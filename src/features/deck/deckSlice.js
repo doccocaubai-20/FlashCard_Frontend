@@ -46,6 +46,42 @@ export const importFlashcards = createAsyncThunk('deck/importFlashcards', async 
   }
 });
 
+export const createDeck = createAsyncThunk('deck/createDeck', async (deckData, { rejectWithValue }) => {
+  try {
+    const response = await deckApi.createDeck(deckData);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+});
+
+export const updateDeck = createAsyncThunk('deck/updateDeck', async ({ id, data }, { rejectWithValue }) => {
+  try {
+    const response = await deckApi.updateDeck(id, data);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+});
+
+export const deleteDeck = createAsyncThunk('deck/deleteDeck', async (id, { rejectWithValue }) => {
+  try {
+    await deckApi.deleteDeck(id);
+    return id;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+});
+
+export const createFlashcard = createAsyncThunk('deck/createFlashcard', async (cardData, { rejectWithValue }) => {
+  try {
+    const response = await flashcardApi.create(cardData);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+});
+
 const deckSlice = createSlice({
   name: 'deck',
   initialState,
@@ -110,6 +146,60 @@ const deckSlice = createSlice({
         }
       })
       .addCase(importFlashcards.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(createDeck.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(createDeck.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.decks.push(action.payload);
+      })
+      .addCase(createDeck.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(updateDeck.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateDeck.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const index = state.decks.findIndex((d) => d.id === action.payload.id);
+        if (index !== -1) {
+          state.decks[index] = action.payload;
+        }
+        if (state.currentDeck && state.currentDeck.id === action.payload.id) {
+          state.currentDeck = action.payload;
+        }
+      })
+      .addCase(updateDeck.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(deleteDeck.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(deleteDeck.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.decks = state.decks.filter((d) => d.id !== action.payload);
+      })
+      .addCase(deleteDeck.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(createFlashcard.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(createFlashcard.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.flashcards.push(action.payload);
+      })
+      .addCase(createFlashcard.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       });

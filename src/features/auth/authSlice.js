@@ -19,19 +19,8 @@ const resolveAuthResponse = (payload) => {
   }
   const data = payload.data && typeof payload.data === 'object' ? payload.data : payload;
   return {
-    token:
-      payload.token ||
-      payload.accessToken ||
-      payload.access_token ||
-      payload.AccessToken ||
-      payload.Access_Token ||
-      data.token ||
-      data.accessToken ||
-      data.access_token ||
-      data.AccessToken ||
-      data.Access_Token ||
-      null,
-    user: payload.user || data.user || (data?.email ? data : null),
+    token: data.access_token || null,
+    user: data.user || null,
   };
 };
 
@@ -56,6 +45,15 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (credent
 export const fetchMe = createAsyncThunk('auth/fetchMe', async (_, { rejectWithValue }) => {
   try {
     const response = await authApi.getMe();
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+});
+
+export const updateProfile = createAsyncThunk('auth/updateProfile', async ({ id, data }, { rejectWithValue }) => {
+  try {
+    const response = await authApi.updateUser(id, data);
     return response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message);
@@ -135,6 +133,20 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchMe.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(updateProfile.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+        state.error = null;
+        localStorage.setItem('user', JSON.stringify(action.payload));
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       });

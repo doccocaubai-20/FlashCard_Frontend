@@ -5,4 +5,5 @@ export const authApi = {
     login: (data) => api.post('/api/auth/login', data),
     googleLogin: (data) => api.post('/api/auth/google', data),
     getMe: () => api.get('/api/users/me'),
+    updateUser: (id, data) => api.patch(`/api/users/${id}`, data),
 };
