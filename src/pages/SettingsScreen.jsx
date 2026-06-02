@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../features/auth/authSlice';
-import { Moon, Sun, User, Lock, Settings } from 'lucide-react';
+import { Sun, Moon, Camera, Check, ShieldAlert } from 'lucide-react';
+
+const predefinedAvatarSeeds = ['Felix', 'Chloe', 'Buddy', 'Buster', 'Coco', 'Angel'];
 
 export default function SettingsScreen() {
   const dispatch = useDispatch();
@@ -39,6 +41,23 @@ export default function SettingsScreen() {
 
   const [profileMsg, setProfileMsg] = useState('');
   const [passwordMsg, setPasswordMsg] = useState('');
+
+  // Handle local file upload converting to base64
+  const handleAvatarFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 1.2 * 1024 * 1024) {
+      alert('Kích thước ảnh quá lớn! Vui lòng chọn ảnh nhỏ hơn 1.2MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProfileData((prev) => ({ ...prev, avatarUrl: reader.result }));
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
@@ -86,168 +105,244 @@ export default function SettingsScreen() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8 pb-16 p-6">
       
-      {/* Header */}
-      <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">
-          <Settings size={20} />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Cài đặt hệ thống</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">
-            Cấu hình giao diện và cập nhật thông tin tài khoản cá nhân.
-          </p>
+      {/* Page Title */}
+      <div className="pb-4 border-b border-slate-200 dark:border-slate-800">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Cài đặt</h1>
+      </div>
+
+      {/* Section 1: Tài khoản */}
+      <div className="space-y-3">
+        <h2 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tài khoản</h2>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl divide-y divide-slate-100 dark:divide-slate-800/50 shadow-sm px-6 transition-colors">
+          <div className="py-4 flex items-center justify-between">
+            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Địa chỉ email</span>
+            <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">{user?.email || 'Chưa thiết lập'}</span>
+          </div>
+          <div className="py-4 flex items-center justify-between">
+            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Loại tài khoản</span>
+            <span className="inline-flex items-center px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-full">
+              {user?.role === 'ADMIN' ? 'Quản trị viên' : 'Học viên'}
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-[1fr_2fr]">
-        
-        {/* Left Column: Appearance */}
-        <div className="space-y-6">
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-4">Giao diện ứng dụng</h3>
-            <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900/30 rounded-2xl border border-slate-100 dark:border-slate-800">
-              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                {isDark ? <Moon size={18} className="text-purple-500" /> : <Sun size={18} className="text-amber-500" />}
-                Chế độ tối (Dark Mode)
+      {/* Section 2: Giao diện (Sun/Moon switch) */}
+      <div className="space-y-3">
+        <h2 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Giao diện</h2>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-sm px-6 transition-colors">
+          <div className="py-5 flex items-center justify-between">
+            <div>
+              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 block">Chế độ hiển thị</span>
+              <span className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 block">Chọn giao diện sáng (Light) hoặc tối (Dark) cho hệ thống</span>
+            </div>
+            
+            {/* Custom Sun/Moon Switch */}
+            <button
+              type="button"
+              onClick={() => setIsDark((prev) => !prev)}
+              className="relative inline-flex h-9 w-18 items-center rounded-full bg-slate-200 dark:bg-indigo-950/60 border border-slate-300 dark:border-indigo-800 transition-colors cursor-pointer select-none outline-none focus:outline-none shrink-0"
+              title={isDark ? "Chuyển sang Chế độ sáng" : "Chuyển sang Chế độ tối"}
+            >
+              {/* Sun Icon */}
+              <span className="absolute left-2.5 text-amber-500 z-10 pointer-events-none select-none">
+                <Sun size={14} className={isDark ? 'opacity-30 transition-opacity' : 'opacity-100 transition-opacity'} />
               </span>
               
-              {/* Toggle Switch */}
-              <button
-                onClick={() => setIsDark((prev) => !prev)}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out outline-none ${
-                  isDark ? 'bg-purple-700' : 'bg-slate-200 dark:bg-slate-700'
+              {/* Toggle slider button */}
+              <span
+                className={`inline-block h-6.5 w-6.5 transform rounded-full bg-white dark:bg-indigo-500 shadow-md transition-transform duration-300 ease-in-out ${
+                  isDark ? 'translate-x-10' : 'translate-x-1'
                 }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-                    isDark ? 'translate-x-5' : 'translate-x-0'
-                  }`}
-                />
-              </button>
-            </div>
+              />
+              
+              {/* Moon Icon */}
+              <span className="absolute right-2.5 text-indigo-400 z-10 pointer-events-none select-none">
+                <Moon size={14} className={isDark ? 'opacity-100 transition-opacity' : 'opacity-30 transition-opacity'} />
+              </span>
+            </button>
           </div>
         </div>
+      </div>
 
-        {/* Right Column: Forms */}
-        <div className="space-y-8">
+      {/* Section 3: Thông tin cá nhân (Avatar + Form) */}
+      <div className="space-y-3">
+        <h2 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Thông tin cá nhân</h2>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-sm px-6 py-4 transition-colors">
           
-          {/* Profile Form */}
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
-            <div className="flex items-center gap-2 pb-4 border-b border-slate-100 dark:border-slate-700">
-              <User size={18} className="text-purple-600 dark:text-purple-400" />
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">Thông tin cá nhân</h3>
+          {/* Avatar Management Area */}
+          <div className="py-6 flex flex-col items-center gap-4 border-b border-slate-100 dark:border-slate-800">
+            <div className="relative group">
+              <div className="h-28 w-28 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 border-4 border-white dark:border-slate-800 ring-2 ring-slate-200 dark:ring-slate-700 shadow-lg">
+                {profileData.avatarUrl ? (
+                  <img src={profileData.avatarUrl} alt="Avatar preview" className="h-full w-full object-cover" />
+                ) : (
+                  <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-extrabold text-3xl select-none">
+                    {profileData.name ? profileData.name.substring(0, 2).toUpperCase() : 'U'}
+                  </div>
+                )}
+              </div>
+              
+              {/* Hidden File Input */}
+              <input
+                type="file"
+                id="avatar-file-input"
+                accept="image/*"
+                onChange={handleAvatarFileChange}
+                className="hidden"
+              />
+
+              {/* Camera Hover Overlay */}
+              <label
+                htmlFor="avatar-file-input"
+                className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-xs font-bold gap-1"
+              >
+                <Camera size={20} className="text-slate-200" />
+                <span className="text-slate-200">Tải ảnh lên</span>
+              </label>
             </div>
 
-            <form onSubmit={handleProfileSubmit} className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Họ và tên
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={profileData.name}
-                    onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/20 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Tuổi
-                  </label>
-                  <input
-                    type="number"
-                    value={profileData.age}
-                    onChange={(e) => setProfileData({ ...profileData, age: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/20 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
-                  />
-                </div>
+            {/* Quick Predefined Avatar Selector Gallery */}
+            <div className="space-y-2.5 text-center w-full max-w-sm">
+              <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
+                Hoặc chọn nhanh Avatar minh hoạ
+              </span>
+              <div className="flex justify-center gap-2 flex-wrap">
+                {predefinedAvatarSeeds.map((seed) => {
+                  const url = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
+                  const isSelected = profileData.avatarUrl === url;
+                  return (
+                    <button
+                      key={seed}
+                      type="button"
+                      onClick={() => setProfileData((prev) => ({ ...prev, avatarUrl: url }))}
+                      className={`h-9 w-9 rounded-full overflow-hidden bg-white border-2 hover:scale-105 active:scale-95 transition-all cursor-pointer relative select-none ${
+                        isSelected ? 'border-indigo-600 ring-2 ring-indigo-300/40 scale-105' : 'border-slate-200 dark:border-slate-800'
+                      }`}
+                    >
+                      <img src={url} alt={`Avatar ${seed}`} className="h-full w-full object-cover" />
+                      {isSelected && (
+                        <div className="absolute inset-0 bg-indigo-600/20 flex items-center justify-center text-white">
+                          <Check size={12} className="stroke-[3]" />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
+            </div>
+          </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Đường dẫn ảnh đại diện (Avatar URL)
-                </label>
+          {/* Text Profile Form */}
+          <form onSubmit={handleProfileSubmit} className="divide-y divide-slate-100 dark:divide-slate-800/50 mt-4">
+            <div className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Họ và tên</span>
+              <div className="w-full sm:max-w-md">
                 <input
-                  type="url"
-                  placeholder="https://example.com/avatar.jpg"
-                  value={profileData.avatarUrl}
-                  onChange={(e) => setProfileData({ ...profileData, avatarUrl: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/20 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                  type="text"
+                  required
+                  value={profileData.name}
+                  onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
                 />
               </div>
+            </div>
 
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-xs font-semibold text-purple-600 dark:text-purple-400">{profileMsg}</span>
+            <div className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Tuổi</span>
+              <div className="w-full sm:max-w-md">
+                <input
+                  type="number"
+                  value={profileData.age}
+                  onChange={(e) => setProfileData({ ...profileData, age: e.target.value })}
+                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                />
+              </div>
+            </div>
+
+            <div className="py-4 flex items-center justify-between gap-4">
+              {profileMsg ? (
+                <span className={`text-xs font-semibold ${profileMsg.includes('thành công') ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500'}`}>
+                  {profileMsg}
+                </span>
+              ) : <div />}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-800 text-white text-sm font-bold rounded-xl transition-all cursor-pointer hover:shadow active:scale-[0.98]"
+              >
+                {isLoading ? 'Đang lưu...' : 'Lưu thông tin'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Section 4: Mật khẩu (LOCAL accounts only) */}
+      {user?.authProvider === 'LOCAL' ? (
+        <div className="space-y-3">
+          <h2 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tài khoản và bảo mật</h2>
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-sm px-6 py-2 transition-colors">
+            <form onSubmit={handlePasswordSubmit} className="divide-y divide-slate-100 dark:divide-slate-800/50">
+              <div className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Mật khẩu mới</span>
+                <div className="w-full sm:max-w-md">
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={passwordData.password}
+                    onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
+                    className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                  />
+                </div>
+              </div>
+
+              <div className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Xác nhận mật khẩu mới</span>
+                <div className="w-full sm:max-w-md">
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={passwordData.confirmPassword}
+                    onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                    className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                  />
+                </div>
+              </div>
+
+              <div className="py-4 flex items-center justify-between gap-4">
+                {passwordMsg ? (
+                  <span className={`text-xs font-semibold ${passwordMsg.includes('thành công') ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500'}`}>
+                    {passwordMsg}
+                  </span>
+                ) : <div />}
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="px-5 py-2.5 rounded-xl bg-purple-700 hover:bg-purple-800 disabled:bg-purple-400 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all cursor-pointer"
+                  className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-800 text-white text-sm font-bold rounded-xl transition-all cursor-pointer hover:shadow active:scale-[0.98]"
                 >
-                  {isLoading ? 'Đang lưu...' : 'Lưu thông tin'}
+                  {isLoading ? 'Đang đổi...' : 'Đổi mật khẩu'}
                 </button>
               </div>
             </form>
           </div>
-
-          {/* Password Form (LOCAL account only) */}
-          {user?.authProvider === 'LOCAL' && (
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
-              <div className="flex items-center gap-2 pb-4 border-b border-slate-100 dark:border-slate-700">
-                <Lock size={18} className="text-purple-600 dark:text-purple-400" />
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">Đổi mật khẩu</h3>
-              </div>
-
-              <form onSubmit={handlePasswordSubmit} className="space-y-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      Mật khẩu mới
-                    </label>
-                    <input
-                      type="password"
-                      required
-                      placeholder="••••••••"
-                      value={passwordData.password}
-                      onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/20 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      Xác nhận mật khẩu mới
-                    </label>
-                    <input
-                      type="password"
-                      required
-                      placeholder="••••••••"
-                      value={passwordData.confirmPassword}
-                      onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900/20 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between pt-2">
-                  <span className="text-xs font-semibold text-purple-600 dark:text-purple-400">{passwordMsg}</span>
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="px-5 py-2.5 rounded-xl bg-purple-700 hover:bg-purple-800 disabled:bg-purple-400 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all cursor-pointer"
-                  >
-                    {isLoading ? 'Đang đổi...' : 'Đổi mật khẩu'}
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
-
         </div>
-
-      </div>
+      ) : (
+        /* Alert user that they log in via Google and security is managed by Google */
+        <div className="rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/50 dark:border-indigo-900/50 p-5 flex items-start gap-4">
+          <ShieldAlert className="text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" size={20} />
+          <div>
+            <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">Đăng nhập thông qua Google</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+              Tài khoản này được xác thực và bảo mật thông qua Google. Mật khẩu và tuỳ chọn bảo mật liên quan được quản lý trực tiếp bởi nhà cung cấp tài khoản Google của bạn.
+            </p>
+          </div>
+        </div>
+      )}
 
     </div>
   );
