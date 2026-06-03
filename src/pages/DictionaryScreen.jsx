@@ -99,12 +99,12 @@ export default function DictionaryScreen() {
     const hanziMatches = lookupMultiple('hanzi', trimmedQuery);
     const pinyinMatches = lookupMultiple('pinyin', trimmedQuery);
     const meaningMatches = lookupMultiple('meaning', trimmedQuery);
-    
+
     // Combine results and deduplicate
     const seen = new Set();
     const combined = [...hanziMatches, ...pinyinMatches, ...meaningMatches];
     const searchResults = [];
-    
+
     for (const item of combined) {
       if (!item) continue;
       const key = `${item.s}-${item.p}-${item.vi}`;
@@ -113,7 +113,7 @@ export default function DictionaryScreen() {
         searchResults.push(item);
       }
     }
-    
+
     // Sort matches dynamically using relevance scores
     const qLower = trimmedQuery.toLowerCase();
     const getSortScore = (item) => {
@@ -174,15 +174,15 @@ export default function DictionaryScreen() {
       }
 
       // 8. Archaic/Rare Variant Penalty
-      const isVariant = 
-        vi.includes('biến thể cổ của') || 
-        vi.includes('biến thể của') || 
-        vi.includes('biến thể cũ của') || 
-        vi.includes('cổ của') || 
-        en.includes('variant of') || 
-        en.includes('archaic variant') || 
+      const isVariant =
+        vi.includes('biến thể cổ của') ||
+        vi.includes('biến thể của') ||
+        vi.includes('biến thể cũ của') ||
+        vi.includes('cổ của') ||
+        en.includes('variant of') ||
+        en.includes('archaic variant') ||
         en.includes('old variant');
-      
+
       if (isVariant) {
         score -= 8000;
       }
@@ -218,7 +218,7 @@ export default function DictionaryScreen() {
   const getCompoundHanViet = (word) => {
     if (!word) return '';
     const chars = Array.from(word);
-    
+
     if (chars.length === 1) {
       const matches = lookupMultiple('hanzi', word);
       const match = matches.find((m) => m.s === word || m.t === word);
@@ -336,7 +336,7 @@ export default function DictionaryScreen() {
         const chars = Array.from(selectedWord.s);
         const breakdown = [];
         let hasMissingSv = false;
-        
+
         chars.forEach((char) => {
           if (!char.trim()) return;
           const matches = lookupMultiple('hanzi', char);
@@ -354,7 +354,7 @@ export default function DictionaryScreen() {
 
         const footnote = hasMissingSv
           ? `<div class="mt-3 text-[11px] text-amber-600 dark:text-amber-500 font-medium border-t border-hairline dark:border-divider-dark pt-2 flex items-start gap-1">
-               ⚠️ <em>Lưu ý: Các chữ hiển thị dạng ngoặc vuông (như [爆], [炸]) do trường âm Hán Việt (sv) trong từ điển của bạn đang bị bỏ trống.</em>
+                <em>Lưu ý: Các chữ hiển thị dạng ngoặc vuông (như [爆], [炸]) do trường âm Hán Việt (sv) trong từ điển của bạn đang bị bỏ trống.</em>
              </div>`
           : '';
 
@@ -385,7 +385,7 @@ export default function DictionaryScreen() {
 
     // Call DeepSeek API
     try {
-      const briefMeaning = selectedWord.en 
+      const briefMeaning = selectedWord.en
         ? (Array.isArray(selectedWord.en) ? selectedWord.en[0] : selectedWord.en.split(/[;,]/)[0]).trim()
         : (selectedWord.vi || '').split('/')[0].trim();
 
@@ -420,7 +420,7 @@ Yêu cầu định dạng & tối ưu hóa:
 
       const resJson = await response.json();
       const content = resJson.choices[0].message.content;
-      
+
       const cleanedContent = content
         .replace(/^```html\s*/i, '')
         .replace(/```$/i, '')
@@ -452,12 +452,12 @@ Yêu cầu định dạng & tối ưu hóa:
   // Copy AI prompt to clipboard
   const handleCopyPrompt = () => {
     if (!selectedWord) return;
-    const briefMeaning = selectedWord.en 
+    const briefMeaning = selectedWord.en
       ? (Array.isArray(selectedWord.en) ? selectedWord.en[0] : selectedWord.en.split(/[;,]/)[0]).trim()
       : (selectedWord.vi || '').split('/')[0].trim();
-      
+
     const promptText = `Hãy phân tích ngắn gọn cấu trúc và ý nghĩa các chữ đơn cấu thành từ ghép tiếng Trung "${selectedWord.s}" (Pinyin: ${selectedWord.p}, Hán Việt: ${getCompoundHanViet(selectedWord.s)}, Nghĩa định hướng: ${briefMeaning}) và cho 3 ví dụ câu thực tế cực ngắn (kèm Pinyin và dịch nghĩa tiếng Việt). Yêu cầu trả về định dạng HTML ngắn gọn trong thẻ <div>, không có lời dẫn.`;
-    
+
     navigator.clipboard.writeText(promptText)
       .then(() => {
         setCopied(true);
@@ -469,16 +469,16 @@ Yêu cầu định dạng & tối ưu hóa:
   // Generate character tab list
   const tabOptions = selectedWord
     ? [
-        selectedWord.s,
-        ...Array.from(new Set(Array.from(selectedWord.s))).filter(
-          (c) => c.trim() && c !== selectedWord.s
-        )
-      ]
+      selectedWord.s,
+      ...Array.from(new Set(Array.from(selectedWord.s))).filter(
+        (c) => c.trim() && c !== selectedWord.s
+      )
+    ]
     : [];
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      
+
       {/* Page Header */}
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white shadow-sm shrink-0">
@@ -494,14 +494,14 @@ Yêu cầu định dạng & tối ưu hóa:
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        
+
         {/* Search Panel & Results */}
         <div className="lg:col-span-2 bg-surface-card dark:bg-surface-dark/50 p-6 rounded-md border border-hairline dark:border-divider-dark shadow-sm flex flex-col gap-6 min-h-[580px] transition-colors">
-          
+
           {selectedWord ? (
             /* Word Detail Panel */
             <div className="flex flex-col gap-6 text-left">
-              
+
               {/* Back Header */}
               <div className="flex items-center gap-3 border-b border-hairline dark:border-divider-dark pb-4">
                 <button
@@ -527,11 +527,10 @@ Yêu cầu định dạng & tối ưu hóa:
                     key={index}
                     type="button"
                     onClick={() => handleTabClick(tabText)}
-                    className={`px-4 py-1.5 rounded-full text-xs font-mono font-bold transition-all border cursor-pointer whitespace-nowrap ${
-                      activeTab === tabText
+                    className={`px-4 py-1.5 rounded-full text-xs font-mono font-bold transition-all border cursor-pointer whitespace-nowrap ${activeTab === tabText
                         ? 'bg-primary border-transparent text-white shadow-sm'
                         : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-                    }`}
+                      }`}
                   >
                     {tabText}
                   </button>
@@ -598,7 +597,7 @@ Yêu cầu định dạng & tối ưu hóa:
                 )}
 
                 {!aiLoading && aiExplanation && (
-                  <div 
+                  <div
                     className="bg-surface-bone/50 dark:bg-surface-dark/20 p-4 rounded-md border border-hairline dark:border-divider-dark text-xs text-body dark:text-on-dark-mute leading-relaxed animate-fade-in"
                     dangerouslySetInnerHTML={{ __html: aiExplanation }}
                   />
@@ -619,7 +618,7 @@ Yêu cầu định dạng & tối ưu hóa:
                     </span>
                   )}
                 </div>
-                
+
                 <div className="space-y-2.5">
                   {tabDetails?.vi && (
                     <div className="flex items-start gap-2.5">
@@ -794,7 +793,7 @@ Yêu cầu định dạng & tối ưu hóa:
                               </span>
                             )}
                           </div>
-                          
+
                           {item.vi && (
                             <p className="text-sm text-body dark:text-on-dark-mute leading-relaxed font-medium line-clamp-2">
                               {item.vi}
@@ -814,7 +813,7 @@ Yêu cầu định dạng & tối ưu hóa:
               </div>
             </>
           )}
-          
+
         </div>
 
         {/* Right Panel: Handwriting Recognition Canvas */}

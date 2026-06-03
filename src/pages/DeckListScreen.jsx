@@ -113,6 +113,22 @@ export default function DeckListScreen() {
                 <p className="text-sm text-body dark:text-on-dark-mute mt-2 line-clamp-2 leading-relaxed">
                   {deck.description || 'Không có mô tả cho bộ bài này.'}
                 </p>
+
+                {/* studied progress bar */}
+                {deck.cardCount > 0 && (
+                  <div className="mt-4">
+                    <div className="flex justify-between text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute mb-1">
+                      <span>Đã thuộc: {deck.studiedCount ?? 0}/{deck.cardCount} từ</span>
+                      <span>{Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-surface-bone dark:bg-black/30 rounded-full overflow-hidden border border-hairline dark:border-divider-dark">
+                      <div 
+                        className="h-full bg-primary rounded-full transition-all duration-300" 
+                        style={{ width: `${Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%` }} 
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center justify-between border-t border-hairline dark:border-divider-dark mt-6 pt-4">

@@ -35,7 +35,7 @@ export default function DashboardScreen() {
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-hairline dark:border-divider-dark pb-6">
           <div>
             <h1 className="font-display text-4xl font-extrabold text-ink dark:text-on-dark tracking-tight">Dashboard</h1>
-            <p className="text-mute dark:text-on-dark-mute text-sm mt-1">Tổng quan về tiến độ học tập và bộ sưu tập thẻ của bạn.</p>
+
           </div>
           <div className="text-sm text-charcoal dark:text-on-dark-mute font-mono bg-surface-bone dark:bg-black/20 border border-hairline dark:border-divider-dark px-4 py-2 rounded-full">
             Chuỗi học hiện tại: <span className="font-bold text-primary">{summary?.streak ?? 0} ngày 🔥</span>

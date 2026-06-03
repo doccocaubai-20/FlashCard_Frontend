@@ -9,6 +9,7 @@ import StudyScreen from './pages/StudyScreen';
 import CreateFlashcardScreen from './pages/CreateFlashcardScreen';
 import SettingsScreen from './pages/SettingsScreen';
 import DictionaryScreen from './pages/DictionaryScreen';
+import GameScreen from './pages/GameScreen';
 import { useDictionary } from './hooks/useDictionary';
 
 function PrivateRoute({ children }) {
@@ -40,6 +41,7 @@ function App() {
         <Route path="/" element={<DashboardScreen />} />
         <Route path="/decks" element={<DeckListScreen />} />
         <Route path="/decks/:id" element={<DeckDetailScreen />} />
+        <Route path="/decks/:id/game" element={<GameScreen />} />
         <Route path="/study" element={<StudyScreen />} />
         <Route path="/flashcards/new" element={<CreateFlashcardScreen />} />
         <Route path="/dictionary" element={<DictionaryScreen />} />

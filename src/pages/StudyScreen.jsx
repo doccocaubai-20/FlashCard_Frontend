@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 import { fetchTodayStudy, submitReview } from '../features/study/studySlice';
 import { fetchAllDecks } from '../features/deck/deckSlice';
 import { studyApi } from '../services/studyApi';
@@ -282,10 +283,7 @@ function SpeakingPractice({ character, pinyin }) {
 }
 
 // AI Example Box dynamic generator & database persistence
-function AIExampleBox({ card, onExampleUpdated }) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
+function AIExampleBox({ card }) {
   const hasExample = card.exampleHanzi && card.examplePinyin && card.exampleMeaning;
 
   const handleSpeakExample = (e) => {
@@ -297,103 +295,15 @@ function AIExampleBox({ card, onExampleUpdated }) {
     window.speechSynthesis.speak(utterance);
   };
 
-  const handleGenerate = async (e) => {
-    e.stopPropagation();
-    setLoading(true);
-    setError(null);
-
-    const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY;
-    if (!apiKey) {
-      setError('Lỗi: Chưa cấu hình VITE_DEEPSEEK_API_KEY trong file .env');
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const prompt = `Hãy tạo một câu ví dụ tiếng Trung giao tiếp cực kỳ đơn giản và thực tế trình độ HSK 1 chứa từ khóa: "${card.hanzi}" (Pinyin: ${card.pinyin}).
-Yêu cầu trả về đúng định dạng JSON như sau, không kèm bất kỳ ký tự nào ngoài JSON, không bọc trong markdown codeblock:
-{
-  "exampleHanzi": "chữ giản thể của câu ví dụ",
-  "examplePinyin": "phiên âm pinyin tương ứng",
-  "exampleMeaning": "dịch nghĩa tiếng Việt tự nhiên nhất"
-}`;
-
-      const response = await fetch('https://api.deepseek.com/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: import.meta.env.VITE_DEEPSEEK_MODEL || 'deepseek-v4-flash',
-          messages: [
-            { role: 'system', content: 'You are a professional Chinese language teacher. Return only valid raw JSON.' },
-            { role: 'user', content: prompt }
-          ],
-          temperature: 0.3
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
-      }
-
-      const resJson = await response.json();
-      const content = resJson.choices[0].message.content.trim();
-      const cleaned = content.replace(/^```json\s*/i, '').replace(/```$/i, '').trim();
-      const parsed = JSON.parse(cleaned);
-
-      if (!parsed.exampleHanzi || !parsed.examplePinyin || !parsed.exampleMeaning) {
-        throw new Error('Dữ liệu AI trả về thiếu trường bắt buộc.');
-      }
-
-      // Save to database
-      await flashcardApi.update(card.id, {
-        exampleHanzi: parsed.exampleHanzi,
-        examplePinyin: parsed.examplePinyin,
-        exampleMeaning: parsed.exampleMeaning
-      });
-
-      // Update parent React state
-      onExampleUpdated(card.id, parsed);
-
-    } catch (err) {
-      console.error(err);
-      setError(`Lỗi: ${err.message || 'Không thể tạo ví dụ. Thử lại sau.'}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="w-full bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md p-6 text-left space-y-4 shadow-sm transition-colors">
       <div className="flex items-center justify-between">
         <h4 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider flex items-center gap-1.5">
           ✨ Câu ví dụ minh họa
         </h4>
-        {!loading && !hasExample && (
-          <button
-            type="button"
-            onClick={handleGenerate}
-            className="flex items-center gap-1.5 px-4.5 py-2 bg-primary hover:bg-primary-deep text-white rounded-full text-xs font-mono font-bold transition-all cursor-pointer shadow-sm active:scale-95"
-          >
-            ⚡ Tạo ví dụ bằng AI
-          </button>
-        )}
       </div>
 
-      {loading && (
-        <div className="flex items-center gap-2 text-mute dark:text-on-dark-mute py-3 text-xs font-mono">
-          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-          <span>AI đang suy nghĩ câu ví dụ phù hợp...</span>
-        </div>
-      )}
-
-      {error && (
-        <p className="text-xs font-mono font-semibold text-red-650">{error}</p>
-      )}
-
-      {hasExample && (
+      {hasExample ? (
         <div className="space-y-2 relative pr-12 group">
           <button
             type="button; button-icon"
@@ -414,19 +324,40 @@ Yêu cầu trả về đúng định dạng JSON như sau, không kèm bất k�
             {card.exampleMeaning}
           </p>
         </div>
-      )}
-
-      {!loading && !hasExample && !error && (
+      ) : (
         <p className="text-xs text-mute dark:text-on-dark-mute italic leading-relaxed">
-          Hiện tại từ vựng này chưa có câu ví dụ trong bộ thẻ. Nhấp nút "Tạo ví dụ bằng AI" để tự động tạo câu ví dụ HSK đơn giản, giải nghĩa và pinyin đi kèm.
+          Hiện tại từ vựng này chưa có câu ví dụ trong bộ thẻ.
         </p>
       )}
     </div>
   );
 }
 
+const speakUtterance = (text, lang, rate) => {
+  return new Promise((resolve) => {
+    if (!window.speechSynthesis) {
+      resolve();
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = lang;
+    utterance.rate = rate;
+    utterance.onend = () => resolve();
+    utterance.onerror = (err) => {
+      console.warn('Speech error:', err);
+      resolve();
+    };
+    window.speechSynthesis.speak(utterance);
+  });
+};
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export default function StudyScreen() {
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const deckIdParam = searchParams.get('deckId');
   
   // Redux study state
   const todayCards = useSelector((state) => state.study.todayCards);
@@ -441,10 +372,38 @@ export default function StudyScreen() {
   const [isStudyStarted, setIsStudyStarted] = useState(false);
   
   // Configurator preferences
-  const [selectedDeckId, setSelectedDeckId] = useState('all');
+  const [selectedDeckId, setSelectedDeckId] = useState(deckIdParam || 'all');
   const [studyMode, setStudyMode] = useState('srs'); // srs, classic
   const [frontFaceMode, setFrontFaceMode] = useState('hanzi'); // hanzi, meaning
   const [showPinyinOnFront, setShowPinyinOnFront] = useState(false);
+  const [isShuffleEnabled, setIsShuffleEnabled] = useState(false);
+
+  // Passive Listening state
+  const [isPassiveStarted, setIsPassiveStarted] = useState(false);
+  const [isPassivePlaying, setIsPassivePlaying] = useState(false);
+  const [passiveRate, setPassiveRate] = useState(0.8);
+  const [isPassiveLoopEnabled, setIsPassiveLoopEnabled] = useState(true);
+  const [passiveStatus, setPassiveStatus] = useState('idle'); // speaking_hanzi, pause_between, speaking_meaning, pause_next, paused, completed
+  
+  const passivePlayingRef = useRef(false);
+  const passiveSeqIdRef = useRef(0);
+  const passiveRateRef = useRef(passiveRate);
+  const isPassiveLoopEnabledRef = useRef(isPassiveLoopEnabled);
+  const activeQueueRef = useRef([]);
+
+  useEffect(() => {
+    if (deckIdParam) {
+      setSelectedDeckId(deckIdParam);
+    }
+  }, [deckIdParam]);
+
+  useEffect(() => {
+    passiveRateRef.current = passiveRate;
+  }, [passiveRate]);
+
+  useEffect(() => {
+    isPassiveLoopEnabledRef.current = isPassiveLoopEnabled;
+  }, [isPassiveLoopEnabled]);
 
   // Study player state
   const [activeQueue, setActiveQueue] = useState([]);
@@ -454,6 +413,10 @@ export default function StudyScreen() {
 
   const [showWriting, setShowWriting] = useState(false);
   const [showSpeaking, setShowSpeaking] = useState(false);
+
+  useEffect(() => {
+    activeQueueRef.current = activeQueue;
+  }, [activeQueue]);
 
   // Reset writing/speaking practice sub-panels on card change
   useEffect(() => {
@@ -522,6 +485,13 @@ export default function StudyScreen() {
     );
   };
 
+  // Cleanup speech synthesis on unmount
+  useEffect(() => {
+    return () => {
+      window.speechSynthesis?.cancel();
+    };
+  }, []);
+
   // Start study session
   const handleStartStudy = () => {
     if (filteredQueue.length === 0) {
@@ -529,11 +499,147 @@ export default function StudyScreen() {
       return;
     }
 
-    setActiveQueue(filteredQueue);
+    let cardsToStudy = [...filteredQueue];
+    if (isShuffleEnabled) {
+      for (let i = cardsToStudy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cardsToStudy[i], cardsToStudy[j]] = [cardsToStudy[j], cardsToStudy[i]];
+      }
+    }
+
+    setActiveQueue(cardsToStudy);
     setCurrentIndex(0);
     setIsFlipped(false);
     setIsStudyFinished(false);
     setIsStudyStarted(true);
+  };
+
+  const runPassiveLoop = async (index, queue = activeQueueRef.current) => {
+    const seqId = ++passiveSeqIdRef.current;
+    
+    const checkState = () => {
+      return seqId === passiveSeqIdRef.current && passivePlayingRef.current;
+    };
+
+    if (!checkState()) return;
+    if (queue.length === 0) return;
+
+    if (index >= queue.length) {
+      if (isPassiveLoopEnabledRef.current) {
+        index = 0;
+      } else {
+        setIsPassivePlaying(false);
+        passivePlayingRef.current = false;
+        setPassiveStatus('completed');
+        return;
+      }
+    }
+
+    const card = queue[index];
+    if (!card) return;
+
+    setCurrentIndex(index);
+    
+    try {
+      // Step 1: Speak Hanzi
+      if (!checkState()) return;
+      setPassiveStatus('speaking_hanzi');
+      await speakUtterance(card.hanzi, 'zh-CN', passiveRateRef.current);
+      
+      // Step 2: Pause 1.5 seconds
+      if (!checkState()) return;
+      setPassiveStatus('pause_between');
+      await delay(1500);
+
+      // Step 3: Speak Vietnamese translation
+      if (!checkState()) return;
+      setPassiveStatus('speaking_meaning');
+      await speakUtterance(card.meaning, 'vi-VN', passiveRateRef.current);
+
+      // Step 4: Pause 3 seconds
+      if (!checkState()) return;
+      setPassiveStatus('pause_next');
+      await delay(3000);
+
+      // Step 5: Next card
+      if (!checkState()) return;
+      runPassiveLoop(index + 1, queue);
+    } catch (err) {
+      console.error('Error in passive loop:', err);
+    }
+  };
+
+  const handleStartPassive = () => {
+    if (filteredQueue.length === 0) {
+      alert('Không tìm thấy từ vựng nào khớp với cấu hình học của bạn!');
+      return;
+    }
+
+    let cardsToStudy = [...filteredQueue];
+    if (isShuffleEnabled) {
+      for (let i = cardsToStudy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cardsToStudy[i], cardsToStudy[j]] = [cardsToStudy[j], cardsToStudy[i]];
+      }
+    }
+
+    setActiveQueue(cardsToStudy);
+    setCurrentIndex(0);
+    setIsPassiveStarted(true);
+    setIsPassivePlaying(true);
+    passivePlayingRef.current = true;
+    
+    setTimeout(() => {
+      runPassiveLoop(0, cardsToStudy);
+    }, 100);
+  };
+
+  const togglePassivePlay = () => {
+    if (isPassivePlaying) {
+      setIsPassivePlaying(false);
+      passivePlayingRef.current = false;
+      passiveSeqIdRef.current++;
+      window.speechSynthesis?.cancel();
+      setPassiveStatus('paused');
+    } else {
+      setIsPassivePlaying(true);
+      passivePlayingRef.current = true;
+      runPassiveLoop(currentIndex);
+    }
+  };
+
+  const handlePassiveNext = () => {
+    window.speechSynthesis?.cancel();
+    passiveSeqIdRef.current++;
+    const nextIdx = (currentIndex + 1) % activeQueue.length;
+    setCurrentIndex(nextIdx);
+    
+    if (isPassivePlaying) {
+      runPassiveLoop(nextIdx);
+    } else {
+      setPassiveStatus('paused');
+    }
+  };
+
+  const handlePassivePrev = () => {
+    window.speechSynthesis?.cancel();
+    passiveSeqIdRef.current++;
+    const prevIdx = (currentIndex - 1 + activeQueue.length) % activeQueue.length;
+    setCurrentIndex(prevIdx);
+    
+    if (isPassivePlaying) {
+      runPassiveLoop(prevIdx);
+    } else {
+      setPassiveStatus('paused');
+    }
+  };
+
+  const handleQuitPassive = () => {
+    setIsPassivePlaying(false);
+    passivePlayingRef.current = false;
+    passiveSeqIdRef.current++;
+    window.speechSynthesis?.cancel();
+    setIsPassiveStarted(false);
   };
 
   // Back to config panel
@@ -828,6 +934,138 @@ export default function StudyScreen() {
     );
   }
 
+  // Passive Listening Player Screen
+  if (isPassiveStarted) {
+    const currentCard = activeQueue[currentIndex];
+    return (
+      <div className="max-w-xl mx-auto space-y-8 p-6 pb-32 min-h-[70vh] flex flex-col justify-center">
+        {/* Navigation Top Bar */}
+        <div className="flex items-center justify-between border-b border-hairline dark:border-divider-dark pb-4">
+          <button
+            onClick={handleQuitPassive}
+            className="flex items-center gap-2 text-mute hover:text-ink dark:text-on-dark-mute dark:hover:text-on-dark font-mono font-bold text-xs cursor-pointer bg-transparent border-none"
+          >
+            <ArrowLeft size={14} />
+            Thoát Nghe Thụ Động
+          </button>
+          <div className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute">
+            THẺ {currentIndex + 1} / {activeQueue.length}
+          </div>
+          <div className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-mono font-bold rounded-full animate-pulse">
+            🎧 TỰ ĐỘNG CHẠY
+          </div>
+        </div>
+
+        {/* Large Display Card */}
+        {currentCard ? (
+          <div className="w-full bg-surface-card dark:bg-surface-dark border-2 border-primary rounded-md p-10 text-center shadow-lg relative min-h-[300px] flex flex-col justify-center items-center gap-6 transition-all duration-300">
+            {/* Status indicator badge */}
+            <div className="absolute top-4 left-4 right-4 flex justify-between items-center px-2">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-mute dark:text-on-dark-mute">
+                {passiveStatus === 'speaking_hanzi' && '🔊 Đang đọc Hán tự'}
+                {passiveStatus === 'pause_between' && '⏱️ Chờ dịch nghĩa...'}
+                {passiveStatus === 'speaking_meaning' && '🔊 Đang đọc giải nghĩa'}
+                {passiveStatus === 'pause_next' && '⏱️ Đợi chuyển thẻ...'}
+                {passiveStatus === 'paused' && '⏸️ Tạm dừng'}
+                {passiveStatus === 'completed' && '🏁 Đã hoàn thành'}
+              </span>
+              <span className="text-[10px] font-mono font-bold text-primary">
+                {currentCard.deckName || 'Bộ bài'}
+              </span>
+            </div>
+
+            {/* Hanzi Display */}
+            <h2 className={`font-display text-6xl font-extrabold text-primary transition-all duration-300 ${passiveStatus === 'speaking_hanzi' ? 'scale-105' : ''}`}>
+              {currentCard.hanzi}
+            </h2>
+
+            {/* Pinyin */}
+            <p className="text-xl font-mono font-bold text-ink dark:text-on-dark mt-2">
+              {currentCard.pinyin}
+            </p>
+
+            {/* Meaning */}
+            <p className="text-base text-body dark:text-on-dark-mute max-w-sm">
+              {currentCard.meaning}
+            </p>
+          </div>
+        ) : (
+          <div className="text-center font-mono text-mute dark:text-on-dark-mute">
+            Không tìm thấy thẻ.
+          </div>
+        )}
+
+        {/* Player controls */}
+        <div className="space-y-6 bg-surface-card dark:bg-surface-dark/40 border border-hairline dark:border-divider-dark rounded-md p-6 shadow-sm">
+          {/* Main Controls Row */}
+          <div className="flex items-center justify-center gap-8">
+            <button
+              onClick={handlePassivePrev}
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-bone dark:bg-black/30 hover:bg-surface-bone/70 border border-hairline dark:border-divider-dark text-ink dark:text-on-dark shadow-sm transition-all cursor-pointer text-lg"
+              title="Thẻ trước"
+            >
+              ⏮️
+            </button>
+
+            <button
+              onClick={togglePassivePlay}
+              className="flex h-16 w-16 items-center justify-center rounded-full bg-primary hover:bg-primary-deep text-white shadow-md transition-all cursor-pointer text-2xl active:scale-95"
+              title={isPassivePlaying ? 'Tạm dừng' : 'Tiếp tục'}
+            >
+              {isPassivePlaying ? '⏸️' : '▶️'}
+            </button>
+
+            <button
+              onClick={handlePassiveNext}
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-bone dark:bg-black/30 hover:bg-surface-bone/70 border border-hairline dark:border-divider-dark text-ink dark:text-on-dark shadow-sm transition-all cursor-pointer text-lg"
+              title="Thẻ tiếp theo"
+            >
+              ⏭️
+            </button>
+          </div>
+
+          {/* Config row */}
+          <div className="grid gap-4 sm:grid-cols-2 pt-4 border-t border-hairline dark:border-divider-dark">
+            {/* Speed slider */}
+            <div className="space-y-1.5 text-left">
+              <label className="block text-[11px] font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
+                Tốc độ phát âm: {passiveRate.toFixed(1)}x
+              </label>
+              <input
+                type="range"
+                min="0.5"
+                max="1.5"
+                step="0.1"
+                value={passiveRate}
+                onChange={(e) => setPassiveRate(parseFloat(e.target.value))}
+                className="w-full accent-primary bg-surface-bone dark:bg-black/40 h-1.5 rounded-lg appearance-none cursor-pointer"
+              />
+            </div>
+
+            {/* Loop switch */}
+            <div className="flex items-center justify-between sm:justify-end gap-3 text-left">
+              <span className="text-[11px] font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
+                Tự động lặp bộ bài
+              </span>
+              <input
+                id="passive-loop-toggle"
+                type="checkbox"
+                checked={isPassiveLoopEnabled}
+                onChange={(e) => setIsPassiveLoopEnabled(e.target.checked)}
+                className="w-4 h-4 text-primary bg-surface-card border-hairline rounded focus:ring-primary accent-primary cursor-pointer"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Tip text */}
+        <p className="text-[10px] text-mute dark:text-on-dark-mute leading-relaxed text-center font-mono">
+          Chế độ nghe thụ động giúp bạn học rảnh tay. Trình duyệt sẽ tự động phát âm Hán tự (giọng Trung Quốc), dừng 1.5 giây, phát âm giải nghĩa (giọng Việt Nam), rồi đợi 3 giây để chuyển sang thẻ tiếp theo.
+        </p>
+      </div>
+    );
+  }
+
   // Study Configurator View (Default)
   return (
     <div className="max-w-4xl mx-auto space-y-8 p-6 pb-32">
@@ -868,7 +1106,7 @@ export default function StudyScreen() {
       <div className="space-y-3">
         <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Chế độ học</h3>
         <div className="grid gap-4 sm:grid-cols-2">
-          {/* Spaced Repetition Block */}
+          {/* Backed Repetition Block */}
           <button
             onClick={() => setStudyMode('srs')}
             className={`p-6 rounded-md border transition-all text-left flex items-start gap-4 cursor-pointer hover:shadow-sm ${
@@ -959,6 +1197,23 @@ export default function StudyScreen() {
         </div>
       </div>
 
+      {/* Row: TÙY CHỌN NÂNG CAO */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Tùy chọn nâng cao</h3>
+        <div className="flex items-center gap-2 bg-surface-card dark:bg-surface-dark/40 border border-hairline dark:border-divider-dark p-4 rounded-md shadow-sm max-w-md">
+          <input
+            id="shuffle-toggle"
+            type="checkbox"
+            checked={isShuffleEnabled}
+            onChange={(e) => setIsShuffleEnabled(e.target.checked)}
+            className="w-4 h-4 text-primary bg-surface-card border-hairline rounded focus:ring-primary focus:ring-2 accent-primary cursor-pointer"
+          />
+          <label htmlFor="shuffle-toggle" className="text-sm font-bold text-ink dark:text-on-dark cursor-pointer select-none">
+            🔀 Xáo trộn thứ tự thẻ ôn tập (Shuffle Cards)
+          </label>
+        </div>
+      </div>
+
       {/* Sticky Bottom Action Footer Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-55 bg-canvas/90 dark:bg-surface-dark/95 backdrop-blur border-t border-hairline dark:border-divider-dark shadow-sm py-4">
         <div className="max-w-4xl mx-auto px-6 flex items-center justify-between">
@@ -969,13 +1224,22 @@ export default function StudyScreen() {
             </span>
           </div>
 
-          <button
-            onClick={handleStartStudy}
-            className="px-6 py-3 bg-primary hover:bg-primary-deep text-white font-mono font-bold rounded-full transition-all shadow-sm cursor-pointer flex items-center gap-2"
-          >
-            <span>Bắt đầu học</span>
-            <Play size={14} fill="currentColor" />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleStartPassive}
+              className="px-5 py-3 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-ink dark:text-on-dark font-mono font-bold rounded-full transition-colors cursor-pointer flex items-center gap-2 shadow-sm"
+            >
+              <span>🎧 Nghe thụ động</span>
+            </button>
+            
+            <button
+              onClick={handleStartStudy}
+              className="px-6 py-3 bg-primary hover:bg-primary-deep text-white font-mono font-bold rounded-full transition-all shadow-sm cursor-pointer flex items-center gap-2"
+            >
+              <span>Bắt đầu học</span>
+              <Play size={14} fill="currentColor" />
+            </button>
+          </div>
         </div>
       </div>
 
