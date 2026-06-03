@@ -328,37 +328,34 @@ export default function DictionaryScreen() {
     setAiLoading(true);
     setAiExplanation('');
 
-    const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY;
+    // Generate local offline breakdown in case of errors/fallback
+    const runOfflineBreakdown = () => {
+      const chars = Array.from(selectedWord.s);
+      const breakdown = [];
+      let hasMissingSv = false;
 
-    if (!apiKey) {
-      // Offline fallback: local Hán-Việt character-by-character breakdown
-      setTimeout(() => {
-        const chars = Array.from(selectedWord.s);
-        const breakdown = [];
-        let hasMissingSv = false;
+      chars.forEach((char) => {
+        if (!char.trim()) return;
+        const matches = lookupMultiple('hanzi', char);
+        const match = matches.find((m) => m.s === char || m.t === char);
+        if (match && match.sv) {
+          breakdown.push(`- **${char}** (${match.sv.toUpperCase()}): ${match.vi}`);
+        } else if (match) {
+          hasMissingSv = true;
+          breakdown.push(`- **${char}** <span class="text-amber-600 font-semibold">[Chữ này chưa có âm Hán Việt]</span>: ${match.vi}`);
+        } else {
+          hasMissingSv = true;
+          breakdown.push(`- **${char}** <span class="text-red-500 font-semibold">[Không tìm thấy dữ liệu]</span>`);
+        }
+      });
 
-        chars.forEach((char) => {
-          if (!char.trim()) return;
-          const matches = lookupMultiple('hanzi', char);
-          const match = matches.find((m) => m.s === char || m.t === char);
-          if (match && match.sv) {
-            breakdown.push(`- **${char}** (${match.sv.toUpperCase()}): ${match.vi}`);
-          } else if (match) {
-            hasMissingSv = true;
-            breakdown.push(`- **${char}** <span class="text-amber-600 font-semibold">[Chữ này chưa có âm Hán Việt]</span>: ${match.vi}`);
-          } else {
-            hasMissingSv = true;
-            breakdown.push(`- **${char}** <span class="text-red-500 font-semibold">[Không tìm thấy dữ liệu]</span>`);
-          }
-        });
+      const footnote = hasMissingSv
+        ? `<div class="mt-3 text-[11px] text-amber-600 dark:text-amber-500 font-medium border-t border-hairline dark:border-divider-dark pt-2 flex items-start gap-1">
+              <em>Lưu ý: Các chữ hiển thị dạng ngoặc vuông (như [爆], [炸]) do trường âm Hán Việt (sv) trong từ điển của bạn đang bị bỏ trống.</em>
+           </div>`
+        : '';
 
-        const footnote = hasMissingSv
-          ? `<div class="mt-3 text-[11px] text-amber-600 dark:text-amber-500 font-medium border-t border-hairline dark:border-divider-dark pt-2 flex items-start gap-1">
-                <em>Lưu ý: Các chữ hiển thị dạng ngoặc vuông (như [爆], [炸]) do trường âm Hán Việt (sv) trong từ điển của bạn đang bị bỏ trống.</em>
-             </div>`
-          : '';
-
-        const explanationHtml = `
+      const explanationHtml = `
 <div class="space-y-4 text-body dark:text-on-dark-mute text-sm">
   <p class="font-bold text-ink dark:text-on-dark border-b border-hairline dark:border-divider-dark pb-2 flex items-center gap-2">
     ✨ Phân tích cấu trúc từ ghép <strong>"${selectedWord.s}"</strong> (Chế độ Ngoại tuyến):
@@ -371,79 +368,55 @@ export default function DictionaryScreen() {
     <p class="font-bold text-primary mb-1">💡 Nghĩa tổng hợp:</p>
     <p class="text-ink dark:text-on-dark font-medium leading-relaxed">
       Sự kết hợp các từ tố trên tạo nên nghĩa khái niệm: <em>"${selectedWord.vi || 'Chưa rõ nghĩa dịch'}"</em>. 
-      <br/>
-      <span class="text-[10px] text-mute dark:text-on-dark-mute mt-1 block">💡 Mẹo: Cấu hình VITE_DEEPSEEK_API_KEY trong file .env ở thư mục frontend để kích hoạt giải thích chi tiết, nguồn gốc và ví dụ bằng AI DeepSeek!</span>
+    </p>
+  </div>
+</div>
+      `;
+      setAiExplanation(explanationHtml);
+    };
+
+    try {
+      const sv = getCompoundHanViet(selectedWord.s) || '';
+      const response = await dictionaryHistoryApi.explain({
+        hanzi: selectedWord.s,
+        traditional: selectedWord.t,
+        pinyin: selectedWord.p,
+        sv,
+        vi: selectedWord.vi,
+        en: selectedWord.en
+      });
+
+      if (response && response.data && response.data.aiExplanation) {
+        setAiExplanation(response.data.aiExplanation);
+        loadHistory();
+      } else {
+        runOfflineBreakdown();
+      }
+    } catch (err) {
+      console.error('Failed to generate AI explanation:', err);
+      
+      // If rate limited (status 429), show custom rate limit alert
+      if (err.response && err.response.status === 429) {
+        const errorHtml = `
+<div class="space-y-4 text-body dark:text-on-dark-mute text-sm">
+  <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/30 rounded-md p-4">
+    <p class="font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+      ⚠️ Hạn mức sử dụng AI trong ngày:
+    </p>
+    <p class="text-ink dark:text-on-dark mt-2 leading-relaxed">
+      Bạn đã vượt quá giới hạn <strong>10 lượt</strong> giải thích bằng AI hôm nay. Vui lòng quay lại vào ngày mai!
+    </p>
+    <p class="text-xs text-mute dark:text-on-dark-mute mt-2 border-t border-amber-200 dark:border-amber-900/30 pt-2">
+      💡 Mẹo: Bạn vẫn có thể xem lại các từ đã từng giải thích trước đó hoặc sử dụng chế độ Ngoại tuyến thông thường.
     </p>
   </div>
 </div>
         `;
-        setAiExplanation(explanationHtml);
-        setAiLoading(false);
-      }, 800);
-      return;
-    }
-
-    // Call DeepSeek API
-    try {
-      const briefMeaning = selectedWord.en
-        ? (Array.isArray(selectedWord.en) ? selectedWord.en[0] : selectedWord.en.split(/[;,]/)[0]).trim()
-        : (selectedWord.vi || '').split('/')[0].trim();
-
-      const prompt = `Hãy giải nghĩa ngắn gọn từ ghép: "${selectedWord.s}" (Phồn thể: ${selectedWord.t || selectedWord.s}, Bính âm: ${selectedWord.p}, Hán Việt: ${getCompoundHanViet(selectedWord.s)}, Nghĩa định hướng: ${briefMeaning}).
-Hãy tạo ra kết quả phân tích theo cấu trúc HTML chuẩn và bọc trong một thẻ div. Nội dung gồm:
-1. Phân tích nguồn gốc và ý nghĩa cấu trúc từng chữ đơn cấu thành từ ghép này (yêu cầu cực kỳ ngắn gọn, tối đa 2 câu mỗi chữ đơn).
-2. Đưa ra 3 câu ví dụ thực tế cực ngắn và thông dụng (mỗi câu ví dụ dưới 10 chữ Hán, gồm chữ Hán giản thể, Pinyin, và dịch nghĩa tiếng Việt).
-
-Yêu cầu định dạng & tối ưu hóa:
-- Trả về trực tiếp mã HTML bên trong <div>, không viết lời dẫn mở đầu hay kết luận. Không dùng thẻ markdown \`\`\`html.
-- Sử dụng các thẻ HTML cơ bản như <p>, <strong>, <em>, <ul class="list-disc pl-5 space-y-1">, <li>...`;
-
-      const response = await fetch('https://api.deepseek.com/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: import.meta.env.VITE_DEEPSEEK_MODEL || 'deepseek-v4-flash',
-          messages: [
-            { role: 'system', content: 'You are a helpful Chinese language assistant. Respond as concisely as possible in structured HTML, avoiding any conversational filler.' },
-            { role: 'user', content: prompt }
-          ],
-          temperature: 0.2
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
+        setAiExplanation(errorHtml);
+      } else {
+        // General fallback to offline breakdown
+        runOfflineBreakdown();
       }
-
-      const resJson = await response.json();
-      const content = resJson.choices[0].message.content;
-
-      const cleanedContent = content
-        .replace(/^```html\s*/i, '')
-        .replace(/```$/i, '')
-        .trim();
-
-      setAiExplanation(cleanedContent);
-
-      // Save the generated AI explanation to the DB for this word
-      try {
-        const sv = getCompoundHanViet(selectedWord.s) || '';
-        await dictionaryHistoryApi.addHistory({
-          hanzi: selectedWord.s,
-          pinyin: selectedWord.p || '',
-          sv,
-          vi: selectedWord.vi || '',
-          aiExplanation: cleanedContent
-        });
-        loadHistory();
-      } catch (err) {
-        console.error('Failed to save AI explanation to database:', err);
-      }
-    } catch (err) {
-      console.error('Failed to generate AI explanation:', err);
     } finally {
       setAiLoading(false);
     }

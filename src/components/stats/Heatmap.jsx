@@ -31,14 +31,16 @@ export default function Heatmap({ data = [] }) {
                 Lịch sử học tập
             </div>
             
-            <div className="grid grid-cols-14 gap-1">
-                {normalized.map((item, index) => (
-                    <div
-                        key={`${item.date || index}-${index}`}
-                        title={`${item.date || 'Không rõ'} — ${item.count} lần`}
-                        className={`h-7 w-7 rounded-xs border border-hairline dark:border-divider-dark transition-colors duration-200 ${getCellColor(item.count)}`}
-                    />
-                ))}
+            <div className="overflow-x-auto pb-2 scrollbar-thin">
+                <div className="grid grid-cols-14 gap-1 min-w-[392px]">
+                    {normalized.map((item, index) => (
+                        <div
+                            key={`${item.date || index}-${index}`}
+                            title={`${item.date || 'Không rõ'} — ${item.count} lần`}
+                            className={`h-7 w-7 rounded-xs border border-hairline dark:border-divider-dark transition-colors duration-200 ${getCellColor(item.count)}`}
+                        />
+                    ))}
+                </div>
             </div>
 
             <div className="mt-4 flex flex-wrap gap-4 text-xs font-mono text-mute dark:text-on-dark-mute">
