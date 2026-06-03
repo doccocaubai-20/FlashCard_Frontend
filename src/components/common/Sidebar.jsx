@@ -29,11 +29,11 @@ export default function Sidebar() {
       
       {/* Brand Section */}
       <div>
-        <div className="sidebar-brand flex items-center gap-3 px-6 pb-6 border-b border-slate-100 dark:border-slate-800">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-none">
+        <div className="sidebar-brand flex items-center gap-3 px-6 pb-6 border-b border-hairline dark:border-divider-dark">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white shadow-sm">
             <BookOpen size={18} />
           </div>
-          <span className="font-bold text-lg bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-350 bg-clip-text text-transparent">
+          <span className="font-display font-extrabold text-lg text-ink dark:text-on-dark tracking-tight">
             ChongZi
           </span>
         </div>
@@ -54,14 +54,14 @@ export default function Sidebar() {
           ))}
         </nav>
       </div>
- 
+  
       {/* Footer / User Profile & Logout */}
-      <div className="sidebar-footer px-4 py-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 rounded-b-2xl">
+      <div className="sidebar-footer px-4 py-4 border-t border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-black/30 rounded-none">
         <div className="flex items-center justify-between gap-3">
           
           {/* User Profile */}
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="h-9 w-9 flex-shrink-0 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 text-white font-bold flex items-center justify-center shadow-sm overflow-hidden border-2 border-white dark:border-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">
+            <div className="h-9 w-9 flex-shrink-0 rounded-full bg-surface-card dark:bg-surface-dark text-ink dark:text-on-dark border border-hairline dark:border-divider-dark font-bold flex items-center justify-center shadow-sm overflow-hidden">
               {user?.avatarUrl ? (
                 <img src={user.avatarUrl} alt="avatar" className="h-full w-full object-cover" />
               ) : (
@@ -69,19 +69,19 @@ export default function Sidebar() {
               )}
             </div>
             <div className="flex flex-col overflow-hidden text-left">
-              <span className="text-sm font-bold text-slate-800 dark:text-slate-200 leading-none truncate">
+              <span className="text-sm font-bold text-ink dark:text-on-dark leading-none truncate">
                 {user?.name || 'Học viên'}
               </span>
-              <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 mt-1 uppercase tracking-wider">
+              <span className="text-[10px] font-mono font-semibold text-primary dark:text-primary mt-1 uppercase tracking-wider">
                 {user?.role === 'ADMIN' ? 'Quản trị' : 'Học viên'}
               </span>
             </div>
           </div>
- 
+  
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="flex items-center justify-center p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all cursor-pointer border border-transparent hover:border-red-100 dark:hover:border-red-900/30"
+            className="flex items-center justify-center p-2 rounded-full text-mute hover:text-primary hover:bg-primary/10 dark:hover:bg-primary/20 transition-all cursor-pointer border border-transparent"
             title="Đăng xuất"
           >
             <LogOut size={18} />

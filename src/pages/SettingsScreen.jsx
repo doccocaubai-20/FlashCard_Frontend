@@ -108,21 +108,21 @@ export default function SettingsScreen() {
     <div className="max-w-4xl mx-auto space-y-8 pb-16 p-6">
       
       {/* Page Title */}
-      <div className="pb-4 border-b border-slate-200 dark:border-slate-800">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Cài đặt</h1>
+      <div className="pb-4 border-b border-hairline dark:border-divider-dark">
+        <h1 className="text-2xl font-extrabold text-ink dark:text-on-dark font-display tracking-tight">Cài đặt</h1>
       </div>
 
       {/* Section 1: Tài khoản */}
       <div className="space-y-3">
-        <h2 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tài khoản</h2>
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl divide-y divide-slate-100 dark:divide-slate-800/50 shadow-sm px-6 transition-colors">
+        <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Tài khoản</h2>
+        <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md divide-y divide-hairline dark:divide-divider-dark shadow-sm px-6 transition-colors">
           <div className="py-4 flex items-center justify-between">
-            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Địa chỉ email</span>
-            <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">{user?.email || 'Chưa thiết lập'}</span>
+            <span className="text-sm font-semibold text-ink dark:text-on-dark">Địa chỉ email</span>
+            <span className="text-sm text-body dark:text-on-dark-mute font-medium">{user?.email || 'Chưa thiết lập'}</span>
           </div>
           <div className="py-4 flex items-center justify-between">
-            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Loại tài khoản</span>
-            <span className="inline-flex items-center px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-full">
+            <span className="text-sm font-semibold text-ink dark:text-on-dark">Loại tài khoản</span>
+            <span className="inline-flex items-center px-3 py-1 bg-surface-bone dark:bg-surface-dark text-ink dark:text-on-dark text-xs font-bold rounded-full border border-hairline dark:border-divider-dark">
               {user?.role === 'ADMIN' ? 'Quản trị viên' : 'Học viên'}
             </span>
           </div>
@@ -131,19 +131,19 @@ export default function SettingsScreen() {
 
       {/* Section 2: Giao diện (Sun/Moon switch) */}
       <div className="space-y-3">
-        <h2 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Giao diện</h2>
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-sm px-6 transition-colors">
+        <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Giao diện</h2>
+        <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md shadow-sm px-6 transition-colors">
           <div className="py-5 flex items-center justify-between">
             <div>
-              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 block">Chế độ hiển thị</span>
-              <span className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 block">Chọn giao diện sáng (Light) hoặc tối (Dark) cho hệ thống</span>
+              <span className="text-sm font-semibold text-ink dark:text-on-dark block">Chế độ hiển thị</span>
+              <span className="text-xs text-mute dark:text-on-dark-mute mt-0.5 block">Chọn giao diện sáng (Light) hoặc tối (Dark) cho hệ thống</span>
             </div>
             
             {/* Custom Sun/Moon Switch */}
             <button
               type="button"
               onClick={() => setIsDark((prev) => !prev)}
-              className="relative inline-flex h-9 w-18 items-center rounded-full bg-slate-200 dark:bg-indigo-950/60 border border-slate-300 dark:border-indigo-800 transition-colors cursor-pointer select-none outline-none focus:outline-none shrink-0"
+              className="relative inline-flex h-9 w-18 items-center rounded-full bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark transition-colors cursor-pointer select-none outline-none focus:outline-none shrink-0"
               title={isDark ? "Chuyển sang Chế độ sáng" : "Chuyển sang Chế độ tối"}
             >
               {/* Sun Icon */}
@@ -153,13 +153,13 @@ export default function SettingsScreen() {
               
               {/* Toggle slider button */}
               <span
-                className={`inline-block h-6.5 w-6.5 transform rounded-full bg-white dark:bg-indigo-500 shadow-md transition-transform duration-300 ease-in-out ${
+                className={`inline-block h-6.5 w-6.5 transform rounded-full bg-white dark:bg-primary shadow-sm transition-transform duration-300 ease-in-out ${
                   isDark ? 'translate-x-10' : 'translate-x-1'
                 }`}
               />
               
               {/* Moon Icon */}
-              <span className="absolute right-2.5 text-indigo-400 z-10 pointer-events-none select-none">
+              <span className="absolute right-2.5 text-primary z-10 pointer-events-none select-none">
                 <Moon size={14} className={isDark ? 'opacity-100 transition-opacity' : 'opacity-30 transition-opacity'} />
               </span>
             </button>
@@ -169,17 +169,17 @@ export default function SettingsScreen() {
 
       {/* Section 3: Thông tin cá nhân (Avatar + Form) */}
       <div className="space-y-3">
-        <h2 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Thông tin cá nhân</h2>
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-sm px-6 py-4 transition-colors">
+        <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Thông tin cá nhân</h2>
+        <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md shadow-sm px-6 py-4 transition-colors">
           
           {/* Avatar Management Area */}
-          <div className="py-6 flex flex-col items-center gap-4 border-b border-slate-100 dark:border-slate-800">
+          <div className="py-6 flex flex-col items-center gap-4 border-b border-hairline dark:border-divider-dark">
             <div className="relative group">
-              <div className="h-28 w-28 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 border-4 border-white dark:border-slate-800 ring-2 ring-slate-200 dark:ring-slate-700 shadow-lg">
+              <div className="h-28 w-28 rounded-full overflow-hidden bg-surface-bone dark:bg-surface-dark border-4 border-surface-card dark:border-surface-dark ring-2 ring-hairline dark:ring-divider-dark shadow-sm">
                 {profileData.avatarUrl ? (
                   <img src={profileData.avatarUrl} alt="Avatar preview" className="h-full w-full object-cover" />
                 ) : (
-                  <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-extrabold text-3xl select-none">
+                  <div className="h-full w-full flex items-center justify-center bg-primary text-white font-extrabold text-3xl select-none">
                     {profileData.name ? profileData.name.substring(0, 2).toUpperCase() : 'U'}
                   </div>
                 )}
@@ -199,14 +199,14 @@ export default function SettingsScreen() {
                 htmlFor="avatar-file-input"
                 className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-xs font-bold gap-1"
               >
-                <Camera size={20} className="text-slate-200" />
-                <span className="text-slate-200">Tải ảnh lên</span>
+                <Camera size={20} className="text-white/90" />
+                <span className="text-white/90">Tải ảnh lên</span>
               </label>
             </div>
 
             {/* Quick Predefined Avatar Selector Gallery */}
             <div className="space-y-2.5 text-center w-full max-w-sm">
-              <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
+              <span className="text-[10px] font-black text-mute dark:text-on-dark-mute uppercase tracking-wider block">
                 Hoặc chọn nhanh Avatar minh hoạ
               </span>
               <div className="flex justify-center gap-2 flex-wrap">
@@ -219,12 +219,12 @@ export default function SettingsScreen() {
                       type="button"
                       onClick={() => setProfileData((prev) => ({ ...prev, avatarUrl: url }))}
                       className={`h-9 w-9 rounded-full overflow-hidden bg-white border-2 hover:scale-105 active:scale-95 transition-all cursor-pointer relative select-none ${
-                        isSelected ? 'border-indigo-600 ring-2 ring-indigo-300/40 scale-105' : 'border-slate-200 dark:border-slate-800'
+                        isSelected ? 'border-primary ring-2 ring-primary/20 scale-105' : 'border-hairline dark:border-divider-dark'
                       }`}
                     >
                       <img src={url} alt={`Avatar ${seed}`} className="h-full w-full object-cover" />
                       {isSelected && (
-                        <div className="absolute inset-0 bg-indigo-600/20 flex items-center justify-center text-white">
+                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center text-white">
                           <Check size={12} className="stroke-[3]" />
                         </div>
                       )}
@@ -236,42 +236,42 @@ export default function SettingsScreen() {
           </div>
 
           {/* Text Profile Form */}
-          <form onSubmit={handleProfileSubmit} className="divide-y divide-slate-100 dark:divide-slate-800/50 mt-4">
+          <form onSubmit={handleProfileSubmit} className="divide-y divide-hairline dark:divide-divider-dark mt-4">
             <div className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Họ và tên</span>
+              <span className="text-sm font-semibold text-ink dark:text-on-dark">Họ và tên</span>
               <div className="w-full sm:max-w-md">
                 <input
                   type="text"
                   required
                   value={profileData.name}
                   onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                  className="w-full px-4 py-2 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
                 />
               </div>
             </div>
 
             <div className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Tuổi</span>
+              <span className="text-sm font-semibold text-ink dark:text-on-dark">Tuổi</span>
               <div className="w-full sm:max-w-md">
                 <input
                   type="number"
                   value={profileData.age}
                   onChange={(e) => setProfileData({ ...profileData, age: e.target.value })}
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                  className="w-full px-4 py-2 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
                 />
               </div>
             </div>
 
             <div className="py-4 flex items-center justify-between gap-4">
               {profileMsg ? (
-                <span className={`text-xs font-semibold ${profileMsg.includes('thành công') ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500'}`}>
+                <span className={`text-xs font-semibold ${profileMsg.includes('thành công') ? 'text-emerald-600 dark:text-emerald-400' : 'text-primary'}`}>
                   {profileMsg}
                 </span>
               ) : <div />}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-800 text-white text-sm font-bold rounded-xl transition-all cursor-pointer hover:shadow active:scale-[0.98]"
+                className="px-5 py-2.5 bg-primary hover:bg-primary-deep disabled:bg-stone text-white text-sm font-bold rounded-full transition-all cursor-pointer hover:shadow active:scale-[0.98]"
               >
                 {isLoading ? 'Đang lưu...' : 'Lưu thông tin'}
               </button>
@@ -283,11 +283,11 @@ export default function SettingsScreen() {
       {/* Section 4: Mật khẩu (LOCAL accounts only) */}
       {user?.authProvider === 'LOCAL' ? (
         <div className="space-y-3">
-          <h2 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tài khoản và bảo mật</h2>
-          <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-sm px-6 py-2 transition-colors">
-            <form onSubmit={handlePasswordSubmit} className="divide-y divide-slate-100 dark:divide-slate-800/50">
+          <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Tài khoản và bảo mật</h2>
+          <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md shadow-sm px-6 py-2 transition-colors">
+            <form onSubmit={handlePasswordSubmit} className="divide-y divide-hairline dark:divide-divider-dark">
               <div className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Mật khẩu mới</span>
+                <span className="text-sm font-semibold text-ink dark:text-on-dark">Mật khẩu mới</span>
                 <div className="w-full sm:max-w-md">
                   <input
                     type="password"
@@ -295,13 +295,13 @@ export default function SettingsScreen() {
                     placeholder="••••••••"
                     value={passwordData.password}
                     onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
-                    className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                    className="w-full px-4 py-2 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
                   />
                 </div>
               </div>
 
               <div className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Xác nhận mật khẩu mới</span>
+                <span className="text-sm font-semibold text-ink dark:text-on-dark">Xác nhận mật khẩu mới</span>
                 <div className="w-full sm:max-w-md">
                   <input
                     type="password"
@@ -309,21 +309,21 @@ export default function SettingsScreen() {
                     placeholder="••••••••"
                     value={passwordData.confirmPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                    className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                    className="w-full px-4 py-2 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
                   />
                 </div>
               </div>
 
               <div className="py-4 flex items-center justify-between gap-4">
                 {passwordMsg ? (
-                  <span className={`text-xs font-semibold ${passwordMsg.includes('thành công') ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500'}`}>
+                  <span className={`text-xs font-semibold ${passwordMsg.includes('thành công') ? 'text-emerald-600 dark:text-emerald-400' : 'text-primary'}`}>
                     {passwordMsg}
                   </span>
                 ) : <div />}
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-800 text-white text-sm font-bold rounded-xl transition-all cursor-pointer hover:shadow active:scale-[0.98]"
+                  className="px-5 py-2.5 bg-primary hover:bg-primary-deep disabled:bg-stone text-white text-sm font-bold rounded-full transition-all cursor-pointer hover:shadow active:scale-[0.98]"
                 >
                   {isLoading ? 'Đang đổi...' : 'Đổi mật khẩu'}
                 </button>
@@ -333,11 +333,11 @@ export default function SettingsScreen() {
         </div>
       ) : (
         /* Alert user that they log in via Google and security is managed by Google */
-        <div className="rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/50 dark:border-indigo-900/50 p-5 flex items-start gap-4">
-          <ShieldAlert className="text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" size={20} />
+        <div className="rounded-md bg-surface-bone dark:bg-surface-dark/40 border border-hairline dark:border-divider-dark p-5 flex items-start gap-4">
+          <ShieldAlert className="text-primary shrink-0 mt-0.5" size={20} />
           <div>
-            <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">Đăng nhập thông qua Google</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+            <h4 className="text-sm font-bold text-ink dark:text-on-dark font-display tracking-tight">Đăng nhập thông qua Google</h4>
+            <p className="text-xs text-body dark:text-on-dark-mute mt-1 leading-relaxed">
               Tài khoản này được xác thực và bảo mật thông qua Google. Mật khẩu và tuỳ chọn bảo mật liên quan được quản lý trực tiếp bởi nhà cung cấp tài khoản Google của bạn.
             </p>
           </div>

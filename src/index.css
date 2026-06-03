@@ -1,8 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
 @import "tailwindcss";
+
 
 /* Configure class-based dark mode for TailwindCSS v4 */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  /* Colors based on DESIGN.md (with primary teal #54cbd4) */
+  --color-primary: #54cbd4;
+  --color-primary-deep: #3ba4ad;
+  --color-on-primary: #ffffff;
+  
+  --color-ink: #202020;
+  --color-body: #3a3a3a;
+  --color-charcoal: #575757;
+  --color-mute: #646464;
+  --color-ash: #8d8d8d;
+  --color-stone: #bbbbbb;
+  
+  --color-canvas: #f9f7f3;
+  --color-surface-bone: #f3f0e8;
+  --color-surface-card: #ffffff;
+  --color-surface-dark: #202020;
+  --color-surface-deep: #000000;
+  
+  --color-hairline: rgba(32, 32, 32, 0.12);
+  --color-hairline-strong: #202020;
+  --color-divider-dark: rgba(255, 255, 255, 0.2);
+  
+  --color-hero-warm: #54cbd4;
+  --color-hero-glow: #7ee0e7;
+  --color-hero-pink: #b8f0f4;
+  --color-badge-success: #2b9a66;
+  --color-link: #54cbd4;
+  --color-ring-focus: rgba(84, 203, 212, 0.5);
+
+  /* Fonts */
+  --font-display: 'Outfit', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Border Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  
+  /* Animate */
   --animate-fade-in: fade-in 0.3s ease-out;
+}
+
+/* Base resets & typography style using dynamic CSS custom properties */
+@layer base {
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* Global Dark Mode custom variable overrides to dynamically adjust text contrast */
+.dark {
+  --color-ink: #fcfcfc;
+  --color-body: rgba(252, 252, 252, 0.76);
+  --color-charcoal: rgba(252, 252, 252, 0.64);
+  --color-mute: rgba(252, 252, 252, 0.52);
+  --color-ash: rgba(252, 252, 252, 0.4);
+  --color-stone: rgba(252, 252, 252, 0.28);
+  
+  --color-canvas: #1c1c1a; /* slightly warmer dark background matching developer theme */
+  --color-surface-bone: #141413;
+  --color-surface-card: #262624;
+  --color-surface-dark: #1c1c1a;
+  
+  --color-hairline: rgba(255, 255, 255, 0.1);
+  --color-hairline-strong: #fcfcfc;
+}
+
+/* Ensure browser dropdown select options render with high contrast in dark mode */
+.dark select, 
+.dark option {
+  background-color: #262624 !important;
+  color: #fcfcfc !important;
 }

@@ -69,16 +69,16 @@ export default function DeckListScreen() {
     <div className="space-y-6">
       
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-surface-card dark:bg-surface-dark/50 p-6 rounded-md border border-hairline dark:border-divider-dark shadow-sm transition-colors">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Quản lý Bộ bài</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+          <h1 className="text-2xl font-extrabold text-ink dark:text-on-dark font-display tracking-tight">Quản lý Bộ bài</h1>
+          <p className="text-body dark:text-on-dark-mute text-sm mt-1">
             Tạo, sửa đổi và quản lý các bộ bài flashcard học tiếng Trung của bạn.
           </p>
         </div>
         <button
           onClick={handleOpenCreate}
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-2xl transition-all shadow-md hover:shadow-lg self-start sm:self-center cursor-pointer active:scale-[0.98]"
+          className="flex items-center gap-2 bg-primary hover:bg-primary-deep text-white font-bold px-5 py-3 rounded-full transition-all shadow-sm hover:shadow-md self-start sm:self-center cursor-pointer active:scale-[0.98]"
         >
           <Plus size={18} />
           Tạo bộ bài mới
@@ -87,36 +87,36 @@ export default function DeckListScreen() {
 
       {/* Grid List */}
       {isLoading && decks.length === 0 ? (
-        <div className="text-center py-12 text-slate-500 dark:text-slate-400">Đang tải danh sách bộ bài...</div>
+        <div className="text-center py-12 text-mute dark:text-on-dark-mute">Đang tải danh sách bộ bài...</div>
       ) : decks.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {decks.map((deck) => (
             <div
               key={deck.id}
               onClick={() => navigate(`/decks/${deck.id}`)}
-              className="group relative flex flex-col justify-between p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-800 shadow-sm hover:shadow-xl dark:shadow-none transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+              className="group relative flex flex-col justify-between p-6 bg-surface-card dark:bg-surface-dark/50 rounded-md border border-hairline dark:border-divider-dark hover:border-primary dark:hover:border-primary shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white dark:group-hover:bg-indigo-600 dark:group-hover:text-white transition-colors duration-300">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-bone dark:bg-surface-dark text-ink dark:text-on-dark group-hover:bg-primary group-hover:text-white dark:group-hover:bg-primary dark:group-hover:text-white transition-colors duration-300">
                     <Folder size={20} />
                   </div>
                   {deck.isSystem && (
-                    <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 dark:text-indigo-450 dark:bg-indigo-950/50 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                    <span className="text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                       Hệ thống
                     </span>
                   )}
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                <h3 className="text-lg font-bold text-ink dark:text-on-dark group-hover:text-primary dark:group-hover:text-primary transition-colors font-display tracking-tight">
                   {deck.title || deck.name || 'Bộ bài chưa đặt tên'}
                 </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed">
+                <p className="text-sm text-body dark:text-on-dark-mute mt-2 line-clamp-2 leading-relaxed">
                   {deck.description || 'Không có mô tả cho bộ bài này.'}
                 </p>
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 mt-6 pt-4">
-                <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">
+              <div className="flex items-center justify-between border-t border-hairline dark:border-divider-dark mt-6 pt-4">
+                <span className="text-xs font-semibold text-mute dark:text-on-dark-mute">
                   {deck.cardCount ?? 0} thẻ
                 </span>
                 
@@ -125,14 +125,14 @@ export default function DeckListScreen() {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={(e) => handleOpenEdit(e, deck)}
-                      className="p-2 text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-lg transition-colors cursor-pointer"
+                      className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
                       title="Sửa tên bộ bài"
                     >
                       <Edit3 size={16} />
                     </button>
                     <button
                       onClick={(e) => handleDelete(e, deck.id, deck.title || deck.name)}
-                      className="p-2 text-slate-400 dark:text-slate-500 hover:text-red-650 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg transition-colors cursor-pointer"
+                      className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
                       title="Xóa bộ bài"
                     >
                       <Trash2 size={16} />
@@ -144,7 +144,7 @@ export default function DeckListScreen() {
           ))}
         </div>
       ) : (
-        <div className="rounded-3xl border border-dashed border-slate-350 dark:border-slate-800 bg-white dark:bg-slate-900 p-12 text-center text-slate-500 dark:text-slate-400 transition-colors">
+        <div className="rounded-md border border-dashed border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/50 p-12 text-center text-mute dark:text-on-dark-mute transition-colors">
           Chưa có bộ bài nào. Nhấp vào nút "Tạo bộ bài mới" ở trên để bắt đầu!
         </div>
       )}
@@ -152,16 +152,16 @@ export default function DeckListScreen() {
       {/* Create/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full border border-slate-100 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-surface-card dark:bg-surface-dark rounded-md shadow-sm max-w-md w-full border border-hairline dark:border-divider-dark overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-hairline dark:border-divider-dark">
+              <h3 className="text-lg font-bold text-ink dark:text-on-dark font-display tracking-tight">
                 {modalMode === 'create' ? 'Tạo bộ bài mới' : 'Chỉnh sửa bộ bài'}
               </h3>
               <button
                 onClick={handleCloseModal}
-                className="text-slate-400 hover:text-slate-650 dark:text-slate-500 dark:hover:text-slate-350 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                className="text-mute hover:text-ink dark:text-on-dark-mute dark:hover:text-on-dark p-1.5 rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors cursor-pointer"
               >
                 <X size={18} />
               </button>
@@ -170,8 +170,8 @@ export default function DeckListScreen() {
             {/* Modal Body / Form */}
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Tên bộ bài <span className="text-red-500">*</span>
+                <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1">
+                  Tên bộ bài <span className="text-primary">*</span>
                 </label>
                 <input
                   type="text"
@@ -179,33 +179,33 @@ export default function DeckListScreen() {
                   placeholder="Ví dụ: Từ vựng HSK 1"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-900"
+                  className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Mô tả</label>
+                <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1">Mô tả</label>
                 <textarea
                   placeholder="Mô tả ngắn gọn về bộ bài..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows="3"
-                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200 resize-none focus:bg-white dark:focus:bg-slate-900"
+                  className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark resize-none"
                 />
               </div>
 
               {/* Modal Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-hairline dark:border-divider-dark">
                 <button
                   type="button"
                   onClick={handleCloseModal}
-                  className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 text-sm font-bold transition-colors cursor-pointer"
+                  className="px-4 py-2.5 rounded-full border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark text-sm font-bold transition-colors cursor-pointer"
                 >
                   Hủy bỏ
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-95"
+                  className="px-5 py-2.5 rounded-full bg-primary hover:bg-primary-deep text-white text-sm font-bold shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-95"
                 >
                   {modalMode === 'create' ? 'Tạo mới' : 'Lưu thay đổi'}
                 </button>

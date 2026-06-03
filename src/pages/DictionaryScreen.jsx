@@ -353,26 +353,26 @@ export default function DictionaryScreen() {
         });
 
         const footnote = hasMissingSv
-          ? `<div class="mt-3 text-[11px] text-amber-600 dark:text-amber-500 font-medium border-t border-slate-100 dark:border-slate-800 pt-2 flex items-start gap-1">
+          ? `<div class="mt-3 text-[11px] text-amber-600 dark:text-amber-500 font-medium border-t border-hairline dark:border-divider-dark pt-2 flex items-start gap-1">
                ⚠️ <em>Lưu ý: Các chữ hiển thị dạng ngoặc vuông (như [爆], [炸]) do trường âm Hán Việt (sv) trong từ điển của bạn đang bị bỏ trống.</em>
              </div>`
           : '';
 
         const explanationHtml = `
-<div class="space-y-4 text-slate-700 dark:text-slate-300 text-sm">
-  <p class="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
+<div class="space-y-4 text-body dark:text-on-dark-mute text-sm">
+  <p class="font-bold text-ink dark:text-on-dark border-b border-hairline dark:border-divider-dark pb-2 flex items-center gap-2">
     ✨ Phân tích cấu trúc từ ghép <strong>"${selectedWord.s}"</strong> (Chế độ Ngoại tuyến):
   </p>
   <ul class="space-y-2 list-none pl-0">
-    ${breakdown.map(line => `<li class="flex items-start gap-2 bg-slate-50 dark:bg-slate-950/40 p-2.5 rounded-xl border border-slate-100/50 dark:border-slate-800/40">${line}</li>`).join('')}
+    ${breakdown.map(line => `<li class="flex items-start gap-2 bg-surface-bone/80 dark:bg-black/35 p-2.5 rounded-md border border-hairline dark:border-divider-dark">${line}</li>`).join('')}
   </ul>
   ${footnote}
-  <div class="mt-4 bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/30 rounded-2xl p-4">
-    <p class="font-bold text-indigo-900 dark:text-indigo-400 mb-1">💡 Nghĩa tổng hợp:</p>
-    <p class="text-indigo-950 dark:text-indigo-200 font-medium leading-relaxed">
+  <div class="mt-4 bg-surface-bone dark:bg-black/50 border border-hairline dark:border-divider-dark rounded-md p-4">
+    <p class="font-bold text-primary mb-1">💡 Nghĩa tổng hợp:</p>
+    <p class="text-ink dark:text-on-dark font-medium leading-relaxed">
       Sự kết hợp các từ tố trên tạo nên nghĩa khái niệm: <em>"${selectedWord.vi || 'Chưa rõ nghĩa dịch'}"</em>. 
       <br/>
-      <span class="text-[10px] text-slate-400 dark:text-slate-550 mt-1 block">💡 Mẹo: Cấu hình VITE_DEEPSEEK_API_KEY trong file .env ở thư mục frontend để kích hoạt giải thích chi tiết, nguồn gốc và ví dụ bằng AI DeepSeek!</span>
+      <span class="text-[10px] text-mute dark:text-on-dark-mute mt-1 block">💡 Mẹo: Cấu hình VITE_DEEPSEEK_API_KEY trong file .env ở thư mục frontend để kích hoạt giải thích chi tiết, nguồn gốc và ví dụ bằng AI DeepSeek!</span>
     </p>
   </div>
 </div>
@@ -443,12 +443,7 @@ Yêu cầu định dạng & tối ưu hóa:
         console.error('Failed to save AI explanation to database:', err);
       }
     } catch (err) {
-      console.error('DeepSeek API Error:', err);
-      setAiExplanation(`
-        <div class="p-4 bg-red-50 text-red-700 border border-red-200 rounded-2xl text-xs font-semibold">
-          ❌ Đã xảy ra lỗi khi kết nối với DeepSeek API: ${err.message}. Vui lòng kiểm tra lại kết nối mạng hoặc API Key.
-        </div>
-      `);
+      console.error('Failed to generate AI explanation:', err);
     } finally {
       setAiLoading(false);
     }
@@ -486,12 +481,12 @@ Yêu cầu định dạng & tối ưu hóa:
       
       {/* Page Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400">
-          <BookOpen size={20} />
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white shadow-sm shrink-0">
+          <BookOpen size={18} />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Tra cứu từ điển</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">
+          <h1 className="font-display text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight">Tra cứu từ điển</h1>
+          <p className="text-mute dark:text-on-dark-mute text-sm mt-0.5">
             Tìm kiếm bằng Hán tự, Phiên âm (Pinyin), âm Hán Việt hoặc Nghĩa tiếng Việt.
           </p>
         </div>
@@ -501,41 +496,41 @@ Yêu cầu định dạng & tối ưu hóa:
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         
         {/* Search Panel & Results */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-sm flex flex-col gap-6 min-h-[580px] transition-colors">
+        <div className="lg:col-span-2 bg-surface-card dark:bg-surface-dark/50 p-6 rounded-md border border-hairline dark:border-divider-dark shadow-sm flex flex-col gap-6 min-h-[580px] transition-colors">
           
           {selectedWord ? (
             /* Word Detail Panel */
             <div className="flex flex-col gap-6 text-left">
               
               {/* Back Header */}
-              <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800/60 pb-4">
+              <div className="flex items-center gap-3 border-b border-hairline dark:border-divider-dark pb-4">
                 <button
                   type="button"
                   onClick={() => {
                     setSelectedWord(null);
                     setSearchParams({});
                   }}
-                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer bg-transparent"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark transition-colors cursor-pointer"
                 >
-                  <ArrowLeft size={16} />
+                  <ArrowLeft size={14} />
                 </button>
                 <div>
-                  <h3 className="font-bold text-slate-800 dark:text-slate-200 text-md">Thông tin từ vựng</h3>
-                  <p className="text-xs text-slate-400 dark:text-slate-500">Chi tiết ý nghĩa, âm Hán Việt và phân tích từ đơn.</p>
+                  <h3 className="font-display font-extrabold text-ink dark:text-on-dark text-md tracking-tight">Thông tin từ vựng</h3>
+                  <p className="text-xs text-mute dark:text-on-dark-mute">Chi tiết ý nghĩa, âm Hán Việt và phân tích từ đơn.</p>
                 </div>
               </div>
 
               {/* Character Tab Bar */}
-              <div className="flex gap-2 border-b border-slate-100 dark:border-slate-800/60 pb-3 overflow-x-auto select-none no-scrollbar">
+              <div className="flex gap-2 border-b border-hairline dark:border-divider-dark pb-3 overflow-x-auto select-none no-scrollbar">
                 {tabOptions.map((tabText, index) => (
                   <button
                     key={index}
                     type="button"
                     onClick={() => handleTabClick(tabText)}
-                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
+                    className={`px-4 py-1.5 rounded-full text-xs font-mono font-bold transition-all border cursor-pointer whitespace-nowrap ${
                       activeTab === tabText
-                        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100 dark:shadow-none'
-                        : 'bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                        ? 'bg-primary border-transparent text-white shadow-sm'
+                        : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
                     }`}
                   >
                     {tabText}
@@ -544,44 +539,42 @@ Yêu cầu định dạng & tối ưu hóa:
               </div>
 
               {/* Main Premium Card */}
-              <div className="bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 rounded-3xl p-8 flex flex-col items-center justify-center relative overflow-hidden shadow-sm">
-                <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider absolute top-4">
+              <div className="bg-surface-bone dark:bg-surface-dark/40 border border-hairline dark:border-divider-dark rounded-md p-8 flex flex-col items-center justify-center relative overflow-hidden shadow-sm">
+                <span className="text-[10px] uppercase font-bold text-mute dark:text-on-dark-mute tracking-wider absolute top-4">
                   {tabDetails?.s === tabDetails?.t ? 'Từ vựng' : 'Giản thể'}
                 </span>
 
-                <h2 className="text-6xl md:text-7xl font-bold text-slate-800 dark:text-slate-100 tracking-wide font-serif py-4">
+                <h2 className="text-6xl md:text-7xl font-bold text-ink dark:text-on-dark tracking-wide font-display py-4">
                   {tabDetails?.s}
                 </h2>
 
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Bính âm - Hán Việt</span>
-                  <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 font-bold">
+                  <span className="text-xs font-semibold text-mute dark:text-on-dark-mute uppercase tracking-widest">Bính âm - Hán Việt</span>
+                  <div className="flex items-center gap-2 text-sm text-body dark:text-on-dark-mute font-bold">
                     <span>{tabDetails?.p || 'Không có Pinyin'}</span>
                     {getCompoundHanViet(tabDetails?.s) && (
                       <>
-                        <span className="text-slate-300 dark:text-slate-700 font-normal">|</span>
-                        <span className="text-indigo-600 dark:text-indigo-400">{getCompoundHanViet(tabDetails.s)}</span>
+                        <span className="text-mute dark:text-on-dark-mute font-normal">|</span>
+                        <span className="text-primary dark:text-link">{getCompoundHanViet(tabDetails.s)}</span>
                       </>
                     )}
                   </div>
                 </div>
-              </div>
-
-              {/* AI Explanation Area */}
-              <div className="border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex flex-col gap-4 text-left">
+              </div>-c              {/* AI Explanation Area */}
+              <div className="border border-hairline dark:border-divider-dark rounded-md p-5 flex flex-col gap-4 text-left">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold text-slate-700 dark:text-slate-350 uppercase tracking-wider flex items-center gap-1.5">
-                    <Sparkles size={14} className="text-indigo-600 dark:text-indigo-400" />
+                  <h4 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider flex items-center gap-1.5">
+                    <Sparkles size={14} className="text-primary" />
                     Giải thích bằng AI
                   </h4>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold bg-slate-50 dark:bg-slate-950/20 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-800">
+                    <span className="text-[10px] text-mute dark:text-on-dark-mute font-semibold bg-surface-bone dark:bg-surface-dark px-2 py-0.5 rounded-full border border-hairline dark:border-divider-dark">
                       5/5 lượt
                     </span>
                     <button
                       type="button"
                       onClick={handleCopyPrompt}
-                      className="flex items-center gap-1 px-2.5 py-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl text-xs font-semibold transition-all cursor-pointer bg-white dark:bg-slate-900"
+                      className="flex items-center gap-1 px-2.5 py-1.5 border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark rounded-full text-xs font-semibold transition-all cursor-pointer bg-surface-card dark:bg-surface-dark"
                     >
                       {copied ? <Check size={12} className="text-green-600" /> : <Copy size={12} />}
                       {copied ? 'Đã sao chép' : 'Copy prompt'}
@@ -590,7 +583,7 @@ Yêu cầu định dạng & tối ưu hóa:
                       type="button"
                       onClick={generateAIExplanation}
                       disabled={aiLoading}
-                      className="flex items-center gap-1.5 px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-500 dark:disabled:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95"
+                      className="flex items-center gap-1.5 px-3.5 py-1.5 bg-primary hover:bg-primary-deep disabled:bg-stone dark:disabled:bg-surface-dark text-white rounded-full text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95"
                     >
                       ⚡ Giải thích
                     </button>
@@ -598,32 +591,30 @@ Yêu cầu định dạng & tối ưu hóa:
                 </div>
 
                 {aiLoading && (
-                  <div className="flex items-center justify-center py-8 text-slate-400 gap-2">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-slate-600"></div>
+                  <div className="flex items-center justify-center py-8 text-mute gap-2">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
                     <span className="text-xs font-medium">AI đang phân tích cấu trúc chữ...</span>
                   </div>
                 )}
 
                 {!aiLoading && aiExplanation && (
                   <div 
-                    className="bg-slate-50/50 dark:bg-slate-950/10 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 leading-relaxed"
+                    className="bg-surface-bone/50 dark:bg-surface-dark/20 p-4 rounded-md border border-hairline dark:border-divider-dark text-xs text-body dark:text-on-dark-mute leading-relaxed animate-fade-in"
                     dangerouslySetInnerHTML={{ __html: aiExplanation }}
                   />
                 )}
 
                 {!aiLoading && !aiExplanation && (
-                  <p className="text-xs text-slate-400 dark:text-slate-550 italic">
+                  <p className="text-xs text-mute dark:text-on-dark-mute italic">
                     Bấm nút "Giải thích" để phân tích cấu trúc Hán-Việt chi tiết từng ký tự cấu thành từ ghép này.
                   </p>
                 )}
-              </div>
-
-              {/* Translation meanings */}
+              </div>e=              {/* Translation meanings */}
               <div className="space-y-3 text-left">
                 <div className="flex items-center gap-2">
-                  <h4 className="text-xs font-bold text-slate-700 dark:text-slate-350 uppercase tracking-wider">Ý nghĩa</h4>
+                  <h4 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider">Ý nghĩa</h4>
                   {tabDetails?.b && (
-                    <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-semibold px-2 py-0.5 rounded">
+                    <span className="text-[10px] bg-surface-bone dark:bg-surface-dark text-mute dark:text-on-dark-mute font-semibold px-2 py-0.5 rounded-full border border-hairline dark:border-divider-dark">
                       {tabDetails.b} nét
                     </span>
                   )}
@@ -632,10 +623,10 @@ Yêu cầu định dạng & tối ưu hóa:
                 <div className="space-y-2.5">
                   {tabDetails?.vi && (
                     <div className="flex items-start gap-2.5">
-                      <span className="text-[9px] uppercase font-extrabold bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 px-1.5 py-0.5 rounded border border-red-100/50 dark:border-red-900/30 mt-0.5 flex-shrink-0">
+                      <span className="text-[9px] uppercase font-extrabold bg-primary/10 text-primary px-1.5 py-0.5 rounded border border-primary/20 mt-0.5 flex-shrink-0">
                         VN
                       </span>
-                      <p className="text-sm text-slate-700 dark:text-slate-200 font-semibold leading-relaxed">
+                      <p className="text-sm text-ink dark:text-on-dark font-semibold leading-relaxed">
                         {tabDetails.vi}
                       </p>
                     </div>
@@ -643,20 +634,18 @@ Yêu cầu định dạng & tối ưu hóa:
 
                   {tabDetails?.en && tabDetails.en.length > 0 && (
                     <div className="flex items-start gap-2.5">
-                      <span className="text-[9px] uppercase font-extrabold bg-blue-50 dark:bg-blue-955/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded border border-blue-100/50 dark:border-blue-900/30 mt-0.5 flex-shrink-0">
+                      <span className="text-[9px] uppercase font-extrabold bg-surface-bone dark:bg-surface-dark text-ink dark:text-on-dark px-1.5 py-0.5 rounded border border-hairline dark:border-divider-dark mt-0.5 flex-shrink-0">
                         GB
                       </span>
-                      <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                      <p className="text-sm text-body dark:text-on-dark-mute leading-relaxed font-medium">
                         {Array.isArray(tabDetails.en) ? tabDetails.en.join('; ') : tabDetails.en}
                       </p>
                     </div>
                   )}
                 </div>
               </div>
-
             </div>
           ) : (
-            /* Search Area & Results List */
             <>
               {/* Search Box Area */}
               <div className="flex gap-2.5">
@@ -667,65 +656,63 @@ Yêu cầu định dạng & tối ưu hóa:
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200 shadow-inner"
+                    className="w-full pl-11 pr-4 py-3 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark shadow-sm"
                   />
-                  <Search className="absolute left-4 top-3.5 text-slate-400 dark:text-slate-500" size={16} />
+                  <Search className="absolute left-4 top-3.5 text-mute" size={16} />
                 </div>
                 <button
                   type="button"
                   onClick={() => handleSearch()}
                   disabled={loading}
-                  className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 dark:disabled:bg-slate-800 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer"
+                  className="px-5 py-3 rounded-full bg-primary hover:bg-primary-deep disabled:bg-stone text-white text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
                 >
                   <Search size={15} />
                   Tìm kiếm
                 </button>
-              </div>
-
-              {/* Results List */}
+              </div>                {/* Results List */}
               <div className="flex-1 min-h-[450px] max-h-[600px] overflow-y-auto pr-1 flex flex-col gap-3">
                 {loading && (
-                  <div className="flex flex-col items-center justify-center py-20 text-slate-400 gap-3">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                  <div className="flex flex-col items-center justify-center py-20 text-mute gap-3">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                     <span className="text-sm font-medium">Đang tải và đồng bộ từ điển...</span>
                   </div>
                 )}
 
                 {!loading && results.length === 0 && (
                   hasSearched ? (
-                    <div className="flex flex-col items-center justify-center py-20 text-slate-400 bg-slate-50/50 dark:bg-slate-950/10 rounded-2xl border border-dashed border-slate-100 dark:border-slate-800">
-                      <BookOpen size={48} className="stroke-1 text-slate-300 dark:text-slate-600 mb-3" />
-                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400 max-w-sm text-center leading-relaxed">
+                    <div className="flex flex-col items-center justify-center py-20 text-mute bg-surface-bone/30 dark:bg-surface-dark/30 rounded-md border border-dashed border-hairline dark:border-divider-dark animate-fade-in">
+                      <BookOpen size={48} className="stroke-1 text-mute dark:text-on-dark-mute mb-3" />
+                      <p className="text-sm font-medium text-body dark:text-on-dark-mute max-w-sm text-center leading-relaxed">
                         Không tìm thấy kết quả phù hợp cho từ khóa này.
                       </p>
                     </div>
                   ) : history.length > 0 ? (
-                    <div className="flex flex-col gap-4">
-                      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
-                        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                          <History size={14} className="text-slate-400" />
+                    <div className="flex flex-col gap-4 animate-fade-in">
+                      <div className="flex items-center justify-between border-b border-hairline dark:border-divider-dark pb-2">
+                        <h4 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider flex items-center gap-1.5">
+                          <History size={14} className="text-mute" />
                           Lịch sử tra cứu gần đây
                         </h4>
                         <button
                           type="button"
                           onClick={handleClearHistory}
-                          className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 font-semibold cursor-pointer border border-transparent hover:border-red-900/30 bg-transparent hover:bg-red-955/20 px-2 py-1 rounded-xl transition-all"
+                          className="flex items-center gap-1 text-xs text-primary hover:text-primary-deep font-semibold cursor-pointer border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark hover:bg-surface-bone dark:hover:bg-black px-2 py-1 rounded-full transition-all"
                         >
                           <Trash2 size={12} />
                           Xóa lịch sử
                         </button>
                       </div>
 
-                      <div className="divide-y divide-slate-100 dark:divide-slate-800/50">
+                      <div className="divide-y divide-hairline dark:divide-divider-dark">
                         {history.map((item, idx) => (
                           <div
                             key={idx}
                             onClick={() => handleSelectHistoryWord(item)}
-                            className="flex gap-5 py-3.5 items-center hover:bg-slate-50 dark:hover:bg-slate-800 px-4 rounded-2xl transition-all border border-transparent hover:border-slate-100 dark:hover:border-slate-800 cursor-pointer group bg-transparent"
+                            className="flex gap-5 py-3.5 items-center hover:bg-surface-bone/50 dark:hover:bg-surface-dark/30 px-4 rounded-md transition-all border border-transparent hover:border-hairline dark:hover:border-divider-dark cursor-pointer group bg-transparent"
                           >
                             {/* Calligraphy square */}
-                            <div className="flex-shrink-0 w-12 min-h-12 h-auto py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 rounded-xl flex flex-col items-center justify-center shadow-sm font-sans group-hover:bg-indigo-50 dark:group-hover:bg-indigo-950/30 group-hover:border-indigo-200 dark:group-hover:border-indigo-900 group-hover:text-indigo-700 dark:group-hover:text-indigo-400 transition-all">
-                              <div className={`flex flex-col items-center justify-center gap-0.5 leading-none font-semibold text-slate-700 dark:text-slate-200 ${item.hanzi.length > 3 ? 'text-xs' : item.hanzi.length > 1 ? 'text-sm' : 'text-xl'}`}>
+                            <div className="flex-shrink-0 w-12 min-h-12 h-auto py-1.5 bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md flex flex-col items-center justify-center shadow-sm font-display group-hover:bg-surface-card dark:group-hover:bg-black group-hover:border-primary/50 group-hover:text-primary dark:group-hover:text-primary transition-all">
+                              <div className={`flex flex-col items-center justify-center gap-0.5 leading-none font-semibold text-ink dark:text-on-dark ${item.hanzi.length > 3 ? 'text-xs' : item.hanzi.length > 1 ? 'text-sm' : 'text-xl'}`}>
                                 {Array.from(item.hanzi).map((char, index) => (
                                   <span key={index}>{char}</span>
                                 ))}
@@ -736,23 +723,23 @@ Yêu cầu định dạng & tối ưu hóa:
                             <div className="flex-1 space-y-1 text-left">
                               <div className="flex flex-wrap items-center gap-2">
                                 {item.sv && (
-                                  <span className="text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-indigo-900 dark:group-hover:text-indigo-300 transition-colors">
+                                  <span className="text-sm font-bold text-ink dark:text-on-dark group-hover:text-primary dark:group-hover:text-primary transition-colors">
                                     {item.sv.toUpperCase()}
                                   </span>
                                 )}
                                 {item.pinyin && (
-                                  <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/30 px-2 py-0.5 rounded-full border border-indigo-100 dark:border-indigo-900/30">
+                                  <span className="text-xs font-semibold text-primary dark:text-link bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
                                     {item.pinyin}
                                   </span>
                                 )}
                                 {item.aiExplanation && (
-                                  <span className="text-[10px] text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/30 px-2 py-0.5 rounded-full border border-indigo-100/30 dark:border-indigo-900/20 font-bold flex items-center gap-0.5">
+                                  <span className="text-[10px] text-primary dark:text-link bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10 font-bold flex items-center gap-0.5">
                                     <Sparkles size={10} /> Đã giải thích
                                   </span>
                                 )}
                               </div>
                               {item.vi && (
-                                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
+                                <p className="text-xs text-body dark:text-on-dark-mute line-clamp-1">
                                   {item.vi}
                                 </p>
                               )}
@@ -762,9 +749,9 @@ Yêu cầu định dạng & tối ưu hóa:
                       </div>
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center py-20 text-slate-400 bg-slate-50/50 dark:bg-slate-950/10 rounded-2xl border border-dashed border-slate-100 dark:border-slate-800">
-                      <BookOpen size={48} className="stroke-1 text-slate-300 dark:text-slate-600 mb-3" />
-                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400 max-w-sm text-center leading-relaxed">
+                    <div className="flex flex-col items-center justify-center py-20 text-mute bg-surface-bone/30 dark:bg-surface-dark/30 rounded-md border border-dashed border-hairline dark:border-divider-dark animate-fade-in">
+                      <BookOpen size={48} className="stroke-1 text-mute dark:text-on-dark-mute mb-3" />
+                      <p className="text-sm font-medium text-body dark:text-on-dark-mute max-w-sm text-center leading-relaxed">
                         Nhập từ khóa vào ô trên hoặc viết tay bằng khung vẽ bên phải để bắt đầu tra từ điển.
                       </p>
                     </div>
@@ -772,16 +759,16 @@ Yêu cầu định dạng & tối ưu hóa:
                 )}
 
                 {!loading && results.length > 0 && (
-                  <div className="divide-y divide-slate-100 dark:divide-slate-800/50">
+                  <div className="divide-y divide-hairline dark:divide-divider-dark">
                     {results.map((item, idx) => (
                       <div
                         key={idx}
                         onClick={() => handleSelectWord(item)}
-                        className="flex gap-5 py-4 items-center hover:bg-slate-50 dark:hover:bg-slate-800 px-4 rounded-2xl transition-all border border-transparent hover:border-slate-100 dark:hover:border-slate-800 cursor-pointer group bg-transparent"
+                        className="flex gap-5 py-4 items-center hover:bg-surface-bone/50 dark:hover:bg-surface-dark/30 px-4 rounded-md transition-all border border-transparent hover:border-hairline dark:hover:border-divider-dark cursor-pointer group bg-transparent"
                       >
                         {/* Character Column */}
-                        <div className="flex-shrink-0 w-16 min-h-16 h-auto py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 rounded-2xl flex flex-col items-center justify-center shadow-sm font-sans group-hover:bg-indigo-50 dark:group-hover:bg-indigo-950/30 group-hover:border-indigo-200 dark:group-hover:border-indigo-900 group-hover:text-indigo-700 dark:group-hover:text-indigo-400 transition-all">
-                          <div className={`flex flex-col items-center justify-center gap-0.5 leading-none font-semibold text-slate-800 dark:text-slate-200 ${item.s.length > 3 ? 'text-xl' : item.s.length > 1 ? 'text-2xl' : 'text-3xl'}`}>
+                        <div className="flex-shrink-0 w-16 min-h-16 h-auto py-2.5 bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md flex flex-col items-center justify-center shadow-sm font-display group-hover:bg-surface-card dark:group-hover:bg-black group-hover:border-primary/50 group-hover:text-primary dark:group-hover:text-primary transition-all">
+                          <div className={`flex flex-col items-center justify-center gap-0.5 leading-none font-semibold text-ink dark:text-on-dark ${item.s.length > 3 ? 'text-xl' : item.s.length > 1 ? 'text-2xl' : 'text-3xl'}`}>
                             {Array.from(item.s).map((char, index) => (
                               <span key={index}>{char}</span>
                             ))}
@@ -792,30 +779,30 @@ Yêu cầu định dạng & tối ưu hóa:
                         <div className="flex-1 space-y-1.5 text-left">
                           <div className="flex flex-wrap items-center gap-2">
                             {getCompoundHanViet(item.s) && (
-                              <span className="text-md font-bold text-slate-800 dark:text-slate-200 group-hover:text-indigo-900 dark:group-hover:text-indigo-300 transition-colors">
+                              <span className="text-md font-bold text-ink dark:text-on-dark group-hover:text-primary dark:group-hover:text-primary transition-colors">
                                 {getCompoundHanViet(item.s).toUpperCase()}
                               </span>
                             )}
                             {item.p && (
-                              <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/30 px-2 py-0.5 rounded-full border border-indigo-100 dark:border-indigo-900/30">
+                              <span className="text-xs font-semibold text-primary dark:text-link bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
                                 {item.p}
                               </span>
                             )}
                             {item.t && item.t !== item.s && (
-                              <span className="text-xs text-slate-400 dark:text-slate-550 font-medium bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+                              <span className="text-xs text-mute dark:text-on-dark-mute font-medium bg-surface-bone dark:bg-surface-dark px-1.5 py-0.5 rounded-full border border-hairline dark:border-divider-dark">
                                 Phồn: {item.t}
                               </span>
                             )}
                           </div>
                           
                           {item.vi && (
-                            <p className="text-sm text-slate-600 dark:text-slate-350 leading-relaxed font-medium line-clamp-2">
+                            <p className="text-sm text-body dark:text-on-dark-mute leading-relaxed font-medium line-clamp-2">
                               {item.vi}
                             </p>
                           )}
 
                           {item.en && item.en.length > 0 && (
-                            <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium italic">
+                            <p className="text-[11px] text-mute dark:text-on-dark-mute font-medium italic">
                               EN: {Array.isArray(item.en) ? item.en.join(', ') : item.en}
                             </p>
                           )}

@@ -3,13 +3,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import GoalTracker from '../components/stats/GoalTracker';
 import Heatmap from '../components/stats/Heatmap';
-import { fetchSummary, fetchHeatmap } from '../features/stats/statsSlice';
+import { fetchSummary, fetchHeatmap, fetchBadges } from '../features/stats/statsSlice';
 import { fetchAllDecks } from '../features/deck/deckSlice';
+import { Trophy, Flame, Calendar, Award } from 'lucide-react';
+
+const badgeIconMap = {
+  Flame: Flame,
+  Calendar: Calendar,
+  Award: Award,
+  Trophy: Trophy,
+};
 
 export default function DashboardScreen() {
   const dispatch = useDispatch();
   const summary = useSelector((state) => state.stats.summary);
   const heatmapData = useSelector((state) => state.stats.heatmapData);
+  const badges = useSelector((state) => state.stats.badges);
   const goals = useSelector((state) => state.stats.goals);
   const decks = useSelector((state) => state.deck.decks);
 
@@ -17,18 +26,19 @@ export default function DashboardScreen() {
     dispatch(fetchSummary());
     dispatch(fetchHeatmap());
     dispatch(fetchAllDecks());
+    dispatch(fetchBadges());
   }, [dispatch]);
 
   return (
     <div className="space-y-8">
-      <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm transition-colors">
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/50 p-6 transition-colors">
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-hairline dark:border-divider-dark pb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Dashboard</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Tổng quan về tiến độ học tập và bộ sưu tập thẻ của bạn.</p>
+            <h1 className="font-display text-4xl font-extrabold text-ink dark:text-on-dark tracking-tight">Dashboard</h1>
+            <p className="text-mute dark:text-on-dark-mute text-sm mt-1">Tổng quan về tiến độ học tập và bộ sưu tập thẻ của bạn.</p>
           </div>
-          <div className="text-sm text-slate-600 dark:text-slate-400 font-semibold bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/80 px-4 py-2 rounded-2xl">
-            Chuỗi học hiện tại: <span className="font-extrabold text-indigo-600 dark:text-indigo-400">{summary?.streak ?? 0} ngày 🔥</span>
+          <div className="text-sm text-charcoal dark:text-on-dark-mute font-mono bg-surface-bone dark:bg-black/20 border border-hairline dark:border-divider-dark px-4 py-2 rounded-full">
+            Chuỗi học hiện tại: <span className="font-bold text-primary">{summary?.streak ?? 0} ngày 🔥</span>
           </div>
         </div>
 
@@ -36,32 +46,65 @@ export default function DashboardScreen() {
           <div className="space-y-6">
             <GoalTracker completed={summary?.completedCards ?? 0} target={goals?.dailyTarget ?? 20} />
             <Heatmap data={heatmapData} />
+
+            {/* Unlocked Badges Container */}
+            <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/40 p-5">
+              <h2 className="font-display text-sm font-bold text-ink dark:text-on-dark tracking-tight uppercase tracking-wider mb-4 flex items-center gap-2">
+                <Trophy size={16} className="text-primary" />
+                Huy hiệu đạt được ({badges?.length ?? 0})
+              </h2>
+              {badges?.length > 0 ? (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {badges.map((badge) => {
+                    const IconComponent = badgeIconMap[badge.icon] || Trophy;
+                    return (
+                      <div
+                        key={badge.id}
+                        className="flex items-center gap-3 p-3 rounded-md border border-hairline dark:border-divider-dark bg-surface-bone dark:bg-black/25"
+                      >
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                          <IconComponent size={20} />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-ink dark:text-on-dark">{badge.name}</h4>
+                          <p className="text-[10px] text-mute dark:text-on-dark-mute mt-0.5">{badge.description}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-6 border border-dashed border-hairline dark:border-divider-dark rounded-md text-xs text-mute dark:text-on-dark-mute">
+                  Chưa có huy hiệu nào. Hãy tích cực học bài mỗi ngày để tích luỹ danh hiệu nhé!
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/30 p-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Bộ bài của bạn</h2>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Chọn một bộ bài bên dưới để bắt đầu luyện tập hoặc ôn thẻ.</p>
-            <div className="mt-6 space-y-4 max-h-[400px] overflow-y-auto pr-1">
+          <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-bone dark:bg-black/10 p-6">
+            <h2 className="font-display text-xl font-bold text-ink dark:text-on-dark tracking-tight">Bộ bài của bạn</h2>
+            <p className="mt-1 text-sm text-mute dark:text-on-dark-mute">Chọn một bộ bài bên dưới để bắt đầu luyện tập hoặc ôn thẻ.</p>
+            <div className="mt-6 space-y-4 max-h-[500px] overflow-y-auto pr-1">
               {decks?.length > 0 ? (
                 decks.map((deck) => (
                   <Link
                     key={deck.id}
                     to={`/decks/${deck.id}`}
-                    className="block rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-800"
+                    className="block rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark p-4 transition-all duration-200 hover:-translate-y-[2px] hover:border-primary dark:hover:border-primary"
                   >
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">{deck.title || deck.name || 'Bộ bài chưa đặt tên'}</h3>
-                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-1">{deck.description || 'Không có mô tả cho bộ bài này.'}</p>
+                        <h3 className="text-sm font-bold text-ink dark:text-on-dark">{deck.title || deck.name || 'Bộ bài chưa đặt tên'}</h3>
+                        <p className="mt-1 text-xs text-mute dark:text-on-dark-mute line-clamp-1">{deck.description || 'Không có mô tả cho bộ bài này.'}</p>
                       </div>
-                      <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-700 dark:text-slate-350 shrink-0">
+                      <span className="rounded-full bg-surface-bone dark:bg-black/35 px-3 py-1 text-xs font-mono font-semibold text-charcoal dark:text-on-dark-mute shrink-0">
                         {deck.cardCount ?? 0} thẻ
                       </span>
                     </div>
                   </Link>
                 ))
               ) : (
-                <div className="rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 text-center text-slate-500 dark:text-slate-400">
+                <div className="rounded-md border border-dashed border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/50 p-6 text-center text-mute dark:text-on-dark-mute">
                   Chưa có bộ bài nào. Hãy tạo hoặc nhập một bộ bài mới để bắt đầu.
                 </div>
               )}

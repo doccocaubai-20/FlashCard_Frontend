@@ -175,17 +175,17 @@ export default function CreateFlashcardScreen() {
       <div className="flex items-center gap-4">
         <button
           onClick={() => navigate(-1)}
-          className="flex h-10 w-10 items-center justify-center rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm cursor-pointer"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-ink dark:text-on-dark transition-colors shadow-sm cursor-pointer"
         >
           <ArrowLeft size={18} />
         </button>
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
             <PlusCircle size={20} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Thêm thẻ mới</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Tạo thêm thẻ từ vựng vào bộ bài của bạn.</p>
+            <h1 className="text-2xl font-extrabold text-ink dark:text-on-dark font-display tracking-tight">Thêm thẻ mới</h1>
+            <p className="text-mute dark:text-on-dark-mute text-sm mt-0.5">Tạo thêm thẻ từ vựng vào bộ bài của bạn.</p>
           </div>
         </div>
       </div>
@@ -193,23 +193,23 @@ export default function CreateFlashcardScreen() {
       {/* Form Container */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-sm space-y-6 transition-colors"
+        className="bg-surface-card dark:bg-surface-dark/50 p-6 rounded-md border border-hairline dark:border-divider-dark shadow-sm space-y-6 transition-colors"
       >
         
         {/* Deck Dropdown Selector */}
         <div>
-          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            Chọn bộ bài <span className="text-red-500">*</span>
+          <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1">
+            Chọn bộ bài <span className="text-primary">*</span>
           </label>
           <select
             required
             value={formData.deckId}
             onChange={(e) => setFormData({ ...formData, deckId: e.target.value })}
-            className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200 cursor-pointer"
+            className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark cursor-pointer"
           >
-            <option value="" className="dark:bg-slate-900">-- Chọn bộ bài để lưu thẻ --</option>
+            <option value="" className="dark:bg-surface-dark">-- Chọn bộ bài để lưu thẻ --</option>
             {decks.map((deck) => (
-              <option key={deck.id} value={deck.id} className="dark:bg-slate-900">
+              <option key={deck.id} value={deck.id} className="dark:bg-surface-dark">
                 {deck.title || deck.name} {deck.isSystem ? '(Hệ thống)' : ''}
               </option>
             ))}
@@ -219,10 +219,10 @@ export default function CreateFlashcardScreen() {
         {/* Vocabulary Fields */}
         <div className="grid gap-6 md:grid-cols-3">
           <div>
-            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
-              <span>Hán tự (Hanzi) <span className="text-red-500">*</span></span>
+            <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1 flex items-center justify-between">
+              <span>Hán tự (Hanzi) <span className="text-primary">*</span></span>
               {isDictLoading && (
-                <span className="text-xs text-slate-400 dark:text-slate-500 font-normal animate-pulse">
+                <span className="text-xs text-mute dark:text-on-dark-mute font-normal animate-pulse">
                   Đang tải từ điển...
                 </span>
               )}
@@ -238,22 +238,22 @@ export default function CreateFlashcardScreen() {
                   setLastEditedField('hanzi');
                 }}
                 onBlur={() => handleBlur('hanzi')}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
               />
               {suggestions.field === 'hanzi' && suggestions.list.length > 0 && (
-                <div className="absolute z-50 left-0 right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg max-h-60 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/50">
+                <div className="absolute z-50 left-0 right-0 mt-1 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md shadow-sm max-h-60 overflow-y-auto divide-y divide-hairline dark:divide-divider-dark">
                   {suggestions.list.map((item, idx) => (
                     <button
                       key={idx}
                       type="button"
                       onMouseDown={() => handleSelectSuggestion(item)}
-                      className="w-full text-left px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 flex flex-col gap-0.5 transition-colors cursor-pointer border-none bg-transparent"
+                      className="w-full text-left px-4 py-2 hover:bg-surface-bone dark:hover:bg-black flex flex-col gap-0.5 transition-colors cursor-pointer border-none bg-transparent"
                     >
                       <div className="flex justify-between items-center">
-                        <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">{item.s} {item.sv && `(${item.sv})`}</span>
-                        <span className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">{item.p}</span>
+                        <span className="font-bold text-ink dark:text-on-dark font-display text-sm">{item.s} {item.sv && `(${item.sv})`}</span>
+                        <span className="text-xs text-primary dark:text-link font-bold">{item.p}</span>
                       </div>
-                      <span className="text-xs text-slate-500 dark:text-slate-400 truncate">{item.vi}</span>
+                      <span className="text-xs text-body dark:text-on-dark-mute truncate">{item.vi}</span>
                     </button>
                   ))}
                 </div>
@@ -262,8 +262,8 @@ export default function CreateFlashcardScreen() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Phiên âm (Pinyin) <span className="text-red-500">*</span>
+            <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1">
+              Phiên âm (Pinyin) <span className="text-primary">*</span>
             </label>
             <div className="relative">
               <input
@@ -276,22 +276,22 @@ export default function CreateFlashcardScreen() {
                   setLastEditedField('pinyin');
                 }}
                 onBlur={() => handleBlur('pinyin')}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
               />
               {suggestions.field === 'pinyin' && suggestions.list.length > 0 && (
-                <div className="absolute z-50 left-0 right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg max-h-60 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/50">
+                <div className="absolute z-50 left-0 right-0 mt-1 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md shadow-sm max-h-60 overflow-y-auto divide-y divide-hairline dark:divide-divider-dark">
                   {suggestions.list.map((item, idx) => (
                     <button
                       key={idx}
                       type="button"
                       onMouseDown={() => handleSelectSuggestion(item)}
-                      className="w-full text-left px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 flex flex-col gap-0.5 transition-colors cursor-pointer border-none bg-transparent"
+                      className="w-full text-left px-4 py-2 hover:bg-surface-bone dark:hover:bg-black flex flex-col gap-0.5 transition-colors cursor-pointer border-none bg-transparent"
                     >
                       <div className="flex justify-between items-center">
-                        <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">{item.s} {item.sv && `(${item.sv})`}</span>
-                        <span className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">{item.p}</span>
+                        <span className="font-bold text-ink dark:text-on-dark font-display text-sm">{item.s} {item.sv && `(${item.sv})`}</span>
+                        <span className="text-xs text-primary dark:text-link font-bold">{item.p}</span>
                       </div>
-                      <span className="text-xs text-slate-500 dark:text-slate-400 truncate">{item.vi}</span>
+                      <span className="text-xs text-body dark:text-on-dark-mute truncate">{item.vi}</span>
                     </button>
                   ))}
                 </div>
@@ -300,8 +300,8 @@ export default function CreateFlashcardScreen() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Ý nghĩa <span className="text-red-500">*</span>
+            <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1">
+              Ý nghĩa <span className="text-primary">*</span>
             </label>
             <div className="relative">
               <input
@@ -314,22 +314,22 @@ export default function CreateFlashcardScreen() {
                   setLastEditedField('meaning');
                 }}
                 onBlur={() => handleBlur('meaning')}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
               />
               {suggestions.field === 'meaning' && suggestions.list.length > 0 && (
-                <div className="absolute z-50 left-0 right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg max-h-60 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/50">
+                <div className="absolute z-50 left-0 right-0 mt-1 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md shadow-sm max-h-60 overflow-y-auto divide-y divide-hairline dark:divide-divider-dark">
                   {suggestions.list.map((item, idx) => (
                     <button
                       key={idx}
                       type="button"
                       onMouseDown={() => handleSelectSuggestion(item)}
-                      className="w-full text-left px-4 py-2 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 flex flex-col gap-0.5 transition-colors cursor-pointer border-none bg-transparent"
+                      className="w-full text-left px-4 py-2 hover:bg-surface-bone dark:hover:bg-black flex flex-col gap-0.5 transition-colors cursor-pointer border-none bg-transparent"
                     >
                       <div className="flex justify-between items-center">
-                        <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">{item.s} {item.sv && `(${item.sv})`}</span>
-                        <span className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">{item.p}</span>
+                        <span className="font-bold text-ink dark:text-on-dark font-display text-sm">{item.s} {item.sv && `(${item.sv})`}</span>
+                        <span className="text-xs text-primary dark:text-link font-bold">{item.p}</span>
                       </div>
-                      <span className="text-xs text-slate-500 dark:text-slate-400 truncate">{item.vi}</span>
+                      <span className="text-xs text-body dark:text-on-dark-mute truncate">{item.vi}</span>
                     </button>
                   ))}
                 </div>
@@ -341,69 +341,69 @@ export default function CreateFlashcardScreen() {
         {/* Optional Fields */}
         <div className="grid gap-6 md:grid-cols-2">
           <div>
-            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Bộ thủ (Radicals)</label>
+            <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1">Bộ thủ (Radicals)</label>
             <input
               type="text"
               placeholder="Ví dụ: 亻(nhân)"
               value={formData.radicals}
               onChange={(e) => setFormData({ ...formData, radicals: e.target.value })}
-              className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+              className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
             />
           </div>
         </div>
 
         {/* Example Block */}
-        <div className="border-t border-slate-100 dark:border-slate-800/60 pt-6 space-y-4">
-          <h4 className="text-sm font-bold text-slate-700 dark:text-slate-350">Ví dụ minh họa (Tùy chọn)</h4>
+        <div className="border-t border-hairline dark:border-divider-dark pt-6 space-y-4">
+          <h4 className="text-sm font-bold text-ink dark:text-on-dark uppercase tracking-wider">Ví dụ minh họa (Tùy chọn)</h4>
           <div className="grid gap-4 md:grid-cols-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Hán tự ví dụ</label>
+              <label className="block text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wide mb-1">Hán tự ví dụ</label>
               <input
                 type="text"
                 placeholder="Ví dụ: 你好"
                 value={formData.exampleHanzi}
                 onChange={(e) => setFormData({ ...formData, exampleHanzi: e.target.value })}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Pinyin ví dụ</label>
+              <label className="block text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wide mb-1">Pinyin ví dụ</label>
               <input
                 type="text"
                 placeholder="Ví dụ: nǐ hǎo"
                 value={formData.examplePinyin}
                 onChange={(e) => setFormData({ ...formData, examplePinyin: e.target.value })}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Nghĩa ví dụ</label>
+              <label className="block text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wide mb-1">Nghĩa ví dụ</label>
               <input
                 type="text"
                 placeholder="Ví dụ: Xin chào"
                 value={formData.exampleMeaning}
                 onChange={(e) => setFormData({ ...formData, exampleMeaning: e.target.value })}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm text-slate-800 dark:text-slate-200"
+                className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
               />
             </div>
           </div>
         </div>
 
         {/* Buttons */}
-        <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800/60">
-          <span className="text-xs font-semibold text-red-500">{errorMsg}</span>
+        <div className="flex items-center justify-between pt-4 border-t border-hairline dark:border-divider-dark">
+          <span className="text-xs font-semibold text-primary">{errorMsg}</span>
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 text-sm font-bold transition-colors cursor-pointer bg-transparent"
+              className="px-4 py-2.5 rounded-full border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark text-sm font-bold transition-colors cursor-pointer bg-transparent"
             >
               Quay lại
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 dark:disabled:bg-slate-800 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all cursor-pointer"
+              className="px-5 py-2.5 rounded-full bg-primary hover:bg-primary-deep disabled:bg-stone dark:disabled:bg-surface-dark text-white text-sm font-bold shadow-sm hover:shadow-md transition-all cursor-pointer"
             >
               {isLoading ? 'Đang tạo...' : 'Tạo thẻ bài'}
             </button>

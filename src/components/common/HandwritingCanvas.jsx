@@ -100,7 +100,7 @@ export default function HandwritingCanvas({ onRecognize }) {
     const isDark = document.documentElement.classList.contains('dark');
 
     // Draw background grid lines (typical calligraphy drawing square style)
-    ctx.strokeStyle = isDark ? '#334155' : '#cbd5e1'; // slate-700 in dark mode, slate-300 in light mode
+    ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(32, 32, 32, 0.12)';
     ctx.lineWidth = 1;
     ctx.setLineDash([4, 4]);
 
@@ -117,9 +117,9 @@ export default function HandwritingCanvas({ onRecognize }) {
     ctx.lineTo(0, canvas.height);
     ctx.stroke();
 
-    // Reset styles for writing brush
+    // Reset styles for writing brush - using teal primary for premium touch!
     ctx.setLineDash([]);
-    ctx.strokeStyle = isDark ? '#f1f5f9' : '#475569'; // slate-100 in dark mode, slate-600 in light mode
+    ctx.strokeStyle = '#54cbd4'; // primary teal
     ctx.lineWidth = 6;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -144,7 +144,7 @@ export default function HandwritingCanvas({ onRecognize }) {
     const isDark = document.documentElement.classList.contains('dark');
 
     // Draw background grid
-    ctx.strokeStyle = isDark ? '#334155' : '#cbd5e1';
+    ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(32, 32, 32, 0.12)';
     ctx.lineWidth = 1;
     ctx.setLineDash([4, 4]);
 
@@ -159,9 +159,9 @@ export default function HandwritingCanvas({ onRecognize }) {
     ctx.lineTo(0, canvas.height);
     ctx.stroke();
 
-    // Reset writing brush styles
+    // Reset writing brush styles - using teal primary
     ctx.setLineDash([]);
-    ctx.strokeStyle = isDark ? '#f1f5f9' : '#475569';
+    ctx.strokeStyle = '#54cbd4'; // primary teal
     ctx.lineWidth = 6;
 
     newStrokes.forEach((stroke) => {
@@ -235,18 +235,18 @@ export default function HandwritingCanvas({ onRecognize }) {
   };
 
   return (
-    <div className="flex flex-col gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-sm h-full justify-between transition-colors">
+    <div className="flex flex-col gap-4 bg-surface-card dark:bg-surface-dark/40 p-6 rounded-md border border-hairline dark:border-divider-dark shadow-sm h-full justify-between transition-colors">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-slate-700 dark:text-slate-350 uppercase tracking-wider">Viết Tay (Handwriting)</h3>
+        <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Viết Tay (Handwriting)</h3>
         {loading && (
-          <span className="text-[10px] bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-full font-bold animate-pulse">
+          <span className="text-[10px] bg-primary/10 text-primary px-2.5 py-0.5 rounded-full font-mono font-bold animate-pulse">
             Đang nhận diện...
           </span>
         )}
       </div>
 
       {/* Canvas Box */}
-      <div className="relative aspect-square w-full max-w-[280px] mx-auto border border-slate-200 dark:border-slate-800 rounded-2xl bg-slate-50 dark:bg-slate-950/10 shadow-inner overflow-hidden cursor-crosshair">
+      <div className="relative aspect-square w-full max-w-[280px] mx-auto border border-hairline dark:border-divider-dark rounded-md bg-canvas dark:bg-black/30 shadow-inner overflow-hidden cursor-crosshair">
         <canvas
           ref={canvasRef}
           width={300}
@@ -268,7 +268,7 @@ export default function HandwritingCanvas({ onRecognize }) {
           type="button"
           onClick={undo}
           disabled={strokes.length === 0}
-          className="flex items-center gap-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer bg-white dark:bg-slate-900"
+          className="flex items-center gap-1 px-3 py-2 rounded-full border border-hairline dark:border-divider-dark text-xs font-mono font-semibold text-ink dark:text-on-dark hover:bg-surface-bone dark:hover:bg-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer bg-surface-card dark:bg-surface-dark"
         >
           <RotateCcw size={13} />
           Hoàn tác
@@ -277,7 +277,7 @@ export default function HandwritingCanvas({ onRecognize }) {
           type="button"
           onClick={() => clearCanvas(true)}
           disabled={strokes.length === 0 && candidates.length === 0}
-          className="flex items-center gap-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer bg-white dark:bg-slate-900"
+          className="flex items-center gap-1 px-3 py-2 rounded-full border border-hairline dark:border-divider-dark text-xs font-mono font-semibold text-ink dark:text-on-dark hover:bg-surface-bone dark:hover:bg-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer bg-surface-card dark:bg-surface-dark"
         >
           <Trash2 size={13} />
           Xóa
@@ -286,7 +286,7 @@ export default function HandwritingCanvas({ onRecognize }) {
           type="button"
           onClick={() => recognizeStrokes()}
           disabled={strokes.length === 0 || loading}
-          className="flex items-center gap-1 px-3 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold shadow-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+          className="flex items-center gap-1 px-4 py-2 rounded-full bg-primary hover:bg-primary-deep text-white text-xs font-mono font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <Check size={13} />
           Nhận diện
@@ -294,9 +294,9 @@ export default function HandwritingCanvas({ onRecognize }) {
       </div>
 
       {/* Recognition Results Candidates */}
-      <div className="border-t border-slate-100 dark:border-slate-800/60 pt-4 text-left">
-        <span className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2 uppercase tracking-wider">Kết quả nhận diện:</span>
-        <div className="flex flex-wrap gap-2 min-h-[48px] items-center bg-slate-50 dark:bg-slate-950/20 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
+      <div className="border-t border-hairline dark:border-divider-dark pt-4 text-left">
+        <span className="block text-xs font-mono font-bold text-mute dark:text-on-dark-mute mb-2 uppercase tracking-wider">Gợi ý nhận diện:</span>
+        <div className="flex flex-wrap gap-2 min-h-[48px] items-center bg-surface-bone dark:bg-black/20 p-2.5 rounded-md border border-hairline dark:border-divider-dark">
           {candidates.length > 0 ? (
             candidates.map((char) => (
               <button
@@ -306,13 +306,13 @@ export default function HandwritingCanvas({ onRecognize }) {
                   onRecognize(char);
                   clearCanvas(false); // clear lines but keep candidates visible so they can select another if needed
                 }}
-                className="w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-900 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 border border-slate-200 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 text-slate-800 dark:text-slate-200 hover:text-indigo-750 dark:hover:text-indigo-400 font-bold rounded-xl text-xl transition-all cursor-pointer shadow-sm active:scale-95 hover:shadow"
+                className="w-10 h-10 flex items-center justify-center bg-surface-card dark:bg-surface-dark hover:bg-surface-bone dark:hover:bg-black border border-hairline dark:border-divider-dark hover:border-primary dark:hover:border-primary text-ink dark:text-on-dark font-extrabold rounded-md text-xl transition-all cursor-pointer shadow-sm active:scale-95"
               >
                 {char}
               </button>
             ))
           ) : (
-            <span className="text-xs text-slate-400 dark:text-slate-500 italic">Nhấp vẽ nét chữ Hán để hiển thị gợi ý...</span>
+            <span className="text-xs text-mute dark:text-on-dark-mute italic leading-relaxed">Nhấp vẽ nét chữ Hán để hiển thị gợi ý...</span>
           )}
         </div>
       </div>

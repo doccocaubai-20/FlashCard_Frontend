@@ -61,11 +61,10 @@ export function useDictionary() {
     if (!loadPromise) {
       loadPromise = (async () => {
         try {
-          // 1. Try reading the 35MB array from local IndexedDB cache
           let dictArray = await getCachedDictionary();
 
           if (!dictArray) {
-            console.log('Dictionary Cache Miss. Downloading 35MB from server...');
+            console.log('Dictionary Cache Miss. Downloading DICTIONARY from server...');
             const module = await import('../data/dictionary.json');
             dictArray = module.default;
 
@@ -204,7 +203,7 @@ export function useDictionary() {
 
     if (type === 'pinyin') {
       if (!pinyinMap) return [];
-      
+
       // 1. Exact pinyin match (O(1))
       const exact = pinyinMap.get(cleanValue);
       if (exact && exact.length > 0) {
@@ -214,7 +213,7 @@ export function useDictionary() {
       // 2. Prefix pinyin match (O(1500) keys)
       const matches = [];
       const keysSeen = new Set();
-      
+
       for (const key of pinyinMap.keys()) {
         if (key.startsWith(cleanValue)) {
           const entries = pinyinMap.get(key);
@@ -232,7 +231,7 @@ export function useDictionary() {
 
     if (type === 'meaning') {
       if (!meaningMap) return [];
-      
+
       // 1. Check Hán-Việt exact match (O(1))
       const exactSv = meaningMap.get(cleanValue);
       if (exactSv && exactSv.length > 0) {
@@ -242,7 +241,7 @@ export function useDictionary() {
       // 2. Check Hán-Việt prefix match (O(2000) keys)
       const matches = [];
       const seenEntries = new Set();
-      
+
       for (const key of meaningMap.keys()) {
         if (key.startsWith(cleanValue)) {
           const entries = meaningMap.get(key);
