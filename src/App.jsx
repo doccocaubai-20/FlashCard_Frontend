@@ -12,6 +12,14 @@ import DictionaryScreen from './pages/DictionaryScreen';
 import FreeWriteScreen from './pages/FreeWriteScreen';
 import QuizScreen from './pages/QuizScreen';
 import GameScreen from './pages/GameScreen';
+import RadicalScreen from './pages/RadicalScreen';
+import PinyinScreen from './pages/PinyinScreen';
+import GrammarScreen from './pages/GrammarScreen';
+import DialogueScreen from './pages/DialogueScreen';
+import DictationScreen from './pages/DictationScreen';
+import MatchingGameScreen from './pages/MatchingGameScreen';
+import TranslationPlaygroundScreen from './pages/TranslationPlaygroundScreen';
+import VocabularyNotebookScreen from './pages/VocabularyNotebookScreen';
 import { useDictionary } from './hooks/useDictionary';
 
 function PrivateRoute({ children }) {
@@ -45,10 +53,18 @@ function App() {
         <Route path="/decks/:id" element={<DeckDetailScreen />} />
         <Route path="/decks/:id/game" element={<GameScreen />} />
         <Route path="/decks/:id/quiz" element={<QuizScreen />} />
+        <Route path="/decks/:id/dictation" element={<DictationScreen />} />
         <Route path="/study" element={<StudyScreen />} />
         <Route path="/flashcards/new" element={<CreateFlashcardScreen />} />
         <Route path="/dictionary" element={<DictionaryScreen />} />
         <Route path="/write" element={<FreeWriteScreen />} />
+        <Route path="/radicals" element={<RadicalScreen />} />
+        <Route path="/pinyin" element={<PinyinScreen />} />
+        <Route path="/grammar" element={<GrammarScreen />} />
+        <Route path="/dialogues" element={<DialogueScreen />} />
+        <Route path="/games/matching" element={<MatchingGameScreen />} />
+        <Route path="/translation" element={<TranslationPlaygroundScreen />} />
+        <Route path="/notebook" element={<VocabularyNotebookScreen />} />
         <Route path="/settings" element={<SettingsScreen />} />
       </Route>
 

@@ -145,6 +145,13 @@ export default function DeckDetailScreen() {
             </button>
             <button
               type="button"
+              onClick={() => navigate(`/decks/${id}/dictation`)}
+              className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
+            >
+              🎧 Nghe viết
+            </button>
+            <button
+              type="button"
               onClick={() => navigate(`/study?deckId=${id}`)}
               className="rounded-full bg-primary hover:bg-primary-deep text-white px-5 py-2.5 text-sm font-bold shadow-sm hover:shadow-md transition cursor-pointer active:scale-95"
             >

@@ -279,5 +279,5 @@ export function useDictionary() {
     return [];
   }, []);
 
-  return { lookup, lookupMultiple, loading };
+  return { lookup, lookupMultiple, loading, dictArray: dictArrayRef };
 }

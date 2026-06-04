@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import HandwritingCanvas from '../components/common/HandwritingCanvas';
 import { useDictionary } from '../hooks/useDictionary';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
-import { BookOpen, Star, Sparkles, Volume2, HelpCircle } from 'lucide-react';
+import { BookOpen, Star, Sparkles, Volume2, HelpCircle, ArrowRight } from 'lucide-react';
 
 export default function FreeWriteScreen() {
   const { lookupMultiple, loading: dictLoading } = useDictionary();
   const [query, setQuery] = useState('');
   const [selectedWord, setSelectedWord] = useState(null);
   const [favorites, setFavorites] = useState([]);
+  const [searchParams] = useSearchParams();
+  const wordParam = searchParams.get('word');
 
   // HanziWriter state
   const writerRef = useRef(null);
@@ -16,6 +19,13 @@ export default function FreeWriteScreen() {
   const [mode, setMode] = useState('idle'); // idle, quiz
   const [activeCharIndex, setActiveCharIndex] = useState(0);
   const [resetKey, setResetKey] = useState(0);
+
+  // Quiz grading states
+  const [quizScore, setQuizScore] = useState(100);
+  const [quizMistakes, setQuizMistakes] = useState(0);
+  const [quizTotalStrokes, setQuizTotalStrokes] = useState(0);
+  const [quizCurrentStroke, setQuizCurrentStroke] = useState(0);
+  const [quizReport, setQuizReport] = useState(null); // { score, mistakes, grade, feedback }
 
   const loadFavorites = async () => {
     try {
@@ -28,7 +38,12 @@ export default function FreeWriteScreen() {
 
   useEffect(() => {
     loadFavorites();
-  }, []);
+    if (wordParam && !dictLoading) {
+      const cleanWord = decodeURIComponent(wordParam).trim();
+      setQuery(cleanWord);
+      handleSearch(cleanWord);
+    }
+  }, [wordParam, dictLoading]);
 
   const isFavorite = (hanzi) => {
     return favorites.some((f) => f.hanzi === hanzi);
@@ -356,10 +371,52 @@ export default function FreeWriteScreen() {
   const handleQuiz = () => {
     if (!writerRef.current) return;
     writerRef.current.cancelQuiz();
+    setQuizScore(100);
+    setQuizMistakes(0);
+    setQuizReport(null);
     setMode('quiz');
+
+    // Get total strokes
+    const strokeCount = writerRef.current._withData && writerRef.current._withData.character 
+      ? writerRef.current._withData.character.strokes.length 
+      : 0;
+    setQuizTotalStrokes(strokeCount);
+    setQuizCurrentStroke(0);
+
     writerRef.current.quiz({
+      onStrokeCorrect: (strokeData) => {
+        setQuizCurrentStroke(strokeData.strokeNum + 1);
+        setQuizMistakes(strokeData.totalMistakes);
+        setQuizScore(Math.max(0, 100 - strokeData.totalMistakes * 10));
+      },
+      onStrokeMismatch: (strokeData) => {
+        setQuizMistakes(strokeData.totalMistakes);
+        setQuizScore(Math.max(0, 100 - strokeData.totalMistakes * 10));
+      },
       onComplete: (summary) => {
-        alert('Tuyệt vời! Bạn đã viết chính xác từ này!');
+        const finalMistakes = summary.totalMistakes || 0;
+        const finalScore = Math.max(0, 100 - finalMistakes * 10);
+        
+        let grade = 'C';
+        let feedback = 'Hãy cố gắng luyện tập thêm nhiều lần!';
+        if (finalScore >= 95) {
+          grade = 'A+';
+          feedback = 'Xuất sắc! Nét viết thanh thoát, đúng chuẩn tuyệt đối!';
+        } else if (finalScore >= 85) {
+          grade = 'A';
+          feedback = 'Rất tốt! Chữ viết rất chuẩn xác và thẳng hàng.';
+        } else if (finalScore >= 70) {
+          grade = 'B';
+          feedback = 'Đạt yêu cầu. Bạn cần chú ý thêm thứ tự nét.';
+        }
+
+        setQuizReport({
+          score: finalScore,
+          mistakes: finalMistakes,
+          grade,
+          feedback,
+          character: summary.character
+        });
         setMode('idle');
       }
     });
@@ -369,6 +426,7 @@ export default function FreeWriteScreen() {
     if (!writerRef.current) return;
     writerRef.current.cancelQuiz();
     setMode('idle');
+    setQuizReport(null);
     setResetKey((prev) => prev + 1);
   };
 
@@ -575,6 +633,23 @@ export default function FreeWriteScreen() {
                     <div ref={containerRef} id="free-write-canvas" className="w-[220px] h-[220px]" />
                   </div>
 
+                  {mode === 'quiz' && (
+                    <div className="w-full max-w-[236px] bg-surface-bone/50 dark:bg-black/35 p-3.5 rounded-md border border-hairline dark:border-divider-dark text-left space-y-1">
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-mute">Nét vẽ:</span>
+                        <span className="text-primary font-mono font-bold">{quizCurrentStroke} / {quizTotalStrokes}</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-mute">Lỗi vẽ sai:</span>
+                        <span className="text-red-500 font-mono font-bold">{quizMistakes}</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-mute">Đo độ chính xác:</span>
+                        <span className="text-teal-500 font-mono font-bold">{quizScore}%</span>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex gap-2">
                     <button
                       type="button"
@@ -615,6 +690,80 @@ export default function FreeWriteScreen() {
           )}
         </div>
 
+      {/* Quiz Report Modal */}
+      {quizReport && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark max-w-sm w-full rounded-md p-6 shadow-xl text-center space-y-6 animate-in zoom-in-95 duration-200">
+            <div className="relative pt-2">
+              <div className="text-7xl font-display font-extrabold text-ink dark:text-on-dark animate-pulse">
+                {quizReport.character}
+              </div>
+              <div className={`absolute -top-1.5 right-4 h-12 w-12 rounded-full border-2 font-mono font-extrabold text-base flex items-center justify-center shadow ${
+                quizReport.score >= 90
+                  ? 'bg-amber-500/10 border-amber-500/35 text-amber-500'
+                  : quizReport.score >= 70
+                  ? 'bg-teal-500/10 border-teal-500/35 text-teal-500'
+                  : 'bg-orange-500/10 border-orange-500/35 text-orange-500'
+              }`}>
+                {quizReport.grade}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-extrabold text-ink dark:text-on-dark font-display">
+                Kết quả luyện viết
+              </h3>
+              <p className="text-xs text-mute dark:text-on-dark-mute max-w-xs mx-auto leading-relaxed">
+                {quizReport.feedback}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 bg-surface-bone/50 dark:bg-black/20 p-4 rounded-md border border-hairline dark:border-divider-dark text-left">
+              <div>
+                <span className="text-[10px] font-bold text-mute uppercase tracking-wider block">Điểm số</span>
+                <span className="text-xl font-extrabold font-mono text-primary">{quizReport.score}%</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-mute uppercase tracking-wider block">Lỗi sai nét</span>
+                <span className="text-xl font-extrabold font-mono text-red-500">{quizReport.mistakes} lần</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2 pt-2">
+              {activeCharIndex + 1 < chars.length && (
+                <button
+                  onClick={() => {
+                    const nextIdx = activeCharIndex + 1;
+                    setActiveCharIndex(nextIdx);
+                    setQuizReport(null);
+                    setTimeout(() => {
+                      handleQuiz();
+                    }, 200);
+                  }}
+                  className="w-full py-3 bg-primary hover:bg-primary-deep text-white font-mono font-bold text-xs rounded-full cursor-pointer transition-all shadow-sm hover:shadow active:scale-95 flex items-center justify-center gap-1.5"
+                >
+                  Viết chữ tiếp theo ({chars[activeCharIndex + 1]})
+                  <ArrowRight size={14} />
+                </button>
+              )}
+              
+              <button
+                onClick={handleQuiz}
+                className="w-full py-3 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-ink dark:text-on-dark font-mono font-bold text-xs rounded-full transition-colors cursor-pointer"
+              >
+                Luyện lại chữ này
+              </button>
+
+              <button
+                onClick={() => setQuizReport(null)}
+                className="w-full py-2 text-xs font-semibold text-mute hover:text-ink dark:hover:text-on-dark cursor-pointer"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );

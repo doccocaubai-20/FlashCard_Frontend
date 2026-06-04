@@ -36,6 +36,7 @@
   flex: 1 1 0%; /* flex-1 */
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal page-wide scroll on mobile */
   scroll-behavior: smooth;
   transition: background-color 0.3s ease;
 }
@@ -62,6 +63,26 @@
   gap: 0.375rem;
   padding: 1.5rem 1rem;
   flex-grow: 1;
+  /* Custom scrollbar styling for modern browsers */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(84, 203, 212, 0.25) transparent;
+}
+
+.sidebar-menu-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-menu-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-menu-list::-webkit-scrollbar-thumb {
+  background: rgba(84, 203, 212, 0.25);
+  border-radius: 9999px;
+}
+
+.sidebar-menu-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(84, 203, 212, 0.5);
 }
 
 .sidebar-item {

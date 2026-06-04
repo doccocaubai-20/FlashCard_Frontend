@@ -1,11 +1,191 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import GoalTracker from '../components/stats/GoalTracker';
 import Heatmap from '../components/stats/Heatmap';
 import { fetchSummary, fetchHeatmap, fetchBadges } from '../features/stats/statsSlice';
 import { fetchAllDecks } from '../features/deck/deckSlice';
-import { Trophy, Flame, Calendar, Award } from 'lucide-react';
+import { Trophy, Flame, Calendar, Award, Sparkles, Volume2, Star, PenTool } from 'lucide-react';
+import { useDictionary } from '../hooks/useDictionary';
+import { favoriteWordsApi } from '../services/favoriteWordsApi';
+
+function WordOfTheDay({ dictArray, dictLoading }) {
+  const [wotd, setWotd] = useState(null);
+  const [favorites, setFavorites] = useState([]);
+  const [favLoading, setFavLoading] = useState(false);
+
+  const loadFavorites = async () => {
+    try {
+      const res = await favoriteWordsApi.getFavorites();
+      setFavorites(res.data || []);
+    } catch (err) {
+      console.error('WOTD: Failed to load favorites:', err);
+    }
+  };
+
+  useEffect(() => {
+    loadFavorites();
+  }, []);
+
+  const isFavorite = wotd ? favorites.some((f) => f.hanzi === wotd.s) : false;
+
+  const handleToggleFavorite = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!wotd || favLoading) return;
+    setFavLoading(true);
+    try {
+      if (isFavorite) {
+        await favoriteWordsApi.deleteFavoriteByHanzi(wotd.s);
+      } else {
+        await favoriteWordsApi.addFavorite({
+          hanzi: wotd.s,
+          pinyin: wotd.p || '',
+          sv: wotd.sv || '',
+          vi: wotd.vi || '',
+        });
+      }
+      await loadFavorites();
+    } catch (err) {
+      console.error('WOTD: Failed to toggle favorite:', err);
+    } finally {
+      setFavLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (dictLoading || !dictArray || dictArray.length === 0) return;
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const cachedWord = localStorage.getItem('wotd_word');
+    const cachedDate = localStorage.getItem('wotd_date');
+
+    if (cachedDate === todayStr && cachedWord) {
+      try {
+        setWotd(JSON.parse(cachedWord));
+        return;
+      } catch (err) {
+        console.error('Error parsing cached WOTD:', err);
+      }
+    }
+
+    const candidates = dictArray.filter(
+      (e) => e && e.hsk && e.hsk >= 1 && e.hsk <= 3 && e.s && e.s.length <= 2
+    );
+    const pool = candidates.length > 0 ? candidates : dictArray.filter(e => e && e.s && e.s.length <= 2);
+    
+    if (pool.length > 0) {
+      const randomIndex = Math.floor(Math.random() * pool.length);
+      const selected = pool[randomIndex];
+      
+      if (!selected.sv && selected.s) {
+        const chars = Array.from(selected.s);
+        const svs = chars.map(char => {
+          const match = dictArray.find(m => m.s === char);
+          return match?.sv || '';
+        }).filter(Boolean).join(' ');
+        selected.sv = svs;
+      }
+
+      localStorage.setItem('wotd_word', JSON.stringify(selected));
+      localStorage.setItem('wotd_date', todayStr);
+      setWotd(selected);
+    }
+  }, [dictArray, dictLoading]);
+
+  const handleSpeak = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!wotd || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(wotd.s);
+    utterance.lang = 'zh-CN';
+    utterance.rate = 0.8;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  if (dictLoading || !wotd) {
+    return (
+      <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/40 p-6 flex flex-col justify-center items-center min-h-[150px]">
+        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
+        <span className="text-xs text-mute mt-2">Đang tải từ vựng hôm nay...</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/40 p-5 relative shadow-sm overflow-hidden flex flex-col gap-4 text-left group transition-all duration-300 hover:shadow-md">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-all pointer-events-none" />
+
+      <div className="flex items-center justify-between border-b border-hairline dark:border-divider-dark pb-3">
+        <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider flex items-center gap-1.5">
+          <Sparkles size={13} className="text-primary" />
+          Từ vựng hôm nay
+        </h3>
+        {wotd.hsk && (
+          <span className="text-[9px] font-extrabold uppercase bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 rounded shadow-sm">
+            HSK {wotd.hsk}
+          </span>
+        )}
+      </div>
+
+      <div className="flex items-start justify-between gap-4">
+        <div className="space-y-1.5 min-w-0 flex-1">
+          <h2 className="text-4xl font-extrabold text-ink dark:text-on-dark font-display leading-none">
+            {wotd.s}
+          </h2>
+          
+          <div className="flex items-center gap-2 text-xs font-bold text-mute dark:text-on-dark-mute">
+            <span className="text-primary font-mono">{wotd.p}</span>
+            {wotd.sv && (
+              <>
+                <span>|</span>
+                <span className="text-charcoal dark:text-on-dark-mute uppercase text-[10px] tracking-wider">{wotd.sv}</span>
+              </>
+            )}
+          </div>
+          
+          <p className="text-xs font-semibold text-body dark:text-on-dark-mute leading-relaxed pt-1 line-clamp-2">
+            {wotd.vi}
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={handleSpeak}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-primary shadow-sm transition-all cursor-pointer text-xs"
+            title="Nghe phát âm"
+          >
+            <Volume2 size={13} />
+          </button>
+
+          <button
+            type="button"
+            onClick={handleToggleFavorite}
+            disabled={favLoading}
+            className={`flex h-8 w-8 items-center justify-center rounded-full border transition-all cursor-pointer text-xs ${
+              isFavorite
+                ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
+                : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute'
+            }`}
+            title={isFavorite ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
+          >
+            <Star size={13} fill={isFavorite ? 'currentColor' : 'none'} />
+          </button>
+
+          <Link
+            to={`/write?word=${encodeURIComponent(wotd.s)}`}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-primary shadow-sm transition-all cursor-pointer text-xs"
+            title="Luyện viết từ này"
+          >
+            <PenTool size={13} />
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const badgeIconMap = {
   Flame: Flame,
@@ -21,6 +201,7 @@ export default function DashboardScreen() {
   const badges = useSelector((state) => state.stats.badges);
   const goals = useSelector((state) => state.stats.goals);
   const decks = useSelector((state) => state.deck.decks);
+  const { dictArray, loading: dictLoading } = useDictionary();
 
   useEffect(() => {
     dispatch(fetchSummary());
@@ -43,10 +224,10 @@ export default function DashboardScreen() {
       </div>
 
       {/* Bento Grid */}
-      <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr] w-full min-w-0">
         
         {/* Left Column: Stats & Heatmap */}
-        <div className="space-y-6">
+        <div className="space-y-6 min-w-0">
           <GoalTracker completed={summary?.completedCards ?? 0} target={goals?.dailyTarget ?? 20} />
           <Heatmap data={heatmapData} />
 
@@ -84,10 +265,13 @@ export default function DashboardScreen() {
           </div>
         </div>
 
-        {/* Right Column: Decks List Panel */}
-        <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/40 p-6">
-          <h2 className="font-display text-xl font-bold text-ink dark:text-on-dark tracking-tight">Bộ bài của bạn</h2>
-          <p className="mt-1 text-sm text-mute dark:text-on-dark-mute">Chọn một bộ bài bên dưới để bắt đầu luyện tập hoặc ôn thẻ.</p>
+        {/* Right Column: Word of the Day & Decks Panel */}
+        <div className="space-y-6 min-w-0">
+          <WordOfTheDay dictArray={dictArray} dictLoading={dictLoading} />
+          
+          <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/40 p-6">
+            <h2 className="font-display text-xl font-bold text-ink dark:text-on-dark tracking-tight">Bộ bài của bạn</h2>
+            <p className="mt-1 text-sm text-mute dark:text-on-dark-mute">Chọn một bộ bài bên dưới để bắt đầu luyện tập hoặc ôn thẻ.</p>
           <div className="mt-6 space-y-4 max-h-[500px] overflow-y-auto pr-1">
             {decks?.length > 0 ? (
               decks.map((deck) => (
@@ -114,6 +298,7 @@ export default function DashboardScreen() {
             )}
           </div>
         </div>
+      </div>
 
       </div>
     </div>
