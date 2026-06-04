@@ -18,7 +18,10 @@ import {
   ChevronDown,
   Gamepad2,
   Languages,
-  Star
+  Star,
+  Mic,
+  Puzzle,
+  Zap
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -45,21 +48,14 @@ export default function Sidebar() {
     {
       title: 'Học & Ôn luyện',
       items: [
-        { to: '/study', label: 'Học tập', icon: GraduationCap },
-        { to: '/write', label: 'Luyện viết', icon: PenTool },
-        { to: '/dialogues', label: 'Hội thoại HSK', icon: MessageSquare },
-        { to: '/translation', label: 'Luyện dịch câu', icon: Languages },
-        { to: '/games/matching', label: 'Trò chơi nối từ', icon: Gamepad2 },
+        { to: '/study-hub', label: 'Khu học tập HSK', icon: GraduationCap },
+        { to: '/game-arcade', label: 'Đấu trường game', icon: Gamepad2 },
       ]
     },
     {
       title: 'Tra cứu & Công cụ',
       items: [
-        { to: '/dictionary', label: 'Tra từ điển', icon: Search },
-        { to: '/notebook', label: 'Sổ tay từ vựng', icon: Star },
-        { to: '/grammar', label: 'Ngữ pháp HSK', icon: BookOpenText },
-        { to: '/radicals', label: 'Bộ thủ', icon: Library },
-        { to: '/pinyin', label: 'Bảng Pinyin', icon: Grid },
+        { to: '/reference-hub', label: 'Tra cứu & Thư viện', icon: Library },
       ]
     },
     {
@@ -157,7 +153,7 @@ export default function Sidebar() {
                 {/* Group Nav Items with Collapse Animation */}
                 <div 
                   className={`flex flex-col gap-1 transition-all duration-300 overflow-hidden ${
-                    isCollapsed ? 'max-h-0 opacity-0' : 'max-h-60 opacity-100'
+                    isCollapsed ? 'max-h-0 opacity-0' : 'max-h-[500px] opacity-100'
                   }`}
                 >
                   {group.items.map(({ to, label, icon: Icon }) => (

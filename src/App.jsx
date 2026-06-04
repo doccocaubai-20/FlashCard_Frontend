@@ -20,6 +20,12 @@ import DictationScreen from './pages/DictationScreen';
 import MatchingGameScreen from './pages/MatchingGameScreen';
 import TranslationPlaygroundScreen from './pages/TranslationPlaygroundScreen';
 import VocabularyNotebookScreen from './pages/VocabularyNotebookScreen';
+import SpeakingScreen from './pages/SpeakingScreen';
+import UnscrambleGameScreen from './pages/UnscrambleGameScreen';
+import FallingWordsGameScreen from './pages/FallingWordsGameScreen';
+import StudyHubScreen from './pages/StudyHubScreen';
+import GameArcadeScreen from './pages/GameArcadeScreen';
+import ReferenceHubScreen from './pages/ReferenceHubScreen';
 import { useDictionary } from './hooks/useDictionary';
 
 function PrivateRoute({ children }) {
@@ -62,7 +68,13 @@ function App() {
         <Route path="/pinyin" element={<PinyinScreen />} />
         <Route path="/grammar" element={<GrammarScreen />} />
         <Route path="/dialogues" element={<DialogueScreen />} />
+        <Route path="/speaking" element={<SpeakingScreen />} />
+        <Route path="/games/unscramble" element={<UnscrambleGameScreen />} />
+        <Route path="/games/falling" element={<FallingWordsGameScreen />} />
         <Route path="/games/matching" element={<MatchingGameScreen />} />
+        <Route path="/study-hub" element={<StudyHubScreen />} />
+        <Route path="/game-arcade" element={<GameArcadeScreen />} />
+        <Route path="/reference-hub" element={<ReferenceHubScreen />} />
         <Route path="/translation" element={<TranslationPlaygroundScreen />} />
         <Route path="/notebook" element={<VocabularyNotebookScreen />} />
         <Route path="/settings" element={<SettingsScreen />} />
