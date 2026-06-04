@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchAllDecks, createDeck, updateDeck, deleteDeck } from '../features/deck/deckSlice';
-import { Plus, Edit3, Trash2, Folder, X } from 'lucide-react';
+import { Plus, Edit3, Trash2, Folder, X, Star } from 'lucide-react';
+import { favoriteWordsApi } from '../services/favoriteWordsApi';
 
 export default function DeckListScreen() {
   const dispatch = useDispatch();
@@ -14,6 +15,13 @@ export default function DeckListScreen() {
   const [modalMode, setModalMode] = useState('create'); // 'create' | 'edit'
   const [selectedDeck, setSelectedDeck] = useState(null);
   const [formData, setFormData] = useState({ title: '', description: '' });
+  const [favoritesCount, setFavoritesCount] = useState(0);
+
+  useEffect(() => {
+    favoriteWordsApi.getFavorites()
+      .then(res => setFavoritesCount(res.data?.length || 0))
+      .catch(err => console.error('Failed to load favorites count:', err));
+  }, []);
 
   useEffect(() => {
     dispatch(fetchAllDecks());
@@ -88,8 +96,38 @@ export default function DeckListScreen() {
       {/* Grid List */}
       {isLoading && decks.length === 0 ? (
         <div className="text-center py-12 text-mute dark:text-on-dark-mute">Đang tải danh sách bộ bài...</div>
-      ) : decks.length > 0 ? (
+      ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Virtual Deck: Từ vựng yêu thích */}
+          <div
+            onClick={() => navigate('/decks/favorites')}
+            className="group relative flex flex-col justify-between p-6 bg-gradient-to-br from-amber-500/5 to-amber-500/10 dark:from-amber-500/10 dark:to-amber-500/20 rounded-md border border-amber-500/30 hover:border-amber-500 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-500 text-white group-hover:bg-amber-600 transition-colors duration-300">
+                  <Star size={20} fill="currentColor" />
+                </div>
+                <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                  Cá nhân
+                </span>
+              </div>
+              <h3 className="text-lg font-bold text-ink dark:text-on-dark group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors font-display tracking-tight">
+                Từ vựng yêu thích
+              </h3>
+              <p className="text-sm text-body dark:text-on-dark-mute mt-2 line-clamp-2 leading-relaxed">
+                Lưu giữ các từ vựng bạn đã đánh dấu sao khi tra cứu từ điển hoặc trong các bài học.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between border-t border-hairline dark:border-divider-dark mt-6 pt-4">
+              <span className="text-xs font-semibold text-mute dark:text-on-dark-mute">
+                {favoritesCount} từ vựng
+              </span>
+            </div>
+          </div>
+
+          {/* User's regular decks */}
           {decks.map((deck) => (
             <div
               key={deck.id}
@@ -158,10 +196,6 @@ export default function DeckListScreen() {
               </div>
             </div>
           ))}
-        </div>
-      ) : (
-        <div className="rounded-md border border-dashed border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/50 p-12 text-center text-mute dark:text-on-dark-mute transition-colors">
-          Chưa có bộ bài nào. Nhấp vào nút "Tạo bộ bài mới" ở trên để bắt đầu!
         </div>
       )}
 

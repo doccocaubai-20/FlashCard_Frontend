@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { logout } from '../../features/auth/authSlice';
-import { LayoutDashboard, BookOpen, PlusCircle, Settings, LogOut, Search, GraduationCap } from 'lucide-react';
+import { LayoutDashboard, BookOpen, PlusCircle, Settings, LogOut, Search, GraduationCap, PenTool } from 'lucide-react';
 
 export default function Sidebar() {
   const dispatch = useDispatch();
@@ -21,6 +21,7 @@ export default function Sidebar() {
     { to: '/study', label: 'Học tập', icon: GraduationCap },
     { to: '/flashcards/new', label: 'Thêm Thẻ mới', icon: PlusCircle },
     { to: '/dictionary', label: 'Tra từ điển', icon: Search },
+    { to: '/write', label: 'Luyện viết', icon: PenTool },
     { to: '/settings', label: 'Cài đặt', icon: Settings },
   ];
 

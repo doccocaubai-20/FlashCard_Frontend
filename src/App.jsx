@@ -9,6 +9,8 @@ import StudyScreen from './pages/StudyScreen';
 import CreateFlashcardScreen from './pages/CreateFlashcardScreen';
 import SettingsScreen from './pages/SettingsScreen';
 import DictionaryScreen from './pages/DictionaryScreen';
+import FreeWriteScreen from './pages/FreeWriteScreen';
+import QuizScreen from './pages/QuizScreen';
 import GameScreen from './pages/GameScreen';
 import { useDictionary } from './hooks/useDictionary';
 
@@ -42,9 +44,11 @@ function App() {
         <Route path="/decks" element={<DeckListScreen />} />
         <Route path="/decks/:id" element={<DeckDetailScreen />} />
         <Route path="/decks/:id/game" element={<GameScreen />} />
+        <Route path="/decks/:id/quiz" element={<QuizScreen />} />
         <Route path="/study" element={<StudyScreen />} />
         <Route path="/flashcards/new" element={<CreateFlashcardScreen />} />
         <Route path="/dictionary" element={<DictionaryScreen />} />
+        <Route path="/write" element={<FreeWriteScreen />} />
         <Route path="/settings" element={<SettingsScreen />} />
       </Route>
 

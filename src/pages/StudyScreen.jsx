@@ -15,8 +15,11 @@ import {
   ArrowLeft, 
   ArrowRight, 
   CheckCircle,
-  HelpCircle
+  HelpCircle,
+  Star
 } from 'lucide-react';
+import { favoriteWordsApi } from '../services/favoriteWordsApi';
+import { useDictionary } from '../hooks/useDictionary';
 
 // SVG blossom logo
 function BlossomIcon({ className }) {
@@ -366,6 +369,71 @@ export default function StudyScreen() {
   // Redux decks list
   const decks = useSelector((state) => state.deck.decks);
 
+  const { lookupMultiple } = useDictionary();
+  const [favorites, setFavorites] = useState([]);
+
+  const loadFavorites = async () => {
+    try {
+      const res = await favoriteWordsApi.getFavorites();
+      setFavorites(res.data || []);
+    } catch (err) {
+      console.error('Failed to load favorites:', err);
+    }
+  };
+
+  const isFavorite = (hanzi) => {
+    if (!hanzi) return false;
+    const cleanHanzi = hanzi.split(/[｜|]/)[0].trim();
+    return favorites.some((f) => f.hanzi === cleanHanzi);
+  };
+
+  const getCompoundHanViet = (word) => {
+    if (!word) return '';
+    const chars = Array.from(word);
+
+    if (chars.length === 1) {
+      const matches = lookupMultiple('hanzi', word);
+      const match = matches.find((m) => m.s === word || m.t === word);
+      return match?.sv || '';
+    }
+
+    const _matches = lookupMultiple('hanzi', word);
+    const exact = _matches.find((m) => m.s === word || m.t === word);
+    if (exact && exact.sv) return exact.sv;
+
+    const parts = chars.map((char) => {
+      const matches = lookupMultiple('hanzi', char);
+      const match = matches.find((m) => m.s === char || m.t === char);
+      if (match && match.sv) {
+        return match.sv;
+      }
+      return `[${char}]`;
+    });
+    return parts.join(' ').replace(/\s+/g, ' ').trim();
+  };
+
+  const handleToggleFavorite = async (hanzi, pinyin, meaning) => {
+    if (!hanzi) return;
+    const cleanHanzi = hanzi.split(/[｜|]/)[0].trim();
+    const alreadyFav = isFavorite(cleanHanzi);
+    try {
+      if (alreadyFav) {
+        await favoriteWordsApi.deleteFavoriteByHanzi(cleanHanzi);
+      } else {
+        const sv = getCompoundHanViet(cleanHanzi) || '';
+        await favoriteWordsApi.addFavorite({
+          hanzi: cleanHanzi,
+          pinyin: pinyin || '',
+          sv,
+          vi: meaning || '',
+        });
+      }
+      loadFavorites();
+    } catch (err) {
+      console.error('Failed to toggle favorite:', err);
+    }
+  };
+
   // Client local states
   const [allCards, setAllCards] = useState([]);
   const [isAllCardsLoading, setIsAllCardsLoading] = useState(false);
@@ -439,21 +507,40 @@ export default function StudyScreen() {
     };
     loadAllCards();
     dispatch(fetchAllDecks());
+    loadFavorites();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (selectedDeckId === 'favorites') {
+      setStudyMode('classic');
+    }
+  }, [selectedDeckId]);
 
   // Load today study cards depending on selectedDeckId
   useEffect(() => {
-    dispatch(fetchTodayStudy(selectedDeckId === 'all' ? undefined : Number(selectedDeckId)));
+    if (selectedDeckId !== 'favorites') {
+      dispatch(fetchTodayStudy(selectedDeckId === 'all' ? undefined : Number(selectedDeckId)));
+    }
   }, [dispatch, selectedDeckId]);
 
   // Compute filtered queue dynamically based on selected deck and study mode
   const filteredQueue = useMemo(() => {
+    if (selectedDeckId === 'favorites') {
+      return favorites.map(f => ({
+        id: f.id,
+        deckId: 'favorites',
+        hanzi: f.hanzi,
+        pinyin: f.pinyin || '',
+        meaning: f.vi || '',
+        deckName: 'Từ vựng yêu thích'
+      }));
+    }
     let list = studyMode === 'srs' ? todayCards : allCards;
     if (selectedDeckId !== 'all') {
       list = list.filter((c) => c.deckId === Number(selectedDeckId));
     }
     return list;
-  }, [studyMode, todayCards, allCards, selectedDeckId]);
+  }, [studyMode, todayCards, allCards, selectedDeckId, favorites]);
 
   const handleExampleUpdated = (cardId, exampleData) => {
     setActiveQueue((prevQueue) =>
@@ -827,14 +914,32 @@ export default function StudyScreen() {
         {/* Flashcard Area */}
         <div className="flex flex-col items-center justify-center pt-4">
           {currentCard ? (
-            <Flashcard 
-              cardData={currentCard} 
-              isFlipped={isFlipped} 
-              onFlip={handleFlip} 
-              frontFaceMode={frontFaceMode}
-              showPinyinOnFront={showPinyinOnFront}
-              onTogglePinyinOnFront={() => setShowPinyinOnFront((prev) => !prev)}
-            />
+            <div className="relative w-full max-w-xl">
+              <Flashcard 
+                cardData={currentCard} 
+                isFlipped={isFlipped} 
+                onFlip={handleFlip} 
+                frontFaceMode={frontFaceMode}
+                showPinyinOnFront={showPinyinOnFront}
+                onTogglePinyinOnFront={() => setShowPinyinOnFront((prev) => !prev)}
+              />
+              
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleFavorite(currentCard.hanzi, currentCard.pinyin, currentCard.meaning);
+                }}
+                className={`absolute top-5 left-5 z-30 p-2 rounded-full border transition-all cursor-pointer ${
+                  isFavorite(currentCard.hanzi)
+                    ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
+                    : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
+                }`}
+                title={isFavorite(currentCard.hanzi) ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
+              >
+                <Star size={16} fill={isFavorite(currentCard.hanzi) ? 'currentColor' : 'none'} />
+              </button>
+            </div>
           ) : (
             <div className="text-mute dark:text-on-dark-mute font-mono">Lỗi: Không tìm thấy thẻ bài.</div>
           )}
@@ -1093,6 +1198,7 @@ export default function StudyScreen() {
             className="w-full px-5 py-3 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full shadow-sm text-sm text-ink dark:text-on-dark font-semibold outline-none cursor-pointer hover:bg-surface-bone dark:hover:bg-black transition-all"
           >
             <option value="all">Tất cả các bộ bài</option>
+            <option value="favorites">⭐ Từ vựng yêu thích ({favorites.length})</option>
             {decks?.map((deck) => (
               <option key={deck.id} value={deck.id}>
                 {deck.title || deck.name} {deck.isSystem ? '(Hệ thống)' : '(Tự tạo)'}

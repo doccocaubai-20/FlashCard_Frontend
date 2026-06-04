@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDictionary } from '../hooks/useDictionary';
 import HandwritingCanvas from '../components/common/HandwritingCanvas';
-import { Search, BookOpen, ArrowLeft, Sparkles, Copy, Check, History, Trash2 } from 'lucide-react';
+import { Search, BookOpen, ArrowLeft, Sparkles, Copy, Check, History, Trash2, Star } from 'lucide-react';
 import { dictionaryHistoryApi } from '../services/dictionaryHistoryApi';
+import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { useSearchParams } from 'react-router-dom';
 
 export default function DictionaryScreen() {
@@ -17,6 +18,9 @@ export default function DictionaryScreen() {
   const [history, setHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
 
+  // Favorites State
+  const [favorites, setFavorites] = useState([]);
+
   // Detail View State
   const [selectedWord, setSelectedWord] = useState(null);
   const [activeTab, setActiveTab] = useState('');
@@ -24,6 +28,41 @@ export default function DictionaryScreen() {
   const [aiExplanation, setAiExplanation] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const loadFavorites = async () => {
+    try {
+      const res = await favoriteWordsApi.getFavorites();
+      setFavorites(res.data || []);
+    } catch (err) {
+      console.error('Failed to load favorites:', err);
+    }
+  };
+
+  const isFavorite = (hanzi) => {
+    return favorites.some((f) => f.hanzi === hanzi);
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!selectedWord) return;
+    const hanzi = selectedWord.s;
+    const alreadyFav = isFavorite(hanzi);
+    try {
+      if (alreadyFav) {
+        await favoriteWordsApi.deleteFavoriteByHanzi(hanzi);
+      } else {
+        const sv = getCompoundHanViet(hanzi) || '';
+        await favoriteWordsApi.addFavorite({
+          hanzi,
+          pinyin: selectedWord.p || '',
+          sv,
+          vi: selectedWord.vi || '',
+        });
+      }
+      loadFavorites();
+    } catch (err) {
+      console.error('Failed to toggle favorite:', err);
+    }
+  };
 
   const loadHistory = async () => {
     try {
@@ -39,6 +78,7 @@ export default function DictionaryScreen() {
 
   useEffect(() => {
     loadHistory();
+    loadFavorites();
   }, []);
 
   // Read and handle URL parameter (?word=...) on mount/load
@@ -516,6 +556,21 @@ export default function DictionaryScreen() {
                   {tabDetails?.s === tabDetails?.t ? 'Từ vựng' : 'Giản thể'}
                 </span>
 
+                {tabDetails && (
+                  <button
+                    type="button"
+                    onClick={handleToggleFavorite}
+                    className={`absolute top-4 right-4 p-2 rounded-full border transition-all cursor-pointer ${
+                      isFavorite(tabDetails.s)
+                        ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
+                        : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
+                    }`}
+                    title={isFavorite(tabDetails.s) ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
+                  >
+                    <Star size={16} fill={isFavorite(tabDetails.s) ? 'currentColor' : 'none'} />
+                  </button>
+                )}
+
                 <h2 className="text-6xl md:text-7xl font-bold text-ink dark:text-on-dark tracking-wide font-display py-4">
                   {tabDetails?.s}
                 </h2>
@@ -760,6 +815,9 @@ export default function DictionaryScreen() {
                                 {item.p}
                               </span>
                             )}
+                            {isFavorite(item.s) && (
+                              <Star size={12} className="text-amber-500 fill-amber-500" />
+                            )}
                             {item.t && item.t !== item.s && (
                               <span className="text-xs text-mute dark:text-on-dark-mute font-medium bg-surface-bone dark:bg-surface-dark px-1.5 py-0.5 rounded-full border border-hairline dark:border-divider-dark">
                                 Phồn: {item.t}
@@ -791,7 +849,22 @@ export default function DictionaryScreen() {
 
         {/* Right Panel: Handwriting Recognition Canvas */}
         <div className="lg:col-span-1 h-full">
-          <HandwritingCanvas onRecognize={handleRecognize} />
+          <HandwritingCanvas 
+            onRecognize={handleRecognize} 
+            query={query}
+            onDeleteLastChar={() => {
+              setQuery((prev) => {
+                const next = prev.slice(0, -1);
+                return next;
+              });
+            }}
+            onClearAll={() => {
+              setQuery('');
+              setResults([]);
+              setHasSearched(false);
+              setSelectedWord(null);
+            }}
+          />
         </div>
 
       </div>

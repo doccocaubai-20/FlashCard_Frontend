@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { RotateCcw, Trash2, Check } from 'lucide-react';
 
-export default function HandwritingCanvas({ onRecognize }) {
+export default function HandwritingCanvas({ onRecognize, query, onDeleteLastChar, onClearAll }) {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [strokes, setStrokes] = useState([]);
@@ -246,7 +246,7 @@ export default function HandwritingCanvas({ onRecognize }) {
       </div>
 
       {/* Canvas Box */}
-      <div className="relative aspect-square w-full max-w-[280px] mx-auto border border-hairline dark:border-divider-dark rounded-md bg-canvas dark:bg-black/30 shadow-inner overflow-hidden cursor-crosshair">
+      <div className="relative aspect-square w-full max-w-[360px] mx-auto border border-hairline dark:border-divider-dark rounded-md bg-canvas dark:bg-black/30 shadow-inner overflow-hidden cursor-crosshair">
         <canvas
           ref={canvasRef}
           width={300}
@@ -295,7 +295,29 @@ export default function HandwritingCanvas({ onRecognize }) {
 
       {/* Recognition Results Candidates */}
       <div className="border-t border-hairline dark:border-divider-dark pt-4 text-left">
-        <span className="block text-xs font-mono font-bold text-mute dark:text-on-dark-mute mb-2 uppercase tracking-wider">Gợi ý nhận diện:</span>
+        <div className="flex items-center justify-between mb-2">
+          <span className="block text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Gợi ý nhận diện:</span>
+          {query && onDeleteLastChar && onClearAll && (
+            <div className="flex gap-1.5">
+              <button
+                type="button"
+                onClick={onDeleteLastChar}
+                className="flex items-center gap-0.5 px-2 py-0.5 rounded-full border border-hairline dark:border-divider-dark text-[10px] font-bold text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 bg-surface-card dark:bg-surface-dark transition-all cursor-pointer select-none"
+                title="Xóa ký tự cuối cùng"
+              >
+                ⌫ Xóa chữ
+              </button>
+              <button
+                type="button"
+                onClick={onClearAll}
+                className="flex items-center gap-0.5 px-2 py-0.5 rounded-full border border-hairline dark:border-divider-dark text-[10px] font-bold text-mute hover:text-ink dark:hover:text-on-dark hover:bg-surface-bone dark:hover:bg-black bg-surface-card dark:bg-surface-dark transition-all cursor-pointer select-none"
+                title="Xóa toàn bộ ô tìm kiếm"
+              >
+                ✕ Xóa hết
+              </button>
+            </div>
+          )}
+        </div>
         <div className="flex flex-wrap gap-2 min-h-[48px] items-center bg-surface-bone dark:bg-black/20 p-2.5 rounded-md border border-hairline dark:border-divider-dark">
           {candidates.length > 0 ? (
             candidates.map((char) => (
