@@ -1,15 +1,169 @@
 import React, { useState, useEffect } from 'react';
 import { useDictionary } from '../hooks/useDictionary';
 import HandwritingCanvas from '../components/common/HandwritingCanvas';
-import { Search, BookOpen, ArrowLeft, Sparkles, Copy, Check, History, Trash2, Star } from 'lucide-react';
+import { Search, BookOpen, ArrowLeft, Sparkles, Copy, Check, History, Trash2, Star, Volume2 } from 'lucide-react';
 import { dictionaryHistoryApi } from '../services/dictionaryHistoryApi';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { useSearchParams } from 'react-router-dom';
+import { translationData } from '../data/translationData';
+import { dialoguesData } from '../data/dialoguesData';
+import { grammarData } from '../data/grammarData';
+
+// External sentences loaded dynamically in the background
+let _externalSentences = [];
+
+// Compile list of unique sentences once when the module loads
+const getAllSentences = () => {
+  const list = [];
+  
+  // 1. From translationData
+  if (Array.isArray(translationData)) {
+    translationData.forEach(item => {
+      list.push({
+        hanzi: item.hanzi || '',
+        pinyin: item.pinyin || '',
+        meaning: item.meaning || '',
+        source: `HSK câu dịch (${item.level || 'HSK'})`
+      });
+    });
+  }
+
+  // 2. From dialoguesData
+  if (Array.isArray(dialoguesData)) {
+    dialoguesData.forEach(dialogue => {
+      if (dialogue.lines && Array.isArray(dialogue.lines)) {
+        dialogue.lines.forEach(line => {
+          list.push({
+            hanzi: line.hanzi || '',
+            pinyin: line.pinyin || '',
+            meaning: line.meaning || '',
+            source: `Hội thoại (${dialogue.title || ''} - ${dialogue.level || 'HSK'})`
+          });
+        });
+      }
+    });
+  }
+
+  // 3. From grammarData
+  if (Array.isArray(grammarData)) {
+    grammarData.forEach(grammar => {
+      if (grammar.examples && Array.isArray(grammar.examples)) {
+        grammar.examples.forEach(ex => {
+          list.push({
+            hanzi: ex.hanzi || '',
+            pinyin: ex.pinyin || '',
+            meaning: ex.meaning || '',
+            source: `Ngữ pháp: ${grammar.title || ''} (${grammar.level || 'HSK'})`
+          });
+        });
+      }
+    });
+  }
+
+  // 4. From external ALT corpus
+  if (Array.isArray(_externalSentences)) {
+    _externalSentences.forEach(item => {
+      list.push({
+        hanzi: item.hanzi || '',
+        pinyin: item.pinyin || '',
+        meaning: item.meaning || '',
+        source: item.source || 'ALT song ngữ'
+      });
+    });
+  }
+
+  // Deduplicate by normalized Hanzi
+  const unique = [];
+  const seen = new Set();
+  for (const item of list) {
+    if (!item.hanzi) continue;
+    const cleanHanzi = item.hanzi.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?？。！，、；：\s]/g, '');
+    if (!seen.has(cleanHanzi)) {
+      seen.add(cleanHanzi);
+      unique.push(item);
+    }
+  }
+
+  return unique;
+};
+
+// Cached full sentences array
+let _cachedSentences = null;
+
+const searchRelatedSentences = (q) => {
+  const trimmed = (q || '').trim();
+  if (!trimmed) return [];
+  
+  if (!_cachedSentences) {
+    _cachedSentences = getAllSentences();
+  }
+  
+  // Normalize query for Pinyin search
+  const cleanPinyin = (str) => {
+    return str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // remove tone marks
+      .toLowerCase()
+      .replace(/ü/g, 'v')
+      .replace(/[^a-z0-9]/g, ''); // keep only alphanumeric
+  };
+  
+  const qLower = trimmed.toLowerCase();
+  const qPinyinClean = cleanPinyin(trimmed);
+  const isHanzi = /[\u4e00-\u9fa5]/.test(trimmed);
+  
+  const matched = [];
+  
+  for (const item of _cachedSentences) {
+    let matches = false;
+    
+    if (isHanzi) {
+      // Substring check on Hanzi
+      matches = item.hanzi.includes(trimmed);
+      
+      // Fallback clean check
+      if (!matches) {
+        const cleanQ = trimmed.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?？。！，、；：\s]/g, '');
+        if (cleanQ && cleanQ.length > 0) {
+          matches = item.hanzi.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?？。！，、；：\s]/g, '').includes(cleanQ);
+        }
+      }
+    } else {
+      // Pinyin substring check
+      const sentPinyinClean = cleanPinyin(item.pinyin);
+      if (qPinyinClean && sentPinyinClean.includes(qPinyinClean)) {
+        matches = true;
+      }
+      
+      // Vietnamese meaning substring check
+      if (!matches && item.meaning) {
+        const meaningLower = item.meaning.toLowerCase();
+        if (meaningLower.includes(qLower)) {
+          matches = true;
+        }
+      }
+    }
+    
+    if (matches) {
+      matched.push(item);
+    }
+  }
+  
+  // Sort matches by Hanzi length (shorter sentence first)
+  matched.sort((a, b) => {
+    if (a.hanzi === trimmed && b.hanzi !== trimmed) return -1;
+    if (b.hanzi === trimmed && a.hanzi !== trimmed) return 1;
+    return a.hanzi.length - b.hanzi.length;
+  });
+  
+  return matched.slice(0, 10);
+};
 
 export default function DictionaryScreen() {
   const { lookupMultiple, loading } = useDictionary();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
+  const [relatedSentences, setRelatedSentences] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const wordParam = searchParams.get('word');
@@ -92,6 +246,16 @@ export default function DictionaryScreen() {
     loadHistory();
     loadFavorites();
     loadAiLimit();
+
+    // Dynamically load the large ALT bilingual sentence corpus in the background
+    import('../data/opusSentences.json')
+      .then((module) => {
+        _externalSentences = module.default || [];
+        _cachedSentences = null; // Rebuild cache with the newly loaded sentences on next search
+      })
+      .catch((err) => {
+        console.error('Failed to load ALT parallel sentences:', err);
+      });
   }, []);
 
   // Read and handle URL parameter (?word=...) on mount/load
@@ -122,15 +286,26 @@ export default function DictionaryScreen() {
         }
       };
 
-      runUrlLoad();
+      if (!loading) {
+        runUrlLoad();
+      }
     }
-  }, [wordParam, history.length]);
+  }, [wordParam, loading, history.length]);
+
+  // Re-run search when dictionary finishes loading
+  useEffect(() => {
+    if (!loading && query) {
+      handleSearch(query);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
   // Debounced search on query change
   useEffect(() => {
     const trimmed = (query || '').trim();
     if (!trimmed) {
       setResults([]);
+      setRelatedSentences([]);
       setHasSearched(false);
       return;
     }
@@ -143,10 +318,12 @@ export default function DictionaryScreen() {
   }, [query]);
 
   const handleSearch = async (searchQuery) => {
+    if (loading) return;
     const actualQuery = typeof searchQuery === 'string' ? searchQuery : query;
     const trimmedQuery = (actualQuery || '').trim();
     if (!trimmedQuery) {
       setResults([]);
+      setRelatedSentences([]);
       return;
     }
 
@@ -252,9 +429,160 @@ export default function DictionaryScreen() {
 
     searchResults.sort((a, b) => getSortScore(b) - getSortScore(a));
 
-    setResults(searchResults.slice(0, 30));
+    let finalResults = searchResults.slice(0, 30);
+
+    if (finalResults.length === 0) {
+      const isHanzi = /[\u4e00-\u9fa5]/.test(trimmedQuery);
+      let decomposedResults = [];
+      if (isHanzi) {
+        decomposedResults = await segmentHanziSentence(trimmedQuery);
+      } else {
+        decomposedResults = await resolvePinyinSentence(trimmedQuery);
+      }
+
+      if (decomposedResults.length > 0) {
+        finalResults = decomposedResults;
+      }
+    }
+
+    setResults(finalResults);
     setHasSearched(true);
     setSelectedWord(null); // Reset detail view when performing a new search
+
+    // Match related example sentences in static corpora
+    const matchedSentences = searchRelatedSentences(trimmedQuery);
+    setRelatedSentences(matchedSentences);
+  };
+
+  const segmentPinyin = async (s) => {
+    if (!s) return [];
+    const memo = new Map();
+    const helper = async (startIndex) => {
+      if (startIndex === s.length) return [];
+      if (memo.has(startIndex)) return memo.get(startIndex);
+      
+      for (let len = Math.min(6, s.length - startIndex); len >= 1; len--) {
+        const part = s.substring(startIndex, startIndex + len);
+        const matches = await lookupMultiple('pinyin', part);
+        if (matches && matches.length > 0) {
+          const rest = await helper(startIndex + len);
+          if (rest !== null) {
+            const result = [part, ...rest];
+            memo.set(startIndex, result);
+            return result;
+          }
+        }
+      }
+      memo.set(startIndex, null);
+      return null;
+    };
+    return (await helper(0)) || [];
+  };
+
+  const segmentHanziSentence = async (text) => {
+    const cleanText = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?？。！，、；：]/g, '').trim();
+    if (!cleanText) return [];
+    
+    const chars = Array.from(cleanText);
+    const result = [];
+    let i = 0;
+    const maxWordLength = 8;
+    
+    while (i < chars.length) {
+      let matched = false;
+      for (let len = Math.min(maxWordLength, chars.length - i); len >= 1; len--) {
+        const word = chars.slice(i, i + len).join('');
+        const matches = await lookupMultiple('hanzi', word);
+        const exact = matches.find((m) => m.s === word || m.t === word);
+        if (exact) {
+          result.push({ ...exact, isSegmentedPart: true });
+          i += len;
+          matched = true;
+          break;
+        }
+      }
+      
+      if (!matched) {
+        const char = chars[i];
+        result.push({
+          s: char,
+          t: char,
+          p: '',
+          vi: 'Từ tố chưa được cập nhật',
+          isVirtual: true,
+          isSegmentedPart: true
+        });
+        i++;
+      }
+    }
+    return result;
+  };
+
+  const resolvePinyinSentence = async (text) => {
+    const cleanText = text.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
+    if (!cleanText) return [];
+
+    const words = cleanText.split(/\s+/);
+    const pinyinSyllables = [];
+    let isPurePinyin = true;
+
+    for (const word of words) {
+      const segmented = await segmentPinyin(word);
+      if (segmented && segmented.length > 0) {
+        pinyinSyllables.push(...segmented);
+      } else {
+        isPurePinyin = false;
+        break;
+      }
+    }
+
+    if (!isPurePinyin || pinyinSyllables.length === 0) {
+      return [];
+    }
+
+    const resolvedChars = [];
+    for (const syl of pinyinSyllables) {
+      const matches = await lookupMultiple('pinyin', syl);
+      const singleCharMatches = matches.filter(m => m.s && m.s.length === 1);
+      
+      const getSortScore = (item) => {
+        if (!item) return 0;
+        const vi = (item.vi || '').toLowerCase();
+        let score = 0;
+        if (item.hsk) score += (10 - item.hsk) * 200;
+        if (item.b) score += item.b * 10;
+        if (item.bwr) score -= item.bwr * 0.1;
+        
+        const isVariant = vi.includes('biến thể') || vi.includes('chữ cổ');
+        if (isVariant) score -= 8000;
+        return score;
+      };
+
+      if (singleCharMatches.length > 0) {
+        singleCharMatches.sort((a, b) => getSortScore(b) - getSortScore(a));
+        resolvedChars.push(singleCharMatches[0]);
+      } else if (matches.length > 0) {
+        matches.sort((a, b) => getSortScore(b) - getSortScore(a));
+        resolvedChars.push(matches[0]);
+      }
+    }
+
+    if (resolvedChars.length === 0) {
+      return [];
+    }
+
+    const hanziSentence = resolvedChars.map(c => c.s).join('');
+    return await segmentHanziSentence(hanziSentence);
+  };
+
+  const speakSentence = (e, text) => {
+    e.stopPropagation();
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'zh-CN';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
   };
 
   const handleKeyDown = (e) => {
@@ -744,7 +1072,7 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                   </div>
                 )}
 
-                {!loading && results.length === 0 && (
+                {!loading && results.length === 0 && relatedSentences.length === 0 && (
                   hasSearched ? (
                     <div className="flex flex-col items-center justify-center py-20 text-mute bg-surface-bone/30 dark:bg-surface-dark/30 rounded-md border border-dashed border-hairline dark:border-divider-dark animate-fade-in">
                       <BookOpen size={48} className="stroke-1 text-mute dark:text-on-dark-mute mb-3" />
@@ -824,60 +1152,118 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                   )
                 )}
 
-                {!loading && results.length > 0 && (
-                  <div className="divide-y divide-hairline dark:divide-divider-dark">
-                    {results.map((item, idx) => (
-                      <div
-                        key={idx}
-                        onClick={() => handleSelectWord(item)}
-                        className="flex gap-5 py-4 items-center hover:bg-surface-bone/50 dark:hover:bg-surface-dark/30 px-4 rounded-md transition-all border border-transparent hover:border-hairline dark:hover:border-divider-dark cursor-pointer group bg-transparent"
-                      >
-                        {/* Character Column */}
-                        <div className="flex-shrink-0 w-16 min-h-16 h-auto py-2.5 bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md flex flex-col items-center justify-center shadow-sm font-display group-hover:bg-surface-card dark:group-hover:bg-black group-hover:border-primary/50 group-hover:text-primary dark:group-hover:text-primary transition-all">
-                          <div className={`flex flex-col items-center justify-center gap-0.5 leading-none font-semibold text-ink dark:text-on-dark ${item.s.length > 3 ? 'text-xl' : item.s.length > 1 ? 'text-2xl' : 'text-3xl'}`}>
-                            {Array.from(item.s).map((char, index) => (
-                              <span key={index}>{char}</span>
-                            ))}
+                {!loading && (results.length > 0 || relatedSentences.length > 0) && (
+                  <div className="flex flex-col gap-6">
+                    {/* Word segments/results */}
+                    {results.length > 0 && (
+                      <div className="flex flex-col gap-3 animate-fade-in">
+                        {results[0]?.isSegmentedPart && (
+                          <div className="bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/30 p-3.5 rounded-xl text-xs text-primary dark:text-link text-left flex items-start gap-2.5 shadow-xs">
+                            <span className="text-sm shrink-0">💡</span>
+                            <div>
+                              <p className="font-bold">Nhận diện câu/cụm từ ghép</p>
+                              <p className="mt-0.5 text-mute dark:text-on-dark-mute font-normal">Từ điển đã tự động phân tích và chia câu của bạn thành các từ tố đơn lẻ dưới đây:</p>
+                            </div>
                           </div>
-                        </div>
+                        )}
+                        <div className="divide-y divide-hairline dark:divide-divider-dark">
+                          {results.map((item, idx) => (
+                            <div
+                              key={idx}
+                              onClick={() => handleSelectWord(item)}
+                              className="flex gap-5 py-4 items-center hover:bg-surface-bone/50 dark:hover:bg-surface-dark/30 px-4 rounded-md transition-all border border-transparent hover:border-hairline dark:hover:border-divider-dark cursor-pointer group bg-transparent"
+                            >
+                              {/* Character Column */}
+                              <div className="flex-shrink-0 w-16 min-h-16 h-auto py-2.5 bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md flex flex-col items-center justify-center shadow-sm font-display group-hover:bg-surface-card dark:group-hover:bg-black group-hover:border-primary/50 group-hover:text-primary dark:group-hover:text-primary transition-all">
+                                <div className={`flex flex-col items-center justify-center gap-0.5 leading-none font-semibold text-ink dark:text-on-dark ${item.s.length > 3 ? 'text-xl' : item.s.length > 1 ? 'text-2xl' : 'text-3xl'}`}>
+                                  {Array.from(item.s).map((char, index) => (
+                                    <span key={index}>{char}</span>
+                                  ))}
+                                </div>
+                              </div>
 
-                        {/* Word Details */}
-                        <div className="flex-1 space-y-1.5 text-left">
-                          <div className="flex flex-wrap items-center gap-2">
-                            {getCompoundHanViet(item.s) && (
-                              <span className="text-md font-bold text-ink dark:text-on-dark group-hover:text-primary dark:group-hover:text-primary transition-colors">
-                                {getCompoundHanViet(item.s).toUpperCase()}
-                              </span>
-                            )}
-                            {item.p && (
-                              <span className="text-xs font-semibold text-primary dark:text-link bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
-                                {item.p}
-                              </span>
-                            )}
-                            {isFavorite(item.s) && (
-                              <Star size={12} className="text-amber-500 fill-amber-500" />
-                            )}
-                            {item.t && item.t !== item.s && (
-                              <span className="text-xs text-mute dark:text-on-dark-mute font-medium bg-surface-bone dark:bg-surface-dark px-1.5 py-0.5 rounded-full border border-hairline dark:border-divider-dark">
-                                Phồn: {item.t}
-                              </span>
-                            )}
-                          </div>
+                              {/* Word Details */}
+                              <div className="flex-1 space-y-1.5 text-left">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  {getCompoundHanViet(item.s) && (
+                                    <span className="text-md font-bold text-ink dark:text-on-dark group-hover:text-primary dark:group-hover:text-primary transition-colors">
+                                      {getCompoundHanViet(item.s).toUpperCase()}
+                                    </span>
+                                  )}
+                                  {item.p && (
+                                    <span className="text-xs font-semibold text-primary dark:text-link bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
+                                      {item.p}
+                                    </span>
+                                  )}
+                                  {isFavorite(item.s) && (
+                                    <Star size={12} className="text-amber-500 fill-amber-500" />
+                                  )}
+                                  {item.t && item.t !== item.s && (
+                                    <span className="text-xs text-mute dark:text-on-dark-mute font-medium bg-surface-bone dark:bg-surface-dark px-1.5 py-0.5 rounded-full border border-hairline dark:border-divider-dark">
+                                      Phồn: {item.t}
+                                    </span>
+                                  )}
+                                </div>
 
-                          {item.vi && (
-                            <p className="text-sm text-body dark:text-on-dark-mute leading-relaxed font-medium line-clamp-2">
-                              {item.vi}
-                            </p>
-                          )}
+                                {item.vi && (
+                                  <p className="text-sm text-body dark:text-on-dark-mute leading-relaxed font-medium line-clamp-2">
+                                    {item.vi}
+                                  </p>
+                                )}
 
-                          {item.en && item.en.length > 0 && (
-                            <p className="text-[11px] text-mute dark:text-on-dark-mute font-medium italic">
-                              EN: {Array.isArray(item.en) ? item.en.join(', ') : item.en}
-                            </p>
-                          )}
+                                {item.en && item.en.length > 0 && (
+                                  <p className="text-[11px] text-mute dark:text-on-dark-mute font-medium italic">
+                                    EN: {Array.isArray(item.en) ? item.en.join(', ') : item.en}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    ))}
+                    )}
+
+                    {/* Related Sentences section */}
+                    {relatedSentences.length > 0 && (
+                      <div className="flex flex-col gap-4 text-left border-t border-hairline dark:border-divider-dark pt-5 animate-fade-in">
+                        <h4 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider flex items-center gap-1.5">
+                          💡 Câu ví dụ liên quan
+                        </h4>
+                        <div className="flex flex-col gap-3">
+                          {relatedSentences.map((sentence, sIdx) => (
+                            <div 
+                              key={sIdx}
+                              className="bg-surface-bone/35 dark:bg-surface-dark/20 p-4 rounded-xl border border-hairline dark:border-divider-dark flex justify-between items-start gap-4 hover:border-primary/30 transition-all shadow-xs"
+                            >
+                              <div className="flex-1 space-y-1">
+                                <div className="text-lg font-display font-extrabold text-ink dark:text-on-dark">
+                                  {sentence.hanzi}
+                                </div>
+                                <div className="text-xs font-mono font-bold text-primary dark:text-link">
+                                  {sentence.pinyin}
+                                </div>
+                                <div className="text-xs text-body dark:text-on-dark-mute italic font-medium pt-0.5">
+                                  {sentence.meaning}
+                                </div>
+                                <div className="pt-1.5">
+                                  <span className="text-[9px] uppercase font-bold text-mute dark:text-on-dark-mute bg-surface-bone dark:bg-black/20 border border-hairline dark:border-divider-dark px-1.5 py-0.5 rounded">
+                                    {sentence.source}
+                                  </span>
+                                </div>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={(e) => speakSentence(e, sentence.hanzi)}
+                                className="h-8 w-8 rounded-full bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-primary shadow-sm flex items-center justify-center cursor-pointer active:scale-95 transition-all shrink-0"
+                                title="Nghe đọc toàn bộ câu"
+                              >
+                                <Volume2 size={13} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -900,6 +1286,7 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
             onClearAll={() => {
               setQuery('');
               setResults([]);
+              setRelatedSentences([]);
               setHasSearched(false);
               setSelectedWord(null);
             }}

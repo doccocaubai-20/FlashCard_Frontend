@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lora:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 
 @import "tailwindcss";
 
@@ -7,81 +7,204 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Colors based on DESIGN.md (with primary teal #54cbd4) */
-  --color-primary: #54cbd4;
-  --color-primary-deep: #3ba4ad;
+  /* ── Modern Asian Minimalist Palette ── */
+  /* Primary: Jade teal — tri thức, dịu mắt */
+  --color-primary: #0F5257;
+  --color-primary-deep: #0a3b3f;
+  --color-primary-light: #e8f4f5;
   --color-on-primary: #ffffff;
-  
-  --color-ink: #202020;
-  --color-body: #3a3a3a;
-  --color-charcoal: #575757;
-  --color-mute: #646464;
-  --color-ash: #8d8d8d;
-  --color-stone: #bbbbbb;
-  
-  --color-canvas: #f9f7f3;
-  --color-surface-bone: #f3f0e8;
-  --color-surface-card: #ffffff;
-  --color-surface-dark: #202020;
-  --color-surface-deep: #000000;
-  
-  --color-hairline: rgba(32, 32, 32, 0.12);
-  --color-hairline-strong: #202020;
-  --color-divider-dark: rgba(255, 255, 255, 0.2);
-  
-  --color-hero-warm: #54cbd4;
-  --color-hero-glow: #7ee0e7;
-  --color-hero-pink: #b8f0f4;
-  --color-badge-success: #2b9a66;
-  --color-link: #54cbd4;
-  --color-ring-focus: rgba(84, 203, 212, 0.5);
 
-  /* Fonts */
-  --font-display: 'Inter', sans-serif;
-  --font-sans: 'Inter', sans-serif;
+  /* Text scale — than tối mềm mại */
+  --color-ink: #1a2332;
+  --color-body: #2c3e50;
+  --color-charcoal: #4a5568;
+  --color-mute: #718096;
+  --color-ash: #a0aec0;
+  --color-stone: #cbd5e0;
+
+  /* Backgrounds — giấy cổ nhẹ nhàng */
+  --color-canvas: #f8f9fa;
+  --color-surface-bone: #f1f3f5;
+  --color-surface-card: #ffffff;
+  --color-surface-dark: #1a2332;
+  --color-surface-deep: #0f1923;
+
+  /* Borders */
+  --color-hairline: rgba(26, 35, 50, 0.09);
+  --color-hairline-strong: #1a2332;
+  --color-divider-dark: rgba(255, 255, 255, 0.12);
+
+  /* Accents */
+  --color-hero-warm: #0F5257;
+  --color-hero-glow: #1a7a82;
+  --color-hero-pink: #d4eef0;
+  --color-badge-success: #276749;
+  --color-link: #0F5257;
+  --color-ring-focus: rgba(15, 82, 87, 0.25);
+
+  /* Fonts — Be Vietnam Pro (sans) + Lora (display/serif tiêu đề) */
+  --font-display: 'Lora', 'Be Vietnam Pro', serif;
+  --font-sans: 'Be Vietnam Pro', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Border Radii */
+  /* Border Radii — vừa phải, không quá tròn */
   --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 10px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
   --radius-lg: 16px;
   --radius-full: 9999px;
-  
+
   /* Animate */
   --animate-fade-in: fade-in 0.3s ease-out;
 }
 
-/* Base resets & typography style using dynamic CSS custom properties */
+/* ── Base ── */
 @layer base {
   body {
     background-color: var(--color-canvas);
+    color: var(--color-body);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Lora', 'Be Vietnam Pro', serif;
     color: var(--color-ink);
-    font-family: 'Inter', sans-serif;
   }
 }
 
-/* Global Dark Mode custom variable overrides to dynamically adjust text contrast */
+/* ── Dark Mode ── */
 .dark {
-  --color-ink: #fcfcfc;
-  --color-body: rgba(252, 252, 252, 0.76);
-  --color-charcoal: rgba(252, 252, 252, 0.64);
-  --color-mute: rgba(252, 252, 252, 0.52);
-  --color-ash: rgba(252, 252, 252, 0.4);
-  --color-stone: rgba(252, 252, 252, 0.28);
-  
-  --color-canvas: #1c1c1a; /* slightly warmer dark background matching developer theme */
-  --color-surface-bone: #141413;
-  --color-surface-card: #262624;
-  --color-surface-dark: #1c1c1a;
-  
-  --color-hairline: rgba(255, 255, 255, 0.1);
-  --color-hairline-strong: #fcfcfc;
+  --color-ink: #f0f4f8;
+  --color-body: rgba(240, 244, 248, 0.82);
+  --color-charcoal: rgba(240, 244, 248, 0.66);
+  --color-mute: rgba(240, 244, 248, 0.48);
+  --color-ash: rgba(240, 244, 248, 0.36);
+  --color-stone: rgba(240, 244, 248, 0.24);
+
+  --color-canvas: #111827;
+  --color-surface-bone: #0d1420;
+  --color-surface-card: #1a2332;
+  --color-surface-dark: #111827;
+
+  --color-hairline: rgba(240, 244, 248, 0.1);
+  --color-hairline-strong: #f0f4f8;
+
+  --color-primary-light: rgba(15, 82, 87, 0.25);
 }
 
-/* Ensure browser dropdown select options render with high contrast in dark mode */
-.dark select, 
+/* ── Dark mode select ── */
+.dark select,
 .dark option {
-  background-color: #262624 !important;
-  color: #fcfcfc !important;
+  background-color: #1a2332 !important;
+  color: #f0f4f8 !important;
+}
+
+/* ── Fade in animation ── */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════════════════════
+   GLOBAL CARD SYSTEM — Đồng bộ toàn app
+   Bo góc 12px + Soft shadow + Border ẩn
+   ════════════════════════════════════════════ */
+@layer utilities {
+
+  /* ── Chuẩn card chính — dùng thay thế border-hairline ── */
+  .ui-card {
+    border-radius: 12px;
+    background-color: var(--color-surface-card);
+    border: 1px solid rgba(26, 35, 50, 0.07);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.04),
+      0 4px 8px rgba(0, 0, 0, 0.03);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .dark .ui-card {
+    background-color: var(--color-surface-card);
+    border-color: rgba(240, 244, 248, 0.07);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.15),
+      0 4px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  /* ── Hover variant — card có thể click ── */
+  .ui-card-hover {
+    border-radius: 12px;
+    background-color: var(--color-surface-card);
+    border: 1px solid rgba(26, 35, 50, 0.07);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.04),
+      0 4px 8px rgba(0, 0, 0, 0.03);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+  }
+
+  .ui-card-hover:hover {
+    border-color: rgba(15, 82, 87, 0.25);
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.07),
+      0 8px 24px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+  }
+
+  .dark .ui-card-hover {
+    background-color: var(--color-surface-card);
+    border-color: rgba(240, 244, 248, 0.07);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.15),
+      0 4px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  .dark .ui-card-hover:hover {
+    border-color: rgba(15, 82, 87, 0.4);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.25),
+      0 8px 28px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+  }
+}
+
+/* ════════════════════════════════════════════
+   GLOBAL OVERRIDE — Đồng bộ rounded-md → 12px
+   Áp dụng cho tất cả card có border-hairline
+   ════════════════════════════════════════════ */
+
+/* Tất cả div/section có class rounded-md và border → đổi radius + shadow */
+.rounded-md.border,
+.rounded-md.border-hairline {
+  border-radius: 12px !important;
+  border-color: rgba(26, 35, 50, 0.07) !important;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 8px rgba(0, 0, 0, 0.03) !important;
+}
+
+.dark .rounded-md.border,
+.dark .rounded-md.border-hairline {
+  border-color: rgba(240, 244, 248, 0.07) !important;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* rounded-xl vẫn giữ 16px như mong muốn */
+.rounded-xl.border,
+.rounded-xl.border-hairline {
+  border-color: rgba(26, 35, 50, 0.07) !important;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 8px rgba(0, 0, 0, 0.03) !important;
+}
+
+.dark .rounded-xl.border,
+.dark .rounded-xl.border-hairline {
+  border-color: rgba(240, 244, 248, 0.07) !important;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.12) !important;
 }

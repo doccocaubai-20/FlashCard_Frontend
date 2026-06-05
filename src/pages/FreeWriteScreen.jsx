@@ -6,7 +6,7 @@ import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { BookOpen, Star, Sparkles, Volume2, HelpCircle, ArrowRight } from 'lucide-react';
 
 export default function FreeWriteScreen() {
-  const { lookupMultiple } = useDictionary();
+  const { lookupMultiple, loading } = useDictionary();
   const [query, setQuery] = useState('');
   const [selectedWord, setSelectedWord] = useState(null);
   const [favorites, setFavorites] = useState([]);
@@ -45,9 +45,19 @@ export default function FreeWriteScreen() {
     if (wordParam) {
       const cleanWord = decodeURIComponent(wordParam).trim();
       setQuery(cleanWord);
-      handleSearch(cleanWord);
+      if (!loading) {
+        handleSearch(cleanWord);
+      }
     }
-  }, [wordParam]);
+  }, [wordParam, loading]);
+
+  // Re-run search when dictionary finishes loading
+  useEffect(() => {
+    if (!loading && query) {
+      handleSearch(query);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
   const isFavorite = (hanzi) => {
     return favorites.some((f) => f.hanzi === hanzi);
@@ -265,6 +275,7 @@ export default function FreeWriteScreen() {
   };
 
   const handleSearch = async (searchQuery) => {
+    if (loading) return;
     const q = (searchQuery || '').trim();
     if (!q) {
       setSelectedWord(null);
@@ -438,7 +449,6 @@ export default function FreeWriteScreen() {
       }
     });
   };
-
   const handleReset = () => {
     if (!writerRef.current) return;
     writerRef.current.cancelQuiz();
@@ -459,7 +469,7 @@ export default function FreeWriteScreen() {
         <div>
           <h1 className="font-display text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight">Luyện viết chữ Hán</h1>
           <p className="text-mute dark:text-on-dark-mute text-sm mt-0.5">
-            Viết chữ lên bảng vẽ bên trái để nhận diện và luyện viết theo nét chuẩn ở bên phải.
+            Luyện viết chữ Hán theo các nét chuẩn ở bên trái và viết tay nhận diện, tra cứu ở bên phải.
           </p>
         </div>
       </div>
@@ -467,24 +477,99 @@ export default function FreeWriteScreen() {
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
-        {/* Left Side: Handwriting Canvas */}
-        <div className="lg:col-span-5">
-          <HandwritingCanvas 
-            onRecognize={handleRecognize} 
-            query={query}
-            onDeleteLastChar={() => {
-              setQuery((prev) => {
-                const next = prev.slice(0, -1);
-                handleSearch(next);
-                return next;
-              });
-            }}
-            onClearAll={handleClearAll}
-          />
-        </div>
+        {/* Left Side: Writing Practice (Luyện viết chuẩn) */}
+        {selectedWord ? (
+          <div className="lg:col-span-5 bg-surface-card dark:bg-surface-dark/50 p-6 rounded-xl border border-hairline dark:border-white/5 shadow-sm flex flex-col items-center gap-4 transition-colors min-h-[550px] justify-center">
+            <span className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Luyện viết chuẩn</span>
+            
+            {chars.length > 1 && (
+              <div className="flex gap-1.5 mb-1 overflow-x-auto max-w-full select-none no-scrollbar">
+                {chars.map((c, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setActiveCharIndex(i)}
+                    className={`px-3 py-1 rounded-full text-xs font-bold font-mono transition-all cursor-pointer ${
+                      activeCharIndex === i
+                        ? 'bg-primary text-white shadow-sm'
+                        : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-white/5 text-ink dark:text-on-dark'
+                    }`}
+                  >
+                    Chữ {i + 1}: {c}
+                  </button>
+                ))}
+              </div>
+            )}
 
-        {/* Right Side: Translation Details & Stroke Grid */}
-        <div className="lg:col-span-7 bg-surface-card dark:bg-surface-dark/50 p-6 rounded-md border border-hairline dark:border-divider-dark shadow-sm flex flex-col gap-6 transition-colors min-h-[550px]">
+            {/* Writer Container */}
+            <div className="relative bg-surface-card dark:bg-surface-dark border border-hairline dark:border-white/5 rounded-xl p-2 w-[236px] h-[236px] flex items-center justify-center shadow-inner">
+              <div ref={containerRef} id="free-write-canvas" className="w-[220px] h-[220px]" />
+            </div>
+
+            {mode === 'quiz' && (
+              <div className="w-full max-w-[236px] bg-surface-bone/50 dark:bg-black/35 p-3.5 rounded-xl border border-hairline dark:border-white/5 text-left space-y-1 animate-fade-in">
+                <div className="flex justify-between text-xs font-semibold">
+                  <span className="text-mute">Nét vẽ:</span>
+                  <span className="text-primary font-mono font-bold">{quizCurrentStroke} / {quizTotalStrokes}</span>
+                </div>
+                <div className="flex justify-between text-xs font-semibold">
+                  <span className="text-mute">Lỗi vẽ sai:</span>
+                  <span className="text-red-500 font-mono font-bold">{quizMistakes}</span>
+                </div>
+                <div className="flex justify-between text-xs font-semibold">
+                  <span className="text-mute">Đo độ chính xác:</span>
+                  <span className="text-teal-500 font-mono font-bold">{quizScore}%</span>
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleAnimate}
+                className="px-3.5 py-1.5 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark text-ink dark:text-on-dark text-xs font-mono font-semibold rounded-full transition-all cursor-pointer shadow-sm"
+              >
+                Xem nét
+              </button>
+              <button
+                type="button"
+                onClick={handleQuiz}
+                className={`px-3.5 py-1.5 text-white text-xs font-mono font-semibold rounded-full shadow transition-all cursor-pointer ${
+                  mode === 'quiz' ? 'bg-primary/50' : 'bg-primary hover:bg-primary-deep'
+                }`}
+              >
+                {mode === 'quiz' ? 'Đang viết...' : 'Luyện viết'}
+              </button>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="px-3.5 py-1.5 bg-surface-bone hover:bg-surface-bone/70 dark:bg-surface-dark dark:hover:bg-surface-dark/70 text-ink dark:text-on-dark text-xs font-mono font-semibold rounded-full transition-all cursor-pointer border border-hairline dark:border-divider-dark"
+              >
+                Làm mới
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="lg:col-span-5 bg-surface-card dark:bg-surface-dark/30 p-6 rounded-xl border border-dashed border-hairline dark:border-white/5 shadow-sm flex flex-col items-center justify-center py-20 text-mute text-center min-h-[550px] transition-colors">
+            {loading ? (
+              <>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-3"></div>
+                <span className="text-sm font-medium">Đang tải và đồng bộ từ điển...</span>
+              </>
+            ) : (
+              <>
+                <BookOpen size={48} className="stroke-1 text-mute dark:text-on-dark-mute mb-3 animate-pulse" />
+                <h3 className="text-md font-bold text-ink dark:text-on-dark mb-1">Chưa chọn từ</h3>
+                <p className="text-xs text-mute dark:text-on-dark-mute max-w-xs leading-relaxed">
+                  Hãy nhập từ khóa hoặc vẽ chữ ở bảng viết tay bên phải để bắt đầu phân tích và luyện nét viết chuẩn.
+                </p>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Right Side: Translation Details & Handwriting Canvas */}
+        <div className="lg:col-span-7 bg-surface-card dark:bg-surface-dark/50 p-6 rounded-xl border border-hairline dark:border-white/5 shadow-sm flex flex-col gap-6 transition-colors min-h-[550px]">
           
           {/* Query Edit Bar */}
           <div className="flex gap-2.5 items-center">
@@ -583,10 +668,10 @@ export default function FreeWriteScreen() {
               </div>
 
               {/* Bento Content Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start flex-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start flex-1">
                 
                 {/* Details & Meaning */}
-                <div className="space-y-4 md:col-span-1">
+                <div className="space-y-4">
                   <div>
                     <h4 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-2">Định nghĩa & Bản dịch</h4>
                     <div className="bg-surface-bone/50 dark:bg-black/20 p-4 rounded-md border border-hairline dark:border-divider-dark">
@@ -622,90 +707,44 @@ export default function FreeWriteScreen() {
                   )}
                 </div>
 
-                {/* Animated Calligraphy Grid */}
-                <div className="flex flex-col items-center gap-4 bg-surface-bone/30 dark:bg-black/10 border border-hairline dark:border-divider-dark rounded-md p-5 shadow-sm md:col-span-2">
-                  <span className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Luyện viết chuẩn</span>
-                  
-                  {chars.length > 1 && (
-                    <div className="flex gap-1.5 mb-1 overflow-x-auto max-w-full select-none no-scrollbar">
-                      {chars.map((c, i) => (
-                        <button
-                          key={i}
-                          type="button"
-                          onClick={() => setActiveCharIndex(i)}
-                          className={`px-3 py-1 rounded-full text-xs font-bold font-mono transition-all cursor-pointer ${
-                            activeCharIndex === i
-                              ? 'bg-primary text-white shadow-sm'
-                              : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-                          }`}
-                        >
-                          Chữ {i + 1}: {c}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Writer Container */}
-                  <div className="relative bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md p-2 w-[236px] h-[236px] flex items-center justify-center shadow-inner">
-                    <div ref={containerRef} id="free-write-canvas" className="w-[220px] h-[220px]" />
-                  </div>
-
-                  {mode === 'quiz' && (
-                    <div className="w-full max-w-[236px] bg-surface-bone/50 dark:bg-black/35 p-3.5 rounded-md border border-hairline dark:border-divider-dark text-left space-y-1">
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-mute">Nét vẽ:</span>
-                        <span className="text-primary font-mono font-bold">{quizCurrentStroke} / {quizTotalStrokes}</span>
-                      </div>
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-mute">Lỗi vẽ sai:</span>
-                        <span className="text-red-500 font-mono font-bold">{quizMistakes}</span>
-                      </div>
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-mute">Đo độ chính xác:</span>
-                        <span className="text-teal-500 font-mono font-bold">{quizScore}%</span>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={handleAnimate}
-                      className="px-3.5 py-1.5 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark text-ink dark:text-on-dark text-xs font-mono font-semibold rounded-full transition-all cursor-pointer shadow-sm"
-                    >
-                      Xem nét
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleQuiz}
-                      className={`px-3.5 py-1.5 text-white text-xs font-mono font-semibold rounded-full shadow transition-all cursor-pointer ${
-                        mode === 'quiz' ? 'bg-primary/50' : 'bg-primary hover:bg-primary-deep'
-                      }`}
-                    >
-                      {mode === 'quiz' ? 'Đang viết...' : 'Luyện viết'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleReset}
-                      className="px-3.5 py-1.5 bg-surface-bone hover:bg-surface-bone/70 dark:bg-surface-dark dark:hover:bg-surface-dark/70 text-ink dark:text-on-dark text-xs font-mono font-semibold rounded-full transition-all cursor-pointer border border-hairline dark:border-divider-dark"
-                    >
-                      Làm mới
-                    </button>
-                  </div>
+                {/* Handwriting Canvas */}
+                <div>
+                  <HandwritingCanvas 
+                    onRecognize={handleRecognize} 
+                    query={query}
+                    onDeleteLastChar={() => {
+                      setQuery((prev) => {
+                        const next = prev.slice(0, -1);
+                        handleSearch(next);
+                        return next;
+                      });
+                    }}
+                    onClearAll={handleClearAll}
+                  />
                 </div>
 
               </div>
 
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-20 text-mute bg-surface-bone/20 dark:bg-surface-dark/20 rounded-md border border-dashed border-hairline dark:border-divider-dark animate-fade-in flex-1">
-              <BookOpen size={48} className="stroke-1 text-mute dark:text-on-dark-mute mb-3" />
-              <p className="text-sm font-medium text-body dark:text-on-dark-mute max-w-sm text-center leading-relaxed">
-                Nhấp chuột vẽ các nét tiếng Trung lên bảng vẽ bên trái và bấm vào gợi ý nhận diện để bắt đầu phân tích từ vựng và luyện nét viết.
-              </p>
+            <div className="flex-1 flex flex-col justify-center max-w-[400px] mx-auto w-full">
+              <HandwritingCanvas 
+                onRecognize={handleRecognize} 
+                query={query}
+                onDeleteLastChar={() => {
+                  setQuery((prev) => {
+                    const next = prev.slice(0, -1);
+                    handleSearch(next);
+                    return next;
+                  });
+                }}
+                onClearAll={handleClearAll}
+              />
             </div>
           )}
         </div>
+
+      </div>
 
       {/* Quiz Report Modal */}
       {quizReport && (
@@ -781,7 +820,6 @@ export default function FreeWriteScreen() {
           </div>
         </div>
       )}
-      </div>
     </div>
   );
 }

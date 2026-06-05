@@ -75,37 +75,37 @@ export default function StudyHubScreen() {
         {activities.map((act, index) => {
           const Icon = act.icon;
           return (
-            <div 
+            <div
               key={index}
               onClick={() => navigate(act.path)}
-              className="group border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone/30 dark:bg-surface-dark/40 dark:hover:bg-black/35 rounded-lg p-6 flex flex-col justify-between shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left"
+              className="group border border-hairline dark:border-white/5 bg-surface-card dark:bg-surface-dark/60 rounded-xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left"
             >
               <div className="space-y-4">
                 {/* Icon & Badge row */}
                 <div className="flex justify-between items-center">
-                  <div className={`h-12 w-12 rounded-full border bg-gradient-to-r ${act.color} flex items-center justify-center`}>
-                    <Icon size={22} />
+                  <div className={`h-11 w-11 rounded-xl border bg-gradient-to-br ${act.color} flex items-center justify-center`}>
+                    <Icon size={20} />
                   </div>
-                  <span className="text-[9px] font-mono font-bold tracking-wider uppercase text-mute border border-hairline dark:border-divider-dark px-2.5 py-1 rounded-full bg-surface-bone dark:bg-black/20">
+                  <span className="text-[9px] font-bold tracking-widest uppercase text-mute px-2.5 py-1 rounded-full bg-surface-bone dark:bg-white/5">
                     {act.badge}
                   </span>
                 </div>
 
                 {/* Info */}
-                <div className="space-y-2">
-                  <h3 className="font-display text-lg font-bold text-ink dark:text-on-dark group-hover:text-primary transition-colors flex items-center gap-1.5">
+                <div className="space-y-1.5">
+                  <h3 className="font-display text-base font-semibold text-ink dark:text-on-dark group-hover:text-primary transition-colors">
                     {act.title}
                   </h3>
-                  <p className="text-xs text-mute leading-relaxed min-h-[50px]">
+                  <p className="text-xs text-mute leading-relaxed min-h-[44px]">
                     {act.description}
                   </p>
                 </div>
               </div>
 
               {/* Action link */}
-              <div className="pt-4 border-t border-hairline dark:border-divider-dark mt-4 flex items-center justify-between text-xs font-bold text-primary group-hover:text-primary-deep transition-colors">
+              <div className="pt-4 border-t border-hairline dark:border-white/8 mt-4 flex items-center justify-between text-xs font-bold text-primary group-hover:text-primary-deep transition-colors">
                 <span>Bắt đầu học</span>
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-200" />
+                <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-200" />
               </div>
             </div>
           );

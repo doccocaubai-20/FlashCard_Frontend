@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../features/auth/authSlice';
-import { Sun, Moon, Camera, Check, ShieldAlert } from 'lucide-react';
+import { Sun, Moon, Camera, Check, ShieldAlert, Upload, Loader2 } from 'lucide-react';
+import api from '../services/api';
 
 const predefinedAvatarSeeds = ['Felix', 'Chloe', 'Buddy', 'Buster', 'Coco', 'Angel'];
 
@@ -41,22 +42,42 @@ export default function SettingsScreen() {
 
   const [profileMsg, setProfileMsg] = useState('');
   const [passwordMsg, setPasswordMsg] = useState('');
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarMsg, setAvatarMsg] = useState('');
 
-  // Handle local file upload converting to base64
-  const handleAvatarFileChange = (e) => {
+  // Handle file upload via API → Supabase Storage
+  const handleAvatarFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (file.size > 1.2 * 1024 * 1024) {
-      alert('Kích thước ảnh quá lớn! Vui lòng chọn ảnh nhỏ hơn 1.2MB.');
+    // Validate type
+    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowed.includes(file.type)) {
+      setAvatarMsg('❌ Chỉ chấp nhận ảnh JPG, PNG, WebP hoặc GIF!');
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setAvatarMsg('❌ Ảnh không được vượt quá 2MB!');
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setProfileData((prev) => ({ ...prev, avatarUrl: reader.result }));
-    };
-    reader.readAsDataURL(file);
+    setAvatarUploading(true);
+    setAvatarMsg('Đang tải ảnh lên...');
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await api.post('/users/upload-avatar', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      const { avatarUrl } = res.data;
+      setProfileData((prev) => ({ ...prev, avatarUrl }));
+      setAvatarMsg('✅ Tải ảnh lên thành công!');
+    } catch (err) {
+      const msg = err?.response?.data?.message || 'Lỗi tải ảnh lên!';
+      setAvatarMsg(`❌ ${msg}`);
+    } finally {
+      setAvatarUploading(false);
+    }
   };
 
   const handleProfileSubmit = async (e) => {
@@ -197,12 +218,23 @@ export default function SettingsScreen() {
               {/* Camera Hover Overlay */}
               <label
                 htmlFor="avatar-file-input"
-                className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-xs font-bold gap-1"
+                className={`absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity text-xs font-bold gap-1 ${avatarUploading ? 'pointer-events-none' : 'cursor-pointer'}`}
               >
-                <Camera size={20} className="text-white/90" />
-                <span className="text-white/90">Tải ảnh lên</span>
+                {avatarUploading ? (
+                  <Loader2 size={20} className="text-white/90 animate-spin" />
+                ) : (
+                  <Camera size={20} className="text-white/90" />
+                )}
+                <span className="text-white/90">{avatarUploading ? 'Đang tải...' : 'Tải ảnh lên'}</span>
               </label>
             </div>
+
+            {/* Avatar status message */}
+            {avatarMsg && (
+              <p className={`text-xs font-semibold ${avatarMsg.startsWith('✅') ? 'text-emerald-600 dark:text-emerald-400' : avatarMsg.startsWith('❌') ? 'text-red-500' : 'text-mute'}`}>
+                {avatarMsg}
+              </p>
+            )}
 
             {/* Quick Predefined Avatar Selector Gallery */}
             <div className="space-y-2.5 text-center w-full max-w-sm">

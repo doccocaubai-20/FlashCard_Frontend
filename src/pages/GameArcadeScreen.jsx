@@ -60,50 +60,49 @@ export default function GameArcadeScreen() {
         {games.map((game, index) => {
           const Icon = game.icon;
           return (
-            <div 
+            <div
               key={index}
               onClick={() => navigate(game.path)}
-              className="group border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone/30 dark:bg-surface-dark/40 dark:hover:bg-black/35 rounded-lg p-6 flex flex-col justify-between shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left relative overflow-hidden"
+              className="group border border-hairline dark:border-white/5 bg-surface-card dark:bg-surface-dark/60 rounded-xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left relative overflow-hidden"
             >
-              {/* Glowing accent border in hover */}
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              {/* Top accent on hover */}
+              <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-hero-glow opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               <div className="space-y-4">
                 {/* Icon & Badge row */}
                 <div className="flex justify-between items-center">
-                  <div className={`h-12 w-12 rounded-full border bg-gradient-to-r ${game.color} flex items-center justify-center`}>
-                    <Icon size={22} className="animate-pulse" />
+                  <div className={`h-11 w-11 rounded-xl border bg-gradient-to-br ${game.color} flex items-center justify-center`}>
+                    <Icon size={20} />
                   </div>
-                  <div className="flex flex-col gap-1 items-end">
-                    <span className="text-[8px] font-bold text-emerald-500 border border-emerald-500/20 bg-emerald-500/5 px-2 py-0.5 rounded-full">
-                      {game.level}
-                    </span>
-                  </div>
+                  <span className="text-[8px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-2 py-0.5 rounded-full">
+                    {game.level}
+                  </span>
                 </div>
 
                 {/* Info */}
-                <div className="space-y-2">
-                  <span className="text-[9px] font-mono font-bold tracking-wider uppercase text-mute">
+                <div className="space-y-1.5">
+                  <span className="text-[9px] font-bold tracking-widest uppercase text-mute">
                     {game.badge}
                   </span>
-                  <h3 className="font-display text-lg font-bold text-ink dark:text-on-dark group-hover:text-primary transition-colors flex items-center gap-1.5">
+                  <h3 className="font-display text-base font-semibold text-ink dark:text-on-dark group-hover:text-primary transition-colors">
                     {game.title}
                   </h3>
-                  <p className="text-xs text-mute leading-relaxed min-h-[60px]">
+                  <p className="text-xs text-mute leading-relaxed min-h-[52px]">
                     {game.description}
                   </p>
                 </div>
               </div>
 
               {/* Action link */}
-              <div className="pt-4 border-t border-hairline dark:border-divider-dark mt-4 flex items-center justify-between text-xs font-bold text-primary group-hover:text-primary-deep transition-colors">
+              <div className="pt-4 border-t border-hairline dark:border-white/8 mt-4 flex items-center justify-between text-xs font-bold text-primary group-hover:text-primary-deep transition-colors">
                 <span className="flex items-center gap-1">
-                  <Trophy size={12} className="text-amber-500" />
+                  <Trophy size={11} className="text-amber-500" />
                   Bắt đầu chơi
                 </span>
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-200" />
+                <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-200" />
               </div>
             </div>
+
           );
         })}
       </div>

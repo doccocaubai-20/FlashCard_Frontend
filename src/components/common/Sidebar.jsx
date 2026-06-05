@@ -115,28 +115,33 @@ export default function Sidebar() {
       
       <div>
         {/* Brand Section */}
-        <div className="sidebar-brand flex items-center gap-3 px-6 pb-6 border-b border-hairline dark:border-divider-dark">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white shadow-sm">
-            <BookOpen size={18} />
+        <div className="sidebar-brand flex items-center gap-2.5 px-5 pb-5 border-b border-hairline dark:border-divider-dark">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white shadow-sm">
+            <BookOpen size={16} />
           </div>
-          <span className="font-display font-extrabold text-lg text-ink dark:text-on-dark tracking-tight">
-            ChongZi
-          </span>
+          <div>
+            <span className="font-display font-bold text-base text-ink dark:text-on-dark tracking-tight">
+              ChongZi
+            </span>
+            <span className="text-[9px] font-sans font-medium text-mute dark:text-on-dark-mute block leading-none tracking-widest uppercase">
+              Tiếng Trung
+            </span>
+          </div>
         </div>
 
-        {/* Quick Action Button - Highlighted CTA */}
-        <div className="px-4 pt-4">
+        {/* Quick Action Button */}
+        <div className="px-3 pt-4">
           <NavLink
             to="/flashcards/new"
             className={({ isActive }) =>
-              `flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-full font-bold text-xs transition-all shadow-xs group cursor-pointer ${
+              `flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg font-bold text-xs transition-all group cursor-pointer ${
                 isActive
-                  ? 'bg-primary-deep text-white shadow-sm scale-[0.98]'
-                  : 'bg-primary hover:bg-primary-deep text-white hover:scale-[1.01]'
+                  ? 'bg-primary/90 text-white scale-[0.98]'
+                  : 'bg-primary hover:bg-primary-deep text-white shadow-sm hover:shadow-md'
               }`
             }
           >
-            <PlusCircle size={15} className="group-hover:rotate-90 transition-transform duration-300" />
+            <PlusCircle size={14} className="group-hover:rotate-90 transition-transform duration-300" />
             <span>Thêm Thẻ mới</span>
           </NavLink>
         </div>
@@ -151,14 +156,14 @@ export default function Sidebar() {
                 <button
                   type="button"
                   onClick={() => toggleGroup(group.title)}
-                  className="w-full flex items-center justify-between px-3 py-1 text-[9px] font-mono font-extrabold text-mute/70 dark:text-on-dark-mute/60 uppercase tracking-widest hover:text-primary dark:hover:text-primary transition-colors cursor-pointer text-left"
+                  className="w-full flex items-center justify-between px-2.5 py-1 text-[9px] font-sans font-bold text-mute/60 dark:text-on-dark-mute/50 uppercase tracking-widest hover:text-primary dark:hover:text-primary transition-colors cursor-pointer text-left"
                 >
                   <span>{group.title}</span>
-                  <ChevronDown 
-                    size={11} 
-                    className={`transition-transform duration-200 shrink-0 text-mute/50 ${
+                  <ChevronDown
+                    size={10}
+                    className={`transition-transform duration-200 shrink-0 ${
                       isCollapsed ? '-rotate-90' : 'rotate-0'
-                    }`} 
+                    }`}
                   />
                 </button>
                 
@@ -187,13 +192,12 @@ export default function Sidebar() {
         </div>
       </div>
   
-      {/* Footer / User Profile & Logout */}
-      <div className="sidebar-footer px-4 py-4 border-t border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-black/30 rounded-none">
-        <div className="flex items-center justify-between gap-3">
-          
+      {/* Footer */}
+      <div className="sidebar-footer px-3 py-3.5 border-t border-hairline dark:border-divider-dark">
+        <div className="flex items-center justify-between gap-2">
           {/* User Profile */}
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="h-9 w-9 flex-shrink-0 rounded-full bg-surface-card dark:bg-surface-dark text-ink dark:text-on-dark border border-hairline dark:border-divider-dark font-bold flex items-center justify-center shadow-sm overflow-hidden">
+            <div className="h-8 w-8 flex-shrink-0 rounded-full bg-primary-light dark:bg-primary/20 text-primary dark:text-on-dark border border-hairline dark:border-divider-dark font-bold text-xs flex items-center justify-center shadow-sm overflow-hidden">
               {user?.avatarUrl ? (
                 <img src={user.avatarUrl} alt="avatar" className="h-full w-full object-cover" />
               ) : (
@@ -201,22 +205,22 @@ export default function Sidebar() {
               )}
             </div>
             <div className="flex flex-col overflow-hidden text-left">
-              <span className="text-sm font-bold text-ink dark:text-on-dark leading-none truncate">
+              <span className="text-xs font-semibold text-ink dark:text-on-dark leading-none truncate">
                 {user?.name || 'Học viên'}
               </span>
-              <span className="text-[10px] font-mono font-semibold text-primary dark:text-primary mt-1 uppercase tracking-wider">
+              <span className="text-[9px] font-bold text-primary dark:text-primary mt-0.5 uppercase tracking-widest">
                 {user?.role === 'ADMIN' ? 'Quản trị' : 'Học viên'}
               </span>
             </div>
           </div>
-   
-          {/* Logout Button */}
+
+          {/* Logout */}
           <button
             onClick={handleLogout}
-            className="flex items-center justify-center p-2 rounded-full text-mute hover:text-primary hover:bg-primary/10 dark:hover:bg-primary/20 transition-all cursor-pointer border border-transparent"
+            className="flex items-center justify-center p-1.5 rounded-lg text-mute hover:text-primary hover:bg-primary/8 dark:hover:bg-primary/15 transition-all cursor-pointer"
             title="Đăng xuất"
           >
-            <LogOut size={18} />
+            <LogOut size={15} />
           </button>
         </div>
       </div>

@@ -28,6 +28,7 @@ import GameArcadeScreen from './pages/GameArcadeScreen';
 import ReferenceHubScreen from './pages/ReferenceHubScreen';
 import LeaderboardScreen from './pages/LeaderboardScreen';
 import AdminScreen from './pages/AdminScreen';
+import StatsScreen from './pages/StatsScreen';
 
 function PrivateRoute({ children }) {
   const token = useSelector((state) => state.auth.token);
@@ -81,6 +82,7 @@ function App() {
         <Route path="/translation" element={<TranslationPlaygroundScreen />} />
         <Route path="/notebook" element={<VocabularyNotebookScreen />} />
         <Route path="/leaderboard" element={<LeaderboardScreen />} />
+        <Route path="/stats" element={<StatsScreen />} />
         <Route path="/admin" element={
           <AdminRoute>
             <AdminScreen />

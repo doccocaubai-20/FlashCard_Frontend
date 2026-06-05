@@ -2,10 +2,10 @@ import { Activity } from 'lucide-react';
 
 const getCellColor = (count) => {
     if (count >= 4) return 'bg-primary';
-    if (count >= 3) return 'bg-primary/75';
-    if (count >= 2) return 'bg-primary/45';
-    if (count >= 1) return 'bg-primary/20';
-    return 'bg-surface-bone dark:bg-surface-dark border-hairline dark:border-divider-dark';
+    if (count >= 3) return 'bg-primary/70';
+    if (count >= 2) return 'bg-primary/40';
+    if (count >= 1) return 'bg-primary/18';
+    return 'bg-[#edf2f7] dark:bg-white/5';
 };
 
 export default function Heatmap({ data = [] }) {
