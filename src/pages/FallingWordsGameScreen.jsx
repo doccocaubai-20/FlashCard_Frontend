@@ -572,16 +572,17 @@ export default function FallingWordsGameScreen() {
                 value={inputValue}
                 onChange={handleInputChange}
                 disabled={isPaused || gameOver}
-                placeholder="Gõ Pinyin (ví dụ: pingguo) hoặc nghĩa tiếng Việt (táo)..."
-                className="w-full bg-slate-900 border border-slate-700 text-white rounded-md text-center py-3.5 px-4 text-xl font-bold tracking-wide outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all placeholder:text-slate-600"
+                placeholder="Gõ pinyin hoặc nghĩa tiếng Việt..."
+                className="w-full bg-slate-900 border border-slate-700 text-white rounded-md text-center py-3.5 px-4 text-xl font-bold tracking-wide outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all placeholder:text-slate-600 placeholder:text-sm"
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"
+                spellCheck={false}
+                inputMode="text"
               />
-              
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 text-[10px] text-slate-500 font-bold font-mono">
-                <Info size={11} />
-                <span>Không cần gõ dấu/khoảng cách</span>
+              <div className="flex items-center justify-center gap-1 text-[10px] text-slate-500 font-bold font-mono mt-1.5">
+                <Info size={10} />
+                <span>Không cần gõ dấu thanh hay khoảng cách</span>
               </div>
             </div>
 

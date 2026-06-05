@@ -326,9 +326,9 @@ export default function UnscrambleGameScreen() {
                     className="px-4 py-2.5 bg-surface-bone/50 hover:bg-surface-bone dark:bg-black/25 dark:hover:bg-black/50 border border-hairline dark:border-divider-dark rounded-md text-base font-bold font-display cursor-pointer transition-all active:scale-95 text-ink dark:text-on-dark hover:border-primary/50"
                   >
                     {token.word}
-                    {token.meaning && (
-                      <span className="block text-[8px] font-medium text-mute tracking-normal font-sans font-normal mt-0.5">
-                        {token.meaning.split('/')[0].trim()}
+                    {token.pinyin && (
+                      <span className="block text-[8px] font-mono font-medium text-primary/70 tracking-normal mt-0.5">
+                        {token.pinyin}
                       </span>
                     )}
                   </button>
