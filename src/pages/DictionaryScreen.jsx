@@ -372,8 +372,9 @@ export default function DictionaryScreen() {
         score += 5000;
       }
 
-      // 3. Exact Hán-Việt match
-      if (sv === qLower) {
+      // 3. Exact Hán-Việt match (only if syllable count matches Chinese character length to avoid incomplete database readings)
+      const svSyllables = sv.split(/[\s·-]+/).filter(Boolean).length;
+      if (sv === qLower && s.length === svSyllables) {
         score += 2000;
       }
 
@@ -393,7 +394,25 @@ export default function DictionaryScreen() {
         score += 300;
       }
 
-      // 7. Common Word Boost & Rank Penalty
+      // 7. Proper Noun & Transliteration Penalty
+      const itemP = item.p || '';
+      const pSyllables = itemP.split(/[\s·’']+/);
+      const isProper = pSyllables.some(syll => syll && syll[0] === syll[0].toUpperCase() && syll[0] !== syll[0].toLowerCase());
+      if (isProper) {
+        score -= 3000;
+      }
+
+      const isTransliteration = 
+        en.includes('transliteration') || 
+        en.includes('surname') || 
+        vi.includes('họ ') || 
+        vi.includes('tập đoàn') || 
+        vi.includes('diễn viên');
+      if (isTransliteration) {
+        score -= 5000;
+      }
+
+      // 8. Common Word Boost & Rank Penalty
       if (item.hsk) {
         score += (10 - item.hsk) * 200; // HSK 1 gets +1800, HSK 7 gets +600
       }
@@ -402,12 +421,14 @@ export default function DictionaryScreen() {
       }
       if (item.bwr) {
         score -= item.bwr * 0.1; // e.g. rank 8 subtracts 0.8, rank 75159 subtracts 7515.9
+      } else {
+        score -= 10000; // default maximum penalty for unranked/obscure words
       }
       if (item.mwr) {
         score -= item.mwr * 0.1;
       }
 
-      // 8. Archaic/Rare Variant Penalty
+      // 9. Archaic/Rare Variant Penalty
       const isVariant =
         vi.includes('biến thể cổ của') ||
         vi.includes('biến thể của') ||
@@ -421,7 +442,7 @@ export default function DictionaryScreen() {
         score -= 8000;
       }
 
-      // 9. Shorter words are more fundamental (tie-breaker)
+      // 10. Shorter words are more fundamental (tie-breaker)
       score -= s.length * 10;
 
       return score;

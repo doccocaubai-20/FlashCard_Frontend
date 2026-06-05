@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { fetchAllDecks, createFlashcard } from '../features/deck/deckSlice';
+import { fetchAllDecks, createFlashcard, createDeck, importFlashcards, fetchFlashcardsByDeck } from '../features/deck/deckSlice';
 import { PlusCircle, ArrowLeft, BookOpen, Sparkles, CheckSquare, Square, Save, Loader2 } from 'lucide-react';
 import { useDictionary } from '../hooks/useDictionary';
 import HandwritingCanvas from '../components/common/HandwritingCanvas';
@@ -25,7 +25,7 @@ const HSK_LEVELS = [
   { value: 6,     label: 'HSK 6' },
 ];
 
-const COUNT_OPTIONS = [5, 10, 15, 20];
+const COUNT_OPTIONS = [5, 10, 15, 20, 30];
 
 export default function CreateFlashcardScreen() {
   const dispatch = useDispatch();
@@ -71,6 +71,44 @@ export default function CreateFlashcardScreen() {
   const [aiSaveDeckId, setAiSaveDeckId] = useState('');
   const [aiSaving, setAiSaving] = useState(false);
   const [aiSaveMsg, setAiSaveMsg] = useState({ type: '', text: '' });
+
+  // ── Inline Deck Creation State ──
+  const [showNewDeckInput, setShowNewDeckInput] = useState(false);
+  const [newDeckTitle, setNewDeckTitle] = useState('');
+  const [isCreatingDeck, setIsCreatingDeck] = useState(false);
+
+  const handleCreateNewDeck = async () => {
+    if (!newDeckTitle.trim()) return;
+    try {
+      setIsCreatingDeck(true);
+      const newDeck = await dispatch(createDeck({ title: newDeckTitle.trim(), description: 'Bộ bài học mới' })).unwrap();
+      setFormData((prev) => ({ ...prev, deckId: String(newDeck.id) }));
+      setAiSaveDeckId(String(newDeck.id));
+      setShowNewDeckInput(false);
+      setNewDeckTitle('');
+    } catch (err) {
+      console.error('Failed to create new deck:', err);
+      alert('Không thể tạo bộ bài mới. Vui lòng thử lại.');
+    } finally {
+      setIsCreatingDeck(false);
+    }
+  };
+
+  const [existingWords, setExistingWords] = useState([]);
+
+  useEffect(() => {
+    if (aiSaveDeckId) {
+      dispatch(fetchFlashcardsByDeck(Number(aiSaveDeckId)))
+        .unwrap()
+        .then((cards) => {
+          const words = cards.map(c => c.hanzi || c.character || '');
+          setExistingWords(words);
+        })
+        .catch(err => console.error('Failed to fetch existing cards:', err));
+    } else {
+      setExistingWords([]);
+    }
+  }, [aiSaveDeckId, dispatch]);
 
   // Relevance sorting helper to penalize variants and boost common words
   const getSortScore = (item) => {
@@ -216,7 +254,7 @@ export default function CreateFlashcardScreen() {
       setAiCards([]);
       setSelectedCards(new Set());
       setAiSaveMsg({ type: '', text: '' });
-      const res = await aiFlashcardApi.generate(aiTopic.trim(), aiCount, aiHskLevel);
+      const res = await aiFlashcardApi.generate(aiTopic.trim(), aiCount, aiHskLevel, existingWords);
       const cards = res.data?.cards || res.data || [];
       setAiCards(cards);
       // Select all by default
@@ -262,10 +300,9 @@ export default function CreateFlashcardScreen() {
     try {
       setAiSaving(true);
       setAiSaveMsg({ type: '', text: '' });
-      const cardsToSave = aiCards.filter((_, i) => selectedCards.has(i));
-
-      for (const card of cardsToSave) {
-        await dispatch(createFlashcard({
+      const cardsToSave = aiCards
+        .filter((_, i) => selectedCards.has(i))
+        .map((card) => ({
           deckId: Number(aiSaveDeckId),
           hanzi: card.hanzi || card.chinese || card.word || '',
           pinyin: card.pinyin || '',
@@ -273,8 +310,9 @@ export default function CreateFlashcardScreen() {
           exampleHanzi: card.exampleHanzi || card.example || undefined,
           examplePinyin: card.examplePinyin || undefined,
           exampleMeaning: card.exampleMeaning || undefined,
-        })).unwrap();
-      }
+        }));
+
+      await dispatch(importFlashcards(cardsToSave)).unwrap();
 
       setAiSaveMsg({ type: 'success', text: `Đã lưu ${cardsToSave.length} thẻ thành công!` });
       // Optionally redirect
@@ -348,12 +386,51 @@ export default function CreateFlashcardScreen() {
                   className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark cursor-pointer"
                 >
                   <option value="" className="dark:bg-surface-dark">-- Chọn bộ bài để lưu thẻ --</option>
-                  {decks.map((deck) => (
+                  {decks.filter(d => !d.isSystem).map((deck) => (
                     <option key={deck.id} value={deck.id} className="dark:bg-surface-dark">
-                      {deck.title || deck.name} {deck.isSystem ? '(Hệ thống)' : ''}
+                      {deck.title || deck.name}
                     </option>
                   ))}
                 </select>
+
+                {/* Inline Deck Creation */}
+                {showNewDeckInput ? (
+                  <div className="flex gap-2 items-center mt-2">
+                    <input
+                      type="text"
+                      placeholder="Tên bộ bài mới..."
+                      value={newDeckTitle}
+                      onChange={(e) => setNewDeckTitle(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleCreateNewDeck(); } }}
+                      className="flex-1 px-4 py-2 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none text-sm text-ink dark:text-on-dark"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleCreateNewDeck}
+                      disabled={isCreatingDeck || !newDeckTitle.trim()}
+                      className="px-4 py-2 bg-primary hover:bg-primary-deep text-white text-xs font-bold rounded-full transition-colors disabled:bg-stone cursor-pointer"
+                    >
+                      {isCreatingDeck ? 'Đang tạo...' : 'Lưu'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setShowNewDeckInput(false); setNewDeckTitle(''); }}
+                      className="px-4 py-2 border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark text-xs font-bold rounded-full transition-colors cursor-pointer bg-transparent"
+                    >
+                      Hủy
+                    </button>
+                  </div>
+                ) : (
+                  <div className="mt-1.5 pl-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowNewDeckInput(true)}
+                      className="text-xs font-semibold text-primary dark:text-link hover:underline bg-transparent border-none p-0 cursor-pointer flex items-center gap-1"
+                    >
+                      ➕ Tạo bộ bài cá nhân mới
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Vocabulary Fields */}
@@ -741,12 +818,51 @@ export default function CreateFlashcardScreen() {
                     className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark cursor-pointer"
                   >
                     <option value="" className="dark:bg-surface-dark">-- Chọn bộ bài để lưu thẻ --</option>
-                    {decks.map((deck) => (
+                    {decks.filter(d => !d.isSystem).map((deck) => (
                       <option key={deck.id} value={deck.id} className="dark:bg-surface-dark">
-                        {deck.title || deck.name} {deck.isSystem ? '(Hệ thống)' : ''}
+                        {deck.title || deck.name}
                       </option>
                     ))}
                   </select>
+
+                  {/* Inline Deck Creation for AI */}
+                  {showNewDeckInput ? (
+                    <div className="flex gap-2 items-center mt-2">
+                      <input
+                        type="text"
+                        placeholder="Tên bộ bài mới..."
+                        value={newDeckTitle}
+                        onChange={(e) => setNewDeckTitle(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleCreateNewDeck(); } }}
+                        className="flex-1 px-4 py-2 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none text-sm text-ink dark:text-on-dark"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleCreateNewDeck}
+                        disabled={isCreatingDeck || !newDeckTitle.trim()}
+                        className="px-4 py-2 bg-primary hover:bg-primary-deep text-white text-xs font-bold rounded-full transition-colors disabled:bg-stone cursor-pointer"
+                      >
+                        {isCreatingDeck ? 'Đang tạo...' : 'Lưu'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setShowNewDeckInput(false); setNewDeckTitle(''); }}
+                        className="px-4 py-2 border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark text-xs font-bold rounded-full transition-colors cursor-pointer bg-transparent"
+                      >
+                        Hủy
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="mt-1.5 pl-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowNewDeckInput(true)}
+                        className="text-xs font-semibold text-primary dark:text-link hover:underline bg-transparent border-none p-0 cursor-pointer flex items-center gap-1"
+                      >
+                        ➕ Tạo bộ bài cá nhân mới
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {aiSaveMsg.text && (
