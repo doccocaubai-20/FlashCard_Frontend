@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchAllDecks, fetchFlashcardsByDeck } from '../features/deck/deckSlice';
-import { useDictionary } from '../hooks/useDictionary';
+import { dictionaryApi } from '../services/dictionaryApi';
 import { cleanDefinition } from '../utils/formatters';
 import { 
   Gamepad2, 
@@ -19,7 +19,7 @@ import {
 export default function MatchingGameScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { dictArray, loading: dictLoading } = useDictionary();
+  // No local useDictionary needed
   const decks = useSelector((state) => state.deck.decks);
 
   // Game configuration states
@@ -78,17 +78,21 @@ export default function MatchingGameScreen() {
   }, [gameStarted, gameWon]);
 
   // Generate game board
-  const setupGame = () => {
+  const setupGame = async () => {
     let pool = [];
 
     if (selectedSource.startsWith('hsk')) {
       const level = parseInt(selectedSource.replace('hsk', ''));
-      if (!dictArray || dictArray.length === 0) return;
-      
-      // Filter words for the selected HSK level
-      pool = dictArray.filter(
-        (w) => w && w.hsk === level && w.s && w.s.length <= 3
-      );
+      setLoadingCards(true);
+      try {
+        const res = await dictionaryApi.getHskWords(level, 100);
+        pool = res.data || [];
+        pool = pool.filter(w => w && w.s && w.s.length <= 3);
+      } catch (err) {
+        console.error('Failed to load matching game words:', err);
+      } finally {
+        setLoadingCards(false);
+      }
     } else {
       // Custom deck cards
       pool = deckCards.map((c) => ({
@@ -265,10 +269,10 @@ export default function MatchingGameScreen() {
 
           <button
             onClick={setupGame}
-            disabled={dictLoading || loadingCards}
+            disabled={loadingCards}
             className="w-full py-2.5 bg-primary hover:bg-primary-deep text-white font-bold rounded-md cursor-pointer transition-all active:scale-[0.98] shadow-sm disabled:opacity-50"
           >
-            {dictLoading || loadingCards ? 'Đang tải dữ liệu...' : 'Bắt đầu chơi'}
+            {loadingCards ? 'Đang tải dữ liệu...' : 'Bắt đầu chơi'}
           </button>
         </div>
       ) : (
@@ -374,8 +378,17 @@ export default function MatchingGameScreen() {
 
       {/* Game Won Bento Modal Report */}
       {gameWon && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-lg max-w-lg w-full p-6 text-center space-y-6 shadow-2xl relative">
+        <div 
+          onClick={() => {
+            setGameWon(false);
+            setGameStarted(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-lg max-w-lg w-full p-6 text-center space-y-6 shadow-2xl relative"
+          >
             
             {/* Header */}
             <div className="space-y-2">
@@ -410,7 +423,10 @@ export default function MatchingGameScreen() {
             <div className="flex gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => setGameStarted(false)}
+                onClick={() => {
+                  setGameWon(false);
+                  setGameStarted(false);
+                }}
                 className="flex-1 py-2.5 border border-hairline dark:border-divider-dark rounded-md text-xs font-bold text-mute hover:text-ink hover:bg-surface-bone dark:hover:bg-black transition cursor-pointer"
               >
                 Chọn bài mới

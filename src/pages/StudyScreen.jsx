@@ -387,28 +387,30 @@ export default function StudyScreen() {
     return favorites.some((f) => f.hanzi === cleanHanzi);
   };
 
-  const getCompoundHanViet = (word) => {
+  const getCompoundHanViet = async (word) => {
     if (!word) return '';
     const chars = Array.from(word);
 
     if (chars.length === 1) {
-      const matches = lookupMultiple('hanzi', word);
+      const matches = await lookupMultiple('hanzi', word);
       const match = matches.find((m) => m.s === word || m.t === word);
       return match?.sv || '';
     }
 
-    const _matches = lookupMultiple('hanzi', word);
+    const _matches = await lookupMultiple('hanzi', word);
     const exact = _matches.find((m) => m.s === word || m.t === word);
     if (exact && exact.sv) return exact.sv;
 
-    const parts = chars.map((char) => {
-      const matches = lookupMultiple('hanzi', char);
+    const parts = [];
+    for (const char of chars) {
+      const matches = await lookupMultiple('hanzi', char);
       const match = matches.find((m) => m.s === char || m.t === char);
       if (match && match.sv) {
-        return match.sv;
+        parts.push(match.sv);
+      } else {
+        parts.push(`[${char}]`);
       }
-      return `[${char}]`;
-    });
+    }
     return parts.join(' ').replace(/\s+/g, ' ').trim();
   };
 
@@ -420,7 +422,7 @@ export default function StudyScreen() {
       if (alreadyFav) {
         await favoriteWordsApi.deleteFavoriteByHanzi(cleanHanzi);
       } else {
-        const sv = getCompoundHanViet(cleanHanzi) || '';
+        const sv = (await getCompoundHanViet(cleanHanzi)) || '';
         await favoriteWordsApi.addFavorite({
           hanzi: cleanHanzi,
           pinyin: pinyin || '',

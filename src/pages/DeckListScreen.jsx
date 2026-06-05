@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchAllDecks, createDeck, updateDeck, deleteDeck } from '../features/deck/deckSlice';
-import { Plus, Edit3, Trash2, Folder, X, Star } from 'lucide-react';
+import { Plus, Edit3, Trash2, Folder, X, Star, Share2, Globe, Copy, Check } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
+import api from '../services/api';
 
 export default function DeckListScreen() {
   const dispatch = useDispatch();
@@ -16,6 +17,14 @@ export default function DeckListScreen() {
   const [selectedDeck, setSelectedDeck] = useState(null);
   const [formData, setFormData] = useState({ title: '', description: '' });
   const [favoritesCount, setFavoritesCount] = useState(0);
+
+  // Sharing & Importing states
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [shareCodeInput, setShareCodeInput] = useState('');
+  const [importing, setImporting] = useState(false);
+  const [importError, setImportError] = useState('');
+  const [shareCodeResult, setShareCodeResult] = useState('');
+  const [shareDeckTitle, setShareDeckTitle] = useState('');
 
   useEffect(() => {
     favoriteWordsApi.getFavorites()
@@ -73,24 +82,65 @@ export default function DeckListScreen() {
     }
   };
 
+  const handleShare = async (e, deckId) => {
+    e.stopPropagation();
+    try {
+      const res = await api.post(`/api/social/decks/${deckId}/share`);
+      setShareCodeResult(res.data.shareCode);
+      setShareDeckTitle(res.data.title);
+      dispatch(fetchAllDecks());
+    } catch (err) {
+      console.error('Failed to share deck:', err);
+      alert(err.response?.data?.message || 'Không thể chia sẻ bộ từ vựng.');
+    }
+  };
+
+  const handleImport = async (e) => {
+    e.preventDefault();
+    if (!shareCodeInput.trim()) return;
+
+    try {
+      setImporting(true);
+      setImportError('');
+      await api.post(`/api/social/decks/import/${shareCodeInput.trim()}`);
+      setIsImportModalOpen(false);
+      setShareCodeInput('');
+      dispatch(fetchAllDecks());
+    } catch (err) {
+      console.error('Failed to import deck:', err);
+      setImportError(err.response?.data?.message || 'Mã chia sẻ không đúng hoặc đã xảy ra lỗi.');
+    } finally {
+      setImporting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-surface-card dark:bg-surface-dark/50 p-6 rounded-md border border-hairline dark:border-divider-dark shadow-sm transition-colors">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-surface-card dark:bg-surface-dark/50 p-6 rounded-md border border-hairline dark:border-divider-dark shadow-sm transition-colors text-left">
         <div>
           <h1 className="text-2xl font-extrabold text-ink dark:text-on-dark font-display tracking-tight">Quản lý Bộ bài</h1>
           <p className="text-body dark:text-on-dark-mute text-sm mt-1">
             Tạo, sửa đổi và quản lý các bộ bài flashcard học tiếng Trung của bạn.
           </p>
         </div>
-        <button
-          onClick={handleOpenCreate}
-          className="flex items-center gap-2 bg-primary hover:bg-primary-deep text-white font-bold px-5 py-3 rounded-full transition-all shadow-sm hover:shadow-md self-start sm:self-center cursor-pointer active:scale-[0.98]"
-        >
-          <Plus size={18} />
-          Tạo bộ bài mới
-        </button>
+        <div className="flex items-center gap-3 self-start sm:self-center">
+          <button
+            onClick={() => setIsImportModalOpen(true)}
+            className="flex items-center gap-2 border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark font-bold px-4 py-3 rounded-full transition-all shadow-xs cursor-pointer bg-surface-card dark:bg-surface-dark"
+          >
+            <Globe size={16} />
+            <span>Nhập bộ từ</span>
+          </button>
+          <button
+            onClick={handleOpenCreate}
+            className="flex items-center gap-2 bg-primary hover:bg-primary-deep text-white font-bold px-5 py-3 rounded-full transition-all shadow-sm hover:shadow-md cursor-pointer active:scale-[0.98]"
+          >
+            <Plus size={18} />
+            Tạo bộ bài mới
+          </button>
+        </div>
       </div>
 
       {/* Grid List */}
@@ -139,11 +189,18 @@ export default function DeckListScreen() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-bone dark:bg-surface-dark text-ink dark:text-on-dark group-hover:bg-primary group-hover:text-white dark:group-hover:bg-primary dark:group-hover:text-white transition-colors duration-300">
                     <Folder size={20} />
                   </div>
-                  {deck.isSystem && (
-                    <span className="text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                      Hệ thống
-                    </span>
-                  )}
+                  <div className="flex items-center gap-1.5">
+                    {deck.isSystem && (
+                      <span className="text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                        Hệ thống
+                      </span>
+                    )}
+                    {deck.isPublic && (
+                      <span className="text-[10px] font-bold text-green-600 bg-green-500/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                        Đã chia sẻ
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <h3 className="text-lg font-bold text-ink dark:text-on-dark group-hover:text-primary dark:group-hover:text-primary transition-colors font-display tracking-tight">
                   {deck.title || deck.name || 'Bộ bài chưa đặt tên'}
@@ -177,6 +234,13 @@ export default function DeckListScreen() {
                 {/* Actions */}
                 {!deck.isSystem && (
                   <div className="flex items-center gap-1">
+                    <button
+                      onClick={(e) => handleShare(e, deck.id)}
+                      className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
+                      title="Chia sẻ bộ bài"
+                    >
+                      <Share2 size={16} />
+                    </button>
                     <button
                       onClick={(e) => handleOpenEdit(e, deck)}
                       className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
@@ -262,6 +326,105 @@ export default function DeckListScreen() {
               </div>
             </form>
 
+          </div>
+        </div>
+      )}
+
+      {/* Import Modal */}
+      {isImportModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-surface-card dark:bg-surface-dark rounded-md shadow-sm max-w-sm w-full border border-hairline dark:border-divider-dark overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            
+            <div className="flex items-center justify-between px-6 py-4 border-b border-hairline dark:border-divider-dark">
+              <h3 className="text-base font-bold text-ink dark:text-on-dark font-display tracking-tight">
+                Nhập bộ từ vựng chia sẻ
+              </h3>
+              <button
+                onClick={() => setIsImportModalOpen(false)}
+                className="text-mute hover:text-ink dark:text-on-dark-mute dark:hover:text-on-dark p-1.5 rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleImport} className="p-6 space-y-4">
+              <p className="text-xs text-mute">Nhập mã chia sẻ (ví dụ: DEC-A7C8D2) để tải bộ từ vựng học tập công khai của người dùng khác.</p>
+              
+              <div>
+                <input
+                  type="text"
+                  required
+                  placeholder="Mã chia sẻ DEC-XXXXXX..."
+                  value={shareCodeInput}
+                  onChange={(e) => setShareCodeInput(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-xs text-ink dark:text-on-dark font-mono font-bold"
+                />
+              </div>
+
+              {importError && (
+                <p className="text-[11px] font-semibold text-red-500">{importError}</p>
+              )}
+
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-hairline dark:border-divider-dark">
+                <button
+                  type="button"
+                  onClick={() => setIsImportModalOpen(false)}
+                  className="px-4 py-2 rounded-full border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark text-xs font-bold transition-colors cursor-pointer"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  disabled={importing}
+                  className="px-5 py-2 rounded-full bg-primary hover:bg-primary-deep text-white text-xs font-bold shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-95"
+                >
+                  {importing ? 'Đang nhập...' : 'Nhập bộ từ'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Share Success Modal */}
+      {shareCodeResult && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-surface-card dark:bg-surface-dark rounded-md shadow-sm max-w-sm w-full border border-hairline dark:border-divider-dark overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            
+            <div className="flex items-center justify-between px-6 py-4 border-b border-hairline dark:border-divider-dark">
+              <h3 className="text-base font-bold text-ink dark:text-on-dark font-display tracking-tight">
+                Chia sẻ thành công!
+              </h3>
+              <button
+                onClick={() => setShareCodeResult('')}
+                className="text-mute hover:text-ink dark:text-on-dark-mute dark:hover:text-on-dark p-1.5 rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4 text-center">
+              <Globe size={40} className="text-green-500 mx-auto animate-pulse" />
+              <p className="text-xs text-body dark:text-on-dark-mute">
+                Bộ bài <strong>"{shareDeckTitle}"</strong> đã ở chế độ công khai.
+              </p>
+              <div className="bg-surface-bone dark:bg-black/30 p-4 rounded-lg border border-hairline dark:border-divider-dark flex items-center justify-between gap-2">
+                <span className="font-mono font-bold text-sm text-primary tracking-widest">{shareCodeResult}</span>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(shareCodeResult);
+                    alert('Đã copy mã chia sẻ vào clipboard!');
+                  }}
+                  className="p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded text-mute hover:text-ink transition-colors cursor-pointer"
+                  title="Copy mã chia sẻ"
+                >
+                  <Copy size={16} />
+                </button>
+              </div>
+              <p className="text-[10px] text-mute leading-relaxed">
+                Gửi mã này cho bạn bè để họ có thể nhập vào và tự động tải toàn bộ thẻ flashcard của bạn để cùng ôn luyện.
+              </p>
+            </div>
           </div>
         </div>
       )}

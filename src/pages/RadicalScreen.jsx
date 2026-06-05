@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDictionary } from '../hooks/useDictionary';
+import { dictionaryApi } from '../services/dictionaryApi';
 import { radicalData } from '../data/radicalData';
 import { Search, Library, Volume2, ArrowRight, Sparkles } from 'lucide-react';
 
 export default function RadicalScreen() {
   const navigate = useNavigate();
-  const { dictArray, loading } = useDictionary();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRadical, setSelectedRadical] = useState(radicalData[0]);
   const [matchingWords, setMatchingWords] = useState([]);
@@ -37,54 +36,22 @@ export default function RadicalScreen() {
 
   // Search words in dictionary containing the selected radical
   useEffect(() => {
-    if (loading || !dictArray || !selectedRadical) return;
+    if (!selectedRadical) return;
 
     setSearchingWords(true);
-    // Use setTimeout to avoid UI blocking on heavy computations
-    const timer = setTimeout(() => {
-      const char = selectedRadical.char;
-      const results = [];
-
-      for (let i = 0; i < dictArray.length; i++) {
-        const entry = dictArray[i];
-        if (!entry) continue;
-
-        let isMatch = false;
-        if (entry.s === char) {
-          isMatch = true;
-        } else if (entry.s.includes(char)) {
-          isMatch = true;
-        } else if (entry.etym && entry.etym.components) {
-          for (let j = 0; j < entry.etym.components.length; j++) {
-            if (entry.etym.components[j].char === char) {
-              isMatch = true;
-              break;
-            }
-          }
-        }
-
-        if (isMatch) {
-          results.push(entry);
-        }
+    const fetchMatchingWords = async () => {
+      try {
+        const res = await dictionaryApi.getWordsByRadical(selectedRadical.char);
+        setMatchingWords(res.data || []);
+      } catch (err) {
+        console.error('Failed to fetch words by radical:', err);
+      } finally {
+        setSearchingWords(false);
       }
+    };
 
-      // Sort results by HSK level (HSK 1-3 first) and frequency (b/bwr)
-      results.sort((a, b) => {
-        const aHsk = a.hsk || 99;
-        const bHsk = b.hsk || 99;
-        if (aHsk !== bHsk) return aHsk - bHsk;
-        const aB = a.b || 0;
-        const bB = b.b || 0;
-        return bB - aB;
-      });
-
-      // Cập nhật từ vựng (giới hạn 40 từ thông dụng để giao diện mượt mà)
-      setMatchingWords(results.slice(0, 40));
-      setSearchingWords(false);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [selectedRadical, dictArray, loading]);
+    fetchMatchingWords();
+  }, [selectedRadical]);
 
   const handleSpeakRadical = (e) => {
     e.stopPropagation();

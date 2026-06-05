@@ -6,13 +6,14 @@ import Heatmap from '../components/stats/Heatmap';
 import { fetchSummary, fetchHeatmap, fetchBadges } from '../features/stats/statsSlice';
 import { fetchAllDecks } from '../features/deck/deckSlice';
 import { Trophy, Flame, Calendar, Award, Sparkles, Volume2, Star, PenTool } from 'lucide-react';
-import { useDictionary } from '../hooks/useDictionary';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
+import { dictionaryApi } from '../services/dictionaryApi';
 
-function WordOfTheDay({ dictArray, dictLoading }) {
+function WordOfTheDay() {
   const [wotd, setWotd] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [favLoading, setFavLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const loadFavorites = async () => {
     try {
@@ -54,8 +55,6 @@ function WordOfTheDay({ dictArray, dictLoading }) {
   };
 
   useEffect(() => {
-    if (dictLoading || !dictArray || dictArray.length === 0) return;
-
     const todayStr = new Date().toISOString().split('T')[0];
     const cachedWord = localStorage.getItem('wotd_word');
     const cachedDate = localStorage.getItem('wotd_date');
@@ -63,35 +62,31 @@ function WordOfTheDay({ dictArray, dictLoading }) {
     if (cachedDate === todayStr && cachedWord) {
       try {
         setWotd(JSON.parse(cachedWord));
+        setLoading(false);
         return;
       } catch (err) {
         console.error('Error parsing cached WOTD:', err);
       }
     }
 
-    const candidates = dictArray.filter(
-      (e) => e && e.hsk && e.hsk >= 1 && e.hsk <= 3 && e.s && e.s.length <= 2
-    );
-    const pool = candidates.length > 0 ? candidates : dictArray.filter(e => e && e.s && e.s.length <= 2);
-    
-    if (pool.length > 0) {
-      const randomIndex = Math.floor(Math.random() * pool.length);
-      const selected = pool[randomIndex];
-      
-      if (!selected.sv && selected.s) {
-        const chars = Array.from(selected.s);
-        const svs = chars.map(char => {
-          const match = dictArray.find(m => m.s === char);
-          return match?.sv || '';
-        }).filter(Boolean).join(' ');
-        selected.sv = svs;
+    const fetchWotd = async () => {
+      setLoading(true);
+      try {
+        const res = await dictionaryApi.getWordOfTheDay();
+        if (res.data) {
+          localStorage.setItem('wotd_word', JSON.stringify(res.data));
+          localStorage.setItem('wotd_date', todayStr);
+          setWotd(res.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch WOTD:', err);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      localStorage.setItem('wotd_word', JSON.stringify(selected));
-      localStorage.setItem('wotd_date', todayStr);
-      setWotd(selected);
-    }
-  }, [dictArray, dictLoading]);
+    fetchWotd();
+  }, []);
 
   const handleSpeak = (e) => {
     e.stopPropagation();
@@ -104,7 +99,7 @@ function WordOfTheDay({ dictArray, dictLoading }) {
     window.speechSynthesis.speak(utterance);
   };
 
-  if (dictLoading || !wotd) {
+  if (loading || !wotd) {
     return (
       <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/40 p-6 flex flex-col justify-center items-center min-h-[150px]">
         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
@@ -201,7 +196,7 @@ export default function DashboardScreen() {
   const badges = useSelector((state) => state.stats.badges);
   const goals = useSelector((state) => state.stats.goals);
   const decks = useSelector((state) => state.deck.decks);
-  const { dictArray, loading: dictLoading } = useDictionary();
+  // No local dictionary loading needed
 
   useEffect(() => {
     dispatch(fetchSummary());
@@ -267,7 +262,7 @@ export default function DashboardScreen() {
 
         {/* Right Column: Word of the Day & Decks Panel */}
         <div className="space-y-6 min-w-0">
-          <WordOfTheDay dictArray={dictArray} dictLoading={dictLoading} />
+          <WordOfTheDay />
           
           <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/40 p-6">
             <h2 className="font-display text-xl font-bold text-ink dark:text-on-dark tracking-tight">Bộ bài của bạn</h2>

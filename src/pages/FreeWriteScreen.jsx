@@ -6,12 +6,16 @@ import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { BookOpen, Star, Sparkles, Volume2, HelpCircle, ArrowRight } from 'lucide-react';
 
 export default function FreeWriteScreen() {
-  const { lookupMultiple, loading: dictLoading } = useDictionary();
+  const { lookupMultiple } = useDictionary();
   const [query, setQuery] = useState('');
   const [selectedWord, setSelectedWord] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [searchParams] = useSearchParams();
   const wordParam = searchParams.get('word');
+
+  // Async calculated dictionary data
+  const [breakdown, setBreakdown] = useState([]);
+  const [compoundSv, setCompoundSv] = useState('');
 
   // HanziWriter state
   const writerRef = useRef(null);
@@ -38,46 +42,15 @@ export default function FreeWriteScreen() {
 
   useEffect(() => {
     loadFavorites();
-    if (wordParam && !dictLoading) {
+    if (wordParam) {
       const cleanWord = decodeURIComponent(wordParam).trim();
       setQuery(cleanWord);
       handleSearch(cleanWord);
     }
-  }, [wordParam, dictLoading]);
+  }, [wordParam]);
 
   const isFavorite = (hanzi) => {
     return favorites.some((f) => f.hanzi === hanzi);
-  };
-
-  const getCompoundHanViet = (word) => {
-    if (!word) return '';
-    const chars = Array.from(word);
-    if (chars.length === 1) {
-      const matches = lookupMultiple('hanzi', word);
-      const match = matches.find((m) => m.s === word || m.t === word);
-      return match?.sv || '';
-    }
-    const parts = chars.map((char) => {
-      const matches = lookupMultiple('hanzi', char);
-      const match = matches.find((m) => m.s === char || m.t === char);
-      return match?.sv || `[${char}]`;
-    });
-    return parts.join(' ').replace(/\s+/g, ' ').trim();
-  };
-
-  const getCharacterBreakdown = (word) => {
-    if (!word || word.length <= 1) return [];
-    const chars = Array.from(word);
-    return chars.map((char) => {
-      const matches = lookupMultiple('hanzi', char);
-      const match = matches.find((m) => m.s === char || m.t === char);
-      return {
-        char,
-        pinyin: match?.p || '',
-        sv: match?.sv || '',
-        vi: match?.vi || 'Không tìm thấy dữ liệu',
-      };
-    });
   };
 
   const handleToggleFavorite = async () => {
@@ -88,11 +61,10 @@ export default function FreeWriteScreen() {
       if (alreadyFav) {
         await favoriteWordsApi.deleteFavoriteByHanzi(hanzi);
       } else {
-        const sv = getCompoundHanViet(hanzi) || '';
         await favoriteWordsApi.addFavorite({
           hanzi,
           pinyin: selectedWord.p || '',
-          sv,
+          sv: compoundSv || '',
           vi: selectedWord.vi || '',
         });
       }
@@ -152,18 +124,18 @@ export default function FreeWriteScreen() {
     return score;
   };
 
-  const segmentPinyin = (s) => {
+  const segmentPinyin = async (s) => {
     if (!s) return [];
     const memo = new Map();
-    const helper = (startIndex) => {
+    const helper = async (startIndex) => {
       if (startIndex === s.length) return [];
       if (memo.has(startIndex)) return memo.get(startIndex);
       
       for (let len = Math.min(6, s.length - startIndex); len >= 1; len--) {
         const part = s.substring(startIndex, startIndex + len);
-        const matches = lookupMultiple('pinyin', part);
+        const matches = await lookupMultiple('pinyin', part);
         if (matches && matches.length > 0) {
-          const rest = helper(startIndex + len);
+          const rest = await helper(startIndex + len);
           if (rest !== null) {
             const result = [part, ...rest];
             memo.set(startIndex, result);
@@ -174,10 +146,10 @@ export default function FreeWriteScreen() {
       memo.set(startIndex, null);
       return null;
     };
-    return helper(0) || [];
+    return (await helper(0)) || [];
   };
 
-  const resolveQueryToWord = (q) => {
+  const resolveQueryToWord = async (q) => {
     const cleanQ = (q || '').trim();
     if (!cleanQ) return null;
 
@@ -185,7 +157,7 @@ export default function FreeWriteScreen() {
 
     if (isHanzi) {
       // 1. Direct match in dictionary
-      const exactMatches = lookupMultiple('hanzi', cleanQ);
+      const exactMatches = await lookupMultiple('hanzi', cleanQ);
       const exactMatch = exactMatches.find((m) => m.s === cleanQ || m.t === cleanQ);
       if (exactMatch) {
         return exactMatch;
@@ -193,12 +165,12 @@ export default function FreeWriteScreen() {
 
       // 2. Decompose characters
       const chars = Array.from(cleanQ);
-      const resolvedParts = chars.map(char => {
-        const matches = lookupMultiple('hanzi', char);
+      const resolvedParts = [];
+      for (const char of chars) {
+        const matches = await lookupMultiple('hanzi', char);
         const match = matches.find((m) => m.s === char || m.t === char);
-        if (match) return match;
-        return { s: char, t: char, p: '', sv: '', vi: 'Không có dữ liệu' };
-      });
+        resolvedParts.push(match || { s: char, t: char, p: '', sv: '', vi: 'Không có dữ liệu' });
+      }
 
       const combinedPinyin = resolvedParts.map(p => p.p).filter(Boolean).join(' ');
       const combinedSv = resolvedParts.map(p => p.sv).filter(Boolean).join(' ');
@@ -218,7 +190,7 @@ export default function FreeWriteScreen() {
     const lowerQ = cleanQ.toLowerCase();
     
     // Check if it matches a direct meaning or single word pinyin first
-    const directPinyinMatches = lookupMultiple('pinyin', lowerQ);
+    const directPinyinMatches = await lookupMultiple('pinyin', lowerQ);
     const directPinyin = directPinyinMatches.find(m => m.s === lowerQ || m.p === lowerQ || m.sp === lowerQ);
     if (directPinyin) {
       return directPinyin;
@@ -229,7 +201,7 @@ export default function FreeWriteScreen() {
     let isPurePinyin = true;
     
     for (const word of words) {
-      const segmented = segmentPinyin(word);
+      const segmented = await segmentPinyin(word);
       if (segmented && segmented.length > 0) {
         pinyinSyllables.push(...segmented);
       } else {
@@ -242,7 +214,7 @@ export default function FreeWriteScreen() {
       const resolvedChars = [];
       
       for (const syl of pinyinSyllables) {
-        const matches = lookupMultiple('pinyin', syl);
+        const matches = await lookupMultiple('pinyin', syl);
         const singleCharMatches = matches.filter(m => m.s && m.s.length === 1);
         
         if (singleCharMatches.length > 0) {
@@ -261,7 +233,7 @@ export default function FreeWriteScreen() {
         const combinedHanzi = resolvedChars.map(c => c.s).join('');
         
         // If the joined Hanzi word exists in the dictionary, return it directly!
-        const exactMatches = lookupMultiple('hanzi', combinedHanzi);
+        const exactMatches = await lookupMultiple('hanzi', combinedHanzi);
         const exactMatch = exactMatches.find(m => m.s === combinedHanzi);
         if (exactMatch) {
           return exactMatch;
@@ -283,7 +255,7 @@ export default function FreeWriteScreen() {
     }
 
     // Meaning match fallback
-    const meaningMatches = lookupMultiple('meaning', lowerQ);
+    const meaningMatches = await lookupMultiple('meaning', lowerQ);
     if (meaningMatches.length > 0) {
       meaningMatches.sort((a, b) => getSortScore(b, lowerQ) - getSortScore(a, lowerQ));
       return meaningMatches[0];
@@ -292,28 +264,71 @@ export default function FreeWriteScreen() {
     return null;
   };
 
-  const handleSearch = (searchQuery) => {
+  const handleSearch = async (searchQuery) => {
     const q = (searchQuery || '').trim();
     if (!q) {
       setSelectedWord(null);
+      setBreakdown([]);
+      setCompoundSv('');
       return;
     }
 
-    let match = resolveQueryToWord(q);
+    let match = await resolveQueryToWord(q);
 
     // Fallback: If not found but contains Chinese characters, filter out everything else
     if (!match && /[\u4e00-\u9fa5]/.test(q)) {
       const hanziOnly = q.replace(/[^\u4e00-\u9fa5]/g, '');
       if (hanziOnly) {
-        match = resolveQueryToWord(hanziOnly);
+        match = await resolveQueryToWord(hanziOnly);
       }
     }
 
     if (match) {
       setSelectedWord(match);
       setActiveCharIndex(0);
+
+      // Calculate breakdown and compound Hán Việt asynchronously
+      const word = match.s;
+      const chars = Array.from(word);
+
+      // 1. Calculate Compound Hán Việt
+      if (match.sv) {
+        setCompoundSv(match.sv);
+      } else if (chars.length === 1) {
+        const matches = await lookupMultiple('hanzi', word);
+        const singleMatch = matches.find((m) => m.s === word || m.t === word);
+        setCompoundSv(singleMatch?.sv || '');
+      } else {
+        const parts = [];
+        for (const char of chars) {
+          const matches = await lookupMultiple('hanzi', char);
+          const singleMatch = matches.find((m) => m.s === char || m.t === char);
+          parts.push(singleMatch?.sv || `[${char}]`);
+        }
+        setCompoundSv(parts.join(' ').replace(/\s+/g, ' ').trim());
+      }
+
+      // 2. Calculate Character Breakdown
+      if (chars.length > 1) {
+        const bdList = [];
+        for (const char of chars) {
+          const matches = await lookupMultiple('hanzi', char);
+          const singleMatch = matches.find((m) => m.s === char || m.t === char);
+          bdList.push({
+            char,
+            pinyin: singleMatch?.p || '',
+            sv: singleMatch?.sv || '',
+            vi: singleMatch?.vi || 'Không tìm thấy dữ liệu',
+          });
+        }
+        setBreakdown(bdList);
+      } else {
+        setBreakdown([]);
+      }
     } else {
       setSelectedWord(null);
+      setBreakdown([]);
+      setCompoundSv('');
     }
   };
 
@@ -328,6 +343,8 @@ export default function FreeWriteScreen() {
   const handleClearAll = () => {
     setQuery('');
     setSelectedWord(null);
+    setBreakdown([]);
+    setCompoundSv('');
   };
 
   // HanziWriter rendering logic
@@ -523,10 +540,10 @@ export default function FreeWriteScreen() {
                   </h2>
                   <div className="flex items-center gap-2 mt-1.5 text-sm font-semibold text-mute dark:text-on-dark-mute">
                     <span>{selectedWord.p || 'Không có Pinyin'}</span>
-                    {getCompoundHanViet(selectedWord.s) && (
+                    {compoundSv && (
                       <>
                         <span>|</span>
-                        <span className="text-primary dark:text-link">{getCompoundHanViet(selectedWord.s).toUpperCase()}</span>
+                        <span className="text-primary dark:text-link">{compoundSv.toUpperCase()}</span>
                       </>
                     )}
                   </div>
@@ -589,7 +606,7 @@ export default function FreeWriteScreen() {
                     <div className="space-y-2 mt-2">
                       <h4 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider">Phân tích từng chữ</h4>
                       <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
-                        {getCharacterBreakdown(selectedWord.s).map((item, idx) => (
+                        {breakdown.map((item, idx) => (
                           <div key={idx} className="bg-surface-bone/50 dark:bg-black/35 p-3 rounded-md border border-hairline dark:border-divider-dark text-xs flex gap-2.5">
                             <span className="text-base font-extrabold text-primary shrink-0">{item.char}</span>
                             <div className="text-left">

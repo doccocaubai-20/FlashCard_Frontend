@@ -1,11 +1,14 @@
-import React, { useState, useMemo } from 'react';
-import { useDictionary } from '../hooks/useDictionary';
+import React, { useState, useEffect, useMemo } from 'react';
+import { dictionaryApi } from '../services/dictionaryApi';
 import { Grid, Volume2, Sparkles, HelpCircle } from 'lucide-react';
 
 export default function PinyinScreen() {
-  const { dictArray, loading } = useDictionary();
+  const [allSyllables, setAllSyllables] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedInitial, setSelectedInitial] = useState('b');
   const [selectedSyllable, setSelectedSyllable] = useState(null);
+  const [syllableDetails, setSyllableDetails] = useState(null);
+  const [detailsLoading, setDetailsLoading] = useState(false);
 
   const initials = [
     { key: 'b', label: 'B' },
@@ -34,42 +37,33 @@ export default function PinyinScreen() {
     { key: 'zero', label: 'Nguyên âm (a, o, e...)' },
   ];
 
-  // Extract all valid single-character syllables from cached dictArray
-  const allSyllables = useMemo(() => {
-    if (!dictArray) return [];
-    const set = new Set();
-    const list = [];
-
-    for (let i = 0; i < dictArray.length; i++) {
-      const entry = dictArray[i];
-      if (!entry || !entry.sp || entry.s.length !== 1) continue;
-      
-      const sp = entry.sp.toLowerCase().trim();
-      // Skip compound or multi-word pinyin
-      if (sp.length > 6 || /\s/.test(sp)) continue;
-
-      if (!set.has(sp)) {
-        set.add(sp);
-        list.push(sp);
+  // Fetch unique syllables on mount
+  useEffect(() => {
+    const fetchSyllables = async () => {
+      setLoading(true);
+      try {
+        const res = await dictionaryApi.getSyllables();
+        setAllSyllables(res.data || []);
+      } catch (err) {
+        console.error('Failed to fetch syllables:', err);
+      } finally {
+        setLoading(false);
       }
-    }
-    return list.sort();
-  }, [dictArray]);
+    };
+    fetchSyllables();
+  }, []);
 
   // Filter syllables that start with the selected initial
   const filteredSyllables = useMemo(() => {
     return allSyllables.filter((syl) => {
       if (selectedInitial === 'zero') {
-        // Starts with a, o, e, er (no initial consonant)
         return /^[aeo]/.test(syl);
       }
       
-      // Handle multi-character initials like zh, ch, sh
       if (selectedInitial === 'zh') return syl.startsWith('zh');
       if (selectedInitial === 'ch') return syl.startsWith('ch');
       if (selectedInitial === 'sh') return syl.startsWith('sh');
       
-      // Exclude zh, ch, sh when checking single character z, c, s
       if (selectedInitial === 'z') return syl.startsWith('z') && !syl.startsWith('zh');
       if (selectedInitial === 'c') return syl.startsWith('c') && !syl.startsWith('ch');
       if (selectedInitial === 's') return syl.startsWith('s') && !syl.startsWith('sh');
@@ -78,81 +72,88 @@ export default function PinyinScreen() {
     });
   }, [allSyllables, selectedInitial]);
 
-  // Find all dictionary entries for a syllable to group them by tones (1 to 4)
-  const syllableDetails = useMemo(() => {
-    if (!selectedSyllable || !dictArray) return null;
+  // Fetch details when selected syllable changes
+  useEffect(() => {
+    if (!selectedSyllable) {
+      setSyllableDetails(null);
+      return;
+    }
 
-    const entries = dictArray.filter(
-      (e) => e.s.length === 1 && e.sp && e.sp.toLowerCase().trim() === selectedSyllable
-    );
+    const fetchDetails = async () => {
+      setDetailsLoading(true);
+      try {
+        const res = await dictionaryApi.getSyllableDetails(selectedSyllable);
+        const entries = res.data || [];
 
-    // Group by tone index (we can detect tone by looking at tone numbers in pt e.g. ba1, ba2, ba3, ba4)
-    const tones = {
-      1: { display: '', chars: [], pinyin: '' },
-      2: { display: '', chars: [], pinyin: '' },
-      3: { display: '', chars: [], pinyin: '' },
-      4: { display: '', chars: [], pinyin: '' },
-      5: { display: '', chars: [], pinyin: '' }, // Neutral tone
-    };
+        const tones = {
+          1: { display: '', chars: [], pinyin: '' },
+          2: { display: '', chars: [], pinyin: '' },
+          3: { display: '', chars: [], pinyin: '' },
+          4: { display: '', chars: [], pinyin: '' },
+          5: { display: '', chars: [], pinyin: '' },
+        };
 
-    entries.forEach((e) => {
-      // Find tone from pt (e.g. wo3 -> tone 3)
-      const pt = e.pt || '';
-      const match = pt.match(/\d/);
-      const toneNum = match ? parseInt(match[0]) : 5;
+        entries.forEach((e) => {
+          const pt = e.pt || '';
+          const match = pt.match(/\d/);
+          const toneNum = match ? parseInt(match[0]) : 5;
 
-      const bucket = tones[toneNum] || tones[5];
-      bucket.pinyin = e.p;
-      
-      // Add up to 8 common character examples
-      if (bucket.chars.length < 8 && !bucket.chars.some(c => c.s === e.s)) {
-        bucket.chars.push(e);
+          const bucket = tones[toneNum] || tones[5];
+          bucket.pinyin = e.p;
+          
+          if (bucket.chars.length < 8 && !bucket.chars.some(c => c.s === e.s)) {
+            bucket.chars.push(e);
+          }
+        });
+
+        const toneMarkers = {
+          a: ['ā', 'á', 'ǎ', 'à', 'a'],
+          o: ['ō', 'ó', 'ǒ', 'ò', 'o'],
+          e: ['ē', 'é', 'ě', 'è', 'e'],
+          i: ['ī', 'í', 'ǐ', 'ì', 'i'],
+          u: ['ū', 'ú', 'ǔ', 'ù', 'u'],
+          v: ['ǖ', 'ǘ', 'ǚ', 'ǜ', 'ü'],
+        };
+
+        const getPinyinWithTone = (base, tone) => {
+          if (tone === 5) return base;
+          
+          let vowel = 'a';
+          if (base.includes('a')) vowel = 'a';
+          else if (base.includes('o')) vowel = 'o';
+          else if (base.includes('e')) vowel = 'e';
+          else if (base.includes('ui')) vowel = 'i';
+          else if (base.includes('iu')) vowel = 'u';
+          else if (base.includes('i')) vowel = 'i';
+          else if (base.includes('u')) vowel = 'u';
+          else if (base.includes('v') || base.includes('ü')) vowel = 'v';
+
+          const replacement = toneMarkers[vowel][tone - 1];
+          const normalizedBase = base.replace('ü', 'v');
+          return normalizedBase.replace(vowel, replacement).replace('v', 'ü');
+        };
+
+        [1, 2, 3, 4, 5].forEach((t) => {
+          if (!tones[t].pinyin) {
+            tones[t].pinyin = getPinyinWithTone(selectedSyllable, t);
+          }
+        });
+
+        setSyllableDetails({
+          syllable: selectedSyllable,
+          tones: Object.keys(tones)
+            .map((t) => ({ tone: Number(t), ...tones[t] }))
+            .filter((t) => t.tone !== 5 || t.chars.length > 0),
+        });
+      } catch (err) {
+        console.error('Failed to fetch details:', err);
+      } finally {
+        setDetailsLoading(false);
       }
-    });
-
-    // Provide default tone names if pinyin field is empty
-    const toneMarkers = {
-      a: ['ā', 'á', 'ǎ', 'à', 'a'],
-      o: ['ō', 'ó', 'ǒ', 'ò', 'o'],
-      e: ['ē', 'é', 'ě', 'è', 'e'],
-      i: ['ī', 'í', 'ǐ', 'ì', 'i'],
-      u: ['ū', 'ú', 'ǔ', 'ù', 'u'],
-      v: ['ǖ', 'ǘ', 'ǚ', 'ǜ', 'ü'],
     };
 
-    // Simple fallback tone marker replacement helper
-    const getPinyinWithTone = (base, tone) => {
-      if (tone === 5) return base;
-      
-      // Find primary vowel to place tone marker
-      let vowel = 'a';
-      if (base.includes('a')) vowel = 'a';
-      else if (base.includes('o')) vowel = 'o';
-      else if (base.includes('e')) vowel = 'e';
-      else if (base.includes('ui')) vowel = 'i';
-      else if (base.includes('iu')) vowel = 'u';
-      else if (base.includes('i')) vowel = 'i';
-      else if (base.includes('u')) vowel = 'u';
-      else if (base.includes('v') || base.includes('ü')) vowel = 'v';
-
-      const replacement = toneMarkers[vowel][tone - 1];
-      const normalizedBase = base.replace('ü', 'v');
-      return normalizedBase.replace(vowel, replacement).replace('v', 'ü');
-    };
-
-    [1, 2, 3, 4, 5].forEach((t) => {
-      if (!tones[t].pinyin) {
-        tones[t].pinyin = getPinyinWithTone(selectedSyllable, t);
-      }
-    });
-
-    return {
-      syllable: selectedSyllable,
-      tones: Object.keys(tones)
-        .map((t) => ({ tone: Number(t), ...tones[t] }))
-        .filter((t) => t.tone !== 5 || t.chars.length > 0), // hide neutral tone if no chars
-    };
-  }, [selectedSyllable, dictArray]);
+    fetchDetails();
+  }, [selectedSyllable]);
 
   const handleSpeakTone = (pinyin) => {
     if (!window.speechSynthesis) return;

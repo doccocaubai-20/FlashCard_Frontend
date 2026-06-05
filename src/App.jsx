@@ -26,11 +26,17 @@ import FallingWordsGameScreen from './pages/FallingWordsGameScreen';
 import StudyHubScreen from './pages/StudyHubScreen';
 import GameArcadeScreen from './pages/GameArcadeScreen';
 import ReferenceHubScreen from './pages/ReferenceHubScreen';
-import { useDictionary } from './hooks/useDictionary';
+import LeaderboardScreen from './pages/LeaderboardScreen';
+import AdminScreen from './pages/AdminScreen';
 
 function PrivateRoute({ children }) {
   const token = useSelector((state) => state.auth.token);
   return token ? children : <Navigate to="/login" replace />;
+}
+
+function AdminRoute({ children }) {
+  const user = useSelector((state) => state.auth.user);
+  return user?.role === 'ADMIN' ? children : <Navigate to="/" replace />;
 }
 
 function LoginRoute() {
@@ -39,9 +45,6 @@ function LoginRoute() {
 }
 
 function App() {
-  // Preload and cache the dictionary in the background on app startup
-  useDictionary();
-
   return (
     <Routes>
       <Route path="/login" element={<LoginRoute />} />
@@ -77,6 +80,12 @@ function App() {
         <Route path="/reference-hub" element={<ReferenceHubScreen />} />
         <Route path="/translation" element={<TranslationPlaygroundScreen />} />
         <Route path="/notebook" element={<VocabularyNotebookScreen />} />
+        <Route path="/leaderboard" element={<LeaderboardScreen />} />
+        <Route path="/admin" element={
+          <AdminRoute>
+            <AdminScreen />
+          </AdminRoute>
+        } />
         <Route path="/settings" element={<SettingsScreen />} />
       </Route>
 

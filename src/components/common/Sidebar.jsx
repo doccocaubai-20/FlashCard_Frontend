@@ -21,7 +21,9 @@ import {
   Star,
   Mic,
   Puzzle,
-  Zap
+  Zap,
+  Trophy,
+  Shield
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -43,6 +45,7 @@ export default function Sidebar() {
       items: [
         { to: '/', label: 'Dashboard', icon: LayoutDashboard },
         { to: '/decks', label: 'Bộ bài', icon: BookOpen },
+        { to: '/leaderboard', label: 'Bảng xếp hạng', icon: Trophy },
       ]
     },
     {
@@ -65,6 +68,15 @@ export default function Sidebar() {
       ]
     }
   ];
+
+  if (user?.role === 'ADMIN') {
+    menuGroups.push({
+      title: 'Quản trị (Admin)',
+      items: [
+        { to: '/admin', label: 'Admin CMS', icon: Shield },
+      ]
+    });
+  }
 
   // Load and persist sidebar collapse preference from localStorage
   const [collapsedGroups, setCollapsedGroups] = useState(() => {

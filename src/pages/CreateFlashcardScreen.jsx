@@ -67,9 +67,9 @@ export default function CreateFlashcardScreen() {
   };
 
   // Handle dictionary search
-  const handleLookup = (field, value) => {
+  const handleLookup = async (field, value) => {
     if (!value) return;
-    const candidates = lookupMultiple(field, value);
+    const candidates = await lookupMultiple(field, value);
     if (candidates && candidates.length > 0) {
       const sorted = [...candidates].sort((a, b) => getSortScore(b) - getSortScore(a));
       const result = sorted[0];
@@ -124,8 +124,8 @@ export default function CreateFlashcardScreen() {
       return;
     }
 
-    const handler = setTimeout(() => {
-      const candidates = lookupMultiple(lastEditedField, valueToSearch);
+    const handler = setTimeout(async () => {
+      const candidates = await lookupMultiple(lastEditedField, valueToSearch);
       const sorted = [...candidates].sort((a, b) => getSortScore(b) - getSortScore(a));
       setSuggestions({
         field: lastEditedField,

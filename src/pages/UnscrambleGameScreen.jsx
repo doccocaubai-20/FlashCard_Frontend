@@ -472,8 +472,17 @@ export default function UnscrambleGameScreen() {
 
       {/* Game Over Bento Modal Report */}
       {gameWon && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-lg max-w-2xl w-full p-6 text-center space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+        <div 
+          onClick={() => {
+            setGameWon(false);
+            setGameStarted(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-lg max-w-2xl w-full p-6 text-center space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto"
+          >
             
             {/* Header */}
             <div className="space-y-2">
@@ -549,7 +558,10 @@ export default function UnscrambleGameScreen() {
             <div className="flex gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => setGameStarted(false)}
+                onClick={() => {
+                  setGameWon(false);
+                  setGameStarted(false);
+                }}
                 className="flex-1 py-2.5 border border-hairline dark:border-divider-dark rounded-md text-xs font-bold text-mute hover:text-ink hover:bg-surface-bone dark:hover:bg-black transition cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <ArrowLeft size={13} />
@@ -558,7 +570,10 @@ export default function UnscrambleGameScreen() {
               
               <button
                 type="button"
-                onClick={() => navigate('/')}
+                onClick={() => {
+                  setGameWon(false);
+                  navigate('/');
+                }}
                 className="flex-1 py-2.5 border border-hairline dark:border-divider-dark rounded-md text-xs font-bold text-mute hover:text-ink hover:bg-surface-bone dark:hover:bg-black transition cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <Home size={13} />

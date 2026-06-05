@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllDecks, fetchFlashcardsByDeck } from '../features/deck/deckSlice';
-import { useDictionary } from '../hooks/useDictionary';
+import { dictionaryApi } from '../services/dictionaryApi';
 import { cleanDefinition } from '../utils/formatters';
 import { 
   Zap, 
@@ -26,7 +26,7 @@ export default function FallingWordsGameScreen() {
   const dispatch = useDispatch();
 
   // Load custom decks from Redux
-  const { dictArray, loading: dictLoading } = useDictionary();
+  const [loadingCards, setLoadingCards] = useState(false);
   const decks = useSelector((state) => state.deck.decks);
 
   // Configuration States
@@ -91,35 +91,32 @@ export default function FallingWordsGameScreen() {
       .trim();
   };
 
-  // Prepare word pool
-  const buildWordPool = () => {
+  // Start game play
+  const handleStartGame = async () => {
     let pool = [];
 
-    if (selectedSource.startsWith('hsk')) {
-      const level = parseInt(selectedSource.replace('hsk', ''), 10);
-      if (!dictArray || dictArray.length === 0) return [];
-      
-      // Filter words for selected HSK level
-      pool = dictArray.filter(
-        (w) => w && w.hsk === level && w.s && w.s.length <= 4
-      );
-    } else {
-      // Custom deck cards mapped to standard dict layout
-      const deckId = selectedSource.replace('deck_', '');
-      const cards = deckCardsRef.current;
-      pool = cards.map((c) => ({
-        s: c.front,
-        p: '',
-        vi: c.back
-      }));
+    setLoadingCards(true);
+    try {
+      if (selectedSource.startsWith('hsk')) {
+        const level = parseInt(selectedSource.replace('hsk', ''), 10);
+        const res = await dictionaryApi.getHskWords(level, 100);
+        pool = res.data || [];
+        pool = pool.filter(w => w && w.s && w.s.length <= 4);
+      } else {
+        // Custom deck cards mapped to standard dict layout
+        const cards = deckCardsRef.current;
+        pool = cards.map((c) => ({
+          s: c.front,
+          p: '',
+          vi: c.back
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to load game pool:', err);
+    } finally {
+      setLoadingCards(false);
     }
 
-    return pool;
-  };
-
-  // Start game play
-  const handleStartGame = () => {
-    const pool = buildWordPool();
     if (pool.length === 0) {
       alert('Nguồn từ vựng được chọn không có dữ liệu hoặc đang tải. Vui lòng chọn nguồn khác.');
       return;
@@ -419,11 +416,11 @@ export default function FallingWordsGameScreen() {
 
           <button
             onClick={handleStartGame}
-            disabled={dictLoading}
+            disabled={loadingCards}
             className="w-full py-3 bg-amber-500 hover:bg-amber-600 disabled:bg-amber-500/40 text-white font-bold rounded-md cursor-pointer transition-all active:scale-[0.98] shadow-sm flex items-center justify-center gap-2"
           >
             <Play size={16} />
-            {dictLoading ? 'Đang chuẩn bị dữ liệu...' : 'Bắt đầu đấu trường'}
+            {loadingCards ? 'Đang chuẩn bị dữ liệu...' : 'Bắt đầu đấu trường'}
           </button>
         </div>
       ) : (
@@ -625,8 +622,17 @@ export default function FallingWordsGameScreen() {
 
       {/* Game Over Bento Modal Report */}
       {gameOver && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-fade-in">
-          <div className="bg-slate-900 border border-slate-800 rounded-lg max-w-2xl w-full p-6 text-center space-y-6 shadow-2xl relative text-white max-h-[90vh] overflow-y-auto">
+        <div 
+          onClick={() => {
+            setGameOver(false);
+            setGameStarted(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-fade-in"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-slate-900 border border-slate-800 rounded-lg max-w-2xl w-full p-6 text-center space-y-6 shadow-2xl relative text-white max-h-[90vh] overflow-y-auto"
+          >
             
             {/* Broken Heart or Trophy icon */}
             <div className="space-y-2">
@@ -716,7 +722,10 @@ export default function FallingWordsGameScreen() {
             <div className="flex gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => setGameStarted(false)}
+                onClick={() => {
+                  setGameOver(false);
+                  setGameStarted(false);
+                }}
                 className="flex-1 py-2.5 border border-slate-800 rounded-md text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
               >
                 Cấp độ khác
