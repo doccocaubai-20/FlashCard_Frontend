@@ -1,15 +1,26 @@
 import { useState, useCallback } from 'react';
 import { dictionaryApi } from '../services/dictionaryApi';
 
+// Client-side RAM cache to completely eliminate duplicate network requests
+const clientSearchCache = new Map();
+
 export function useDictionary() {
   const [loading, setLoading] = useState(false);
 
   const lookup = useCallback(async (type, value) => {
     if (!value) return null;
+    const cleanValue = value.toLowerCase().trim();
+    const cacheKey = `single:${type}:${cleanValue}`;
+    if (clientSearchCache.has(cacheKey)) {
+      return clientSearchCache.get(cacheKey);
+    }
+
     setLoading(true);
     try {
       const res = await dictionaryApi.search(type, value, false);
-      return res.data;
+      const data = res.data;
+      clientSearchCache.set(cacheKey, data);
+      return data;
     } catch (err) {
       console.error('Failed to lookup dictionary:', err);
       return null;
@@ -20,10 +31,18 @@ export function useDictionary() {
 
   const lookupMultiple = useCallback(async (type, value) => {
     if (!value) return [];
+    const cleanValue = value.toLowerCase().trim();
+    const cacheKey = `multi:${type}:${cleanValue}`;
+    if (clientSearchCache.has(cacheKey)) {
+      return clientSearchCache.get(cacheKey);
+    }
+
     setLoading(true);
     try {
       const res = await dictionaryApi.search(type, value, true);
-      return res.data || [];
+      const data = res.data || [];
+      clientSearchCache.set(cacheKey, data);
+      return data;
     } catch (err) {
       console.error('Failed to lookupMultiple dictionary:', err);
       return [];
