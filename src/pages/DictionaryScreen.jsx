@@ -160,7 +160,8 @@ const searchRelatedSentences = (q) => {
 };
 
 export default function DictionaryScreen() {
-  const { lookupMultiple, loading } = useDictionary();
+  const { lookupMultiple } = useDictionary();
+  const [isSearching, setIsSearching] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [relatedSentences, setRelatedSentences] = useState([]);
@@ -286,19 +287,9 @@ export default function DictionaryScreen() {
         }
       };
 
-      if (!loading) {
-        runUrlLoad();
-      }
+      runUrlLoad();
     }
-  }, [wordParam, loading, history.length]);
-
-  // Re-run search when dictionary finishes loading
-  useEffect(() => {
-    if (!loading && query) {
-      handleSearch(query);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
+  }, [wordParam, history.length]);
 
   // Debounced search on query change
   useEffect(() => {
@@ -318,7 +309,7 @@ export default function DictionaryScreen() {
   }, [query]);
 
   async function handleSearch(searchQuery) {
-    if (loading) return;
+    if (isSearching) return;
     const actualQuery = typeof searchQuery === 'string' ? searchQuery : query;
     const trimmedQuery = (actualQuery || '').trim();
     if (!trimmedQuery) {
@@ -327,152 +318,159 @@ export default function DictionaryScreen() {
       return;
     }
 
-    // Lookup across multiple indexes: Hanzi, Pinyin, and Meaning
-    const [hanziMatches, pinyinMatches, meaningMatches] = await Promise.all([
-      lookupMultiple('hanzi', trimmedQuery),
-      lookupMultiple('pinyin', trimmedQuery),
-      lookupMultiple('meaning', trimmedQuery)
-    ]);
-
-    // Combine results and deduplicate
-    const seen = new Set();
-    const combined = [...hanziMatches, ...pinyinMatches, ...meaningMatches];
-    const searchResults = [];
-
-    for (const item of combined) {
-      if (!item) continue;
-      const key = `${item.s}-${item.p}-${item.vi}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        searchResults.push(item);
-      }
-    }
-
-    // Sort matches dynamically using relevance scores
     const qLower = trimmedQuery.toLowerCase();
-    const getSortScore = (item) => {
-      const s = (item.s || '').toLowerCase();
-      const t = (item.t || '').toLowerCase();
-      const p = (item.p || '').toLowerCase();
-      const pt = (item.pt || '').toLowerCase();
-      const sp = (item.sp || '').toLowerCase();
-      const sv = (item.sv || '').toLowerCase();
-      const vi = (item.vi || '').toLowerCase();
-      const en = Array.isArray(item.en) ? item.en.join(' ').toLowerCase() : (item.en || '').toLowerCase();
 
-      let score = 0;
+    setIsSearching(true);
+    try {
+      // Lookup across multiple indexes: Hanzi, Pinyin, and Meaning
+      const [hanziMatches, pinyinMatches, meaningMatches] = await Promise.all([
+        lookupMultiple('hanzi', trimmedQuery),
+        lookupMultiple('pinyin', trimmedQuery),
+        lookupMultiple('meaning', trimmedQuery)
+      ]);
 
-      // 1. Exact Hanzi match
-      if (s === qLower || t === qLower) {
-        score += 10000;
+      // Combine results and deduplicate
+      const seen = new Set();
+      const combined = [...hanziMatches, ...pinyinMatches, ...meaningMatches];
+      const searchResults = [];
+
+      for (const item of combined) {
+        if (!item) continue;
+        const key = `${item.s}-${item.p}-${item.vi}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          searchResults.push(item);
+        }
       }
 
-      // 2. Exact Pinyin match
-      if (p === qLower || pt === qLower || sp === qLower) {
-        score += 5000;
+      const getSortScore = (item) => {
+        const s = (item.s || '').toLowerCase();
+        const t = (item.t || '').toLowerCase();
+        const p = (item.p || '').toLowerCase();
+        const pt = (item.pt || '').toLowerCase();
+        const sp = (item.sp || '').toLowerCase();
+        const sv = (item.sv || '').toLowerCase();
+        const vi = (item.vi || '').toLowerCase();
+        const en = Array.isArray(item.en) ? item.en.join(' ').toLowerCase() : (item.en || '').toLowerCase();
+
+        let score = 0;
+
+        // 1. Exact Hanzi match
+        if (s === qLower || t === qLower) {
+          score += 10000;
+        }
+
+        // 2. Exact Pinyin match
+        if (p === qLower || pt === qLower || sp === qLower) {
+          score += 5000;
+        }
+
+        // 3. Exact Hán-Việt match (only if syllable count matches Chinese character length to avoid incomplete database readings)
+        const svSyllables = sv.split(/[\s·-]+/).filter(Boolean).length;
+        if (sv === qLower && s.length === svSyllables) {
+          score += 2000;
+        }
+
+        // 4. Exact meaning match (first translation before / or full match)
+        const firstVi = vi.split('/')[0].trim();
+        if (firstVi === qLower || vi.trim() === qLower) {
+          score += 1000;
+        }
+
+        // 5. Starts with Hanzi
+        if (s.startsWith(qLower) || t.startsWith(qLower)) {
+          score += 500;
+        }
+
+        // 6. Starts with Hán-Việt
+        if (sv.startsWith(qLower)) {
+          score += 300;
+        }
+
+        // 7. Proper Noun & Transliteration Penalty
+        const itemP = item.p || '';
+        const pSyllables = itemP.split(/[\s·’']+/);
+        const isProper = pSyllables.some(syll => syll && syll[0] === syll[0].toUpperCase() && syll[0] !== syll[0].toLowerCase());
+        if (isProper) {
+          score -= 3000;
+        }
+
+        const isTransliteration = 
+          en.includes('transliteration') || 
+          en.includes('surname') || 
+          vi.includes('họ ') || 
+          vi.includes('tập đoàn') || 
+          vi.includes('diễn viên');
+        if (isTransliteration) {
+          score -= 5000;
+        }
+
+        // 8. Common Word Boost & Rank Penalty
+        if (item.hsk) {
+          score += (10 - item.hsk) * 200; // HSK 1 gets +1800, HSK 7 gets +600
+        }
+        if (item.b) {
+          score += item.b * 10; // e.g. b 76.3 gets +763
+        }
+        if (item.bwr) {
+          score -= item.bwr * 0.1; // e.g. rank 8 subtracts 0.8, rank 75159 subtracts 7515.9
+        } else {
+          score -= 10000; // default maximum penalty for unranked/obscure words
+        }
+        if (item.mwr) {
+          score -= item.mwr * 0.1;
+        }
+
+        // 9. Archaic/Rare Variant Penalty
+        const isVariant =
+          vi.includes('biến thể cổ của') ||
+          vi.includes('biến thể của') ||
+          vi.includes('biến thể cũ của') ||
+          vi.includes('cổ của') ||
+          en.includes('variant of') ||
+          en.includes('archaic variant') ||
+          en.includes('old variant');
+
+        if (isVariant) {
+          score -= 8000;
+        }
+
+        // 10. Shorter words are more fundamental (tie-breaker)
+        score -= s.length * 10;
+
+        return score;
+      };
+
+      searchResults.sort((a, b) => getSortScore(b) - getSortScore(a));
+
+      let finalResults = searchResults.slice(0, 30);
+
+      if (finalResults.length === 0) {
+        const isHanzi = /[\u4e00-\u9fa5]/.test(trimmedQuery);
+        let decomposedResults;
+        if (isHanzi) {
+          decomposedResults = await segmentHanziSentence(trimmedQuery);
+        } else {
+          decomposedResults = await resolvePinyinSentence(trimmedQuery);
+        }
+
+        if (decomposedResults.length > 0) {
+          finalResults = decomposedResults;
+        }
       }
 
-      // 3. Exact Hán-Việt match (only if syllable count matches Chinese character length to avoid incomplete database readings)
-      const svSyllables = sv.split(/[\s·-]+/).filter(Boolean).length;
-      if (sv === qLower && s.length === svSyllables) {
-        score += 2000;
-      }
+      setResults(finalResults);
+      setHasSearched(true);
+      setSelectedWord(null); // Reset detail view when performing a new search
 
-      // 4. Exact meaning match (first translation before / or full match)
-      const firstVi = vi.split('/')[0].trim();
-      if (firstVi === qLower || vi.trim() === qLower) {
-        score += 1000;
-      }
-
-      // 5. Starts with Hanzi
-      if (s.startsWith(qLower) || t.startsWith(qLower)) {
-        score += 500;
-      }
-
-      // 6. Starts with Hán-Việt
-      if (sv.startsWith(qLower)) {
-        score += 300;
-      }
-
-      // 7. Proper Noun & Transliteration Penalty
-      const itemP = item.p || '';
-      const pSyllables = itemP.split(/[\s·’']+/);
-      const isProper = pSyllables.some(syll => syll && syll[0] === syll[0].toUpperCase() && syll[0] !== syll[0].toLowerCase());
-      if (isProper) {
-        score -= 3000;
-      }
-
-      const isTransliteration = 
-        en.includes('transliteration') || 
-        en.includes('surname') || 
-        vi.includes('họ ') || 
-        vi.includes('tập đoàn') || 
-        vi.includes('diễn viên');
-      if (isTransliteration) {
-        score -= 5000;
-      }
-
-      // 8. Common Word Boost & Rank Penalty
-      if (item.hsk) {
-        score += (10 - item.hsk) * 200; // HSK 1 gets +1800, HSK 7 gets +600
-      }
-      if (item.b) {
-        score += item.b * 10; // e.g. b 76.3 gets +763
-      }
-      if (item.bwr) {
-        score -= item.bwr * 0.1; // e.g. rank 8 subtracts 0.8, rank 75159 subtracts 7515.9
-      } else {
-        score -= 10000; // default maximum penalty for unranked/obscure words
-      }
-      if (item.mwr) {
-        score -= item.mwr * 0.1;
-      }
-
-      // 9. Archaic/Rare Variant Penalty
-      const isVariant =
-        vi.includes('biến thể cổ của') ||
-        vi.includes('biến thể của') ||
-        vi.includes('biến thể cũ của') ||
-        vi.includes('cổ của') ||
-        en.includes('variant of') ||
-        en.includes('archaic variant') ||
-        en.includes('old variant');
-
-      if (isVariant) {
-        score -= 8000;
-      }
-
-      // 10. Shorter words are more fundamental (tie-breaker)
-      score -= s.length * 10;
-
-      return score;
-    };
-
-    searchResults.sort((a, b) => getSortScore(b) - getSortScore(a));
-
-    let finalResults = searchResults.slice(0, 30);
-
-    if (finalResults.length === 0) {
-      const isHanzi = /[\u4e00-\u9fa5]/.test(trimmedQuery);
-      let decomposedResults;
-      if (isHanzi) {
-        decomposedResults = await segmentHanziSentence(trimmedQuery);
-      } else {
-        decomposedResults = await resolvePinyinSentence(trimmedQuery);
-      }
-
-      if (decomposedResults.length > 0) {
-        finalResults = decomposedResults;
-      }
+      // Match related example sentences in static corpora
+      const matchedSentences = searchRelatedSentences(trimmedQuery);
+      setRelatedSentences(matchedSentences);
+    } catch (err) {
+      console.error('Failed to search dictionary:', err);
+    } finally {
+      setIsSearching(false);
     }
-
-    setResults(finalResults);
-    setHasSearched(true);
-    setSelectedWord(null); // Reset detail view when performing a new search
-
-    // Match related example sentences in static corpora
-    const matchedSentences = searchRelatedSentences(trimmedQuery);
-    setRelatedSentences(matchedSentences);
   }
 
   async function segmentPinyin(s) {
@@ -1078,7 +1076,7 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                 <button
                   type="button"
                   onClick={() => handleSearch()}
-                  disabled={loading}
+                  disabled={isSearching}
                   className="px-5 py-3 rounded-full bg-primary hover:bg-primary-deep disabled:bg-stone text-white text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
                 >
                   <Search size={15} />
@@ -1086,14 +1084,14 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                 </button>
               </div>                {/* Results List */}
               <div className="flex-1 min-h-[450px] max-h-[600px] overflow-y-auto pr-1 flex flex-col gap-3">
-                {loading && (
+                {isSearching && (
                   <div className="flex flex-col items-center justify-center py-20 text-mute gap-3">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                    <span className="text-sm font-medium">Đang tải và đồng bộ từ điển...</span>
+                    <span className="text-sm font-medium">Đang tìm kiếm...</span>
                   </div>
                 )}
 
-                {!loading && results.length === 0 && relatedSentences.length === 0 && (
+                {!isSearching && results.length === 0 && relatedSentences.length === 0 && (
                   hasSearched ? (
                     <div className="flex flex-col items-center justify-center py-20 text-mute bg-surface-bone/30 dark:bg-surface-dark/30 rounded-md border border-dashed border-hairline dark:border-divider-dark animate-fade-in">
                       <BookOpen size={48} className="stroke-1 text-mute dark:text-on-dark-mute mb-3" />
@@ -1173,7 +1171,7 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                   )
                 )}
 
-                {!loading && (results.length > 0 || relatedSentences.length > 0) && (
+                {!isSearching && (results.length > 0 || relatedSentences.length > 0) && (
                   <div className="flex flex-col gap-6">
                     {/* Word segments/results */}
                     {results.length > 0 && (

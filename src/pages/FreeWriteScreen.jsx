@@ -6,7 +6,8 @@ import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { BookOpen, Star, Volume2, ArrowRight } from 'lucide-react';
 
 export default function FreeWriteScreen() {
-  const { lookupMultiple, loading } = useDictionary();
+  const { lookupMultiple } = useDictionary();
+  const [isSearching, setIsSearching] = useState(false);
   const [query, setQuery] = useState('');
   const [selectedWord, setSelectedWord] = useState(null);
   const [favorites, setFavorites] = useState([]);
@@ -45,19 +46,9 @@ export default function FreeWriteScreen() {
     if (wordParam) {
       const cleanWord = decodeURIComponent(wordParam).trim();
       setQuery(cleanWord);
-      if (!loading) {
-        handleSearch(cleanWord);
-      }
+      handleSearch(cleanWord);
     }
-  }, [wordParam, loading]);
-
-  // Re-run search when dictionary finishes loading
-  useEffect(() => {
-    if (!loading && query) {
-      handleSearch(query);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
+  }, [wordParam]);
 
   const isFavorite = (hanzi) => {
     return favorites.some((f) => f.hanzi === hanzi);
@@ -275,7 +266,7 @@ export default function FreeWriteScreen() {
   }
 
   async function handleSearch(searchQuery) {
-    if (loading) return;
+    if (isSearching) return;
     const q = (searchQuery || '').trim();
     if (!q) {
       setSelectedWord(null);
@@ -284,62 +275,69 @@ export default function FreeWriteScreen() {
       return;
     }
 
-    let match = await resolveQueryToWord(q);
+    setIsSearching(true);
+    try {
+      let match = await resolveQueryToWord(q);
 
-    // Fallback: If not found but contains Chinese characters, filter out everything else
-    if (!match && /[\u4e00-\u9fa5]/.test(q)) {
-      const hanziOnly = q.replace(/[^\u4e00-\u9fa5]/g, '');
-      if (hanziOnly) {
-        match = await resolveQueryToWord(hanziOnly);
-      }
-    }
-
-    if (match) {
-      setSelectedWord(match);
-      setActiveCharIndex(0);
-
-      // Calculate breakdown and compound Hán Việt asynchronously
-      const word = match.s;
-      const chars = Array.from(word);
-
-      // 1. Calculate Compound Hán Việt
-      if (match.sv) {
-        setCompoundSv(match.sv);
-      } else if (chars.length === 1) {
-        const matches = await lookupMultiple('hanzi', word);
-        const singleMatch = matches.find((m) => m.s === word || m.t === word);
-        setCompoundSv(singleMatch?.sv || '');
-      } else {
-        const parts = [];
-        for (const char of chars) {
-          const matches = await lookupMultiple('hanzi', char);
-          const singleMatch = matches.find((m) => m.s === char || m.t === char);
-          parts.push(singleMatch?.sv || `[${char}]`);
+      // Fallback: If not found but contains Chinese characters, filter out everything else
+      if (!match && /[\u4e00-\u9fa5]/.test(q)) {
+        const hanziOnly = q.replace(/[^\u4e00-\u9fa5]/g, '');
+        if (hanziOnly) {
+          match = await resolveQueryToWord(hanziOnly);
         }
-        setCompoundSv(parts.join(' ').replace(/\s+/g, ' ').trim());
       }
 
-      // 2. Calculate Character Breakdown
-      if (chars.length > 1) {
-        const bdList = [];
-        for (const char of chars) {
-          const matches = await lookupMultiple('hanzi', char);
-          const singleMatch = matches.find((m) => m.s === char || m.t === char);
-          bdList.push({
-            char,
-            pinyin: singleMatch?.p || '',
-            sv: singleMatch?.sv || '',
-            vi: singleMatch?.vi || 'Không tìm thấy dữ liệu',
-          });
+      if (match) {
+        setSelectedWord(match);
+        setActiveCharIndex(0);
+
+        // Calculate breakdown and compound Hán Việt asynchronously
+        const word = match.s;
+        const chars = Array.from(word);
+
+        // 1. Calculate Compound Hán Việt
+        if (match.sv) {
+          setCompoundSv(match.sv);
+        } else if (chars.length === 1) {
+          const matches = await lookupMultiple('hanzi', word);
+          const singleMatch = matches.find((m) => m.s === word || m.t === word);
+          setCompoundSv(singleMatch?.sv || '');
+        } else {
+          const parts = [];
+          for (const char of chars) {
+            const matches = await lookupMultiple('hanzi', char);
+            const singleMatch = matches.find((m) => m.s === char || m.t === char);
+            parts.push(singleMatch?.sv || `[${char}]`);
+          }
+          setCompoundSv(parts.join(' ').replace(/\s+/g, ' ').trim());
         }
-        setBreakdown(bdList);
+
+        // 2. Calculate Character Breakdown
+        if (chars.length > 1) {
+          const bdList = [];
+          for (const char of chars) {
+            const matches = await lookupMultiple('hanzi', char);
+            const singleMatch = matches.find((m) => m.s === char || m.t === char);
+            bdList.push({
+              char,
+              pinyin: singleMatch?.p || '',
+              sv: singleMatch?.sv || '',
+              vi: singleMatch?.vi || 'Không tìm thấy dữ liệu',
+            });
+          }
+          setBreakdown(bdList);
+        } else {
+          setBreakdown([]);
+        }
       } else {
+        setSelectedWord(null);
         setBreakdown([]);
+        setCompoundSv('');
       }
-    } else {
-      setSelectedWord(null);
-      setBreakdown([]);
-      setCompoundSv('');
+    } catch (err) {
+      console.error('Failed to search in FreeWriteScreen:', err);
+    } finally {
+      setIsSearching(false);
     }
   }
 
@@ -551,10 +549,10 @@ export default function FreeWriteScreen() {
           </div>
         ) : (
           <div className="lg:col-span-5 bg-surface-card dark:bg-surface-dark/30 p-6 rounded-xl border border-dashed border-hairline dark:border-white/5 shadow-sm flex flex-col items-center justify-center py-20 text-mute text-center min-h-[550px] transition-colors">
-            {loading ? (
+            {isSearching ? (
               <>
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-3"></div>
-                <span className="text-sm font-medium">Đang tải và đồng bộ từ điển...</span>
+                <span className="text-sm font-medium">Đang tìm kiếm...</span>
               </>
             ) : (
               <>
