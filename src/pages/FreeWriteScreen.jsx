@@ -349,6 +349,21 @@ export default function FreeWriteScreen() {
     window.speechSynthesis.speak(utterance);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  // Clear search results when search bar is cleared
+  useEffect(() => {
+    if (!query.trim()) {
+      setSelectedWord(null);
+      setBreakdown([]);
+      setCompoundSv('');
+    }
+  }, [query]);
+
   const handleClearAll = () => {
     setQuery('');
     setSelectedWord(null);
@@ -576,10 +591,8 @@ export default function FreeWriteScreen() {
                 type="text"
                 placeholder="Từ/cụm từ đang soạn... (Hoặc tự nhập bằng bàn phím)"
                 value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  handleSearch(e.target.value);
-                }}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
                 className="w-full pl-4 pr-10 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark shadow-sm"
               />
               {query && (

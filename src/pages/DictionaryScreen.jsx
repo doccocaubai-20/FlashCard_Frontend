@@ -291,21 +291,13 @@ export default function DictionaryScreen() {
     }
   }, [wordParam, history.length]);
 
-  // Debounced search on query change
+  // Clear search results when search bar is cleared
   useEffect(() => {
-    const trimmed = (query || '').trim();
-    if (!trimmed) {
+    if (!query.trim()) {
       setResults([]);
       setRelatedSentences([]);
       setHasSearched(false);
-      return;
     }
-
-    const timer = setTimeout(() => {
-      handleSearch(query);
-    }, 250); // 250ms debounce
-
-    return () => clearTimeout(timer);
   }, [query]);
 
   async function handleSearch(searchQuery) {
@@ -322,26 +314,8 @@ export default function DictionaryScreen() {
 
     setIsSearching(true);
     try {
-      // Lookup across multiple indexes: Hanzi, Pinyin, and Meaning
-      const [hanziMatches, pinyinMatches, meaningMatches] = await Promise.all([
-        lookupMultiple('hanzi', trimmedQuery),
-        lookupMultiple('pinyin', trimmedQuery),
-        lookupMultiple('meaning', trimmedQuery)
-      ]);
-
-      // Combine results and deduplicate
-      const seen = new Set();
-      const combined = [...hanziMatches, ...pinyinMatches, ...meaningMatches];
-      const searchResults = [];
-
-      for (const item of combined) {
-        if (!item) continue;
-        const key = `${item.s}-${item.p}-${item.vi}`;
-        if (!seen.has(key)) {
-          seen.add(key);
-          searchResults.push(item);
-        }
-      }
+      // Lookup using combined 'all' search type
+      const searchResults = await lookupMultiple('all', trimmedQuery);
 
       const getSortScore = (item) => {
         const s = (item.s || '').toLowerCase();
