@@ -239,6 +239,77 @@ export const grammarData = [
   },
   {
     "level": "HSK 1",
+    "title": "Biểu thị thời gian trong tiếng Trung",
+    "formula": "Number + 点 + Number + 分",
+    "explanation": "Thứ tự thời gian trong tiếng Trung sắp xếp từ lớn đến nhỏ (năm, tháng, ngày) rồi đến giờ và phút.",
+    "examples": [
+      {
+        "hanzi": "9点20分",
+        "pinyin": "jiǔ diǎn èr shí fēn",
+        "meaning": "9 giờ 20 phút"
+      },
+      {
+        "hanzi": "2020年12月7日",
+        "pinyin": "èr líng èr líng nián shí èr yuè qī rì",
+        "meaning": "Ngày 7 tháng 12 năm 2020"
+      },
+      {
+        "hanzi": "星期四",
+        "pinyin": "xīngqīsì",
+        "meaning": "Thứ tư"
+      }
+    ],
+    "id": "g13"
+  },
+  {
+    "level": "HSK 1",
+    "title": "Biểu thị tuổi tác",
+    "formula": "Subj. + Number + 岁",
+    "explanation": "Cấu trúc dùng để nói về tuổi của ai đó, sử dụng số từ kết hợp với lượng từ '岁' (tuổi).",
+    "examples": [
+      {
+        "hanzi": "他今年31岁",
+        "pinyin": "tā jīnnián sān shí yī suì",
+        "meaning": "Anh ấy năm nay 31 tuổi"
+      }
+    ],
+    "id": "g14"
+  },
+  {
+    "level": "HSK 1",
+    "title": "Biểu thị số tiền",
+    "formula": "Number + 块 / 毛",
+    "explanation": "Dùng để nói về số tiền, với '块' (đồng) và '毛' (hào - 1 đồng bằng 10 hào). Người Trung Quốc lấy 4 số 0 làm mốc đếm (vạn).",
+    "examples": [
+      {
+        "hanzi": "10块",
+        "pinyin": "shí kuài",
+        "meaning": "10 đồng (tệ)"
+      },
+      {
+        "hanzi": "五毛",
+        "pinyin": "wǔ máo",
+        "meaning": "5 hào"
+      }
+    ],
+    "id": "g15"
+  },
+  {
+    "level": "HSK 1",
+    "title": "Biểu thị chữ số (Đọc số điện thoại, dãy số)",
+    "formula": "Number + Number + ...",
+    "explanation": "Khi đọc các dãy số dài như số nhà, số điện thoại, số chứng minh thư, ta đọc từng số một từ trái qua phải. Số 1 (一) thường đọc thành 'yāo'.",
+    "examples": [
+      {
+        "hanzi": "我的电话是56290001",
+        "pinyin": "wǒ de diànhuà shì wǔ liù èr jiǔ líng líng líng yāo",
+        "meaning": "Số điện thoại của tôi là 56290001"
+      }
+    ],
+    "id": "g16"
+  },
+  {
+    "level": "HSK 1",
     "title": "Cấu trúc số từ + lượng từ + danh từ",
     "formula": "Number + Measure + Noun",
     "explanation": "Dùng để chỉ số lượng cụ thể của danh từ, lượng từ phải phù hợp với danh từ.",
@@ -254,7 +325,7 @@ export const grammarData = [
         "meaning": "ba cuốn sách"
       }
     ],
-    "id": "g13"
+    "id": "g17"
   },
   {
     "level": "HSK 1",
@@ -278,7 +349,7 @@ export const grammarData = [
         "meaning": "Người kia là bố của anh ấy."
       }
     ],
-    "id": "g14"
+    "id": "g18"
   },
   {
     "level": "HSK 1",
@@ -292,7 +363,7 @@ export const grammarData = [
         "meaning": "Tôi không phải là giáo viên"
       }
     ],
-    "id": "g15"
+    "id": "g19"
   },
   {
     "level": "HSK 1",
@@ -306,7 +377,7 @@ export const grammarData = [
         "meaning": "Anh ta chưa từng đến Bắc Kinh"
       }
     ],
-    "id": "g16"
+    "id": "g20"
   },
   {
     "level": "HSK 1",
@@ -320,7 +391,7 @@ export const grammarData = [
         "meaning": "Muộn quá rồi!"
       }
     ],
-    "id": "g17"
+    "id": "g21"
   },
   {
     "level": "HSK 1",
@@ -334,7 +405,7 @@ export const grammarData = [
         "meaning": "Chúng ta đều là người Việt Nam"
       }
     ],
-    "id": "g18"
+    "id": "g22"
   },
   {
     "level": "HSK 1",
@@ -353,7 +424,7 @@ export const grammarData = [
         "meaning": "Chúng tôi không phải đều là học sinh"
       }
     ],
-    "id": "g19"
+    "id": "g23"
   },
   {
     "level": "HSK 1",
@@ -367,7 +438,7 @@ export const grammarData = [
         "meaning": "Họ cũng đều là người Việt Nam"
       }
     ],
-    "id": "g20"
+    "id": "g24"
   },
   {
     "level": "HSK 1",
@@ -381,7 +452,7 @@ export const grammarData = [
         "meaning": "Tôi và bạn"
       }
     ],
-    "id": "g21"
+    "id": "g25"
   },
   {
     "level": "HSK 1",
@@ -395,7 +466,7 @@ export const grammarData = [
         "meaning": "Anh ấy đang ở trong phòng đợi bạn"
       }
     ],
-    "id": "g22"
+    "id": "g26"
   },
   {
     "level": "HSK 1",
@@ -409,7 +480,7 @@ export const grammarData = [
         "meaning": "Tôi biết nhảy múa"
       }
     ],
-    "id": "g23"
+    "id": "g27"
   },
   {
     "level": "HSK 1",
@@ -423,7 +494,7 @@ export const grammarData = [
         "meaning": "Bây giờ bạn có thể qua đây không?"
       }
     ],
-    "id": "g24"
+    "id": "g28"
   },
   {
     "level": "HSK 1",
@@ -437,7 +508,7 @@ export const grammarData = [
         "meaning": "Quần áo của tôi"
       }
     ],
-    "id": "g25"
+    "id": "g29"
   },
   {
     "level": "HSK 1",
@@ -451,7 +522,7 @@ export const grammarData = [
         "meaning": "Anh ta đến trường rồi"
       }
     ],
-    "id": "g26"
+    "id": "g30"
   },
   {
     "level": "HSK 1",
@@ -465,7 +536,7 @@ export const grammarData = [
         "meaning": "Cậu ấy là học sinh à?"
       }
     ],
-    "id": "g27"
+    "id": "g31"
   },
   {
     "level": "HSK 1",
@@ -479,7 +550,7 @@ export const grammarData = [
         "meaning": "Cậu đang ở đâu vậy?"
       }
     ],
-    "id": "g28"
+    "id": "g32"
   },
   {
     "level": "HSK 1",
@@ -503,7 +574,7 @@ export const grammarData = [
         "meaning": "Thời tiết rất nóng"
       }
     ],
-    "id": "g29"
+    "id": "g33"
   },
   {
     "level": "HSK 1",
@@ -517,7 +588,7 @@ export const grammarData = [
         "meaning": "Anh ấy không phải anh trai tôi"
       }
     ],
-    "id": "g30"
+    "id": "g34"
   },
   {
     "level": "HSK 1",
@@ -531,7 +602,7 @@ export const grammarData = [
         "meaning": "Cô ta đã không xem phim truyền hình"
       }
     ],
-    "id": "g31"
+    "id": "g35"
   },
   {
     "level": "HSK 1",
@@ -545,7 +616,7 @@ export const grammarData = [
         "meaning": "Đây là sách của bạn à?"
       }
     ],
-    "id": "g32"
+    "id": "g36"
   },
   {
     "level": "HSK 1",
@@ -559,7 +630,7 @@ export const grammarData = [
         "meaning": "Tôi là giáo viên, còn bạn?"
       }
     ],
-    "id": "g33"
+    "id": "g37"
   },
   {
     "level": "HSK 1",
@@ -573,7 +644,7 @@ export const grammarData = [
         "meaning": "Mời vào"
       }
     ],
-    "id": "g34"
+    "id": "g38"
   },
   {
     "level": "HSK 1",
@@ -587,7 +658,7 @@ export const grammarData = [
         "meaning": "Quá đẹp rồi!"
       }
     ],
-    "id": "g35"
+    "id": "g39"
   },
   {
     "level": "HSK 1",
@@ -601,7 +672,7 @@ export const grammarData = [
         "meaning": "Anh ấy là bạn học của tôi"
       }
     ],
-    "id": "g36"
+    "id": "g40"
   },
   {
     "level": "HSK 1",
@@ -615,7 +686,7 @@ export const grammarData = [
         "meaning": "Một tuần có 7 ngày"
       }
     ],
-    "id": "g37"
+    "id": "g41"
   },
   {
     "level": "HSK 1",
@@ -629,7 +700,7 @@ export const grammarData = [
         "meaning": "Tôi về từ hôm qua"
       }
     ],
-    "id": "g38"
+    "id": "g42"
   },
   {
     "level": "HSK 1",
@@ -643,7 +714,7 @@ export const grammarData = [
         "meaning": "Đây là đồ mua ở Bắc Kinh"
       }
     ],
-    "id": "g39"
+    "id": "g43"
   },
   {
     "level": "HSK 1",
@@ -657,7 +728,7 @@ export const grammarData = [
         "meaning": "Anh ấy lái xe đến đấy"
       }
     ],
-    "id": "g40"
+    "id": "g44"
   },
   {
     "level": "HSK 1",
@@ -671,7 +742,7 @@ export const grammarData = [
         "meaning": "Họ đang học bài"
       }
     ],
-    "id": "g41"
+    "id": "g45"
   },
   {
     "level": "HSK 2",
@@ -700,7 +771,7 @@ export const grammarData = [
         "meaning": "Chúng nó đều là mèo"
       }
     ],
-    "id": "g42"
+    "id": "g46"
   },
   {
     "level": "HSK 2",
@@ -714,7 +785,7 @@ export const grammarData = [
         "meaning": "Mỗi ngày anh ấy dậy lúc 5 giờ"
       }
     ],
-    "id": "g43"
+    "id": "g47"
   },
   {
     "level": "HSK 2",
@@ -728,7 +799,7 @@ export const grammarData = [
         "meaning": "Cạn ly vì hạnh phúc của các bạn"
       }
     ],
-    "id": "g44"
+    "id": "g48"
   },
   {
     "level": "HSK 2",
@@ -752,7 +823,7 @@ export const grammarData = [
         "meaning": "thứ ba"
       }
     ],
-    "id": "g45"
+    "id": "g49"
   },
   {
     "level": "HSK 2",
@@ -766,7 +837,7 @@ export const grammarData = [
         "meaning": "3 kg"
       }
     ],
-    "id": "g46"
+    "id": "g50"
   },
   {
     "level": "HSK 2",
@@ -785,7 +856,7 @@ export const grammarData = [
         "meaning": "mỗi lần"
       }
     ],
-    "id": "g47"
+    "id": "g51"
   },
   {
     "level": "HSK 2",
@@ -799,7 +870,7 @@ export const grammarData = [
         "meaning": "Bạn đừng ra ngoài"
       }
     ],
-    "id": "g48"
+    "id": "g52"
   },
   {
     "level": "HSK 2",
@@ -818,7 +889,7 @@ export const grammarData = [
         "meaning": "Tôi thích ăn bánh cảo nhất"
       }
     ],
-    "id": "g49"
+    "id": "g53"
   },
   {
     "level": "HSK 2",
@@ -832,7 +903,7 @@ export const grammarData = [
         "meaning": "Tôi và bạn bè cùng nhau học tập."
       }
     ],
-    "id": "g50"
+    "id": "g54"
   },
   {
     "level": "HSK 2",
@@ -846,7 +917,7 @@ export const grammarData = [
         "meaning": "Tôi đang viết chữ Hán."
       }
     ],
-    "id": "g51"
+    "id": "g55"
   },
   {
     "level": "HSK 2",
@@ -860,7 +931,7 @@ export const grammarData = [
         "meaning": "Anh ấy đã về nhà rồi."
       }
     ],
-    "id": "g52"
+    "id": "g56"
   },
   {
     "level": "HSK 2",
@@ -874,7 +945,7 @@ export const grammarData = [
         "meaning": "7 giờ là tôi đi học rồi."
       }
     ],
-    "id": "g53"
+    "id": "g57"
   },
   {
     "level": "HSK 2",
@@ -888,7 +959,7 @@ export const grammarData = [
         "meaning": "Tôi cũng có một quyển sách như thế này."
       }
     ],
-    "id": "g54"
+    "id": "g58"
   },
   {
     "level": "HSK 2",
@@ -902,7 +973,7 @@ export const grammarData = [
         "meaning": "Anh ấy vẫn chưa ăn xong."
       }
     ],
-    "id": "g55"
+    "id": "g59"
   },
   {
     "level": "HSK 2",
@@ -916,7 +987,7 @@ export const grammarData = [
         "meaning": "Tiểu Mỹ thật xinh đẹp."
       }
     ],
-    "id": "g56"
+    "id": "g60"
   },
   {
     "level": "HSK 2",
@@ -930,7 +1001,7 @@ export const grammarData = [
         "meaning": "Ngày mai tôi lại đến."
       }
     ],
-    "id": "g57"
+    "id": "g61"
   },
   {
     "level": "HSK 2",
@@ -944,7 +1015,7 @@ export const grammarData = [
         "meaning": "Bởi vì mưa rất to nên chúng tôi không thể đến công viên chạy bộ."
       }
     ],
-    "id": "g58"
+    "id": "g62"
   },
   {
     "level": "HSK 2",
@@ -958,7 +1029,7 @@ export const grammarData = [
         "meaning": "Anh ấy 70 tuổi rồi, nhưng mà sức khỏe rất tốt."
       }
     ],
-    "id": "g59"
+    "id": "g63"
   },
   {
     "level": "HSK 2",
@@ -972,7 +1043,7 @@ export const grammarData = [
         "meaning": "Từ đây đến công viên còn 2km."
       }
     ],
-    "id": "g60"
+    "id": "g64"
   },
   {
     "level": "HSK 2",
@@ -986,7 +1057,7 @@ export const grammarData = [
         "meaning": "Thường xuyên luyện tập rất tốt cho cơ thể."
       }
     ],
-    "id": "g61"
+    "id": "g65"
   },
   {
     "level": "HSK 2",
@@ -1000,7 +1071,7 @@ export const grammarData = [
         "meaning": "Tôi cao hơn anh ấy."
       }
     ],
-    "id": "g62"
+    "id": "g66"
   },
   {
     "level": "HSK 2",
@@ -1014,7 +1085,7 @@ export const grammarData = [
         "meaning": "Tiểu Vương cảm ơn giáo viên."
       }
     ],
-    "id": "g63"
+    "id": "g67"
   },
   {
     "level": "HSK 2",
@@ -1028,7 +1099,7 @@ export const grammarData = [
         "meaning": "Trường học cách nhà của tôi rất xa."
       }
     ],
-    "id": "g64"
+    "id": "g68"
   },
   {
     "level": "HSK 2",
@@ -1042,7 +1113,7 @@ export const grammarData = [
         "meaning": "Bạn làm rất tốt."
       }
     ],
-    "id": "g65"
+    "id": "g69"
   },
   {
     "level": "HSK 2",
@@ -1056,7 +1127,7 @@ export const grammarData = [
         "meaning": "Mau đi ngủ đi."
       }
     ],
-    "id": "g66"
+    "id": "g70"
   },
   {
     "level": "HSK 2",
@@ -1070,7 +1141,7 @@ export const grammarData = [
         "meaning": "Anh ấy đang đứng ở cổng trường."
       }
     ],
-    "id": "g67"
+    "id": "g71"
   },
   {
     "level": "HSK 2",
@@ -1084,7 +1155,7 @@ export const grammarData = [
         "meaning": "Tôi đã từng đến Trung Quốc."
       }
     ],
-    "id": "g68"
+    "id": "g72"
   },
   {
     "level": "HSK 2",
@@ -1098,7 +1169,7 @@ export const grammarData = [
         "meaning": "Thử một chút."
       }
     ],
-    "id": "g69"
+    "id": "g73"
   },
   {
     "level": "HSK 2",
@@ -1112,7 +1183,7 @@ export const grammarData = [
         "meaning": "Học tập một chút."
       }
     ],
-    "id": "g70"
+    "id": "g74"
   },
   {
     "level": "HSK 2",
@@ -1126,7 +1197,7 @@ export const grammarData = [
         "meaning": "Hát hò một chút."
       }
     ],
-    "id": "g71"
+    "id": "g75"
   },
   {
     "level": "HSK 2",
@@ -1140,7 +1211,7 @@ export const grammarData = [
         "meaning": "Bạn là người Việt Nam nhỉ?"
       }
     ],
-    "id": "g72"
+    "id": "g76"
   },
   {
     "level": "HSK 2",
@@ -1154,7 +1225,7 @@ export const grammarData = [
         "meaning": "Bạn có ăn bánh bao không?"
       }
     ],
-    "id": "g73"
+    "id": "g77"
   },
   {
     "level": "HSK 2",
@@ -1168,7 +1239,7 @@ export const grammarData = [
         "meaning": "8 giờ ngày mai gặp, được không?"
       }
     ],
-    "id": "g74"
+    "id": "g78"
   },
   {
     "level": "HSK 2",
@@ -1182,7 +1253,7 @@ export const grammarData = [
         "meaning": "Đừng ăn quá nhiều."
       }
     ],
-    "id": "g75"
+    "id": "g79"
   },
   {
     "level": "HSK 2",
@@ -1196,7 +1267,7 @@ export const grammarData = [
         "meaning": "Thật là ngon."
       }
     ],
-    "id": "g76"
+    "id": "g80"
   },
   {
     "level": "HSK 2",
@@ -1210,7 +1281,7 @@ export const grammarData = [
         "meaning": "Anh ấy lớn hơn tôi."
       }
     ],
-    "id": "g77"
+    "id": "g81"
   },
   {
     "level": "HSK 2",
@@ -1224,7 +1295,7 @@ export const grammarData = [
         "meaning": "Bọn họ đang đá bóng."
       }
     ],
-    "id": "g78"
+    "id": "g82"
   },
   {
     "level": "HSK 2",
@@ -1238,7 +1309,7 @@ export const grammarData = [
         "meaning": "Máy bay sắp cất cánh rồi."
       }
     ],
-    "id": "g79"
+    "id": "g83"
   },
   {
     "level": "HSK 2",
@@ -1252,7 +1323,7 @@ export const grammarData = [
         "meaning": "Bên ngoài đang đổ mưa."
       }
     ],
-    "id": "g80"
+    "id": "g84"
   },
   {
     "level": "HSK 3",
@@ -1271,7 +1342,7 @@ export const grammarData = [
         "meaning": "Tôi tiếp tục tập thể dục một giờ mỗi ngày."
       }
     ],
-    "id": "g81"
+    "id": "g85"
   },
   {
     "level": "HSK 3",
@@ -1295,7 +1366,7 @@ export const grammarData = [
         "meaning": "Anh ấy viết chữ Trung Quốc trong nửa giờ."
       }
     ],
-    "id": "g82"
+    "id": "g86"
   },
   {
     "level": "HSK 3",
@@ -1314,7 +1385,7 @@ export const grammarData = [
         "meaning": "Tôi đã xem TV trong ba giờ."
       }
     ],
-    "id": "g83"
+    "id": "g87"
   },
   {
     "level": "HSK 3",
@@ -1328,7 +1399,7 @@ export const grammarData = [
         "meaning": "Cô đã học tiếng Trung Quốc được một năm (vẫn đang học)."
       }
     ],
-    "id": "g84"
+    "id": "g88"
   },
   {
     "level": "HSK 3",
@@ -1347,7 +1418,7 @@ export const grammarData = [
         "meaning": "Hôm qua có mười mấy người đi."
       }
     ],
-    "id": "g85"
+    "id": "g89"
   },
   {
     "level": "HSK 3",
@@ -1361,7 +1432,7 @@ export const grammarData = [
         "meaning": "Tôi đã đến Hà Nội để gặp gỡ bạn bè."
       }
     ],
-    "id": "g86"
+    "id": "g90"
   },
   {
     "level": "HSK 3",
@@ -1375,7 +1446,7 @@ export const grammarData = [
         "meaning": "Tôi đã ngủ trong bảy giờ."
       }
     ],
-    "id": "g87"
+    "id": "g91"
   },
   {
     "level": "HSK 3",
@@ -1394,7 +1465,7 @@ export const grammarData = [
         "meaning": "Gặp mặt một chút"
       }
     ],
-    "id": "g88"
+    "id": "g92"
   },
   {
     "level": "HSK 3",
@@ -1408,7 +1479,7 @@ export const grammarData = [
         "meaning": "Máy bay nhanh hơn xe hơi."
       }
     ],
-    "id": "g89"
+    "id": "g93"
   },
   {
     "level": "HSK 3",
@@ -1422,7 +1493,7 @@ export const grammarData = [
         "meaning": "Cô ấy thích học hơn tôi."
       }
     ],
-    "id": "g90"
+    "id": "g94"
   },
   {
     "level": "HSK 3",
@@ -1451,7 +1522,7 @@ export const grammarData = [
         "meaning": "Tôi đến sớm hơn bạn hôm nay."
       }
     ],
-    "id": "g91"
+    "id": "g95"
   },
   {
     "level": "HSK 3",
@@ -1475,7 +1546,7 @@ export const grammarData = [
         "meaning": "Anh ấy chạy nhanh hơn tôi nhiều."
       }
     ],
-    "id": "g92"
+    "id": "g96"
   },
   {
     "level": "HSK 3",
@@ -1494,7 +1565,7 @@ export const grammarData = [
         "meaning": "Cô ấy không lớn hơn tôi."
       }
     ],
-    "id": "g93"
+    "id": "g97"
   },
   {
     "level": "HSK 3",
@@ -1523,7 +1594,7 @@ export const grammarData = [
         "meaning": "Chúng tôi ở đó mùa đông không lạnh như thế này."
       }
     ],
-    "id": "g94"
+    "id": "g98"
   },
   {
     "level": "HSK 3",
@@ -1542,7 +1613,7 @@ export const grammarData = [
         "meaning": "Tôi không học tốt như cô ấy."
       }
     ],
-    "id": "g95"
+    "id": "g99"
   },
   {
     "level": "HSK 3",
@@ -1556,7 +1627,7 @@ export const grammarData = [
         "meaning": "Roland cao hơn tôi 5 cm."
       }
     ],
-    "id": "g96"
+    "id": "g100"
   },
   {
     "level": "HSK 3",
@@ -1575,7 +1646,7 @@ export const grammarData = [
         "meaning": "Thật tuyệt!"
       }
     ],
-    "id": "g97"
+    "id": "g101"
   },
   {
     "level": "HSK 3",
@@ -1599,7 +1670,7 @@ export const grammarData = [
         "meaning": "Bạn nghe xem, lời bài hát này thật hay quá!"
       }
     ],
-    "id": "g98"
+    "id": "g102"
   },
   {
     "level": "HSK 3",
@@ -1613,7 +1684,7 @@ export const grammarData = [
         "meaning": "Chiếc áo len này có cùng giá với cái đó."
       }
     ],
-    "id": "g99"
+    "id": "g103"
   },
   {
     "level": "HSK 3",
@@ -1627,7 +1698,7 @@ export const grammarData = [
         "meaning": "Chiếc váy này không cùng giá với chiếc váy kia."
       }
     ],
-    "id": "g100"
+    "id": "g104"
   },
   {
     "level": "HSK 3",
@@ -1646,7 +1717,7 @@ export const grammarData = [
         "meaning": "Tôi không những đi qua Vịnh Hạ Long, mà còn đi qua thành phố Hồ Chí Minh."
       }
     ],
-    "id": "g101"
+    "id": "g105"
   },
   {
     "level": "HSK 3",
@@ -1665,7 +1736,7 @@ export const grammarData = [
         "meaning": "Hôm nay tôi không bị sốt."
       }
     ],
-    "id": "g102"
+    "id": "g106"
   },
   {
     "level": "HSK 3",
@@ -1684,7 +1755,7 @@ export const grammarData = [
         "meaning": "Em gái tôi sẽ kết hôn vào tháng tới."
       }
     ],
-    "id": "g103"
+    "id": "g107"
   },
   {
     "level": "HSK 3",
@@ -1703,7 +1774,7 @@ export const grammarData = [
         "meaning": "Các sinh viên đang chăm chỉ học."
       }
     ],
-    "id": "g104"
+    "id": "g108"
   },
   {
     "level": "HSK 3",
@@ -1727,7 +1798,7 @@ export const grammarData = [
         "meaning": "Không có tuyết rơi."
       }
     ],
-    "id": "g105"
+    "id": "g109"
   },
   {
     "level": "HSK 3",
@@ -1751,7 +1822,7 @@ export const grammarData = [
         "meaning": "Tổng giám đốc về nhà (người nói ở bên ngoài)."
       }
     ],
-    "id": "g106"
+    "id": "g110"
   },
   {
     "level": "HSK 3",
@@ -1770,7 +1841,7 @@ export const grammarData = [
         "meaning": "Tôi sẽ đi xuống cầu thang."
       }
     ],
-    "id": "g107"
+    "id": "g111"
   },
   {
     "level": "HSK 3",
@@ -1789,7 +1860,7 @@ export const grammarData = [
         "meaning": "Bạn đã mua một cuốn sách."
       }
     ],
-    "id": "g108"
+    "id": "g112"
   },
   {
     "level": "HSK 3",
@@ -1808,7 +1879,7 @@ export const grammarData = [
         "meaning": "Bạn đã nhớ số điện thoại của tôi?"
       }
     ],
-    "id": "g109"
+    "id": "g113"
   },
   {
     "level": "HSK 3",
@@ -1827,7 +1898,7 @@ export const grammarData = [
         "meaning": "Anh ấy đã tìm kiếm bạn một lần."
       }
     ],
-    "id": "g110"
+    "id": "g114"
   },
   {
     "level": "HSK 3",
@@ -1841,7 +1912,7 @@ export const grammarData = [
         "meaning": "Cuốn sách này rất hay, tôi đã xem nó hai lần."
       }
     ],
-    "id": "g111"
+    "id": "g115"
   },
   {
     "level": "HSK 3",
@@ -1870,7 +1941,7 @@ export const grammarData = [
         "meaning": "Tôi đã từng xem bộ phim này, cũng không tệ."
       }
     ],
-    "id": "g112"
+    "id": "g116"
   },
   {
     "level": "HSK 3",
@@ -1878,7 +1949,7 @@ export const grammarData = [
     "formula": "第 + Number + Measure + Noun",
     "explanation": "Thêm 第 vào trước số từ để biểu đạt số thứ tự.",
     "examples": [],
-    "id": "g113"
+    "id": "g117"
   },
   {
     "level": "HSK 3",
@@ -1907,7 +1978,7 @@ export const grammarData = [
         "meaning": "Bài thứ bốn mươi mốt"
       }
     ],
-    "id": "g114"
+    "id": "g118"
   },
   {
     "level": "HSK 3",
@@ -1931,7 +2002,7 @@ export const grammarData = [
         "meaning": "Cửa số bốn"
       }
     ],
-    "id": "g115"
+    "id": "g119"
   },
   {
     "level": "HSK 3",
@@ -1955,7 +2026,7 @@ export const grammarData = [
         "meaning": "Chúng tôi (có) đến bằng máy bay."
       }
     ],
-    "id": "g116"
+    "id": "g120"
   },
   {
     "level": "HSK 3",
@@ -1979,7 +2050,7 @@ export const grammarData = [
         "meaning": "Họ không đến bằng máy bay, họ đến bằng tàu hỏa."
       }
     ],
-    "id": "g117"
+    "id": "g121"
   },
   {
     "level": "HSK 3",
@@ -1998,7 +2069,7 @@ export const grammarData = [
         "meaning": "Học ở Bắc Kinh (tiếng Trung)."
       }
     ],
-    "id": "g118"
+    "id": "g122"
   },
   {
     "level": "HSK 3",
@@ -2017,7 +2088,7 @@ export const grammarData = [
         "meaning": "Cô ấy đỏ mặt ngay khi uống rượu."
       }
     ],
-    "id": "g119"
+    "id": "g123"
   },
   {
     "level": "HSK 3",
@@ -2046,7 +2117,7 @@ export const grammarData = [
         "meaning": "Xa"
       }
     ],
-    "id": "g120"
+    "id": "g124"
   },
   {
     "level": "HSK 3",
@@ -2070,7 +2141,7 @@ export const grammarData = [
         "meaning": "Qua loa"
       }
     ],
-    "id": "g121"
+    "id": "g125"
   },
   {
     "level": "HSK 3",
@@ -2084,7 +2155,7 @@ export const grammarData = [
         "meaning": "Tôi không hiểu mọi thứ cô ấy nói."
       }
     ],
-    "id": "g122"
+    "id": "g126"
   },
   {
     "level": "HSK 3",
@@ -2098,7 +2169,7 @@ export const grammarData = [
         "meaning": "Tôi đến trễ, ngồi ở hàng cuối cùng."
       }
     ],
-    "id": "g123"
+    "id": "g127"
   },
   {
     "level": "HSK 3",
@@ -2112,7 +2183,7 @@ export const grammarData = [
         "meaning": "Tôi đã mua cho bạn cuốn sách bạn muốn."
       }
     ],
-    "id": "g124"
+    "id": "g128"
   },
   {
     "level": "HSK 3",
@@ -2131,7 +2202,7 @@ export const grammarData = [
         "meaning": "Viết từ sớm rồi."
       }
     ],
-    "id": "g125"
+    "id": "g129"
   },
   {
     "level": "HSK 3",
@@ -2145,7 +2216,7 @@ export const grammarData = [
         "meaning": "Cuốn tiểu thuyết tiếng Anh này đã được dịch sang tiếng Trung Quốc."
       }
     ],
-    "id": "g126"
+    "id": "g130"
   },
   {
     "level": "HSK 3",
@@ -2169,7 +2240,7 @@ export const grammarData = [
         "meaning": "Vé máy bay còn chưa mua được."
       }
     ],
-    "id": "g127"
+    "id": "g131"
   },
   {
     "level": "HSK 3",
@@ -2183,7 +2254,7 @@ export const grammarData = [
         "meaning": "Mỗi bức ảnh này đều rất tốt."
       }
     ],
-    "id": "g128"
+    "id": "g132"
   },
   {
     "level": "HSK 3",
@@ -2197,7 +2268,7 @@ export const grammarData = [
         "meaning": "Sau khi đến Trung Quốc, tôi mỗi ngày một béo hơn."
       }
     ],
-    "id": "g129"
+    "id": "g133"
   },
   {
     "level": "HSK 3",
@@ -2211,7 +2282,7 @@ export const grammarData = [
         "meaning": "Họa báo mới bị học sinh mượn đi rồi."
       }
     ],
-    "id": "g130"
+    "id": "g134"
   },
   {
     "level": "HSK 3",
@@ -2235,7 +2306,7 @@ export const grammarData = [
         "meaning": "Xe đạp của anh ấy bị người ta lấy cắp rồi."
       }
     ],
-    "id": "g131"
+    "id": "g135"
   },
   {
     "level": "HSK 3",
@@ -2254,7 +2325,7 @@ export const grammarData = [
         "meaning": "Đồ chơi này bây giờ chưa thể cho con nhìn thấy."
       }
     ],
-    "id": "g132"
+    "id": "g136"
   },
   {
     "level": "HSK 3",
@@ -2273,7 +2344,7 @@ export const grammarData = [
         "meaning": "Con hổ bị giết."
       }
     ],
-    "id": "g133"
+    "id": "g137"
   },
   {
     "level": "HSK 3",
@@ -2292,7 +2363,7 @@ export const grammarData = [
         "meaning": "Kết luận khoa học này đã được thực tiễn chứng minh từ lâu."
       }
     ],
-    "id": "g134"
+    "id": "g138"
   },
   {
     "level": "HSK 4",
@@ -2311,7 +2382,7 @@ export const grammarData = [
         "meaning": "Tôi định đi Vân Nam chơi, nghe nói ở đó không chỉ đẹp mà người cũng rất nhiệt tình."
       }
     ],
-    "id": "g135"
+    "id": "g139"
   },
   {
     "level": "HSK 4",
@@ -2330,7 +2401,7 @@ export const grammarData = [
         "meaning": "Tuy thời gian chúng tôi quen nhau không lâu, nhưng tôi chưa bao giờ vui vẻ như vậy."
       }
     ],
-    "id": "g136"
+    "id": "g140"
   },
   {
     "level": "HSK 4",
@@ -2349,7 +2420,7 @@ export const grammarData = [
         "meaning": "Lúc tôi và chồng vừa mới kết hôn, ngày nào cũng thấy rất mới mẻ."
       }
     ],
-    "id": "g137"
+    "id": "g141"
   },
   {
     "level": "HSK 4",
@@ -2368,7 +2439,7 @@ export const grammarData = [
         "meaning": "Lãng mạn là dù tăng ca đến nửa đêm, khi về nhà, nhà mình vẫn còn sáng đèn."
       }
     ],
-    "id": "g138"
+    "id": "g142"
   },
   {
     "level": "HSK 4",
@@ -2387,7 +2458,7 @@ export const grammarData = [
         "meaning": "Bạn thấy miền Bắc và miền Nam có gì khác nhau về ẩm thực?"
       }
     ],
-    "id": "g139"
+    "id": "g143"
   },
   {
     "level": "HSK 4",
@@ -2406,7 +2477,7 @@ export const grammarData = [
         "meaning": "Bạn đến đúng lúc quá, ví tiền của tôi mất rồi, cho tôi vay ít tiền nhé."
       }
     ],
-    "id": "g140"
+    "id": "g144"
   },
   {
     "level": "HSK 4",
@@ -2425,7 +2496,7 @@ export const grammarData = [
         "meaning": "A: Bạn liên lạc với các bạn trong lớp thế nào? Bao nhiêu người đến? B: Khoảng một nửa thôi."
       }
     ],
-    "id": "g141"
+    "id": "g145"
   },
   {
     "level": "HSK 4",
@@ -2444,7 +2515,7 @@ export const grammarData = [
         "meaning": "Món quà bạn trai tặng tôi dù không đắt, nhưng lại khiến tôi rất cảm động."
       }
     ],
-    "id": "g142"
+    "id": "g146"
   },
   {
     "level": "HSK 4",
@@ -2458,7 +2529,7 @@ export const grammarData = [
         "meaning": "Có người cho rằng nhà và xe là hạnh phúc, có người lại cho rằng tìm được tình yêu đích thực mới là hạnh phúc."
       }
     ],
-    "id": "g143"
+    "id": "g147"
   },
   {
     "level": "HSK 4",
@@ -2477,7 +2548,7 @@ export const grammarData = [
         "meaning": "Trước khi kết hôn, chúng ta đều phải rõ mình muốn gì, và đừng để quan niệm hạnh phúc của người khác ảnh hưởng."
       }
     ],
-    "id": "g144"
+    "id": "g148"
   },
   {
     "level": "HSK 4",
@@ -2496,7 +2567,7 @@ export const grammarData = [
         "meaning": "Một số người cho rằng bạn bè là người có thể cùng mình vui vẻ, nhưng tôi hiểu rằng: khi bạn gặp khó khăn, bạn thực sự sẽ đứng ra giúp đỡ kịp thời."
       }
     ],
-    "id": "g145"
+    "id": "g149"
   },
   {
     "level": "HSK 4",
@@ -2520,7 +2591,7 @@ export const grammarData = [
         "meaning": "Tôi rất thích nơi này, môi trường xung quanh yên tĩnh hơn nhiều so với chỗ tôi ở trước."
       }
     ],
-    "id": "g146"
+    "id": "g150"
   },
   {
     "level": "HSK 4",
@@ -2544,7 +2615,7 @@ export const grammarData = [
         "meaning": "(Đợt tuyển dụng này) đáng lẽ là do Tiểu Lý phụ trách."
       }
     ],
-    "id": "g147"
+    "id": "g151"
   },
   {
     "level": "HSK 4",
@@ -2563,7 +2634,7 @@ export const grammarData = [
         "meaning": "Cái áo này hơi rộng, bạn thử cái kia đi."
       }
     ],
-    "id": "g148"
+    "id": "g152"
   },
   {
     "level": "HSK 4",
@@ -2582,7 +2653,7 @@ export const grammarData = [
         "meaning": "Điều hòa trong nhà hỏng rồi, chúng ta mua cái khác đi."
       }
     ],
-    "id": "g149"
+    "id": "g153"
   },
   {
     "level": "HSK 4",
@@ -2601,7 +2672,7 @@ export const grammarData = [
         "meaning": "Bây giờ mua đồ trên mạng rất tiện, người bán có thể gửi đồ đến văn phòng hoặc nhà bạn. Ngoài ra, còn khá rẻ."
       }
     ],
-    "id": "g150"
+    "id": "g154"
   },
   {
     "level": "HSK 4",
@@ -2620,7 +2691,7 @@ export const grammarData = [
         "meaning": "Trước hết, phải mặc quần áo trang trọng, điều này sẽ tạo ấn tượng tốt với người phỏng vấn, khiến họ nghĩ bạn là người nghiêm túc. Sau đó, khi ứng tuyển đừng căng thẳng."
       }
     ],
-    "id": "g151"
+    "id": "g155"
   },
   {
     "level": "HSK 4",
@@ -2639,7 +2710,7 @@ export const grammarData = [
         "meaning": "Nhiều người khi gặp chỗ không hiểu, đầu tiên nghĩ đến là lên mạng tra."
       }
     ],
-    "id": "g152"
+    "id": "g156"
   },
   {
     "level": "HSK 4",
@@ -2663,7 +2734,7 @@ export const grammarData = [
         "meaning": "Dù bận hay không, anh ấy mỗi ngày đều tập thể dục một tiếng."
       }
     ],
-    "id": "g153"
+    "id": "g157"
   },
   {
     "level": "HSK 4",
@@ -2687,7 +2758,7 @@ export const grammarData = [
         "meaning": "Tôi tưởng công việc mới tốt hơn trước, không ngờ còn không bằng trước."
       }
     ],
-    "id": "g154"
+    "id": "g158"
   },
   {
     "level": "HSK 4",
@@ -2701,7 +2772,7 @@ export const grammarData = [
         "meaning": "Đi tàu hỏa từ Bắc Kinh đến Thượng Hải, trước đây nhanh nhất cũng mất khoảng 12 tiếng, bây giờ có tàu cao tốc, 5 tiếng là đến."
       }
     ],
-    "id": "g155"
+    "id": "g159"
   },
   {
     "level": "HSK 4",
@@ -2715,7 +2786,7 @@ export const grammarData = [
         "meaning": "Theo kế hoạch ban đầu là hai tuần, nhưng chúng ta có thể hoàn thành sớm."
       }
     ],
-    "id": "g156"
+    "id": "g160"
   },
   {
     "level": "HSK 4",
@@ -2729,7 +2800,7 @@ export const grammarData = [
         "meaning": "Cô ấy trước đây là giáo viên tiếng Trung, bây giờ đã trở thành luật sư."
       }
     ],
-    "id": "g157"
+    "id": "g161"
   },
   {
     "level": "HSK 4",
@@ -2743,7 +2814,7 @@ export const grammarData = [
         "meaning": "Mã Khắc đợi Lý Minh gọi lại suốt, nhưng cả tối điện thoại không đến, hóa ra Lý Minh đã nhớ sai số điện thoại của Mã Khắc."
       }
     ],
-    "id": "g158"
+    "id": "g162"
   },
   {
     "level": "HSK 4",
@@ -2767,7 +2838,7 @@ export const grammarData = [
         "meaning": "Theo điều tra, mỗi đêm con người nên ngủ ít nhất 7 tiếng, nhưng điều này không phù hợp với mỗi người."
       }
     ],
-    "id": "g159"
+    "id": "g163"
   },
   {
     "level": "HSK 4",
@@ -2791,7 +2862,7 @@ export const grammarData = [
         "meaning": "Theo kinh nghiệm, vấn đề này chắc có thể giải quyết nhanh chóng, mọi người yên tâm."
       }
     ],
-    "id": "g160"
+    "id": "g164"
   },
   {
     "level": "HSK 4",
@@ -2815,7 +2886,7 @@ export const grammarData = [
         "meaning": "Đi muộn sẽ khiến người khác nghĩ bạn không có trách nhiệm, khiến bạn bỏ lỡ cơ hội quan trọng, thậm chí khiến người khác không còn tin bạn."
       }
     ],
-    "id": "g161"
+    "id": "g165"
   },
   {
     "level": "HSK 4",
@@ -2834,7 +2905,7 @@ export const grammarData = [
         "meaning": "Mỗi ngày uống một chút rượu vang, có lợi cho sức khỏe. Nhưng không được uống quá nhiều, uống quá nhiều rượu chắc chắn có hại cho sức khỏe."
       }
     ],
-    "id": "g162"
+    "id": "g166"
   },
   {
     "level": "HSK 4",
@@ -2848,7 +2919,7 @@ export const grammarData = [
         "meaning": "Việc không chắc chắn, việc chưa xảy ra, tốt nhất đừng nói."
       }
     ],
-    "id": "g163"
+    "id": "g167"
   },
   {
     "level": "HSK 4",
@@ -2862,7 +2933,7 @@ export const grammarData = [
         "meaning": "\"Bạn có ngưỡng mộ tình yêu lãng mạn không?\" Tin rằng câu trả lời của phần lớn mọi người đều là khẳng định."
       }
     ],
-    "id": "g164"
+    "id": "g168"
   },
   {
     "level": "HSK 4",
@@ -2881,7 +2952,7 @@ export const grammarData = [
         "meaning": "A: Bạn không phải rất thích chiếc áo khoác đó sao? Sao không mua? B: Tôi thực sự rất thích, nhưng không có size của tôi, lần sau hãy nói."
       }
     ],
-    "id": "g165"
+    "id": "g169"
   },
   {
     "level": "HSK 4",
@@ -2900,7 +2971,7 @@ export const grammarData = [
         "meaning": "A: Máy bay của bạn mấy giờ? Sao còn chưa chuẩn bị? B: Tối tám giờ, không cần vội, hơn nữa, tôi chỉ đi vài ngày, không cần mang nhiều đồ."
       }
     ],
-    "id": "g166"
+    "id": "g170"
   },
   {
     "level": "HSK 4",
@@ -2914,7 +2985,7 @@ export const grammarData = [
         "meaning": "Các bạn làm kế hoạch nên liên hệ thực tế."
       }
     ],
-    "id": "g167"
+    "id": "g171"
   },
   {
     "level": "HSK 4",
@@ -2928,7 +2999,7 @@ export const grammarData = [
         "meaning": "A: Nghe nói bạn bắt đầu làm việc ở công ty quảng cáo từ năm thứ hai đại học. Làm vậy không ảnh hưởng đến việc học sao? B: Tôi nghĩ không, công việc thực tế giúp tôi hiểu hơn kiến thức trong sách."
       }
     ],
-    "id": "g168"
+    "id": "g172"
   },
   {
     "level": "HSK 4",
@@ -2947,7 +3018,7 @@ export const grammarData = [
         "meaning": "Quảng cáo chỉ giới thiệu ưu điểm, nhưng không nói nhược điểm. Trên thực tế, nhiều thứ không tốt như quảng cáo nói, nên không thể hoàn toàn tin quảng cáo."
       }
     ],
-    "id": "g169"
+    "id": "g173"
   },
   {
     "level": "HSK 4",
@@ -2971,7 +3042,7 @@ export const grammarData = [
         "meaning": "Một cốc nước, đối với một con cá nhỏ mà nói, có thể rất hữu ích, nó có thể bơi rất tốt trong đó. Nhưng đối với một con cá lớn, một cốc nước chẳng giúp ích gì, nó cần một con sông."
       }
     ],
-    "id": "g170"
+    "id": "g174"
   },
   {
     "level": "HSK 4",
@@ -2995,7 +3066,7 @@ export const grammarData = [
         "meaning": "Vì sức khỏe, chúng ta nên mỗi năm đến bệnh viện kiểm tra sức khỏe một lần, đặc biệt là những người bốn năm mươi tuổi, như vậy có thể phát hiện vấn đề sớm hơn."
       }
     ],
-    "id": "g171"
+    "id": "g175"
   },
   {
     "level": "HSK 4",
@@ -3019,7 +3090,7 @@ export const grammarData = [
         "meaning": "Về nhà rồi, tôi mới phát hiện, vậy mà quên mất đi siêu thị ở trung tâm thương mại mua nước ép trái cây."
       }
     ],
-    "id": "g172"
+    "id": "g176"
   },
   {
     "level": "HSK 4",
@@ -3043,7 +3114,7 @@ export const grammarData = [
         "meaning": "Tôi nhớ hôm qua mới 3,5 tệ một cân, giá hôm nay gấp đôi hôm qua."
       }
     ],
-    "id": "g173"
+    "id": "g177"
   },
   {
     "level": "HSK 4",
@@ -3067,7 +3138,7 @@ export const grammarData = [
         "meaning": "Chúng ta luôn dễ dàng thấy khuyết điểm của một người, nhưng đừng quên, ưu điểm của họ càng đáng để chúng ta khám phá và học hỏi."
       }
     ],
-    "id": "g174"
+    "id": "g178"
   },
   {
     "level": "HSK 4",
@@ -3091,7 +3162,7 @@ export const grammarData = [
         "meaning": "Một số sách còn có hoạt động giảm giá, trong đó, tiểu thuyết giảm 25%, bản đồ giảm 20%, sách thi du học giảm 40%."
       }
     ],
-    "id": "g175"
+    "id": "g179"
   },
   {
     "level": "HSK 4",
@@ -3115,7 +3186,7 @@ export const grammarData = [
         "meaning": "Dưới sự giúp đỡ của thầy cô và bạn bè, tiếng Trung của anh ấy tiến bộ rất nhanh."
       }
     ],
-    "id": "g176"
+    "id": "g180"
   },
   {
     "level": "HSK 4",
@@ -3139,7 +3210,7 @@ export const grammarData = [
         "meaning": "Sân bay thông báo máy bay chậm một tiếng, dự đoán anh ấy 6 giờ chiều mới đến Thượng Hải."
       }
     ],
-    "id": "g177"
+    "id": "g181"
   },
   {
     "level": "HSK 4",
@@ -3163,7 +3234,7 @@ export const grammarData = [
         "meaning": "Không phải bạn hẹn gặp bạn học lúc 2 giờ chiều sao? Không đi nữa thì không kịp đâu."
       }
     ],
-    "id": "g178"
+    "id": "g182"
   },
   {
     "level": "HSK 4",
@@ -3187,7 +3258,7 @@ export const grammarData = [
         "meaning": "Cuối tuần Mark thường ở ký túc xá đọc sách, nghe nhạc, ngủ một chút."
       }
     ],
-    "id": "g179"
+    "id": "g183"
   },
   {
     "level": "HSK 4",
@@ -3211,7 +3282,7 @@ export const grammarData = [
         "meaning": "Nếu chất lượng tốt hơn của người khác, thì giá đắt một chút cũng có thể chấp nhận được."
       }
     ],
-    "id": "g180"
+    "id": "g184"
   },
   {
     "level": "HSK 4",
@@ -3235,7 +3306,7 @@ export const grammarData = [
         "meaning": "Người đó làm việc vừa không nghiêm túc, động tác lại chậm, công việc này quan trọng thế, hãy để người khác làm đi."
       }
     ],
-    "id": "g181"
+    "id": "g185"
   },
   {
     "level": "HSK 4",
@@ -3259,7 +3330,7 @@ export const grammarData = [
         "meaning": "Nghe nói lúc buồn đau ăn một miếng sô-cô-la, còn có thể khiến tâm trạng trở nên vui vẻ."
       }
     ],
-    "id": "g182"
+    "id": "g186"
   },
   {
     "level": "HSK 4",
@@ -3283,7 +3354,7 @@ export const grammarData = [
         "meaning": "Mỗi người có hiểu biết khác nhau về hạnh phúc, với tôi, chỉ cần có thể làm việc mình thích, chính là hạnh phúc."
       }
     ],
-    "id": "g183"
+    "id": "g187"
   },
   {
     "level": "HSK 4",
@@ -3297,7 +3368,7 @@ export const grammarData = [
         "meaning": "A: Không ngờ chúng ta tốt nghiệp đã mười năm rồi. B: Đúng vậy, thời gian trôi nhanh quá, thật nhớ mọi người."
       }
     ],
-    "id": "g184"
+    "id": "g188"
   },
   {
     "level": "HSK 4",
@@ -3321,7 +3392,7 @@ export const grammarData = [
         "meaning": "Thái độ sống phải tự mình lựa chọn, vì vậy, khi gặp phiền não, bạn nên nghĩ ra một số cách để bản thân thoát khỏi tâm trạng không vui."
       }
     ],
-    "id": "g185"
+    "id": "g189"
   },
   {
     "level": "HSK 4",
@@ -3345,7 +3416,7 @@ export const grammarData = [
         "meaning": "Ngoài tên chính thức, người Trung Quốc thường có một tên ở nhà, ở nhà, bố mẹ thường chỉ gọi tên ở nhà của con."
       }
     ],
-    "id": "g186"
+    "id": "g190"
   },
   {
     "level": "HSK 4",
@@ -3369,7 +3440,7 @@ export const grammarData = [
         "meaning": "Không phải bạn đã xuất phát lúc hai giờ sao? Chẳng lẽ trên đường mất hơn hai tiếng?"
       }
     ],
-    "id": "g187"
+    "id": "g191"
   },
   {
     "level": "HSK 4",
@@ -3388,7 +3459,7 @@ export const grammarData = [
         "meaning": "Chương trình này tôi vẫn xem, nó giới thiệu nhiều kiến thức nhỏ trong cuộc sống. Nhiều vấn đề trước đây tôi không để ý, bây giờ thông qua nó tôi hiểu được không ít."
       }
     ],
-    "id": "g188"
+    "id": "g192"
   },
   {
     "level": "HSK 4",
@@ -3402,7 +3473,7 @@ export const grammarData = [
         "meaning": "Con phố này chỉ có thể đi bộ qua."
       }
     ],
-    "id": "g189"
+    "id": "g193"
   },
   {
     "level": "HSK 4",
@@ -3416,7 +3487,7 @@ export const grammarData = [
         "meaning": "Tôi đã vượt qua buổi phỏng vấn của công ty đó, quản lý có ấn tượng tốt với tôi, ông ấy bảo tôi mai chính thức đi làm."
       }
     ],
-    "id": "g190"
+    "id": "g194"
   },
   {
     "level": "HSK 4",
@@ -3440,7 +3511,7 @@ export const grammarData = [
         "meaning": "Lúc đó bố mẹ và họ hàng của cô ấy đều không ủng hộ, nhưng cô ấy kiên trì lựa chọn của mình, bây giờ cuối cùng đã chứng minh với mọi người rằng lựa chọn của cô ấy là đúng."
       }
     ],
-    "id": "g191"
+    "id": "g195"
   },
   {
     "level": "HSK 4",
@@ -3459,7 +3530,7 @@ export const grammarData = [
         "meaning": "Nếu bạn muốn làm việc gì, thì hãy dũng cảm làm, đừng lo lắng kết quả, đừng cân nhắc có thất bại hay không."
       }
     ],
-    "id": "g192"
+    "id": "g196"
   },
   {
     "level": "HSK 4",
@@ -3478,7 +3549,7 @@ export const grammarData = [
         "meaning": "Một số người thích nói 'tàm tạm'. Ví dụ, công việc mỗi ngày đều hoàn thành tàm tạm, kết quả là, tích lũy lại, thì thành ra kém rất nhiều."
       }
     ],
-    "id": "g193"
+    "id": "g197"
   },
   {
     "level": "HSK 4",
@@ -3502,7 +3573,7 @@ export const grammarData = [
         "meaning": "Edison chính là sau khi tìm hàng nghìn loại vật liệu mới tìm ra được vật liệu có thể thắp sáng bóng đèn."
       }
     ],
-    "id": "g194"
+    "id": "g198"
   },
   {
     "level": "HSK 4",
@@ -3521,7 +3592,7 @@ export const grammarData = [
         "meaning": "Bạn đến sớm hơn một chút thì tốt rồi, chiếc xe đó vừa chạy đi, bạn chỉ có thể đợi chuyến tiếp theo. Tuy nhiên cũng không mất nhiều thời gian, ước chừng hơn mười phút là đến."
       }
     ],
-    "id": "g195"
+    "id": "g199"
   },
   {
     "level": "HSK 4",
@@ -3540,7 +3611,7 @@ export const grammarData = [
         "meaning": "Con gái tôi quả thực rất tốt, nhớ lúc nó vừa nhận được tháng lương đầu tiên, đã hào hứng kéo tôi và bố nó đi siêu thị, mua quà cho chúng tôi."
       }
     ],
-    "id": "g196"
+    "id": "g200"
   },
   {
     "level": "HSK 4",
@@ -3559,7 +3630,7 @@ export const grammarData = [
         "meaning": "Theo tôi, kết quả thi đấu không phải là quan trọng nhất, quan trọng hơn là trong quá trình tham gia thi đấu giúp bản thân nâng cao."
       }
     ],
-    "id": "g197"
+    "id": "g201"
   },
   {
     "level": "HSK 4",
@@ -3578,7 +3649,7 @@ export const grammarData = [
         "meaning": "Khi bạn bị ốm, nếu vì thiếu tiền mà không thể kịp thời đi khám bác sĩ, sức khỏe của bạn khó được đảm bảo, nói gì đến hạnh phúc."
       }
     ],
-    "id": "g198"
+    "id": "g202"
   },
   {
     "level": "HSK 4",
@@ -3597,7 +3668,7 @@ export const grammarData = [
         "meaning": "Vì nhu cầu công việc, tháng 10 năm ngoái tôi đã đi Thượng Hải một chuyến, để đàm phán kinh doanh với một công ty."
       }
     ],
-    "id": "g199"
+    "id": "g203"
   },
   {
     "level": "HSK 4",
@@ -3616,7 +3687,7 @@ export const grammarData = [
         "meaning": "Trước khi du lịch tốt nhất nên lên kế hoạch, ví dụ như đi mấy nơi, đi xe thế nào, mang những đồ gì, tổng cộng chơi bao nhiêu ngày v.v."
       }
     ],
-    "id": "g200"
+    "id": "g204"
   },
   {
     "level": "HSK 4",
@@ -3635,7 +3706,7 @@ export const grammarData = [
         "meaning": "Bạn giỏi quá! Ngay cả báo tiếng Trung cũng đọc hiểu."
       }
     ],
-    "id": "g201"
+    "id": "g205"
   },
   {
     "level": "HSK 4",
@@ -3654,7 +3725,7 @@ export const grammarData = [
         "meaning": "Có vẻ muốn thi tốt, không chỉ phải ôn tập nghiêm túc, còn phải chú ý phương pháp thi, nếu không thì câu làm được cũng không có thời gian làm."
       }
     ],
-    "id": "g202"
+    "id": "g206"
   },
   {
     "level": "HSK 4",
@@ -3673,7 +3744,7 @@ export const grammarData = [
         "meaning": "Dù làm việc gì cũng phải chú ý phương pháp, phương pháp đúng đắn có thể giúp chúng ta làm tốt hơn."
       }
     ],
-    "id": "g203"
+    "id": "g207"
   },
   {
     "level": "HSK 4",
@@ -3692,7 +3763,7 @@ export const grammarData = [
         "meaning": "Nhiều người cảm thấy cuộc sống của mình là hạnh phúc, nhưng quan điểm của mỗi người về hạnh phúc lại không hoàn toàn giống nhau."
       }
     ],
-    "id": "g204"
+    "id": "g208"
   },
   {
     "level": "HSK 4",
@@ -3711,7 +3782,7 @@ export const grammarData = [
         "meaning": "Đọc sách có nhiều lợi ích, nó có thể làm phong phú kiến thức của bạn, giúp bạn tìm ra cách giải quyết vấn đề; đồng thời, nó còn làm phong phú cảm xúc của bạn, khiến cuộc sống của bạn thêm tuyệt vời."
       }
     ],
-    "id": "g205"
+    "id": "g209"
   },
   {
     "level": "HSK 4",
@@ -3725,7 +3796,7 @@ export const grammarData = [
         "meaning": "Sau khi đọc xong một bài báo hoặc một cuốn sách, còn có thể viết lại nội dung chính và suy nghĩ của mình. Tuy nhiên, bạn không thể hoàn toàn tin vào nội dung trong sách, phải có quan điểm và phán đoán riêng."
       }
     ],
-    "id": "g206"
+    "id": "g210"
   },
   {
     "level": "HSK 4",
@@ -3749,7 +3820,7 @@ export const grammarData = [
         "meaning": "Căn nhà này đầy đủ đồ đạc, tivi, điều hòa, tủ lạnh đều rất mới, hơn nữa giá cũng rẻ, thực sự rất đáng cân nhắc."
       }
     ],
-    "id": "g207"
+    "id": "g211"
   },
   {
     "level": "HSK 4",
@@ -3768,7 +3839,7 @@ export const grammarData = [
         "meaning": "Dùng nước muối để giặt quần áo mới, như vậy dù mặc lâu, giặt nhiều lần, quần áo cũng không dễ phai màu."
       }
     ],
-    "id": "g208"
+    "id": "g212"
   },
   {
     "level": "HSK 4",
@@ -3787,7 +3858,7 @@ export const grammarData = [
         "meaning": "Đối với người Trung Quốc, Tết Nguyên đán là ngày lễ quan trọng nhất trong năm."
       }
     ],
-    "id": "g209"
+    "id": "g213"
   },
   {
     "level": "HSK 4",
@@ -3806,7 +3877,7 @@ export const grammarData = [
         "meaning": "Mỗi ngày ông Bạch đều đến quán cà phê đó ngồi một lát."
       }
     ],
-    "id": "g210"
+    "id": "g214"
   },
   {
     "level": "HSK 4",
@@ -3825,7 +3896,7 @@ export const grammarData = [
         "meaning": "Kết quả điều tra gần như hoàn toàn trái ngược với những gì họ nghĩ."
       }
     ],
-    "id": "g211"
+    "id": "g215"
   },
   {
     "level": "HSK 4",
@@ -3844,7 +3915,7 @@ export const grammarData = [
         "meaning": "Kế hoạch tổ chức hoạt động lễ hội văn hóa truyền thống này của bạn, tôi nghĩ hiệu trưởng có lẽ sẽ đồng ý."
       }
     ],
-    "id": "g212"
+    "id": "g216"
   },
   {
     "level": "HSK 4",
@@ -3863,7 +3934,7 @@ export const grammarData = [
         "meaning": "Trong số gần 7000 nhân viên văn phòng chúng tôi khảo sát, có 64% thường xuyên tăng ca, 28% thỉnh thoảng tăng ca."
       }
     ],
-    "id": "g213"
+    "id": "g217"
   },
   {
     "level": "HSK 4",
@@ -3882,7 +3953,7 @@ export const grammarData = [
         "meaning": "Từ 'hài hước' sớm nhất là do ông Lâm Ngữ Đường dịch ra."
       }
     ],
-    "id": "g214"
+    "id": "g218"
   },
   {
     "level": "HSK 4",
@@ -3901,7 +3972,7 @@ export const grammarData = [
         "meaning": "Có người đã tiến hành khảo sát đặc biệt trên internet."
       }
     ],
-    "id": "g215"
+    "id": "g219"
   },
   {
     "level": "HSK 4",
@@ -3925,7 +3996,7 @@ export const grammarData = [
         "meaning": "Thời kỳ đầu, trà chỉ được coi là một loại thuốc, chứ không phải đồ uống. Sau này, cùng với sự hiểu biết sâu sắc hơn của con người về trà, dần dần bắt đầu coi nó như đồ uống giải khát, từ đó mới dần hình thành văn hóa trà của Trung Quốc."
       }
     ],
-    "id": "g216"
+    "id": "g220"
   },
   {
     "level": "HSK 4",
@@ -3944,7 +4015,7 @@ export const grammarData = [
         "meaning": "Bác sĩ nhắc nhở chúng ta, ngủ quá lâu không tốt, thậm chí đôi khi có thể gây đau đầu, thông thường ngủ đủ tám tiếng là được."
       }
     ],
-    "id": "g217"
+    "id": "g221"
   },
   {
     "level": "HSK 4",
@@ -3963,7 +4034,7 @@ export const grammarData = [
         "meaning": "Có người sợ thất bại, không thể chấp nhận thất bại. Điều này không chỉ vì họ không đủ dũng cảm, mà còn vì họ yêu cầu quá cao đối với bản thân."
       }
     ],
-    "id": "g218"
+    "id": "g222"
   },
   {
     "level": "HSK 4",
@@ -3982,7 +4053,7 @@ export const grammarData = [
         "meaning": "Những người làm việc đến mức 'tàm tạm' đã cảm thấy hài lòng thường không thành công, chỉ có dùng tiêu chuẩn nghiêm khắc để yêu cầu bản thân mới có thể khiến mình trở nên ưu tú hơn."
       }
     ],
-    "id": "g219"
+    "id": "g223"
   },
   {
     "level": "HSK 4",
@@ -3996,7 +4067,7 @@ export const grammarData = [
         "meaning": "Chúng ta nên lấy những người dám nói thật làm gương, như vậy mới có thể kịp thời phát hiện ra khuyết điểm của bản thân."
       }
     ],
-    "id": "g220"
+    "id": "g224"
   },
   {
     "level": "HSK 4",
@@ -4010,7 +4081,7 @@ export const grammarData = [
         "meaning": "Nếu là bạn bè rất quan trọng, người Trung Quốc thường sẽ mời họ đến nhà hàng hoặc quán ăn để ăn, nhằm thể hiện sự tôn trọng và lịch sự đối với khách."
       }
     ],
-    "id": "g221"
+    "id": "g225"
   },
   {
     "level": "HSK 4",
@@ -4034,7 +4105,7 @@ export const grammarData = [
         "meaning": "Vì tối mai công ty sẽ tắt đèn cúp điện, vậy thì chúng ta chắc chắn không phải tăng ca rồi."
       }
     ],
-    "id": "g222"
+    "id": "g226"
   },
   {
     "level": "HSK 4",
@@ -4058,7 +4129,7 @@ export const grammarData = [
         "meaning": "Nhưng việc sử dụng nhiều nó cũng mang đến vấn đề ô nhiễm môi trường nghiêm trọng. Thế là, một số quốc gia quy định siêu thị, trung tâm thương mại không được cung cấp túi nilon miễn phí cho khách hàng, và khuyến khích mọi người mua túi mua sắm có thể tái sử dụng nhiều lần."
       }
     ],
-    "id": "g223"
+    "id": "g227"
   },
   {
     "level": "HSK 4",
@@ -4082,7 +4153,7 @@ export const grammarData = [
         "meaning": "Thực tế, chúng ta chỉ cần chú ý một chút đến những việc nhỏ xung quanh là được. Ví dụ, mùa hè để nhiệt độ điều hòa cao hơn một chút, khi ra ngoài nhớ tắt điều hòa và máy tính, như vậy có thể tiết kiệm điện; lái xe ít hơn, đi xe đạp nhiều hơn hoặc đi tàu điện ngầm và xe buýt, như vậy có thể giảm ô nhiễm không khí; còn có thói quen bỏ rác vào thùng rác vân vân."
       }
     ],
-    "id": "g224"
+    "id": "g228"
   },
   {
     "level": "HSK 4",
@@ -4101,7 +4172,7 @@ export const grammarData = [
         "meaning": "Những người cần ngồi làm việc trong thời gian dài, khoảng một giờ nhất định phải đứng dậy vận động một chút."
       }
     ],
-    "id": "g225"
+    "id": "g229"
   },
   {
     "level": "HSK 4",
@@ -4120,7 +4191,7 @@ export const grammarData = [
         "meaning": "Tôi nhớ ra rồi, đứa trẻ này vừa thông minh vừa đáng yêu, các bạn dạy dỗ thật tốt!"
       }
     ],
-    "id": "g226"
+    "id": "g230"
   },
   {
     "level": "HSK 4",
@@ -4144,7 +4215,7 @@ export const grammarData = [
         "meaning": "Mỗi ngày vì những chuyện nhỏ này mà phê bình cô ấy, làm (phê bình) đến nỗi tâm trạng cả hai chúng tôi đều không tốt."
       }
     ],
-    "id": "g227"
+    "id": "g231"
   },
   {
     "level": "HSK 4",
@@ -4168,7 +4239,7 @@ export const grammarData = [
         "meaning": "Mỗi người đều nên nhớ câu này: 'Lái xe nhất định đừng uống rượu, uống rượu nhất định đừng lái xe.'"
       }
     ],
-    "id": "g228"
+    "id": "g232"
   },
   {
     "level": "HSK 4",
@@ -4192,7 +4263,7 @@ export const grammarData = [
         "meaning": "Có những đứa trẻ khi không có được thứ mình muốn, sẽ thông qua khóc, ném đồ hoặc cố tình gõ đập để thu hút sự chú ý của cha mẹ."
       }
     ],
-    "id": "g229"
+    "id": "g233"
   },
   {
     "level": "HSK 4",
@@ -4216,7 +4287,7 @@ export const grammarData = [
         "meaning": "Trẻ em khoảng bảy tuổi thường hiếu động, không ngồi yên, vì vậy khi dạy trẻ ở độ tuổi này, giáo viên nhất định phải nghĩ cách thu hút sự hứng thú của chúng."
       }
     ],
-    "id": "g230"
+    "id": "g234"
   },
   {
     "level": "HSK 4",
@@ -4240,7 +4311,7 @@ export const grammarData = [
         "meaning": "Tôi đã làm một thẻ thành viên của tiệm cắt tóc đó, cắt tóc đã tiết kiệm được không ít tiền."
       }
     ],
-    "id": "g231"
+    "id": "g235"
   },
   {
     "level": "HSK 4",
@@ -4259,7 +4330,7 @@ export const grammarData = [
         "meaning": "Mấy động tác này tôi e rằng làm không chuẩn, nên trước khi thi đấu phải luyện tập nhiều."
       }
     ],
-    "id": "g232"
+    "id": "g236"
   },
   {
     "level": "HSK 4",
@@ -4278,7 +4349,7 @@ export const grammarData = [
         "meaning": "Buổi biểu diễn kinh kịch bắt đầu lúc 7 giờ rồi, bây giờ có lẽ đã kết thúc."
       }
     ],
-    "id": "g233"
+    "id": "g237"
   },
   {
     "level": "HSK 4",
@@ -4297,7 +4368,7 @@ export const grammarData = [
         "meaning": "Nếu bạn cảm thấy ngày lễ tình nhân chỉ tặng sô-cô-la chưa đủ lãng mạn, thì hãy đưa cô ấy xem bộ phim tình cảm 'Đem tình yêu tiến hành đến cùng' này."
       }
     ],
-    "id": "g234"
+    "id": "g238"
   },
   {
     "level": "HSK 4",
@@ -4316,7 +4387,7 @@ export const grammarData = [
         "meaning": "Tôi đã gọi cho anh ấy mấy lần rồi, nhưng mãi không ai nghe máy, cũng không biết rốt cuộc anh ấy thế nào."
       }
     ],
-    "id": "g235"
+    "id": "g239"
   },
   {
     "level": "HSK 4",
@@ -4340,7 +4411,7 @@ export const grammarData = [
         "meaning": "Vì vậy đừng đẩy mọi việc sang 'ngày mai', mọi thứ hãy bắt đầu từ bây giờ. Lấy việc học tiếng Trung làm ví dụ, trước hết cần chú ý xem bài trước giờ học, tìm ra trọng điểm cần học ngày hôm sau..."
       }
     ],
-    "id": "g236"
+    "id": "g240"
   },
   {
     "level": "HSK 4",
@@ -4364,7 +4435,7 @@ export const grammarData = [
         "meaning": "Nếu bạn dám thành thật nói ra mình không hiểu về mặt nào đó, không có nghĩa là bạn kém hơn người khác, ngược lại, làm như vậy càng nhận được sự tôn trọng của người khác."
       }
     ],
-    "id": "g237"
+    "id": "g241"
   },
   {
     "level": "HSK 4",
@@ -4383,7 +4454,7 @@ export const grammarData = [
         "meaning": "Sao bạn ho dữ vậy? Tôi rót cho bạn cốc nước nhé."
       }
     ],
-    "id": "g238"
+    "id": "g242"
   },
   {
     "level": "HSK 4",
@@ -4407,7 +4478,7 @@ export const grammarData = [
         "meaning": "Đi Vạn Lý Trường Thành thì là một ý hay, chỉ là xa quá."
       }
     ],
-    "id": "g239"
+    "id": "g243"
   },
   {
     "level": "HSK 4",
@@ -4426,7 +4497,7 @@ export const grammarData = [
         "meaning": "Khi làm việc nhất định phải nghiêm túc, cẩn thận, phải chú ý đến từng chỗ trong kế hoạch, nếu không thì rất dễ xảy ra vấn đề."
       }
     ],
-    "id": "g240"
+    "id": "g244"
   },
   {
     "level": "HSK 4",
@@ -4445,7 +4516,7 @@ export const grammarData = [
         "meaning": "Tôi sắp đi công tác một chuyến, bạn có thể giúp tôi chăm sóc chú chó nhỏ của tôi được không?"
       }
     ],
-    "id": "g241"
+    "id": "g245"
   },
   {
     "level": "HSK 4",
@@ -4464,7 +4535,7 @@ export const grammarData = [
         "meaning": "Gió Bắc và gió Nam cãi nhau vì để so xem ai có năng lực hơn."
       }
     ],
-    "id": "g242"
+    "id": "g246"
   },
   {
     "level": "HSK 4",
@@ -4483,7 +4554,7 @@ export const grammarData = [
         "meaning": "Con người thông minh hơn động vật, nhưng động vật vẫn có nhiều điều đáng để con người học hỏi."
       }
     ],
-    "id": "g243"
+    "id": "g247"
   },
   {
     "level": "HSK 4",
@@ -4502,7 +4573,7 @@ export const grammarData = [
         "meaning": "Hôn nhân có hạnh phúc hay không không liên quan đến điều này."
       }
     ],
-    "id": "g244"
+    "id": "g248"
   },
   {
     "level": "HSK 4",
@@ -4521,7 +4592,7 @@ export const grammarData = [
         "meaning": "Nhưng ngày nào cũng nhìn vào máy tính, mắt thực sự chịu không nổi."
       }
     ],
-    "id": "g245"
+    "id": "g249"
   },
   {
     "level": "HSK 4",
@@ -4540,7 +4611,7 @@ export const grammarData = [
         "meaning": "Tối qua tôi mơ một giấc mơ rất kỳ lạ, mơ thấy mình đang đi trên một cây cầu, đi mãi đi mãi, đột nhiên một chiếc xe lao tới, rất nguy hiểm, tiếp đó lại mơ thấy tôi nhảy lên xe, cùng cảnh sát bắt được một kẻ xấu."
       }
     ],
-    "id": "g246"
+    "id": "g250"
   },
   {
     "level": "HSK 4",
@@ -4559,7 +4630,7 @@ export const grammarData = [
         "meaning": "Người phương Bắc thích ăn sủi cảo vào dịp Tết, vì sủi cảo có vị thơm ngon, ngoài ra còn vì mọi người bận rộn cả năm, dịp Tết cả nhà ngồi cùng nhau gói sủi cảo là cơ hội giao lưu rất tốt."
       }
     ],
-    "id": "g247"
+    "id": "g251"
   },
   {
     "level": "HSK 4",
@@ -4578,7 +4649,7 @@ export const grammarData = [
         "meaning": "Hoàng Hà là con sông lớn thứ hai của Trung Quốc, chảy từ phía Tây sang phía Đông, dài 5464 km, người ta gọi nó là 'sông Mẹ'."
       }
     ],
-    "id": "g248"
+    "id": "g252"
   },
   {
     "level": "HSK 4",
@@ -4602,7 +4673,7 @@ export const grammarData = [
         "meaning": "Câu 'Trên đời không có bữa trưa miễn phí' có nghĩa là bất cứ thứ gì cũng phải đạt được qua nỗ lực."
       }
     ],
-    "id": "g249"
+    "id": "g253"
   },
   {
     "level": "HSK 4",
@@ -4626,7 +4697,7 @@ export const grammarData = [
         "meaning": "Vừa nghe tin anh trai thi đỗ tiến sĩ ngành kinh tế, cả nhà tôi đều rất vui."
       }
     ],
-    "id": "g250"
+    "id": "g254"
   },
   {
     "level": "HSK 4",
@@ -4650,7 +4721,7 @@ export const grammarData = [
         "meaning": "Lúc nãy tôi thấy bạn nhảy múa Trung Quốc ở bên cạnh, không ngờ bạn nhảy hay thế!"
       }
     ],
-    "id": "g251"
+    "id": "g255"
   },
   {
     "level": "HSK 4",
@@ -4674,7 +4745,7 @@ export const grammarData = [
         "meaning": "Nhiều người hỏi đi Lệ Giang du lịch thế nào, nói chung, phong cảnh Lệ Giang đẹp, người ở đó cũng rất nhiệt tình, đi du lịch đó là một lựa chọn tốt."
       }
     ],
-    "id": "g252"
+    "id": "g256"
   },
   {
     "level": "HSK 4",
@@ -4698,7 +4769,7 @@ export const grammarData = [
         "meaning": "Không ai có thể cả đời thuận lợi, không thất bại. Sự khác biệt nằm ở chỗ có người chấp nhận thất bại, tìm ra nguyên nhân và tiếp tục cố gắng; còn có người thì dừng bước trước thất bại."
       }
     ],
-    "id": "g253"
+    "id": "g257"
   },
   {
     "level": "HSK 4",
@@ -4722,7 +4793,7 @@ export const grammarData = [
         "meaning": "Cảm giác nằm trên bãi cỏ ngắm sao vào buổi tối rất tuyệt, có lúc nằm mãi rồi lặng lẽ ngủ thiếp đi."
       }
     ],
-    "id": "g254"
+    "id": "g258"
   },
   {
     "level": "HSK 4",
@@ -4751,7 +4822,7 @@ export const grammarData = [
         "meaning": "Cha mẹ phải cho con biết từ nhỏ, không phải thứ gì hễ khóc là có được."
       }
     ],
-    "id": "g255"
+    "id": "g259"
   },
   {
     "level": "HSK 4",
@@ -4775,7 +4846,7 @@ export const grammarData = [
         "meaning": "Khi học, không chỉ biết đáp án là gì, mà còn phải hiểu rõ đáp án rốt cuộc có được như thế nào, chỉ có vậy mới thực sự hiểu vấn đề."
       }
     ],
-    "id": "g256"
+    "id": "g260"
   },
   {
     "level": "HSK 4",
@@ -4799,7 +4870,7 @@ export const grammarData = [
         "meaning": "Ví dụ khi bạn nói chuyện với người Thượng Hải, sẽ thấy tiếng Thượng Hải nghe như tiếng nước ngoài vậy."
       }
     ],
-    "id": "g257"
+    "id": "g261"
   },
   {
     "level": "HSK 4",
@@ -4823,7 +4894,7 @@ export const grammarData = [
         "meaning": "Nếu có ai hỏi về chuyện đó, anh hãy nói với họ rằng anh chưa nhận được thông báo, cũng không rõ chuyện gì đã xảy ra."
       }
     ],
-    "id": "g258"
+    "id": "g262"
   },
   {
     "level": "HSK 5",
@@ -4852,7 +4923,7 @@ export const grammarData = [
         "meaning": "Tình hình thu nhập hàng tháng của thế hệ 8x thế nào?"
       }
     ],
-    "id": "g259"
+    "id": "g263"
   },
   {
     "level": "HSK 5",
@@ -4881,7 +4952,7 @@ export const grammarData = [
         "meaning": "Chỗ ngồi của tôi là số 17, là chỗ gần cửa sổ."
       }
     ],
-    "id": "g260"
+    "id": "g264"
   },
   {
     "level": "HSK 5",
@@ -4905,7 +4976,7 @@ export const grammarData = [
         "meaning": "Người phụ nữ này vì không ảnh hưởng đến giấc ngủ của bác sĩ, lại từ bỏ cơ hội này!"
       }
     ],
-    "id": "g261"
+    "id": "g265"
   },
   {
     "level": "HSK 5",
@@ -4929,7 +5000,7 @@ export const grammarData = [
         "meaning": "Từ trước đến nay, từ “thế hệ 8x” đều mang hương vị trẻ trung."
       }
     ],
-    "id": "g262"
+    "id": "g266"
   },
   {
     "level": "HSK 5",
@@ -4958,7 +5029,7 @@ export const grammarData = [
         "meaning": "Ngày sắp đi, bố từ quê chạy đến tiễn chúng tôi."
       }
     ],
-    "id": "g263"
+    "id": "g267"
   },
   {
     "level": "HSK 5",
@@ -4982,7 +5053,7 @@ export const grammarData = [
         "meaning": "Hai con cừu vừa thấy cỏ xanh, liền lập tức đi ăn cỏ, còn tâm trí nào đánh nhau nữa?"
       }
     ],
-    "id": "g264"
+    "id": "g268"
   },
   {
     "level": "HSK 5",
@@ -5006,7 +5077,7 @@ export const grammarData = [
         "meaning": "Cô ấy không nói với ai, lén lút đi du lịch."
       }
     ],
-    "id": "g265"
+    "id": "g269"
   },
   {
     "level": "HSK 5",
@@ -5030,7 +5101,7 @@ export const grammarData = [
         "meaning": "Trước đây vào những đêm trên đất liền, họ ở trong phòng riêng của mỗi người, cả gia đình không có nhiều giao tiếp."
       }
     ],
-    "id": "g266"
+    "id": "g270"
   },
   {
     "level": "HSK 5",
@@ -5054,7 +5125,7 @@ export const grammarData = [
         "meaning": "Trung Quốc có câu nói xưa: Có thể lên núi, chớ xuống biển."
       }
     ],
-    "id": "g267"
+    "id": "g271"
   },
   {
     "level": "HSK 5",
@@ -5083,7 +5154,7 @@ export const grammarData = [
         "meaning": "Tất cả mọi người trong lớp chúng tôi, bao gồm cả Lưu Phương người không thích vận động nhất cũng tham gia hội thao lần này."
       }
     ],
-    "id": "g268"
+    "id": "g272"
   },
   {
     "level": "HSK 5",
@@ -5112,7 +5183,7 @@ export const grammarData = [
         "meaning": "Trong công việc, anh ấy luôn luôn nhắc nhở bản thân: An toàn của hành khách là quan trọng nhất."
       }
     ],
-    "id": "g269"
+    "id": "g273"
   },
   {
     "level": "HSK 5",
@@ -5151,7 +5222,7 @@ export const grammarData = [
         "meaning": "Đá bóng xong rồi à? Tắm nước nóng một cái cho thoải mái đi."
       }
     ],
-    "id": "g270"
+    "id": "g274"
   },
   {
     "level": "HSK 5",
@@ -5159,7 +5230,7 @@ export const grammarData = [
     "formula": "至今 + Verb / Adj.",
     "explanation": "Phó từ, biểu thị từ một thời điểm trong quá khứ cho đến hiện tại, thường dùng để nhấn mạnh sự tiếp diễn của hành động hoặc trạng thái.",
     "examples": [],
-    "id": "g271"
+    "id": "g275"
   },
   {
     "level": "HSK 5",
@@ -5183,7 +5254,7 @@ export const grammarData = [
         "meaning": "Câu chuyện 'vác gạo trăm dặm' lưu truyền đến nay kể về lòng hiếu thảo của anh ấy với cha mẹ."
       }
     ],
-    "id": "g272"
+    "id": "g276"
   },
   {
     "level": "HSK 5",
@@ -5202,7 +5273,7 @@ export const grammarData = [
         "meaning": "Bạn của bố tôi vẽ một bức tranh tặng tôi, trên tranh là một ngọn núi, trên đỉnh núi có một người nhìn xuống, dưới núi có một người nhìn lên."
       }
     ],
-    "id": "g273"
+    "id": "g277"
   },
   {
     "level": "HSK 5",
@@ -5231,7 +5302,7 @@ export const grammarData = [
         "meaning": "Tại sao ông lại phải chịu áp lực để làm việc này?"
       }
     ],
-    "id": "g274"
+    "id": "g278"
   },
   {
     "level": "HSK 5",
@@ -5250,7 +5321,7 @@ export const grammarData = [
         "meaning": "Kế hoạch này sẽ trở thành một chiếc ô bảo vệ sức khỏe trẻ em."
       }
     ],
-    "id": "g275"
+    "id": "g279"
   },
   {
     "level": "HSK 5",
@@ -5274,7 +5345,7 @@ export const grammarData = [
         "meaning": "Trong lòng anh ấy bực bội vô cùng, tự lẩm bẩm phàn nàn: 'Sao còn xa thế!'"
       }
     ],
-    "id": "g276"
+    "id": "g280"
   },
   {
     "level": "HSK 5",
@@ -5298,7 +5369,7 @@ export const grammarData = [
         "meaning": "Nhưng anh ấy không vui vì điều kiện vật chất tốt, ngược lại thường thành khẩn nói: 'Mong sao cha mẹ có thể cùng tôi sống cuộc sống tốt đẹp!...'"
       }
     ],
-    "id": "g277"
+    "id": "g281"
   },
   {
     "level": "HSK 5",
@@ -5332,7 +5403,7 @@ export const grammarData = [
         "meaning": "Cái này tôi không muốn, anh ấy không thể đáp ứng yêu cầu của chúng tôi."
       }
     ],
-    "id": "g278"
+    "id": "g282"
   },
   {
     "level": "HSK 5",
@@ -5356,7 +5427,7 @@ export const grammarData = [
         "meaning": "Còn người dân Tế Nam sống bên suối, uống dòng nước suối ngọt ngào này, tự nhiên tràn đầy lòng biết ơn đối với nó, từ đó cũng sinh ra nhiều truyền thuyết đẹp về suối."
       }
     ],
-    "id": "g279"
+    "id": "g283"
   },
   {
     "level": "HSK 5",
@@ -5395,7 +5466,7 @@ export const grammarData = [
         "meaning": "Các thành viên trong đội đều cho rằng trình độ của đối phương cao hơn mình rất nhiều."
       }
     ],
-    "id": "g280"
+    "id": "g284"
   },
   {
     "level": "HSK 5",
@@ -5414,7 +5485,7 @@ export const grammarData = [
         "meaning": "Mỗi người đều sẽ gặp phải đủ loại áp lực, nhưng áp lực cũng có thể biến thành động lực."
       }
     ],
-    "id": "g281"
+    "id": "g285"
   },
   {
     "level": "HSK 5",
@@ -5433,7 +5504,7 @@ export const grammarData = [
         "meaning": "Theo anh ấy, cuộc sống không có việc làm thì không thể gọi là cuộc sống."
       }
     ],
-    "id": "g282"
+    "id": "g286"
   },
   {
     "level": "HSK 5",
@@ -5452,7 +5523,7 @@ export const grammarData = [
         "meaning": "Người đánh cá nghĩ, lưới này vừa thu lại, cá nhất định có thể đầy cả thuyền."
       }
     ],
-    "id": "g283"
+    "id": "g287"
   },
   {
     "level": "HSK 5",
@@ -5471,7 +5542,7 @@ export const grammarData = [
         "meaning": "Để không bị kẻ xấu cướp mất, anh ấy đã chôn cái ấm xuống đất giấu đi."
       }
     ],
-    "id": "g284"
+    "id": "g288"
   },
   {
     "level": "HSK 5",
@@ -5490,7 +5561,7 @@ export const grammarData = [
         "meaning": "Thầy Lưu hôm nay có chút việc không đến được, bạn có thể thay thế thầy ấy không?"
       }
     ],
-    "id": "g285"
+    "id": "g289"
   },
   {
     "level": "HSK 5",
@@ -5509,7 +5580,7 @@ export const grammarData = [
         "meaning": "Lý Dương sắp đi du học, chúng tôi đều vui mừng cho anh ấy."
       }
     ],
-    "id": "g286"
+    "id": "g290"
   },
   {
     "level": "HSK 5",
@@ -5528,7 +5599,7 @@ export const grammarData = [
         "meaning": "Rốt cuộc ai thắng ai thua giữa hai chúng ta còn chưa thể nói chắc được đâu."
       }
     ],
-    "id": "g287"
+    "id": "g291"
   },
   {
     "level": "HSK 5",
@@ -5547,7 +5618,7 @@ export const grammarData = [
         "meaning": "Đừng tùy tiện nói từ bỏ, biết đâu lần sau sẽ thành công."
       }
     ],
-    "id": "g288"
+    "id": "g292"
   },
   {
     "level": "HSK 5",
@@ -5566,7 +5637,7 @@ export const grammarData = [
         "meaning": "Tôi không dám tin đây là sự thật, như đang mơ vậy."
       }
     ],
-    "id": "g289"
+    "id": "g293"
   },
   {
     "level": "HSK 5",
@@ -5585,7 +5656,7 @@ export const grammarData = [
         "meaning": "Con 'Tịch' sợ hãi vô cùng, vội vàng chạy ra ngoài."
       }
     ],
-    "id": "g290"
+    "id": "g294"
   },
   {
     "level": "HSK 5",
@@ -5604,7 +5675,7 @@ export const grammarData = [
         "meaning": "Anh ấy cứu được vợ, nhưng đứa con lại bị nước cuốn trôi. Sau đó, mọi người bàn tán xôn xao."
       }
     ],
-    "id": "g291"
+    "id": "g295"
   },
   {
     "level": "HSK 5",
@@ -5623,7 +5694,7 @@ export const grammarData = [
         "meaning": "Sắp mưa rồi, người trên đường lũ lượt chạy về nhà."
       }
     ],
-    "id": "g292"
+    "id": "g296"
   },
   {
     "level": "HSK 5",
@@ -5652,7 +5723,7 @@ export const grammarData = [
         "meaning": "Anh ấy gọi điện hỏi giáo sư Lưu ý kiến về bài luận văn."
       }
     ],
-    "id": "g293"
+    "id": "g297"
   },
   {
     "level": "HSK 5",
@@ -5671,7 +5742,7 @@ export const grammarData = [
         "meaning": "Một ngày nọ, ông ta sai lính đi mua một con voi và một số người bị mù từ khi sinh ra."
       }
     ],
-    "id": "g294"
+    "id": "g298"
   },
   {
     "level": "HSK 5",
@@ -5690,7 +5761,7 @@ export const grammarData = [
         "meaning": "Vấn đề của nó, nó sẽ tự tìm cách, cậu đừng lo lắng vô ích cho nó."
       }
     ],
-    "id": "g295"
+    "id": "g299"
   },
   {
     "level": "HSK 5",
@@ -5709,7 +5780,7 @@ export const grammarData = [
         "meaning": "Từ khi tốt nghiệp đến nay chúng tôi đã xa nhau 20 năm, vẫn luôn không liên lạc."
       }
     ],
-    "id": "g296"
+    "id": "g300"
   },
   {
     "level": "HSK 5",
@@ -5738,7 +5809,7 @@ export const grammarData = [
         "meaning": "Khi nói về điểm không hài lòng nhất với công việc hiện tại, 1% người được khảo sát cho rằng thời gian nghỉ ngơi quá ít, phát triển chậm, lương quá thấp lần lượt chiếm 20,3% và 20%."
       }
     ],
-    "id": "g297"
+    "id": "g301"
   },
   {
     "level": "HSK 5",
@@ -5757,7 +5828,7 @@ export const grammarData = [
         "meaning": "Sự khác biệt của hai bức ảnh này là nhìn một cái là thấy ngay."
       }
     ],
-    "id": "g298"
+    "id": "g302"
   },
   {
     "level": "HSK 5",
@@ -5786,7 +5857,7 @@ export const grammarData = [
         "meaning": "Việc này vẫn phải giải quyết từ gốc, chỉ hiểu vấn đề bề mặt là không được."
       }
     ],
-    "id": "g299"
+    "id": "g303"
   },
   {
     "level": "HSK 5",
@@ -5805,7 +5876,7 @@ export const grammarData = [
         "meaning": "Thế nhưng, lần này anh ta liên tục đổi mấy mũi tên, đều không thể bắn vào được nữa..."
       }
     ],
-    "id": "g300"
+    "id": "g304"
   },
   {
     "level": "HSK 5",
@@ -5829,7 +5900,7 @@ export const grammarData = [
         "meaning": "Rất nhiều lúc, chỉ cần thay đổi một tâm trạng, thay đổi một góc nhìn, bèn có thể đi ra khỏi khốn cảnh."
       }
     ],
-    "id": "g301"
+    "id": "g305"
   },
   {
     "level": "HSK 5",
@@ -5863,7 +5934,7 @@ export const grammarData = [
         "meaning": "Tiếng hét đột ngột này làm tôi giật mình."
       }
     ],
-    "id": "g302"
+    "id": "g306"
   },
   {
     "level": "HSK 5",
@@ -5882,7 +5953,7 @@ export const grammarData = [
         "meaning": "Thiếu niên không hiểu hỏi: 'Sao dũng cảm lại trở thành khuyết điểm?'"
       }
     ],
-    "id": "g303"
+    "id": "g307"
   },
   {
     "level": "HSK 5",
@@ -5901,7 +5972,7 @@ export const grammarData = [
         "meaning": "Nhà Tiểu Lưu thuê tuy rất nhỏ, nhưng dọn dẹp lại còn sạch sẽ."
       }
     ],
-    "id": "g304"
+    "id": "g308"
   },
   {
     "level": "HSK 5",
@@ -5920,7 +5991,7 @@ export const grammarData = [
         "meaning": "Tôi thì rất muốn tham gia hoạt động này, chỉ là tạm thời không thể xác định có thời gian hay không."
       }
     ],
-    "id": "g305"
+    "id": "g309"
   },
   {
     "level": "HSK 5",
@@ -5939,7 +6010,7 @@ export const grammarData = [
         "meaning": "Anh nói thử xem, việc này anh không chịu trách nhiệm thì ai chịu?"
       }
     ],
-    "id": "g306"
+    "id": "g310"
   },
   {
     "level": "HSK 5",
@@ -5963,7 +6034,7 @@ export const grammarData = [
         "meaning": "Họ nghiên cứu qua thảo luận lại, vẫn không tìm ra nguyên nhân."
       }
     ],
-    "id": "g307"
+    "id": "g311"
   },
   {
     "level": "HSK 5",
@@ -5982,7 +6053,7 @@ export const grammarData = [
         "meaning": "May mà gặp được anh, nếu không hôm nay tôi chắc chắn sẽ bị muộn."
       }
     ],
-    "id": "g308"
+    "id": "g312"
   },
   {
     "level": "HSK 5",
@@ -6001,7 +6072,7 @@ export const grammarData = [
         "meaning": "Hay là thế này đi, đã các bạn thấy ít thì đổi thành mỗi sáng bốn hạt, tối ba hạt, như vậy tổng cộng đủ rồi nhỉ."
       }
     ],
-    "id": "g309"
+    "id": "g313"
   },
   {
     "level": "HSK 5",
@@ -6025,7 +6096,7 @@ export const grammarData = [
         "meaning": "Bạn tốt nên giúp đỡ lẫn nhau."
       }
     ],
-    "id": "g310"
+    "id": "g314"
   },
   {
     "level": "HSK 5",
@@ -6044,7 +6115,7 @@ export const grammarData = [
         "meaning": "Số tiền này coi như tôi cho anh vay, sau này khi anh có thì trả lại tôi."
       }
     ],
-    "id": "g311"
+    "id": "g315"
   },
   {
     "level": "HSK 5",
@@ -6063,7 +6134,7 @@ export const grammarData = [
         "meaning": "Thôi bỏ đi, anh chạy nhanh thế nào cũng không đuổi kịp con chim biết bay đâu."
       }
     ],
-    "id": "g312"
+    "id": "g316"
   },
   {
     "level": "HSK 5",
@@ -6082,7 +6153,7 @@ export const grammarData = [
         "meaning": "Quản lý muốn mời tôi đi ăn một bữa, nói là coi như lời khen cho việc tôi làm thêm giờ."
       }
     ],
-    "id": "g313"
+    "id": "g317"
   },
   {
     "level": "HSK 5",
@@ -6101,7 +6172,7 @@ export const grammarData = [
         "meaning": "Cà chua là loại rau được trồng rất phổ biến trên thế giới, Trung Quốc với tư cách là một trong những nước sản xuất chính cũng đang mở rộng diện tích trồng của nó."
       }
     ],
-    "id": "g314"
+    "id": "g318"
   },
   {
     "level": "HSK 5",
@@ -6125,7 +6196,7 @@ export const grammarData = [
         "meaning": "Uất Đạt Phu vào năm 1933 từng làm thơ miêu tả ông: 'Mắt say lờ đờ lên lầu rượu, bàng hoàng gào thét hai dài dài', miêu tả rất sinh động."
       }
     ],
-    "id": "g315"
+    "id": "g319"
   },
   {
     "level": "HSK 5",
@@ -6144,7 +6215,7 @@ export const grammarData = [
         "meaning": "Món quà này là thị trưởng tự tay làm cho cô bé bị bệnh."
       }
     ],
-    "id": "g316"
+    "id": "g320"
   },
   {
     "level": "HSK 5",
@@ -6163,7 +6234,7 @@ export const grammarData = [
         "meaning": "Em nên tự mình học tập chăm chỉ, không thể luôn dựa vào người khác."
       }
     ],
-    "id": "g317"
+    "id": "g321"
   },
   {
     "level": "HSK 5",
@@ -6192,7 +6263,7 @@ export const grammarData = [
         "meaning": "Anh ấy không vui là bình thường, rốt cuộc không ai có thể vui nổi khi ngã đến đầu rách máu chảy."
       }
     ],
-    "id": "g318"
+    "id": "g322"
   },
   {
     "level": "HSK 5",
@@ -6216,7 +6287,7 @@ export const grammarData = [
         "meaning": "Sau những thử nghiệm gian khổ, kỹ thuật quay phim dần dần được cải tiến và hoàn thiện."
       }
     ],
-    "id": "g319"
+    "id": "g323"
   },
   {
     "level": "HSK 5",
@@ -6240,7 +6311,7 @@ export const grammarData = [
         "meaning": "Chú ý từng khoảnh khắc của cuộc sống, tranh luận về nó, kịp thời yêu cầu giúp đỡ, nghiên cứu nghiêm túc, có lẽ phát hiện lớn đang ở ngay trước mắt bạn."
       }
     ],
-    "id": "g320"
+    "id": "g324"
   },
   {
     "level": "HSK 5",
@@ -6269,7 +6340,7 @@ export const grammarData = [
         "meaning": "Ngày Tết Trung Thu, mặt trăng trông đặc biệt sáng."
       }
     ],
-    "id": "g321"
+    "id": "g325"
   },
   {
     "level": "HSK 5",
@@ -6288,7 +6359,7 @@ export const grammarData = [
         "meaning": "Sáng sớm tỉnh dậy, tôi phát hiện ngoài cửa sổ đang có tuyết rơi lớn."
       }
     ],
-    "id": "g322"
+    "id": "g326"
   },
   {
     "level": "HSK 5",
@@ -6307,7 +6378,7 @@ export const grammarData = [
         "meaning": "Anh ấy cứu vợ, không cứu con. Có người nói anh ấy làm đúng, vì con có thể sinh lại, nhưng vợ thì không thể sống lại được."
       }
     ],
-    "id": "g323"
+    "id": "g327"
   },
   {
     "level": "HSK 5",
@@ -6326,7 +6397,7 @@ export const grammarData = [
         "meaning": "Gần đây công việc trong tay quá nhiều, tôi đều bận không xuể."
       }
     ],
-    "id": "g324"
+    "id": "g328"
   },
   {
     "level": "HSK 5",
@@ -6345,7 +6416,7 @@ export const grammarData = [
         "meaning": "Phản ứng của mọi người đối với việc tự nhiên tỉnh dậy và bị tiếng chuông báo thức đánh thức là rất khác nhau."
       }
     ],
-    "id": "g325"
+    "id": "g329"
   },
   {
     "level": "HSK 5",
@@ -6364,7 +6435,7 @@ export const grammarData = [
         "meaning": "Tôi và Lý Dương là bạn tốt, không gì không nói."
       }
     ],
-    "id": "g326"
+    "id": "g330"
   },
   {
     "level": "HSK 5",
@@ -6383,7 +6454,7 @@ export const grammarData = [
         "meaning": "Gần trường có một trường mẫu giáo, bạn có thể đưa con đến đó."
       }
     ],
-    "id": "g327"
+    "id": "g331"
   },
   {
     "level": "HSK 5",
@@ -6402,7 +6473,7 @@ export const grammarData = [
         "meaning": "Số côn trùng gây hại mà loài chim này ăn trong một ngày tương đương với trọng lượng cơ thể của nó."
       }
     ],
-    "id": "g328"
+    "id": "g332"
   },
   {
     "level": "HSK 5",
@@ -6421,7 +6492,7 @@ export const grammarData = [
         "meaning": "Nếu hỏi mọi người khi chọn nghề chủ yếu cân nhắc điều gì, có một bộ phận khá lớn sẽ lấy thu nhập làm tiêu chuẩn."
       }
     ],
-    "id": "g329"
+    "id": "g333"
   },
   {
     "level": "HSK 5",
@@ -6440,7 +6511,7 @@ export const grammarData = [
         "meaning": "Thưa ông, đây là tiền thừa 58 tệ 6 hào, ông đếm xem."
       }
     ],
-    "id": "g330"
+    "id": "g334"
   },
   {
     "level": "HSK 5",
@@ -6459,7 +6530,7 @@ export const grammarData = [
         "meaning": "Nói về người chạy nhanh nhất lớp chúng tôi, thì đó là Lý Dương."
       }
     ],
-    "id": "g331"
+    "id": "g335"
   },
   {
     "level": "HSK 5",
@@ -6478,7 +6549,7 @@ export const grammarData = [
         "meaning": "Trạng thái này nếu kéo dài vài ngày, vài tuần, vài tháng sẽ dẫn đến cao huyết áp, mất ngủ và một số vấn đề tinh thần."
       }
     ],
-    "id": "g332"
+    "id": "g336"
   },
   {
     "level": "HSK 5",
@@ -6502,7 +6573,7 @@ export const grammarData = [
         "meaning": "Nhiệt độ cao kéo dài khiến nhiều người già cảm thấy khó chịu."
       }
     ],
-    "id": "g333"
+    "id": "g337"
   },
   {
     "level": "HSK 5",
@@ -6516,7 +6587,7 @@ export const grammarData = [
         "meaning": "Xin lỗi! Làm phiền rồi, các bạn tiếp tục học đi."
       }
     ],
-    "id": "g334"
+    "id": "g338"
   },
   {
     "level": "HSK 5",
@@ -6540,7 +6611,7 @@ export const grammarData = [
         "meaning": "Do số lượng người dùng Internet của Trung Quốc cũng như mức độ trưởng thành của thị trường đều thấp hơn các nước phát triển, nên khó có vị trí dẫn đầu trong đổi mới sản phẩm."
       }
     ],
-    "id": "g335"
+    "id": "g339"
   },
   {
     "level": "HSK 5",
@@ -6559,7 +6630,7 @@ export const grammarData = [
         "meaning": "Ở mức độ lớn, tương lai của một người phụ thuộc vào giáo dục mà người đó nhận được."
       }
     ],
-    "id": "g336"
+    "id": "g340"
   },
   {
     "level": "HSK 5",
@@ -6578,7 +6649,7 @@ export const grammarData = [
         "meaning": "Do số lượng người dùng Internet của Trung Quốc cũng như mức độ trưởng thành của thị trường đều thấp hơn các nước phát triển, nên khó có vị trí dẫn đầu trong đổi mới sản phẩm."
       }
     ],
-    "id": "g337"
+    "id": "g341"
   },
   {
     "level": "HSK 5",
@@ -6597,7 +6668,7 @@ export const grammarData = [
         "meaning": "Trung Quốc vẫn là một nước đang phát triển."
       }
     ],
-    "id": "g338"
+    "id": "g342"
   },
   {
     "level": "HSK 5",
@@ -6616,7 +6687,7 @@ export const grammarData = [
         "meaning": "Sự phát triển thay đổi của Bắc Kinh quá nhanh, tôi là người Bắc Kinh chính gốc còn thường xuyên lạc đường, huống chi bạn là người ngoại tỉnh."
       }
     ],
-    "id": "g339"
+    "id": "g343"
   },
   {
     "level": "HSK 5",
@@ -6635,7 +6706,7 @@ export const grammarData = [
         "meaning": "Mùa đông Thượng Hải không có sưởi, trong nhà lạnh đến nỗi không thể đưa tay ra, huống chi Lý Dương còn là người bệnh, đương nhiên là không chịu nổi."
       }
     ],
-    "id": "g340"
+    "id": "g344"
   },
   {
     "level": "HSK 5",
@@ -6659,7 +6730,7 @@ export const grammarData = [
         "meaning": "Anh hà tất phải tự mình giao một chuyến? Gọi chuyển phát nhanh là được rồi?"
       }
     ],
-    "id": "g341"
+    "id": "g345"
   },
   {
     "level": "HSK 5",
@@ -6683,7 +6754,7 @@ export const grammarData = [
         "meaning": "Hôm nay chuyển nhà nhờ có bạn ở đây, bạn giúp tôi quá nhiều rồi."
       }
     ],
-    "id": "g342"
+    "id": "g346"
   },
   {
     "level": "HSK 5",
@@ -6712,7 +6783,7 @@ export const grammarData = [
         "meaning": "Cái gọi là 'thực phẩm lành mạnh' trên thị trường hiện nay thực ra không có tiêu chuẩn thống nhất."
       }
     ],
-    "id": "g343"
+    "id": "g347"
   },
   {
     "level": "HSK 5",
@@ -6741,7 +6812,7 @@ export const grammarData = [
         "meaning": "Mùa đông Bắc Kinh, có gió thì lạnh, không gió thì ấm."
       }
     ],
-    "id": "g344"
+    "id": "g348"
   },
   {
     "level": "HSK 5",
@@ -6765,7 +6836,7 @@ export const grammarData = [
         "meaning": "Sân không chỉ kéo gần quan hệ giữa người và thiên nhiên, còn để người nhà ở đây có được sự giao lưu tình cảm, có tác dụng lớn trong việc tạo ra thú vui cuộc sống, vì thế được mọi người yêu thích nhất."
       }
     ],
-    "id": "g345"
+    "id": "g349"
   },
   {
     "level": "HSK 5",
@@ -6789,7 +6860,7 @@ export const grammarData = [
         "meaning": "Đối với công ty, điều quan trọng nhất là xây dựng một bộ chế độ hiệu quả."
       }
     ],
-    "id": "g346"
+    "id": "g350"
   },
   {
     "level": "HSK 5",
@@ -6813,7 +6884,7 @@ export const grammarData = [
         "meaning": "Nguyên liệu của chúng tôi đắt, chi phí nhân công cao, sản phẩm chắc chắn không cạnh tranh nổi về giá với họ."
       }
     ],
-    "id": "g347"
+    "id": "g351"
   },
   {
     "level": "HSK 5",
@@ -6837,7 +6908,7 @@ export const grammarData = [
         "meaning": "Nếu không coi trọng nghiên cứu kỹ thuật và phát triển sản phẩm, chúng ta sớm muộn sẽ bị người khác đẩy ra khỏi thị trường."
       }
     ],
-    "id": "g348"
+    "id": "g352"
   },
   {
     "level": "HSK 5",
@@ -6861,7 +6932,7 @@ export const grammarData = [
         "meaning": "Bạn mời anh ấy làm tổng giám đốc công ty, anh ấy cân nhắc nhiều lần, cuối cùng vẫn lịch sự từ chối."
       }
     ],
-    "id": "g349"
+    "id": "g353"
   },
   {
     "level": "HSK 5",
@@ -6895,7 +6966,7 @@ export const grammarData = [
         "meaning": "Bộ phim truyền hình này quay rất thành công, sau khi phát sóng toàn quốc, được khán giả yêu thích."
       }
     ],
-    "id": "g350"
+    "id": "g354"
   },
   {
     "level": "HSK 5",
@@ -6914,7 +6985,7 @@ export const grammarData = [
         "meaning": "Sự thay đổi cân nặng của những người này thể hiện một mô hình rõ ràng, đó là sau cuối tuần cân nặng tăng lên, trong ngày làm việc cân nặng giảm xuống (thứ Sáu đạt điểm thấp nhất)."
       }
     ],
-    "id": "g351"
+    "id": "g355"
   },
   {
     "level": "HSK 5",
@@ -6928,7 +6999,7 @@ export const grammarData = [
         "meaning": "Không hiểu liền hỏi là ưu điểm lớn nhất của anh ấy, cũng là nguyên nhân chính dẫn đến thành công của anh ấy."
       }
     ],
-    "id": "g352"
+    "id": "g356"
   },
   {
     "level": "HSK 5",
@@ -6947,7 +7018,7 @@ export const grammarData = [
         "meaning": "Việc làm lại thẻ sinh viên nhất định phải có chính bạn đi."
       }
     ],
-    "id": "g353"
+    "id": "g357"
   },
   {
     "level": "HSK 5",
@@ -6966,7 +7037,7 @@ export const grammarData = [
         "meaning": "Học sinh được chia thành hai đội A và B, dùng bóng đá làm công cụ thi đấu ném vào trong rổ, dựa vào số điểm để quyết định thắng thua."
       }
     ],
-    "id": "g354"
+    "id": "g358"
   },
   {
     "level": "HSK 5",
@@ -6985,7 +7056,7 @@ export const grammarData = [
         "meaning": "Ví dụ như để có một buổi biểu diễn kịch, chúng tôi sẽ đầu tư nhiều thời gian, chuẩn bị trang phục, hóa trang, đạo cụ, mỹ thuật sân khấu, để tạo ra hiệu quả tốt."
       }
     ],
-    "id": "g355"
+    "id": "g359"
   },
   {
     "level": "HSK 5",
@@ -7004,7 +7075,7 @@ export const grammarData = [
         "meaning": "Một bộ phim, tuy đầu phim tình tiết bình thường, nhưng nếu nửa giờ cuối có thể làm chúng ta cảm động, chúng ta vẫn sẽ giới thiệu nó cho người khác."
       }
     ],
-    "id": "g356"
+    "id": "g360"
   },
   {
     "level": "HSK 5",
@@ -7023,7 +7094,7 @@ export const grammarData = [
         "meaning": "Hiệu trưởng lại nói với các giáo viên, đối xử với những đứa trẻ này, hãy như bình thường, đừng để trẻ em hay phụ huynh biết chúng được chọn ra."
       }
     ],
-    "id": "g357"
+    "id": "g361"
   },
   {
     "level": "HSK 5",
@@ -7042,7 +7113,7 @@ export const grammarData = [
         "meaning": "Tại sao mọi người thà chen chúc thành một đám, cũng không đến chỗ không có người?"
       }
     ],
-    "id": "g358"
+    "id": "g362"
   },
   {
     "level": "HSK 5",
@@ -7061,7 +7132,7 @@ export const grammarData = [
         "meaning": "Bạn đừng coi thường anh ấy, anh ấy nhìn có vẻ bình thường, nhưng thực ra rất giỏi."
       }
     ],
-    "id": "g359"
+    "id": "g363"
   },
   {
     "level": "HSK 5",
@@ -7080,7 +7151,7 @@ export const grammarData = [
         "meaning": "Người mỗi ngày nói 'quá tệ', 'quá đáng ghét', 'thật xui xẻo', thì khó khăn gặp phải cũng đặc biệt nhiều, vận may cũng tỏ ra cực kì tệ."
       }
     ],
-    "id": "g360"
+    "id": "g364"
   },
   {
     "level": "HSK 5",
@@ -7099,7 +7170,7 @@ export const grammarData = [
         "meaning": "Chỉ có một phòng sáng đèn, các cửa sổ còn lại đều tối."
       }
     ],
-    "id": "g361"
+    "id": "g365"
   },
   {
     "level": "HSK 5",
@@ -7118,7 +7189,7 @@ export const grammarData = [
         "meaning": "Trong tiếng Trung có thành ngữ 'tự tri chi minh', gọi 'tự biết mình' là 'sáng suốt', có thể thấy 'tự biết mình' là một loại trí tuệ."
       }
     ],
-    "id": "g362"
+    "id": "g366"
   },
   {
     "level": "HSK 5",
@@ -7137,7 +7208,7 @@ export const grammarData = [
         "meaning": "Tôi bây giờ liền đi."
       }
     ],
-    "id": "g363"
+    "id": "g367"
   },
   {
     "level": "HSK 5",
@@ -7161,7 +7232,7 @@ export const grammarData = [
         "meaning": "Nhìn bóng lưng xa dần của bố, nước mắt tôi rơi không ngừng như hạt mưa."
       }
     ],
-    "id": "g364"
+    "id": "g368"
   },
   {
     "level": "HSK 5",
@@ -7190,7 +7261,7 @@ export const grammarData = [
         "meaning": "Trong kỳ nghỉ, cô ấy đưa bọn trẻ đi du lịch khắp thế giới, mở rộng kiến thức của chúng."
       }
     ],
-    "id": "g365"
+    "id": "g369"
   },
   {
     "level": "HSK 5",
@@ -7209,7 +7280,7 @@ export const grammarData = [
         "meaning": "Anh ấy mở nắp ấm ra, ngửi ngửi, hóa ra là rượu."
       }
     ],
-    "id": "g366"
+    "id": "g370"
   },
   {
     "level": "HSK 5",
@@ -7233,7 +7304,7 @@ export const grammarData = [
         "meaning": "Bánh củ cải phải ăn lúc nóng, thích vị đậm thì có thể thêm chút xì dầu và giấm."
       }
     ],
-    "id": "g367"
+    "id": "g371"
   },
   {
     "level": "HSK 5",
@@ -7267,7 +7338,7 @@ export const grammarData = [
         "meaning": "Mỗi dịp Tết, tôi đặc biệt nhớ từng cọng cỏ cành cây ở quê hương."
       }
     ],
-    "id": "g368"
+    "id": "g372"
   },
   {
     "level": "HSK 5",
@@ -7291,7 +7362,7 @@ export const grammarData = [
         "meaning": "Chỉ có người bạn chịu nổi thử thách của khó khăn và thời gian mới được coi là bạn thực sự."
       }
     ],
-    "id": "g369"
+    "id": "g373"
   },
   {
     "level": "HSK 5",
@@ -7310,7 +7381,7 @@ export const grammarData = [
         "meaning": "Gần nhà tôi có một quầy sách tranh nhỏ, đó là một cái lều nhỏ dựa tường ngay đầu phố, bên trong dùng vài viên gạch chống những tấm ván gỗ thô để mọi người ngồi đọc sách."
       }
     ],
-    "id": "g370"
+    "id": "g374"
   },
   {
     "level": "HSK 5",
@@ -7329,7 +7400,7 @@ export const grammarData = [
         "meaning": "Cho anh ta mười khẩu súng, anh ta có thể kéo lên một đội quân."
       }
     ],
-    "id": "g371"
+    "id": "g375"
   },
   {
     "level": "HSK 5",
@@ -7348,7 +7419,7 @@ export const grammarData = [
         "meaning": "Trong ấn tượng dường như không có tiền đặt cọc gì, hoàn toàn dựa vào tín dụng."
       }
     ],
-    "id": "g372"
+    "id": "g376"
   },
   {
     "level": "HSK 5",
@@ -7367,7 +7438,7 @@ export const grammarData = [
         "meaning": "Anh dựa vào cái gì mà nghi ngờ tôi lấy trộm đồ?"
       }
     ],
-    "id": "g373"
+    "id": "g377"
   },
   {
     "level": "HSK 5",
@@ -7396,7 +7467,7 @@ export const grammarData = [
         "meaning": "Mặc dù nước thuốc Bắc hơi đắng, nhưng để chữa bệnh, anh ấy vẫn cố uống nó xuống."
       }
     ],
-    "id": "g374"
+    "id": "g378"
   },
   {
     "level": "HSK 5",
@@ -7425,7 +7496,7 @@ export const grammarData = [
         "meaning": "Những nơi tôi từng sống, thỉnh thoảng cũng xuất hiện trong giấc mơ của tôi, nhưng đều không phải là 'nhà' của tôi!"
       }
     ],
-    "id": "g375"
+    "id": "g379"
   },
   {
     "level": "HSK 5",
@@ -7449,7 +7520,7 @@ export const grammarData = [
         "meaning": "Nhân hai ngày nay thời tiết tốt, bà hãy nhanh chóng giặt quần áo hết mùa rồi cất đi."
       }
     ],
-    "id": "g376"
+    "id": "g380"
   },
   {
     "level": "HSK 5",
@@ -7478,7 +7549,7 @@ export const grammarData = [
         "meaning": "Cha của Lý Dương là một họa sĩ, vì vậy, Lý Dương thích vẽ tranh không phải là ngẫu nhiên."
       }
     ],
-    "id": "g377"
+    "id": "g381"
   },
   {
     "level": "HSK 5",
@@ -7502,7 +7573,7 @@ export const grammarData = [
         "meaning": "Cái gọi là không gian riêng tư, là chỉ không gian nhất định xung quanh cơ thể chúng ta, một khi có người xâm nhập không gian này, chúng ta sẽ cảm thấy không thoải mái, không tự nhiên."
       }
     ],
-    "id": "g378"
+    "id": "g382"
   },
   {
     "level": "HSK 5",
@@ -7526,7 +7597,7 @@ export const grammarData = [
         "meaning": "Là một người mẹ, giữa con gái ruột của mình và cô bé Lọ Lem không phải con ruột, khó tránh khỏi sẽ yêu thương con gái ruột hơn, rất khó đối xử hoàn toàn bình đẳng với họ."
       }
     ],
-    "id": "g379"
+    "id": "g383"
   },
   {
     "level": "HSK 5",
@@ -7550,7 +7621,7 @@ export const grammarData = [
         "meaning": "Từ khi tôi nghe chuyện này, liền bắt đầu suy nghĩ nên đọc sách thế nào, ngoài đọc sách còn nên làm gì."
       }
     ],
-    "id": "g380"
+    "id": "g384"
   },
   {
     "level": "HSK 5",
@@ -7579,7 +7650,7 @@ export const grammarData = [
         "meaning": "Tôi cho rằng công ty xử lý việc này không đủ công bằng."
       }
     ],
-    "id": "g381"
+    "id": "g385"
   },
   {
     "level": "HSK 5",
@@ -7608,7 +7679,7 @@ export const grammarData = [
         "meaning": "Các chuyên gia nhất trí cho rằng đây là một sản phẩm thành công, có thể yên tâm sử dụng."
       }
     ],
-    "id": "g382"
+    "id": "g386"
   },
   {
     "level": "HSK 5",
@@ -7637,7 +7708,7 @@ export const grammarData = [
         "meaning": "Ở nơi xa lạ này, mẹ cảm thấy họ như trao đổi thân phận nào đó: mình lại giống con gái, còn Văn Văn lại giống mẹ."
       }
     ],
-    "id": "g383"
+    "id": "g387"
   },
   {
     "level": "HSK 5",
@@ -7661,7 +7732,7 @@ export const grammarData = [
         "meaning": "Mẹ không kìm được rơi nước mắt. Bà nói: 'May mà tối hôm đó trời rất tối'."
       }
     ],
-    "id": "g384"
+    "id": "g388"
   },
   {
     "level": "HSK 5",
@@ -7675,7 +7746,7 @@ export const grammarData = [
         "meaning": "Bạn còn quá trẻ, e rằng không thể một mình hoàn thành nhiệm vụ này."
       }
     ],
-    "id": "g385"
+    "id": "g389"
   },
   {
     "level": "HSK 5",
@@ -7704,7 +7775,7 @@ export const grammarData = [
         "meaning": "Thầy Hảo đến Vân Nam tham gia hoạt động tình nguyện dạy học."
       }
     ],
-    "id": "g386"
+    "id": "g390"
   },
   {
     "level": "HSK 5",
@@ -7728,7 +7799,7 @@ export const grammarData = [
         "meaning": "Trung Quốc có luật về giáo dục nghĩa vụ chín năm."
       }
     ],
-    "id": "g387"
+    "id": "g391"
   },
   {
     "level": "HSK 5",
@@ -7757,7 +7828,7 @@ export const grammarData = [
         "meaning": "Bạn đã phát biểu rồi à?"
       }
     ],
-    "id": "g388"
+    "id": "g392"
   },
   {
     "level": "HSK 5",
@@ -7786,7 +7857,7 @@ export const grammarData = [
         "meaning": "Tôi như thấy chiến thắng đang tiến về phía chúng tôi."
       }
     ],
-    "id": "g389"
+    "id": "g393"
   },
   {
     "level": "HSK 5",
@@ -7810,7 +7881,7 @@ export const grammarData = [
         "meaning": "Thuyền trưởng thật là điên rồi, làm như vậy chỉ làm tăng áp lực cho tàu, tàu sẽ chìm nhanh hơn, đây chẳng phải là tìm chết sao?"
       }
     ],
-    "id": "g390"
+    "id": "g394"
   },
   {
     "level": "HSK 5",
@@ -7829,7 +7900,7 @@ export const grammarData = [
         "meaning": "Theo phương pháp ông già dạy, anh ấy hầu như ngày nào cũng câu được con cá lớn nặng khoảng 5 cân."
       }
     ],
-    "id": "g391"
+    "id": "g395"
   },
   {
     "level": "HSK 5",
@@ -7848,7 +7919,7 @@ export const grammarData = [
         "meaning": "Tôi rất có tình cảm với Thượng Hải, một là vì hồi đại học đã ở đó vài năm, hai là vợ tôi cũng là người Thượng Hải."
       }
     ],
-    "id": "g392"
+    "id": "g396"
   },
   {
     "level": "HSK 5",
@@ -7867,7 +7938,7 @@ export const grammarData = [
         "meaning": "Gì? Một cái áo sơ mi mà tới hơn nghìn tệ. Sao có thể đắt đến thế được?"
       }
     ],
-    "id": "g393"
+    "id": "g397"
   },
   {
     "level": "HSK 5",
@@ -7886,7 +7957,7 @@ export const grammarData = [
         "meaning": "Tôi chỉ biết anh ấy là học sinh lớp 6, còn về việc ở đâu, tôi không rõ."
       }
     ],
-    "id": "g394"
+    "id": "g398"
   },
   {
     "level": "HSK 5",
@@ -7905,7 +7976,7 @@ export const grammarData = [
         "meaning": "Cuối cùng cũng làm xong việc, làm tôi mệt chết đi được."
       }
     ],
-    "id": "g395"
+    "id": "g399"
   },
   {
     "level": "HSK 5",
@@ -7924,7 +7995,7 @@ export const grammarData = [
         "meaning": "Trước khi đi có thể gặp bạn một lần, chuyến này nói chung không uổng!"
       }
     ],
-    "id": "g396"
+    "id": "g400"
   },
   {
     "level": "HSK 5",
@@ -7948,7 +8019,7 @@ export const grammarData = [
         "meaning": "Mấy ván chơi xong, về cơ bản đều chưa đến 10 phút là tôi đã thua."
       }
     ],
-    "id": "g397"
+    "id": "g401"
   },
   {
     "level": "HSK 5",
@@ -7972,7 +8043,7 @@ export const grammarData = [
         "meaning": "Đáng tiếc, phần lớn mọi người đều như bạn, ban đầu không cân nhắc được mất, đợi đến sau này mất nhiều rồi, lại bắt đầu không nỡ, hậu quả là thua đi thua lại."
       }
     ],
-    "id": "g398"
+    "id": "g402"
   },
   {
     "level": "HSK 5",
@@ -8001,7 +8072,7 @@ export const grammarData = [
         "meaning": "Công ty sẽ bồi thường tổn thất của chúng tôi."
       }
     ],
-    "id": "g399"
+    "id": "g403"
   },
   {
     "level": "HSK 5",
@@ -8025,7 +8096,7 @@ export const grammarData = [
         "meaning": "Hằng Nga tự mình uống thuốc trường sinh, kết quả cô bay lên mặt trăng, từ đó xa cách Hậu Nghệ."
       }
     ],
-    "id": "g400"
+    "id": "g404"
   },
   {
     "level": "HSK 5",
@@ -8044,7 +8115,7 @@ export const grammarData = [
         "meaning": "Giả sử nước ngọt hai tệ một chai, hai vỏ chai rỗng có thể đổi một chai nước ngọt, nếu cho bạn sáu tệ, bạn có thể uống nhiều nhất mấy chai nước ngọt?"
       }
     ],
-    "id": "g401"
+    "id": "g405"
   },
   {
     "level": "HSK 5",
@@ -8063,7 +8134,7 @@ export const grammarData = [
         "meaning": "Đây là một giả thiết táo bạo, nhưng chưa chắc đã khoa học."
       }
     ],
-    "id": "g402"
+    "id": "g406"
   },
   {
     "level": "HSK 5",
@@ -8082,7 +8153,7 @@ export const grammarData = [
         "meaning": "Một người sư đệ nhỏ mới cưới được nửa năm, đã chạy đến tìm tôi than thở, nói vợ hầu như ngày nào cũng chỉ ra cho anh ấy một đống tật xấu."
       }
     ],
-    "id": "g403"
+    "id": "g407"
   },
   {
     "level": "HSK 5",
@@ -8101,7 +8172,7 @@ export const grammarData = [
         "meaning": "Năm nay thật tốt! Anh xem lương thực này, chất thành núi rồi."
       }
     ],
-    "id": "g404"
+    "id": "g408"
   },
   {
     "level": "HSK 5",
@@ -8120,7 +8191,7 @@ export const grammarData = [
         "meaning": "Chú tháo chiếc nhẫn vàng trên ngón tay ra, ném vào đống đá."
       }
     ],
-    "id": "g405"
+    "id": "g409"
   },
   {
     "level": "HSK 5",
@@ -8144,7 +8215,7 @@ export const grammarData = [
         "meaning": "Nếu tìm một người có kỳ nghệ không bằng bạn hoặc tương đương bạn để chơi cờ, mặc dù bạn có thể dễ dàng chiến thắng đối thủ, nhưng không thể nâng cao kỳ nghệ của bạn."
       }
     ],
-    "id": "g406"
+    "id": "g410"
   },
   {
     "level": "HSK 5",
@@ -8163,7 +8234,7 @@ export const grammarData = [
         "meaning": "Tôi nhờ anh ấy giúp đỡ, anh ấy đồng ý rất dứt khoát."
       }
     ],
-    "id": "g407"
+    "id": "g411"
   },
   {
     "level": "HSK 5",
@@ -8182,7 +8253,7 @@ export const grammarData = [
         "meaning": "Lúc này, nhiều bạn bè mới khuyên anh ấy cứ đánh bại ba hiệu sách kia, độc chiếm thị trường này."
       }
     ],
-    "id": "g408"
+    "id": "g412"
   },
   {
     "level": "HSK 5",
@@ -8201,7 +8272,7 @@ export const grammarData = [
         "meaning": "Đừng bỏ tất cả trứng vào một giỏ, vì phòng khi không cẩn thận, trứng có thể bị vỡ hết."
       }
     ],
-    "id": "g409"
+    "id": "g413"
   },
   {
     "level": "HSK 5",
@@ -8220,7 +8291,7 @@ export const grammarData = [
         "meaning": "Cô ấy luôn mang theo một khẩu súng, để phòng bất ngờ."
       }
     ],
-    "id": "g410"
+    "id": "g414"
   },
   {
     "level": "HSK 5",
@@ -8234,7 +8305,7 @@ export const grammarData = [
         "meaning": "Trong phòng học nhỏ thế này mà đặt ba bốn cái bàn, chật quá!"
       }
     ],
-    "id": "g411"
+    "id": "g415"
   },
   {
     "level": "HSK 5",
@@ -8248,7 +8319,7 @@ export const grammarData = [
         "meaning": "Người đi xe nhiều quá, tôi chen mãi mới lên được xe."
       }
     ],
-    "id": "g412"
+    "id": "g416"
   },
   {
     "level": "HSK 5",
@@ -8262,7 +8333,7 @@ export const grammarData = [
         "meaning": "Xin xuống trước lên sau, đừng chen lấn."
       }
     ],
-    "id": "g413"
+    "id": "g417"
   },
   {
     "level": "HSK 5",
@@ -8276,7 +8347,7 @@ export const grammarData = [
         "meaning": "Để mua được vé, tôi chen đến mức đầy đầu mồ hôi."
       }
     ],
-    "id": "g414"
+    "id": "g418"
   },
   {
     "level": "HSK 5",
@@ -8290,7 +8361,7 @@ export const grammarData = [
         "meaning": "Tắc nghẽn giao thông là một vấn đề lớn."
       }
     ],
-    "id": "g415"
+    "id": "g419"
   },
   {
     "level": "HSK 5",
@@ -8309,7 +8380,7 @@ export const grammarData = [
         "meaning": "Tôi không có ý định làm phiền ông, nhưng tôi có thể nói chuyện với ông một lát được không?"
       }
     ],
-    "id": "g416"
+    "id": "g420"
   },
   {
     "level": "HSK 5",
@@ -8328,7 +8399,7 @@ export const grammarData = [
         "meaning": "Khi anh ấy dọn dẹp vườn hoa, đã vô tình tìm thấy chiếc bông tai này."
       }
     ],
-    "id": "g417"
+    "id": "g421"
   },
   {
     "level": "HSK 5",
@@ -8352,7 +8423,7 @@ export const grammarData = [
         "meaning": "Cười có thể thúc đẩy hoạt động tim phổi, cải thiện tình trạng căng cơ, cũng có lợi cho giấc ngủ."
       }
     ],
-    "id": "g418"
+    "id": "g422"
   },
   {
     "level": "HSK 5",
@@ -8376,7 +8447,7 @@ export const grammarData = [
         "meaning": "Tổng giám đốc của chúng ta chọn Lý Dương phụ trách thực sự có chút mạo hiểm, vì anh ấy còn quá trẻ."
       }
     ],
-    "id": "g419"
+    "id": "g423"
   },
   {
     "level": "HSK 5",
@@ -8410,7 +8481,7 @@ export const grammarData = [
         "meaning": "Trình độ của hai người họ rất gần nhau, trận đấu này thực sự khó nói ai sẽ thắng."
       }
     ],
-    "id": "g420"
+    "id": "g424"
   },
   {
     "level": "HSK 5",
@@ -8429,7 +8500,7 @@ export const grammarData = [
         "meaning": "Hả? Mọi người đi đâu hết rồi?"
       }
     ],
-    "id": "g421"
+    "id": "g425"
   },
   {
     "level": "HSK 5",
@@ -8448,7 +8519,7 @@ export const grammarData = [
         "meaning": "Ủa! Sao bạn vẫn chưa đi?"
       }
     ],
-    "id": "g422"
+    "id": "g426"
   },
   {
     "level": "HSK 5",
@@ -8467,7 +8538,7 @@ export const grammarData = [
         "meaning": "Ừm, không vấn đề, tôi sẽ gửi cho anh ấy ngay."
       }
     ],
-    "id": "g423"
+    "id": "g427"
   },
   {
     "level": "HSK 5",
@@ -8486,7 +8557,7 @@ export const grammarData = [
         "meaning": "Bất kỳ thắng lợi nào cũng không dễ dàng có được, đằng sau đều phải nỗ lực vất vả."
       }
     ],
-    "id": "g424"
+    "id": "g428"
   },
   {
     "level": "HSK 5",
@@ -8505,7 +8576,7 @@ export const grammarData = [
         "meaning": "Anh ấy là người hiếu thắng, ít khi cầu xin người khác, lần này vay tiền chúng ta, chắc chắn là gặp chuyện khó khăn gì rồi."
       }
     ],
-    "id": "g425"
+    "id": "g429"
   },
   {
     "level": "HSK 5",
@@ -8524,7 +8595,7 @@ export const grammarData = [
         "meaning": "Sau khi tham gia hoạt động bảo vệ môi trường này, hai người có tiếng nói chung, qua lại cũng thân thiết hơn trước."
       }
     ],
-    "id": "g426"
+    "id": "g430"
   },
   {
     "level": "HSK 5",
@@ -8543,7 +8614,7 @@ export const grammarData = [
         "meaning": "Phụ huynh nên phối hợp chặt chẽ với giáo viên, tạo thành sức mạnh tổng hợp, duy trì tính nhất quán trong giáo dục."
       }
     ],
-    "id": "g427"
+    "id": "g431"
   },
   {
     "level": "HSK 5",
@@ -8562,7 +8633,7 @@ export const grammarData = [
         "meaning": "Sự giao lưu giữa các thành phố kết nghĩa đã thắt chặt tình hữu nghị giữa nhân dân hai nước."
       }
     ],
-    "id": "g428"
+    "id": "g432"
   },
   {
     "level": "HSK 5",
@@ -8586,7 +8657,7 @@ export const grammarData = [
         "meaning": "Để tiết kiệm năng lượng, xin mọi người hãy cố gắng sử dụng thiết bị điện tiết kiệm năng lượng."
       }
     ],
-    "id": "g429"
+    "id": "g433"
   },
   {
     "level": "HSK 5",
@@ -8610,7 +8681,7 @@ export const grammarData = [
         "meaning": "Phóng viên được biết, hiện nay người dân vùng bị thiên tai đã dần dần khôi phục sản xuất và cuộc sống bình thường."
       }
     ],
-    "id": "g430"
+    "id": "g434"
   },
   {
     "level": "HSK 5",
@@ -8639,7 +8710,7 @@ export const grammarData = [
         "meaning": "Chiến thắng mới đã mang lại sự cổ vũ lớn cho toàn đội."
       }
     ],
-    "id": "g431"
+    "id": "g435"
   },
   {
     "level": "HSK 5",
@@ -8658,7 +8729,7 @@ export const grammarData = [
         "meaning": "Đám cháy lớn không gây ảnh hưởng lớn đến hoạt động thương mại ở khu đông, hoạt động thương mại trong khu vực vẫn diễn ra bình thường."
       }
     ],
-    "id": "g432"
+    "id": "g436"
   },
   {
     "level": "HSK 5",
@@ -8677,7 +8748,7 @@ export const grammarData = [
         "meaning": "Một buổi sáng giữa tháng chín, Jensen như thường lệ ra ngoài sớm để đến Bộ Giao thông trước giờ cao điểm."
       }
     ],
-    "id": "g433"
+    "id": "g437"
   },
   {
     "level": "HSK 5",
@@ -8696,7 +8767,7 @@ export const grammarData = [
         "meaning": "Điều này cũng không trách được, thà kẹt xe trên đường lãng phí thời gian và xăng, gây ô nhiễm môi trường, chi bằng đổi sang đi xe buýt."
       }
     ],
-    "id": "g434"
+    "id": "g438"
   },
   {
     "level": "HSK 5",
@@ -8715,7 +8786,7 @@ export const grammarData = [
         "meaning": "Anh ấy đã 18 tuổi rồi, còn không dám đi đường đêm một mình, không trách sao mọi người gọi anh ấy là kẻ nhát gan."
       }
     ],
-    "id": "g435"
+    "id": "g439"
   },
   {
     "level": "HSK 5",
@@ -8739,7 +8810,7 @@ export const grammarData = [
         "meaning": "Điều này cũng không trách được, thà kẹt xe trên đường lãng phí thời gian và xăng, gây ô nhiễm môi trường, chi bằng đổi sang đi xe buýt."
       }
     ],
-    "id": "g436"
+    "id": "g440"
   },
   {
     "level": "HSK 5",
@@ -8753,7 +8824,7 @@ export const grammarData = [
         "meaning": "Bộ phim này thể hiện đặc điểm thời đại rõ rệt."
       }
     ],
-    "id": "g437"
+    "id": "g441"
   },
   {
     "level": "HSK 5",
@@ -8777,7 +8848,7 @@ export const grammarData = [
         "meaning": "Tóm lại, trong cuộc sống của loài chim, lông vũ đóng một vai trò rất quan trọng."
       }
     ],
-    "id": "g438"
+    "id": "g442"
   },
   {
     "level": "HSK 5",
@@ -8806,7 +8877,7 @@ export const grammarData = [
         "meaning": "Trong vài phút ngắn ngủi, trong đầu tôi lóe lên rất nhiều ý nghĩ."
       }
     ],
-    "id": "g439"
+    "id": "g443"
   },
   {
     "level": "HSK 5",
@@ -8830,7 +8901,7 @@ export const grammarData = [
         "meaning": "Còn cách tắm của đại bàng còn trực tiếp hơn, chúng sẽ dang rộng đôi cánh trong mưa để đón nhận sự thanh tẩy một cách sảng khoái!"
       }
     ],
-    "id": "g440"
+    "id": "g444"
   },
   {
     "level": "HSK 5",
@@ -8869,7 +8940,7 @@ export const grammarData = [
         "meaning": "Đối với vấn đề này, tư tưởng của anh ấy có thể còn dao động."
       }
     ],
-    "id": "g441"
+    "id": "g445"
   },
   {
     "level": "HSK 5",
@@ -8883,7 +8954,7 @@ export const grammarData = [
         "meaning": "Tháng sau tôi phải chuyển nhà, phải nhanh chóng tìm nhà."
       }
     ],
-    "id": "g442"
+    "id": "g446"
   },
   {
     "level": "HSK 5",
@@ -8902,7 +8973,7 @@ export const grammarData = [
         "meaning": "Trừ phi cần gấp một khoản tiền lớn, tôi mới cân nhắc bán căn nhà này."
       }
     ],
-    "id": "g443"
+    "id": "g447"
   },
   {
     "level": "HSK 5",
@@ -8921,7 +8992,7 @@ export const grammarData = [
         "meaning": "Công việc hàng ngày anh ấy chưa bao giờ hỏi đến, trừ phi vấn đề rất đặc biệt."
       }
     ],
-    "id": "g444"
+    "id": "g448"
   },
   {
     "level": "HSK 5",
@@ -8940,7 +9011,7 @@ export const grammarData = [
         "meaning": "Cho đến hôm nay, tôi cũng không hiểu lúc đó anh ấy tại sao nổi cơn giận lớn như vậy."
       }
     ],
-    "id": "g445"
+    "id": "g449"
   },
   {
     "level": "HSK 5",
@@ -8959,7 +9030,7 @@ export const grammarData = [
         "meaning": "Mấy trăm chậu hoa, phải nhanh chóng mang vào nhà, mệt đến nỗi đau lưng nhức chân, mồ hôi nóng chảy ròng ròng."
       }
     ],
-    "id": "g446"
+    "id": "g450"
   },
   {
     "level": "HSK 5",
@@ -8978,7 +9049,7 @@ export const grammarData = [
         "meaning": "Tôi không biết hoa cỏ được tôi chăm sóc, có cảm ơn tôi hay không, dù sao tôi cũng muốn cảm ơn chúng."
       }
     ],
-    "id": "g447"
+    "id": "g451"
   },
   {
     "level": "HSK 5",
@@ -8997,7 +9068,7 @@ export const grammarData = [
         "meaning": "Thôi bỏ đi, dù sao cũng không phải chuyện quan trọng, vẫn là đừng làm phiền họ."
       }
     ],
-    "id": "g448"
+    "id": "g452"
   },
   {
     "level": "HSK 5",
@@ -9031,10 +9102,10 @@ export const grammarData = [
         "meaning": "Lô quần áo hết mùa này hãy nhanh chóng giảm giá thanh lý đi."
       }
     ],
-    "id": "g449"
+    "id": "g453"
   },
   {
-    "id": "g450",
+    "id": "g454",
     "level": "HSK 6",
     "title": "Cách sử dụng nâng cao của \"dao\" trái ngược",
     "formula": "Subj. + Verb + 得 + 倒 + Adj.",
@@ -9059,7 +9130,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGXXP6M"
   },
   {
-    "id": "g451",
+    "id": "g455",
     "level": "HSK 6",
     "title": "Cách sử dụng nâng cao của \"dao\" trái ngược",
     "formula": "Subj. + 倒 + Adj.",
@@ -9089,7 +9160,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGXXP6M"
   },
   {
-    "id": "g452",
+    "id": "g456",
     "level": "HSK 6",
     "title": "Cách sử dụng nâng cao của \"dao\" trái ngược",
     "formula": "你 + 倒是 + Verb + 呀 / 啊",
@@ -9119,7 +9190,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGXXP6M"
   },
   {
-    "id": "g453",
+    "id": "g457",
     "level": "HSK 6",
     "title": "Nhấn mạnh bằng \"henshi\"",
     "formula": "Subj. + 很是 + Adj.",
@@ -9149,7 +9220,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGA1B87"
   },
   {
-    "id": "g454",
+    "id": "g458",
     "level": "HSK 6",
     "title": "Nhấn mạnh bằng \"henshi\"",
     "formula": "Subj. + 很是 + 会 / 能 + Verb",
@@ -9179,7 +9250,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGA1B87"
   },
   {
-    "id": "g455",
+    "id": "g459",
     "level": "HSK 6",
     "title": "Diễn tả “đầy đủ” với “zuzu”",
     "formula": "足足 + Verb :: / :: Verb + 足足",
@@ -9204,7 +9275,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGJIFI9"
   },
   {
-    "id": "g456",
+    "id": "g460",
     "level": "HSK 6",
     "title": "Diễn tả “lặp đi lặp lại” với “yizai”",
     "formula": "Subj. + 一再 + Verb",
@@ -9234,7 +9305,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASG47D26"
   },
   {
-    "id": "g457",
+    "id": "g461",
     "level": "HSK 6",
     "title": "Diễn tả “luôn luôn trước đây” bằng “xianglai”",
     "formula": "Subject + 向来（都） + Verb/Verb Phrase",
@@ -9259,7 +9330,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGDU0XL"
   },
   {
-    "id": "g458",
+    "id": "g462",
     "level": "HSK 6",
     "title": "Diễn tả “đúng như mong đợi” bằng “guoran”",
     "formula": "Subj. + 果然 + Predicate",
@@ -9289,7 +9360,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGC11D0"
   },
   {
-    "id": "g459",
+    "id": "g463",
     "level": "HSK 6",
     "title": "Diễn tả “đúng như mong đợi” bằng “guoran”",
     "formula": "Clause 1 ，果然 ，Clause 2",
@@ -9319,7 +9390,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGC11D4"
   },
   {
-    "id": "g460",
+    "id": "g464",
     "level": "HSK 6",
     "title": "Diễn tả “như thể” với “sihu”",
     "formula": "Subj. + 似乎 ⋯⋯",
@@ -9349,7 +9420,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGB316B"
   },
   {
-    "id": "g461",
+    "id": "g465",
     "level": "HSK 6",
     "title": "Diễn tả “miễn là” với “fanshi”",
     "formula": "凡是 + Noun + 都 / 就 / 一律 + Predicate",
@@ -9379,7 +9450,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASG38F8A"
   },
   {
-    "id": "g462",
+    "id": "g466",
     "level": "HSK 6",
     "title": "Diễn đạt “trái với mong đợi” bằng “pianpian”",
     "formula": "A, Subject + 偏偏 + B",
@@ -9409,7 +9480,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGFZOLQ"
   },
   {
-    "id": "g463",
+    "id": "g467",
     "level": "HSK 6",
     "title": "Diễn tả “không có ngoại lệ” với “yilu”",
     "formula": "一律 (+ 都) + Verb / Adj.",
@@ -9439,7 +9510,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGC8A38"
   },
   {
-    "id": "g464",
+    "id": "g468",
     "level": "HSK 6",
     "title": "Diễn tả “không có gì ngoài” với “wufei”",
     "formula": "无非 + 是 + Noun / Verb Phrase",
