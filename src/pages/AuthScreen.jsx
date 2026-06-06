@@ -77,8 +77,8 @@ export default function AuthScreen() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-canvas dark:bg-surface-dark p-4 transition-colors">
-      <div className="max-w-md w-full bg-surface-card dark:bg-surface-dark/50 rounded-md shadow-sm p-8 border border-hairline dark:border-divider-dark transition-colors">
+    <div className="auth-container">
+      <div className="auth-card">
 
         {/* Brand / Logo */}
         <div className="text-center mb-8">
@@ -97,48 +97,48 @@ export default function AuthScreen() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <div>
-              <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1">Họ và tên</label>
+              <label className="auth-label">Họ và tên</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
+                className="form-input"
                 placeholder="Nguyễn Văn A"
               />
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1">Email</label>
+            <label className="auth-label">Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
+              className="form-input"
               placeholder="example@email.com"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1">Mật khẩu</label>
+            <label className="auth-label">Mật khẩu</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark"
+              className="form-input"
               placeholder="••••••••"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-deep text-white font-bold py-3 rounded-full transition-all shadow-sm hover:shadow-md active:scale-[0.98] cursor-pointer mt-4"
+            className="w-full btn-primary mt-4"
           >
             {isLogin ? <LogIn size={18} /> : <UserPlus size={18} />}
             <span>{isLogin ? 'Đăng nhập' : 'Đăng ký'}</span>
@@ -147,9 +147,9 @@ export default function AuthScreen() {
 
         {/* Divider */}
         <div className="mt-8 flex items-center">
-          <div className="flex-grow border-t border-hairline dark:border-divider-dark"></div>
+          <div className="auth-divider"></div>
           <span className="px-4 text-[10px] text-mute dark:text-on-dark-mute font-bold uppercase tracking-wider">Hoặc sử dụng</span>
-          <div className="flex-grow border-t border-hairline dark:border-divider-dark"></div>
+          <div className="auth-divider"></div>
         </div>
 
         {/* Google Buttons Section */}
@@ -160,7 +160,7 @@ export default function AuthScreen() {
             {/* Custom Google Button UI */}
             <button
               type="button"
-              className="absolute inset-0 w-full h-full flex items-center justify-center gap-3 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark text-ink dark:text-on-dark font-bold rounded-full transition-all shadow-sm pointer-events-none"
+              className="auth-google-btn"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" className="shrink-0">
                 <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.53-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-8.72z" />

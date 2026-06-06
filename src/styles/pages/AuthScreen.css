@@ -1,0 +1,22 @@
+/* src/styles/pages/AuthScreen.css */
+@layer components {
+  .auth-container {
+    @apply min-h-screen flex items-center justify-center bg-canvas dark:bg-surface-dark p-4 transition-colors;
+  }
+
+  .auth-card {
+    @apply max-w-md w-full bg-surface-card dark:bg-surface-dark/50 rounded-md shadow-sm p-8 border border-hairline dark:border-divider-dark transition-colors;
+  }
+
+  .auth-label {
+    @apply block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1;
+  }
+
+  .auth-google-btn {
+    @apply absolute inset-0 w-full h-full flex items-center justify-center gap-3 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark text-ink dark:text-on-dark font-bold rounded-full transition-all shadow-sm pointer-events-none;
+  }
+
+  .auth-divider {
+    @apply flex-grow border-t border-hairline dark:border-divider-dark;
+  }
+}
