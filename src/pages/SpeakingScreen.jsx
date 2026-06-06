@@ -7,7 +7,6 @@ import {
   Volume2, 
   ArrowLeft, 
   Sparkles, 
-  CheckCircle2, 
   AlertCircle, 
   ChevronLeft, 
   ChevronRight,
@@ -38,6 +37,39 @@ export default function SpeakingScreen() {
   const [browserSupported, setBrowserSupported] = useState(true);
 
   const recognitionRef = useRef(null);
+
+  // Grade spoken Hanzi character by character
+  const gradePronunciation = (spokenStr) => {
+    if (!currentSentence) return;
+
+    // Remove punctuation from both targets
+    const targetClean = currentSentence.hanzi.replace(/[。？！，、；：]/g, '').trim();
+    const spokenClean = spokenStr.replace(/[。？！，、；：\s]/g, '').trim();
+
+    const targetChars = Array.from(targetClean);
+    const spokenChars = Array.from(spokenClean);
+
+    const results = [];
+    let correctCount = 0;
+
+    targetChars.forEach((char) => {
+      // Find matching character in spoken input
+      const matchIdx = spokenChars.indexOf(char);
+      if (matchIdx !== -1) {
+        results.push({ char, correct: true });
+        spokenChars.splice(matchIdx, 1); // remove matched char to prevent duplicate matching
+        correctCount++;
+      } else {
+        results.push({ char, correct: false });
+      }
+    });
+
+    const finalScore = targetChars.length > 0 ? Math.round((correctCount / targetChars.length) * 100) : 0;
+
+    setGradedChars(results);
+    setScore(finalScore);
+    setChecked(true);
+  };
 
   // Initialize Web Speech Recognition
   useEffect(() => {
@@ -104,39 +136,6 @@ export default function SpeakingScreen() {
         console.error(err);
       }
     }
-  };
-
-  // Grade spoken Hanzi character by character
-  const gradePronunciation = (spokenStr) => {
-    if (!currentSentence) return;
-
-    // Remove punctuation from both targets
-    const targetClean = currentSentence.hanzi.replace(/[。？！，、；：]/g, '').trim();
-    const spokenClean = spokenStr.replace(/[。？！，、；：\s]/g, '').trim();
-
-    const targetChars = Array.from(targetClean);
-    const spokenChars = Array.from(spokenClean);
-
-    const results = [];
-    let correctCount = 0;
-
-    targetChars.forEach((char) => {
-      // Find matching character in spoken input
-      const matchIdx = spokenChars.indexOf(char);
-      if (matchIdx !== -1) {
-        results.push({ char, correct: true });
-        spokenChars.splice(matchIdx, 1); // remove matched char to prevent duplicate matching
-        correctCount++;
-      } else {
-        results.push({ char, correct: false });
-      }
-    });
-
-    const finalScore = targetChars.length > 0 ? Math.round((correctCount / targetChars.length) * 100) : 0;
-
-    setGradedChars(results);
-    setScore(finalScore);
-    setChecked(true);
   };
 
   const handleSpeakSample = () => {

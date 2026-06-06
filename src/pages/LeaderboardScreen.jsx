@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import api from '../services/api';
-import { Trophy, Flame, Layers, Award, Medal, Users, RefreshCw } from 'lucide-react';
+import { Trophy, Flame, Layers, Award, RefreshCw } from 'lucide-react';
 
 export default function LeaderboardScreen() {
   const [ranking, setRanking] = useState([]);

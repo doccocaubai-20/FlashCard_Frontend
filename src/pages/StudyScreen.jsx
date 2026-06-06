@@ -4,11 +4,9 @@ import { useSearchParams } from 'react-router-dom';
 import { fetchTodayStudy, submitReview } from '../features/study/studySlice';
 import { fetchAllDecks } from '../features/deck/deckSlice';
 import { studyApi } from '../services/studyApi';
-import { flashcardApi } from '../services/flashcardApi';
 import Flashcard from '../components/flashcard/Flashcard';
 import SRSButtons from '../components/study/SRSButtons';
 import { 
-  BookOpen, 
   Layers, 
   Clock, 
   Play, 
@@ -83,7 +81,7 @@ function WritingPractice({ character }) {
     writerRef.current.cancelQuiz();
     setMode('quiz');
     writerRef.current.quiz({
-      onComplete: (summary) => {
+      onComplete: (_summary) => {
         alert('Tuyệt vời! Bạn đã viết chính xác từ này!');
         setMode('idle');
       }
@@ -220,7 +218,7 @@ function SpeakingPractice({ character, pinyin }) {
       const spokenText = e.results[0][0].transcript;
       setTranscript(spokenText);
 
-      const cleanSpoken = spokenText.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, '').trim();
+      const cleanSpoken = spokenText.replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, '').trim();
       const cleanTarget = character.replace(/[｜|].*/g, '').trim();
 
       if (cleanSpoken.includes(cleanTarget) || cleanTarget.includes(cleanSpoken)) {
@@ -364,7 +362,7 @@ export default function StudyScreen() {
   
   // Redux study state
   const todayCards = useSelector((state) => state.study.todayCards);
-  const isLoadingToday = useSelector((state) => state.study.isLoading);
+  const _isLoadingToday = useSelector((state) => state.study.isLoading);
   
   // Redux decks list
   const decks = useSelector((state) => state.deck.decks);
@@ -438,7 +436,7 @@ export default function StudyScreen() {
 
   // Client local states
   const [allCards, setAllCards] = useState([]);
-  const [isAllCardsLoading, setIsAllCardsLoading] = useState(false);
+  const [_isAllCardsLoading, setIsAllCardsLoading] = useState(false);
   const [isStudyStarted, setIsStudyStarted] = useState(false);
   
   // Configurator preferences

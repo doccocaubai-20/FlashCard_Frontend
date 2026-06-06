@@ -6,7 +6,7 @@ export function calculateNextReview(rating, currentInterval = 0, currentEase = 2
     );
 
     let repetitions = currentRepetitions;
-    let interval = currentInterval;
+    let interval;
 
     if (quality < 3) {
         repetitions = 0;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchAllDecks, fetchFlashcardsByDeck } from '../features/deck/deckSlice';
@@ -9,7 +9,6 @@ import {
   Timer, 
   RotateCcw, 
   Trophy, 
-  Sparkles, 
   CheckCircle2, 
   XCircle, 
   Volume2, 

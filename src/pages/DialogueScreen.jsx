@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Play, Square, Pause, Volume2, ArrowRight, ExternalLink, HelpCircle } from 'lucide-react';
+import { MessageSquare, Play, Square, Volume2, ArrowRight, ExternalLink } from 'lucide-react';
 import { dialoguesData } from '../data/dialoguesData';
 
 export default function DialogueScreen() {
@@ -14,6 +14,15 @@ export default function DialogueScreen() {
   
   const timerRef = useRef(null);
   const speechRef = useRef(null);
+
+  const stopAutoPlay = () => {
+    setIsPlayingAuto(false);
+    setPlayingIndex(-1);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+  };
 
   // Stop TTS and auto play when switching dialogues
   useEffect(() => {
@@ -76,27 +85,6 @@ export default function DialogueScreen() {
 
     speechRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-  };
-
-  const pauseAutoPlay = () => {
-    if (window.speechSynthesis) {
-      window.speechSynthesis.pause();
-    }
-  };
-
-  const resumeAutoPlay = () => {
-    if (window.speechSynthesis) {
-      window.speechSynthesis.resume();
-    }
-  };
-
-  const stopAutoPlay = () => {
-    setIsPlayingAuto(false);
-    setPlayingIndex(-1);
-    if (timerRef.current) clearTimeout(timerRef.current);
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
   };
 
   return (

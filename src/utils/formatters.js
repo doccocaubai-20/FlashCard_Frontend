@@ -17,7 +17,7 @@ export function cleanDefinition(text, maxLength = 50) {
     .replace(/【[^】]*】/g, '');
   
   // Split by '/' or ';' to get alternative meanings
-  const parts = cleaned.split(/[\/;]/).map(p => p.trim()).filter(Boolean);
+  const parts = cleaned.split(';').flatMap(p => p.split('/')).map(p => p.trim()).filter(Boolean);
   
   // Take the first 2 parts at most to keep it short
   let result = parts.slice(0, 2).join(' / ');
@@ -27,7 +27,7 @@ export function cleanDefinition(text, maxLength = 50) {
   
   // If result is empty after stripping (e.g. text was just "(động từ)"), fallback to splitting raw text
   if (!result) {
-    const rawParts = text.split(/[\/;]/).map(p => p.trim()).filter(Boolean);
+    const rawParts = text.split(';').flatMap(p => p.split('/')).map(p => p.trim()).filter(Boolean);
     result = rawParts.slice(0, 2).join(' / ');
   }
   

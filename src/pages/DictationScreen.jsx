@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Volume2, CheckCircle2, XCircle, ArrowRight, RefreshCw, Star, Trophy, Clock } from 'lucide-react';
+import { ArrowLeft, Volume2, CheckCircle2, XCircle, ArrowRight, Trophy, Clock } from 'lucide-react';
 import { studyApi } from '../services/studyApi';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { fetchDeckDetails } from '../features/deck/deckSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import hsk1Data from '../data/tu_vung_hsk1.json';
 
 export default function DictationScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const currentDeck = useSelector((state) => state.deck.currentDeck);
 
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +30,6 @@ export default function DictationScreen() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
-  const timerRef = useRef(null);
 
   // Timer Effect
   useEffect(() => {
@@ -146,17 +144,11 @@ export default function DictationScreen() {
     if (e) e.preventDefault();
     if (isAnswered || !userInput.trim()) return;
 
-    let correct = false;
     const cleanInput = userInput.trim();
-
-    if (gameMode === 'hanzi') {
-      correct = cleanInput === activeCard.hanzi;
-    } else {
-      // Pinyin check: match exact toned pinyin OR toneless comparison
-      const normalizedInput = normalizeText(cleanInput);
-      const normalizedTarget = normalizeText(activeCard.pinyin);
-      correct = normalizedInput === normalizedTarget || cleanInput.toLowerCase().replace(/\s+/g, '') === activeCard.pinyin.toLowerCase().replace(/\s+/g, '');
-    }
+    const correct = gameMode === 'hanzi'
+      ? cleanInput === activeCard.hanzi
+      : (normalizeText(cleanInput) === normalizeText(activeCard.pinyin) || 
+         cleanInput.toLowerCase().replace(/\s+/g, '') === activeCard.pinyin.toLowerCase().replace(/\s+/g, ''));
 
     setIsCorrect(correct);
     setIsAnswered(true);

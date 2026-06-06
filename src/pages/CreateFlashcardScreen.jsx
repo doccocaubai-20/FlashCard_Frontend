@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchAllDecks, createFlashcard, createDeck, importFlashcards, fetchFlashcardsByDeck } from '../features/deck/deckSlice';
-import { PlusCircle, ArrowLeft, BookOpen, Sparkles, CheckSquare, Square, Save, Loader2 } from 'lucide-react';
+import { PlusCircle, ArrowLeft, Sparkles, CheckSquare, Square, Save, Loader2 } from 'lucide-react';
 import { useDictionary } from '../hooks/useDictionary';
 import HandwritingCanvas from '../components/common/HandwritingCanvas';
 import { aiFlashcardApi } from '../services/aiFlashcardApi';
-import api from '../services/api';
 
 // ─── Tab definitions ──────────────────────────────────────────────────────────
 const TABS = [
@@ -34,7 +33,7 @@ export default function CreateFlashcardScreen() {
   const decks = useSelector((state) => state.deck.decks);
   const isLoading = useSelector((state) => state.deck.isLoading);
 
-  const { lookup, lookupMultiple, loading: isDictLoading } = useDictionary();
+  const { lookupMultiple, loading: isDictLoading } = useDictionary();
 
   const [activeTab, setActiveTab] = useState('manual');
 

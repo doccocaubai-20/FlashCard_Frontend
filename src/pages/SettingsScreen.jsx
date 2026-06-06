@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../features/auth/authSlice';
-import { Sun, Moon, Camera, Check, ShieldAlert, Upload, Loader2 } from 'lucide-react';
+import { Sun, Moon, Camera, Check, ShieldAlert, Loader2 } from 'lucide-react';
 import api from '../services/api';
 
 const predefinedAvatarSeeds = ['Felix', 'Chloe', 'Buddy', 'Buster', 'Coco', 'Angel'];
@@ -10,7 +10,7 @@ export default function SettingsScreen() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const isLoading = useSelector((state) => state.auth.isLoading);
-  const error = useSelector((state) => state.auth.error);
+  const _error = useSelector((state) => state.auth.error);
 
   // 1. Dark Mode State and Logic
   const [isDark, setIsDark] = useState(() => {

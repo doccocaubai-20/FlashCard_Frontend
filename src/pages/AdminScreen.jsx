@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 import {
   Users, BookOpen, Layers, Activity, Shield, Trash2, Plus,
-  Sparkles, Globe, Lock, Server, Filter, X, ChevronDown,
+  Sparkles, Globe, Lock, Server, Filter, X,
   RefreshCw, UserCog,
 } from 'lucide-react';
 

@@ -6,8 +6,7 @@ import {
   PenTool, 
   MessageSquare, 
   Languages, 
-  ArrowRight,
-  Sparkles
+  ArrowRight
 } from 'lucide-react';
 
 export default function StudyHubScreen() {

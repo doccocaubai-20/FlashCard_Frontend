@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import HandwritingCanvas from '../components/common/HandwritingCanvas';
 import { useDictionary } from '../hooks/useDictionary';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
-import { BookOpen, Star, Sparkles, Volume2, HelpCircle, ArrowRight } from 'lucide-react';
+import { BookOpen, Star, Volume2, ArrowRight } from 'lucide-react';
 
 export default function FreeWriteScreen() {
   const { lookupMultiple, loading } = useDictionary();
@@ -31,14 +31,14 @@ export default function FreeWriteScreen() {
   const [quizCurrentStroke, setQuizCurrentStroke] = useState(0);
   const [quizReport, setQuizReport] = useState(null); // { score, mistakes, grade, feedback }
 
-  const loadFavorites = async () => {
+  async function loadFavorites() {
     try {
       const res = await favoriteWordsApi.getFavorites();
       setFavorites(res.data || []);
     } catch (err) {
       console.error('Failed to load favorites in free-write:', err);
     }
-  };
+  }
 
   useEffect(() => {
     loadFavorites();
@@ -92,7 +92,7 @@ export default function FreeWriteScreen() {
     });
   };
 
-  const getSortScore = (item, queryLower) => {
+  function getSortScore(item, queryLower) {
     const s = (item.s || '').toLowerCase();
     const t = (item.t || '').toLowerCase();
     const p = (item.p || '').toLowerCase();
@@ -132,9 +132,9 @@ export default function FreeWriteScreen() {
     score -= s.length * 10;
 
     return score;
-  };
+  }
 
-  const segmentPinyin = async (s) => {
+  async function segmentPinyin(s) {
     if (!s) return [];
     const memo = new Map();
     const helper = async (startIndex) => {
@@ -157,9 +157,9 @@ export default function FreeWriteScreen() {
       return null;
     };
     return (await helper(0)) || [];
-  };
+  }
 
-  const resolveQueryToWord = async (q) => {
+  async function resolveQueryToWord(q) {
     const cleanQ = (q || '').trim();
     if (!cleanQ) return null;
 
@@ -272,9 +272,9 @@ export default function FreeWriteScreen() {
     }
 
     return null;
-  };
+  }
 
-  const handleSearch = async (searchQuery) => {
+  async function handleSearch(searchQuery) {
     if (loading) return;
     const q = (searchQuery || '').trim();
     if (!q) {
@@ -341,7 +341,7 @@ export default function FreeWriteScreen() {
       setBreakdown([]);
       setCompoundSv('');
     }
-  };
+  }
 
   const handleSpeak = () => {
     if (!selectedWord || !window.speechSynthesis) return;
@@ -396,7 +396,7 @@ export default function FreeWriteScreen() {
     writerRef.current.animateCharacter();
   };
 
-  const handleQuiz = () => {
+  function handleQuiz() {
     if (!writerRef.current) return;
     writerRef.current.cancelQuiz();
     setQuizScore(100);
@@ -448,7 +448,7 @@ export default function FreeWriteScreen() {
         setMode('idle');
       }
     });
-  };
+  }
   const handleReset = () => {
     if (!writerRef.current) return;
     writerRef.current.cancelQuiz();

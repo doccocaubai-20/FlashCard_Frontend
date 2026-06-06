@@ -9105,7 +9105,637 @@ export const grammarData = [
     "id": "g453"
   },
   {
-    "id": "g454",
+    "level": "HSK 5",
+    "title": "Phân biệt 如何 và 怎么",
+    "formula": "Subj. + 如何/怎么 + Verb + (+ Obj.)",
+    "explanation": "Giống: Cả 如何 và 怎么 đều là đại từ, dùng để hỏi về phương thức hoặc thăm dò ý kiến. Khác: 1. 如何 dùng trong văn viết, 怎么 dùng trong văn nói. 2. 如何 không thể dùng để hỏi nguyên nhân, 怎么 có thể dùng trong câu hỏi nguyên nhân. 3. 如何 có thể dùng ở cuối câu biểu thị sự hỏi thăm tình hình, trưng cầu ý kiến; 怎么 có thể dùng ở đầu câu để biểu thị sự ngạc nhiên, kinh ngạc.",
+    "examples": [
+      {
+        "hanzi": "只有知道如何停止的人,才知道如何高速前进。",
+        "pinyin": "zhǐyǒu zhīdào rúhé tíngzhǐ de rén, cái zhīdào rúhé gāosù qiánjìn.",
+        "meaning": "Chỉ có người biết cách dừng lại mới biết cách tiến nhanh."
+      },
+      {
+        "hanzi": "该如何爱护我们的地球？",
+        "pinyin": "gāi rúhé àihù wǒmen de dìqiú?",
+        "meaning": "Nên làm thế nào để bảo vệ trái đất của chúng ta?"
+      },
+      {
+        "hanzi": "你今天是怎么来的？",
+        "pinyin": "nǐ jīntiān shì zěnme lái de?",
+        "meaning": "Hôm nay bạn đến bằng cách nào?"
+      },
+      {
+        "hanzi": "今天怎么这么冷？",
+        "pinyin": "jīntiān zěnme zhème lěng?",
+        "meaning": "Hôm nay sao lạnh thế?"
+      },
+      {
+        "hanzi": "最近身体如何？",
+        "pinyin": "zuìjìn shēntǐ rúhé?",
+        "meaning": "Gần đây sức khỏe thế nào?"
+      },
+      {
+        "hanzi": "怎么，你不认识我了？",
+        "pinyin": "zěnme, nǐ bù rènshi wǒ le?",
+        "meaning": "Sao, bạn không nhận ra tôi à?"
+      }
+    ],
+    "id": "g454"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Phân biệt 美丽 và 优美",
+    "formula": "Subj. + 美丽/优美 + Noun",
+    "explanation": "Giống: Đều là tính từ dùng để miêu tả phong cảnh, môi trường... Ví dụ: 济南是一座风景美丽/优美的城市. Khác: 美丽 thường dùng để mô tả tướng mạo, dáng người, ăn mặc... đẹp, thiên về cảm nhận thị giác, và có cách dùng tu từ mang ý nghĩa tốt đẹp, cao quý. 优美 thường thiên về mô tả hành động, hình tượng... đem đến cảm giác tốt đẹp, có thể mô tả phi thị giác (nghe), và không có cách dùng tu từ.",
+    "examples": [
+      {
+        "hanzi": "她有一双美丽的大眼睛。",
+        "pinyin": "tā yǒu yī shuāng měilì de dà yǎnjīng.",
+        "meaning": "Cô ấy có một đôi mắt to đẹp."
+      },
+      {
+        "hanzi": "演员们的动作十分优美。",
+        "pinyin": "yǎnyuánmen de dòngzuò shífēn yōuměi.",
+        "meaning": "Động tác của các diễn viên rất ưu mỹ."
+      },
+      {
+        "hanzi": "雨后天空中出现了一道美丽的彩虹。",
+        "pinyin": "yǔ hòu tiānkōng zhōng chūxiàn le yī dào měilì de cǎihóng.",
+        "meaning": "Sau cơn mưa, trên bầu trời xuất hiện một cầu vồng đẹp."
+      },
+      {
+        "hanzi": "一进院子就听到了丽丽那优美的歌声。",
+        "pinyin": "yī jìn yuànzi jiù tīng dào le Lì Lì nà yōuměi de gēshēng.",
+        "meaning": "Vừa vào sân đã nghe thấy tiếng hát ưu mỹ của Lili."
+      },
+      {
+        "hanzi": "他有一颗美丽善良的心。",
+        "pinyin": "tā yǒu yī kē měilì shànliáng de xīn.",
+        "meaning": "Anh ấy có một trái tim đẹp đẽ và lương thiện."
+      }
+    ],
+    "id": "g455"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Từ vựng 纷纷",
+    "formula": "Verb / Adj. + 纷纷 / 纷纷 + Verb",
+    "explanation": "Từ '纷纷' có thể là tính từ, đứng sau động từ hoặc tính từ để mô tả (ngôn luận, những thứ rơi rụng xuống) nhiều mà hỗn loạn. Ngoài ra, '纷纷' cũng có thể làm phó từ, đứng trước động từ, biểu thị (nhiều người hoặc sự vật) liên tục tiếp diễn.",
+    "examples": [
+      {
+        "hanzi": "秋风刮起，落叶纷纷。",
+        "pinyin": "qiūfēng guā qǐ, luòyè fēnfēn.",
+        "meaning": "Gió thu nổi lên, lá rụng tới tấp."
+      },
+      {
+        "hanzi": "他救起了妻子，孩子却被水冲走了。事后，人们议论纷纷。",
+        "pinyin": "tā jiù qǐ le qīzi, háizi què bèi shuǐ chōng zǒu le. shìhòu, rénmen yìlùn fēnfēn.",
+        "meaning": "Anh ấy cứu được vợ, nhưng đứa con lại bị nước cuốn trôi. Sau đó, mọi người bàn tán sôi nổi."
+      },
+      {
+        "hanzi": "除掉“夕”以后，百姓纷纷对七郎表达谢意。",
+        "pinyin": "chú diào “xī” yǐhòu, bǎixìng fēnfēn duì qī láng biǎodá xièyì.",
+        "meaning": "Sau khi trừ được 'Tịch', dân chúng lần lượt bày tỏ lòng biết ơn đối với Thất Lang."
+      }
+    ],
+    "id": "g456"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Phân biệt 彼此 và 互相",
+    "formula": "Subj. + 彼此/互相 + Verb + (+ Obj.)",
+    "explanation": "Giống: Đều có nghĩa là cả hai bên có cùng một hành vi, hành động. Khác: 彼此 là đại từ, có thể đứng trước động từ làm chủ ngữ, có thể làm tân ngữ, định ngữ, và có thể trùng điệp. 互相 là phó từ, khi đứng trước động từ thì đằng trước phải thêm chủ ngữ, không thể làm tân ngữ hoặc định ngữ, và không thể trùng điệp.",
+    "examples": [
+      {
+        "hanzi": "我们彼此都很理解对方。",
+        "pinyin": "wǒmen bǐcǐ dōu hěn lǐjiě duìfāng.",
+        "meaning": "Chúng tôi đều rất hiểu đối phương."
+      },
+      {
+        "hanzi": "我们互相都很理解对方。",
+        "pinyin": "wǒmen hùxiāng dōu hěn lǐjiě duìfāng.",
+        "meaning": "Chúng tôi đều rất hiểu đối phương."
+      },
+      {
+        "hanzi": "相处久了，彼此既然可以从表情，声音和行为举止中了解对方的意思。",
+        "pinyin": "xiāngchǔ jiǔ le, bǐcǐ jìrán kěyǐ cóng biǎoqíng, shēngyīn hé xíngwéi jǔzhǐ zhōng liǎojiě duìfāng de yìsi.",
+        "meaning": "Ở chung lâu rồi, hai bên đã có thể hiểu ý đối phương từ biểu cảm, giọng nói và hành vi cử chỉ."
+      },
+      {
+        "hanzi": "好朋友应该互相帮助。",
+        "pinyin": "hǎo péngyou yīnggāi hùxiāng bāngzhù.",
+        "meaning": "Bạn tốt nên giúp đỡ lẫn nhau."
+      },
+      {
+        "hanzi": "我们是最好的朋友，不分彼此。",
+        "pinyin": "wǒmen shì zuì hǎo de péngyou, bù fēn bǐcǐ.",
+        "meaning": "Chúng tôi là bạn tốt nhất, không phân biệt nhau."
+      },
+      {
+        "hanzi": "我们彼此的爱好相同。",
+        "pinyin": "wǒmen bǐcǐ de àihào xiāngtóng.",
+        "meaning": "Sở thích của hai chúng tôi giống nhau."
+      },
+      {
+        "hanzi": "咱们俩彼此彼此，我画的比你好不了多少。",
+        "pinyin": "zánmen liǎ bǐcǐ bǐcǐ, wǒ huà de bǐ nǐ hǎo bù liǎo duōshao.",
+        "meaning": "Hai chúng ta cũng như nhau thôi, tôi vẽ cũng chẳng hơn bạn được bao nhiêu."
+      }
+    ],
+    "id": "g457"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Phân biệt 激烈 và 强烈",
+    "formula": "Subj. + 激烈/强烈 + (+ Noun)",
+    "explanation": "Giống: Đều là tính từ có nghĩa là mạnh mẽ, lợi hại. Khác: 激烈 thiên về nghĩa kịch liệt, gay gắt, khẩn trương, thường mô tả về ngôn luận, cảm xúc, trong trận đấu hoặc đấu tranh; 强烈 thiên về nghĩa mạnh mẽ có lực, thường mô tả ánh sáng, dòng điện, màu sắc, mùi vị hoặc mô tả tình cảm, tư tưởng, nguyện vọng của con người.",
+    "examples": [
+      {
+        "hanzi": "我不顾父母的激烈/强烈反对，偷偷地报考了表演专业。",
+        "pinyin": "wǒ bù gù fùmǔ de jīliè/qiángliè fǎnduì, tōutōu de bàokǎo le biǎoyǎn zhuānyè.",
+        "meaning": "Tôi bất chấp sự phản đối kịch liệt/mạnh mẽ của bố mẹ, lén lút đăng ký thi chuyên ngành biểu diễn."
+      },
+      {
+        "hanzi": "人类最早什么时候用火，一直是学者激烈争论的问题。",
+        "pinyin": "rénlèi zuìzǎo shénme shíhou yòng huǒ, yīzhí shì xuézhě jīliè zhēnglùn de wèntí.",
+        "meaning": "Con người sử dụng lửa sớm nhất từ khi nào, luôn là vấn đề tranh luận kịch liệt của các học giả."
+      },
+      {
+        "hanzi": "文章发展以后立刻引起了读者的强烈反响。",
+        "pinyin": "wénzhāng fāzhǎn yǐhòu lìkè yǐnqǐ le dúzhě de qiángliè fǎnxiǎng.",
+        "meaning": "Sau khi bài viết được phát triển, lập tức gây ra phản ứng mạnh mẽ từ độc giả."
+      },
+      {
+        "hanzi": "人在激烈运动时，会出很多汗。",
+        "pinyin": "rén zài jīliè yùndòng shí, huì chū hěnduō hàn.",
+        "meaning": "Khi con người vận động mạnh, sẽ ra nhiều mồ hôi."
+      },
+      {
+        "hanzi": "这里夏天尽管阳光的照射很强烈，但白天气温很少超过35°C。",
+        "pinyin": "zhèlǐ xiàtiān jǐnguǎn yángguāng de zhàoshè hěn qiángliè, dàn báitiān qìwēn hěn shǎo chāoguò 35°C.",
+        "meaning": "Ở đây mùa hè mặc dù ánh nắng chiếu rất mạnh, nhưng nhiệt độ ban ngày hiếm khi vượt quá 35°C."
+      }
+    ],
+    "id": "g458"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Phân biệt 通常 và 常常",
+    "formula": "Subj. + 通常/常常 + Verb + (+ Obj.)",
+    "explanation": "Giống: Đều biểu thị thường phát sinh những hành động, động tác giống nhau, ở một vài câu có thể hoán đổi cho nhau. Khác: 通常 nhấn mạnh hành động có quy luật, có thể làm định ngữ (tính từ); 常常 nhấn mạnh hành động nhiều lần xuất hiện, là phó từ không thể làm định ngữ.",
+    "examples": [
+      {
+        "hanzi": "我通常/常常在学校外面那个超市买东西。",
+        "pinyin": "wǒ tōngcháng/chángcháng zài xuéxiào wàimiàn nàge chāoshì mǎi dōngxi.",
+        "meaning": "Tôi thường mua đồ ở siêu thị bên ngoài trường học."
+      },
+      {
+        "hanzi": "有钱人家的，通常是由好几座四合院并列组成的。",
+        "pinyin": "yǒu qián rénjiā de, tōngcháng shì yóu hǎo jǐ zuò sìhéyuàn bìngliè zǔchéng de.",
+        "meaning": "Nhà giàu có thường được tạo thành từ nhiều tứ hợp viện xếp song song."
+      },
+      {
+        "hanzi": "他成绩很好，常常受到表扬。",
+        "pinyin": "tā chéngjì hěn hǎo, chángcháng shòudào biǎoyáng.",
+        "meaning": "Anh ấy thành tích rất tốt, thường xuyên được khen ngợi."
+      },
+      {
+        "hanzi": "我们通常的做法都是这样的。",
+        "pinyin": "wǒmen tōngcháng de zuòfǎ dōu shì zhèyàng de.",
+        "meaning": "Cách làm thông thường của chúng tôi đều như vậy."
+      },
+      {
+        "hanzi": "他常常去上海出差，对上海很熟悉。",
+        "pinyin": "tā chángcháng qù Shànghǎi chūchāi, duì Shànghǎi hěn shúxī.",
+        "meaning": "Anh ấy thường xuyên đi công tác Thượng Hải, rất quen thuộc với Thượng Hải."
+      }
+    ],
+    "id": "g459"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Từ vựng 个别",
+    "formula": "个别 + Noun",
+    "explanation": "Từ vựng '个别' là tính từ, có hai nghĩa: (1) 'từng cái, mỗi cái' (单个，各个), ví dụ: 他经常采取个别谈话的方式了解情况和解决问题; (2) biểu thị 'cực kỳ ít, hiếm có', ví dụ: 除了个别人以外，多数人体重的增加会从周六开始.",
+    "examples": [
+      {
+        "hanzi": "他经常采取个别谈话的方式了解情况和解决问题。",
+        "pinyin": "tā jīngcháng cǎiqǔ gèbié tánhuà de fāngshì liǎojiě qíngkuàng hé jiějué wèntí.",
+        "meaning": "Anh ấy thường áp dụng phương thức nói chuyện riêng lẻ để hiểu tình hình và giải quyết vấn đề."
+      },
+      {
+        "hanzi": "教练针对他的技术特点进行了个别训练，达到了比较好的效果。",
+        "pinyin": "jiàoliàn zhēnduì tā de jìshù tèdiǎn jìnxíng le gèbié xùnliàn, dádào le bǐjiào hǎo de xiàoguǒ.",
+        "meaning": "Huấn luyện viên đã tiến hành huấn luyện riêng lẻ dựa trên đặc điểm kỹ thuật của anh ấy, đạt được hiệu quả khá tốt."
+      },
+      {
+        "hanzi": "除了个别人以外，多数人体重的增加会从周六开始。",
+        "pinyin": "chúle gèbié rén yǐwài, duōshù rén tǐzhòng de zēngjiā huì cóng zhōuliù kāishǐ.",
+        "meaning": "Ngoại trừ một số ít người, đa số mọi người việc tăng cân sẽ bắt đầu từ thứ Bảy."
+      }
+    ],
+    "id": "g460"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Phân biệt 临时 và 暂时",
+    "formula": "Subj. + 临时/暂时 + Verb + (+ Obj.)",
+    "explanation": "Giống: Đều có nghĩa là trong một khoảng thời gian ngắn. Khác: 临时 biểu thị gần đến lúc sự việc phát sinh, có thể làm từ chỉ thuộc tính (thời gian ngắn, không chính thức); 暂时 biểu thị một khoảng thời gian gần đây không chính xác, không có nghĩa như 临时 và không dùng làm từ chỉ thuộc tính.",
+    "examples": [
+      {
+        "hanzi": "没找到满意的房子前，我临时/暂时借住在朋友家里。",
+        "pinyin": "méi zhǎodào mǎnyì de fángzi qián, wǒ línshí/zànshí jiè zhù zài péngyou jiā lǐ.",
+        "meaning": "Trước khi tìm được nhà ưng ý, tôi tạm thời ở nhờ nhà bạn."
+      },
+      {
+        "hanzi": "早到了30分钟，所以我临时决定去旁边的书店看看。",
+        "pinyin": "zǎo dào le sānshí fēnzhōng, suǒyǐ wǒ línshí juédìng qù pángbiān de shūdiàn kànkan.",
+        "meaning": "Đến sớm 30 phút, nên tôi quyết định tạm thời sang hiệu sách bên cạnh xem."
+      },
+      {
+        "hanzi": "这套房子我很喜欢，暂时还不打算买掉。",
+        "pinyin": "zhè tào fángzi wǒ hěn xǐhuān, zànshí hái bù dǎsuàn mǎi diào.",
+        "meaning": "Căn nhà này tôi rất thích, tạm thời còn chưa định bán."
+      },
+      {
+        "hanzi": "麻烦你春节后帮刘方的女儿找份临时工作。",
+        "pinyin": "máfan nǐ chūnjié hòu bāng Liú Fāng de nǚ'ér zhǎo fèn línshí gōngzuò.",
+        "meaning": "Phiền bạn sau Tết giúp con gái Lưu Phương tìm một công việc tạm thời."
+      }
+    ],
+    "id": "g461"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Phân biệt 记录 và 纪录",
+    "formula": "Subj. + 记录/纪录 + (+ Obj.)",
+    "explanation": "Giống: Cả hai từ đều liên quan đến việc ghi lại thông tin. Khác: 记录 có thể làm động từ (ghi chép lại lời nói hoặc sự việc) hoặc danh từ (tài liệu ghi chép hoặc người ghi chép). 纪录 là danh từ, chỉ thành tích tốt nhất trong một khoảng thời gian hoặc phạm vi nhất định, hoặc sự kiện có giá trị tin tức.",
+    "examples": [
+      {
+        "hanzi": "我已经把这次会议的内容详细地记录下来了。",
+        "pinyin": "wǒ yǐjīng bǎ zhè cì huìyì de nèiróng xiángxì de jìlù xiàlái le.",
+        "meaning": "Tôi đã ghi chép lại chi tiết nội dung của cuộc họp lần này."
+      },
+      {
+        "hanzi": "他在本次比赛中打破了世界纪录。",
+        "pinyin": "tā zài běn cì bǐsài zhōng dǎpò le shìjiè jìlù.",
+        "meaning": "Anh ấy đã phá vỡ kỷ lục thế giới trong cuộc thi lần này."
+      },
+      {
+        "hanzi": "第二天还书时再把记录一个一个地画掉。",
+        "pinyin": "dì èr tiān huán shū shí zài bǎ jìlù yī gè yī gè de huà diào.",
+        "meaning": "Ngày hôm sau khi trả sách thì lại gạch bỏ từng cái ghi chép một."
+      },
+      {
+        "hanzi": "小刘，你来做这次会议的记录。",
+        "pinyin": "xiǎo liú, nǐ lái zuò zhè cì huìyì de jìlù.",
+        "meaning": "Tiểu Lưu, bạn làm người ghi chép cho cuộc họp lần này."
+      },
+      {
+        "hanzi": "学校带孩子们看了一部有教育意义的纪录片。",
+        "pinyin": "xuéxiào dài háizimen kàn le yī bù yǒu jiàoyù yìyì de jìlù piàn.",
+        "meaning": "Trường học đã dẫn các em xem một bộ phim tài liệu có ý nghĩa giáo dục."
+      }
+    ],
+    "id": "g462"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Phân biệt 严肃 và 严格",
+    "formula": "Subj. + 严肃/严格 + (+ Obj.)",
+    "explanation": "Giống: Đều là tính từ, biểu thị sự nghiêm túc, nghiêm khắc, không lơ là nhưng phạm vi sử dụng của cả hai lại khác nhau rất lớn, không thể thay thế dùng cho nhau.\nKhác:\n- 严肃: Nhấn mạnh tác phong, thái độ, và các phương diện khác rất nghiêm túc; cũng biểu thị thần sắc, bầu không khí, làm cho người khác vừa tôn trọng vừa sợ hãi.\n- 严格: Biểu thị khi tuân thủ chế độ, hoặc nắm vững tiêu chuẩn nghiêm khắc, không lơ là; không có ý nghĩa về thần sắc hay bầu không khí.",
+    "examples": [
+      {
+        "hanzi": "小林这件事影响恶劣，我们对他一定要严肃批评。",
+        "pinyin": "xiǎo lín zhè jiàn shì yǐngxiǎng èliè, wǒmen duì tā yīdìng yào yánsù pīpíng.",
+        "meaning": "Việc của Tiểu Lâm ảnh hưởng xấu, chúng ta nhất định phải phê bình nghiêm túc đối với anh ấy."
+      },
+      {
+        "hanzi": "小华妈妈，平时对孩子教育很严格。",
+        "pinyin": "xiǎo huá māma, píngshí duì háizi jiàoyù hěn yángé.",
+        "meaning": "Mẹ của Tiểu Hoa, bình thường giáo dục con rất nghiêm khắc."
+      },
+      {
+        "hanzi": "一句幽默的笑话可以让紧张严肃的气氛变得轻松愉快。",
+        "pinyin": "yī jù yōumò de xiàohua kěyǐ ràng jǐnzhāng yánsù de qìfēn biàn dé qīngsōng yúkuài.",
+        "meaning": "Một câu chuyện cười hài hước có thể làm cho bầu không khí căng thẳng nghiêm túc trở nên nhẹ nhàng vui vẻ."
+      }
+    ],
+    "id": "g463"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Phân biệt 总算 và 终于",
+    "formula": "Subj. + 总算/终于 + Verb / Adj. + (+ Obj.)",
+    "explanation": "Giống: Cả hai đều là phó từ, biểu thị trải qua sự biến hóa, thay đổi trong thời gian dài hoặc sau khi chờ đợi xuất hiện một tình huống nào đó.\nKhác:\n- 总算: Kết quả thường là tình huống hy vọng sẽ phát sinh; cũng có thể biểu thị về mặt cơ bản có thể vượt qua được.\n- 终于: Kết quả hầu hết là tình huống hy vọng nhưng có thể là tình huống không như ý muốn; không có ý nghĩa và cách dùng như 总算 ở điểm thứ hai.",
+    "examples": [
+      {
+        "hanzi": "这青年后来努力学艺，总算/终于有了一点儿小名气。",
+        "pinyin": "zhè qīngnián hòulái nǔlì xué yì, zǒngsuàn/zhōngyú yǒu le yīdiǎnr xiǎo míngqì.",
+        "meaning": "Người thanh niên này sau đó nỗ lực học nghề, cuối cùng cũng có một chút danh tiếng nhỏ."
+      },
+      {
+        "hanzi": "到北京的第二年，我总算找到了一份比较满意的工作。",
+        "pinyin": "dào běijīng de dì èr nián, wǒ zǒngsuàn zhǎodào le yī fèn bǐjiào mǎnyì de gōngzuò.",
+        "meaning": "Đến năm thứ hai ở Bắc Kinh, tôi cuối cùng cũng tìm được một công việc tương đối hài lòng."
+      },
+      {
+        "hanzi": "尽管他也很想去，但他终于还是放弃了留学的打算。",
+        "pinyin": "jǐnguǎn tā yě hěn xiǎng qù, dàn tā zhōngyú háishì fàngqì le liúxué de dǎsuàn.",
+        "meaning": "Mặc dù anh ấy cũng rất muốn đi, nhưng cuối cùng anh ấy vẫn từ bỏ ý định du học."
+      },
+      {
+        "hanzi": "他才学了半年外语，能说成这样，总算不错了。",
+        "pinyin": "tā cái xué le bàn nián wàiyǔ, néng shuō chéng zhèyàng, zǒngsuàn bùcuò le.",
+        "meaning": "Anh ấy mới học ngoại ngữ được nửa năm, có thể nói được như vậy, coi như là khá rồi."
+      }
+    ],
+    "id": "g464"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Cấu trúc: Động từ + 下来",
+    "formula": "Verb + 下来",
+    "explanation": "Cấu trúc 'Động từ + 下来' biểu thị sự hoàn thành của hành động, đôi khi bao gồm ý nghĩa thoát ly hoặc cố định.",
+    "examples": [
+      {
+        "hanzi": "你的论文大概什么时候发表？定下来了吗？",
+        "pinyin": "nǐ de lùnwén dàgài shénme shíhou fābiǎo? dìng xiàlái le ma?",
+        "meaning": "Bài luận văn của bạn dự định phát hành khi nào? Đã quyết định chưa?"
+      },
+      {
+        "hanzi": "你看，那张纸是从这本书里撕下来的。",
+        "pinyin": "nǐ kàn, nà zhāng zhǐ shì cóng zhè běn shū lǐ sī xiàlái de.",
+        "meaning": "Anh xem, tờ giấy đó là xé ra từ cuốn sách này."
+      },
+      {
+        "hanzi": "几局下来，基本上都是不到10 分钟我就败下阵来。",
+        "pinyin": "jǐ jú xiàlái, jīběn shàng dōu shì bú dào shí fēnzhōng wǒ jiù bài xià zhèn lái.",
+        "meaning": "Mấy ván chơi xong, cơ bản đều chưa đến 10 phút là tôi đã thua cuộc."
+      }
+    ],
+    "id": "g465"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Phân biệt 反应 và 反映",
+    "formula": "Subj. + 反应/反映 + (+ Obj.)",
+    "explanation": "Giống: Đồng âm, đều vừa có thể làm động từ vừa có thể làm danh từ. Khác: 1. 反应 là động từ chỉ chịu kích thích của ngoại cảnh mà dẫn đến hành động hoặc biến hóa; là danh từ chỉ những hành động này, những sự thay đổi này. 反映 là đem tình hình hoặc ý kiến báo cáo với cấp trên. 2. 反映 còn có thể chỉ phô bày ra bản chất của sự vật. 3. 反应 không thể kết hợp với tân ngữ; 反映 có thể kết hợp với tân ngữ.",
+    "examples": [
+      {
+        "hanzi": "这时人体精力下降，反应减慢，情绪地下，利于人体进入甜美的梦乡。",
+        "pinyin": "zhè shí réntǐ jīnglì xiàjiàng, fǎnyìng jiǎn màn, qíngxù dìxià, lìyú réntǐ jìnrù tiánměi de mèngxiāng.",
+        "meaning": "Lúc này cơ thể con người suy giảm năng lượng, phản ứng chậm lại, tâm trạng thấp, có lợi cho cơ thể bước vào giấc mơ ngọt ngào."
+      },
+      {
+        "hanzi": "请放心，我会把你的意见反映给学校。",
+        "pinyin": "qǐng fàngxīn, wǒ huì bǎ nǐ de yìjiàn fǎnyìng gěi xuéxiào.",
+        "meaning": "Hãy yên tâm, tôi sẽ phản ánh ý kiến của bạn lên nhà trường."
+      },
+      {
+        "hanzi": "谈话可以反映一个人的职业特点。",
+        "pinyin": "tánhuà kěyǐ fǎnyìng yī gè rén de zhíyè tèdiǎn.",
+        "meaning": "Cuộc nói chuyện có thể phản ánh đặc điểm nghề nghiệp của một người."
+      },
+      {
+        "hanzi": "他反应得非常快，一点儿也不用思考。",
+        "pinyin": "tā fǎnyìng de fēicháng kuài, yīdiǎnr yě bùyòng sīkǎo.",
+        "meaning": "Anh ấy phản ứng rất nhanh, không cần suy nghĩ chút nào."
+      },
+      {
+        "hanzi": "这个电影反映了中国年轻一代的新变化。",
+        "pinyin": "zhège diànyǐng fǎnyìng le zhōngguó niánqīng yīdài de xīn biànhuà.",
+        "meaning": "Bộ phim này phản ánh những thay đổi mới của thế hệ trẻ Trung Quốc."
+      }
+    ],
+    "id": "g466"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Thán từ 嗯",
+    "formula": "嗯 (ńg / ňg / ǹg)",
+    "explanation": "Thán từ '嗯' có ba cách đọc và ý nghĩa khác nhau: (1) Đọc là 'ńg' biểu thị nghi vấn, giống như 'hả?' hoặc 'gì?'. (2) Đọc là 'ňg' biểu thị sự bất ngờ hoặc cho rằng điều gì đó không nên như vậy. (3) Đọc là 'ǹg' biểu thị sự đáp ứng hoặc chấp thuận, giống như 'ừ' hoặc 'vâng'.",
+    "examples": [
+      {
+        "hanzi": "嗯？不是28号，难道是我记错了？",
+        "pinyin": "ńg? bù shì 28 hào, nándào shì wǒ jì cuò le?",
+        "meaning": "Hả? Không phải ngày 28 à, chẳng lẽ tôi nhớ nhầm rồi?"
+      },
+      {
+        "hanzi": "嗯？人都去哪了？",
+        "pinyin": "ńg? rén dōu qù nǎ le?",
+        "meaning": "Hả? Mọi người đi đâu hết rồi?"
+      },
+      {
+        "hanzi": "嗯！你的房间为什么这么冷？",
+        "pinyin": "ňg! nǐ de fángjiān wèishénme zhème lěng?",
+        "meaning": "Ơ! Sao phòng của cậu lạnh thế?"
+      },
+      {
+        "hanzi": "嗯！你怎么还没走啊？",
+        "pinyin": "ňg! nǐ zěnme hái méi zǒu a?",
+        "meaning": "Ơ! Sao cậu vẫn chưa đi à?"
+      },
+      {
+        "hanzi": "嗯，如果您心情好，我就说件事；心情不好就改天再说。",
+        "pinyin": "ǹg, rúguǒ nín xīnqíng hǎo, wǒ jiù shuō jiàn shì; xīnqíng bù hǎo jiù gǎitiān zài shuō.",
+        "meaning": "Vâng, nếu tâm trạng ngài tốt, tôi sẽ nói một chuyện; nếu tâm trạng không tốt thì hôm khác nói."
+      },
+      {
+        "hanzi": "嗯，没问题，我这就给他送去。",
+        "pinyin": "ǹg, méi wèntí, wǒ zhè jiù gěi tā sòng qù.",
+        "meaning": "Ừ, không vấn đề, tôi sẽ mang cho anh ấy ngay."
+      }
+    ],
+    "id": "g467"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Phân biệt 轻易 và 容易",
+    "formula": "Subj. + 轻易/容易 + Verb + (+ Obj.)",
+    "explanation": "Giống: Khi làm trạng ngữ, đều biểu thị làm không tốn công, khó khăn. Khác: 轻易 thiên về hành sự thoải mái, không tốn sức lực, thường làm trạng ngữ; còn là phó từ biểu thị tùy tiện. 容易 ngoài biểu thị sự việc đơn giản không khó làm, còn biểu thị nội dung sự việc không phức tạp, có thể độc lập làm vị ngữ; còn biểu thị khả năng xảy ra sự thay đổi nào đó.",
+    "examples": [
+      {
+        "hanzi": "她从小学习就好，高考时很轻易地考上了名牌大学，接着又读了研究生。",
+        "pinyin": "tā cóng xiǎo xuéxí jiù hǎo, gāokǎo shí hěn qīngyì de kǎo shàng le míngpái dàxué, jiēzhe yòu dú le yánjiūshēng.",
+        "meaning": "Cô ấy từ nhỏ học tập đã tốt, khi thi đại học rất dễ dàng thi đỗ vào trường đại học danh tiếng, tiếp đó lại học lên nghiên cứu sinh."
+      },
+      {
+        "hanzi": "今天的考试特别容易，我半个小时就答完了。",
+        "pinyin": "jīntiān de kǎoshì tèbié róngyì, wǒ bàn ge xiǎoshí jiù dá wán le.",
+        "meaning": "Bài thi hôm nay đặc biệt dễ, tôi nửa tiếng đã làm xong."
+      },
+      {
+        "hanzi": "他最近心情不好，容易发脾气。",
+        "pinyin": "tā zuìjìn xīnqíng bù hǎo, róngyì fā píqì.",
+        "meaning": "Gần đây anh ấy tâm trạng không tốt, dễ nổi cáu."
+      },
+      {
+        "hanzi": "我爱书，无论走到哪里，我从不轻易放过书摊、书店。",
+        "pinyin": "wǒ ài shū, wúlùn zǒu dào nǎlǐ, wǒ cóng bù qīngyì fàngguò shūtān, shūdiàn.",
+        "meaning": "Tôi yêu sách, bất kể đi đến đâu, tôi không bao giờ tùy tiện bỏ qua các quầy sách, hiệu sách."
+      }
+    ],
+    "id": "g468"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Cấu trúc: Động từ + 过",
+    "formula": "Verb + 过",
+    "explanation": "Cấu trúc 'Động từ + 过' biểu thị người hoặc vật thể thông qua động tác để thay đổi phương hướng hoặc di chuyển vị trí.",
+    "examples": [
+      {
+        "hanzi": "他转过身，一句话也不说。",
+        "pinyin": "tā zhuǎn guò shēn, yī jù huà yě bù shuō.",
+        "meaning": "Anh ấy quay người lại, không nói một lời nào."
+      },
+      {
+        "hanzi": "它们只要有时间，就会情不自禁地背过头去，反复地啄着羽毛，······",
+        "pinyin": "tāmen zhǐyào yǒu shíjiān, jiù huì qíng bù zì jīn de bèi guò tóu qù, fǎnfù de zhuó zhe yǔmáo, ......",
+        "meaning": "Chúng chỉ cần có thời gian, sẽ không tự chủ được mà quay đầu đi, mổ đi mổ lại lông vũ, ......"
+      },
+      {
+        "hanzi": "接过书的那一刻，老王突然明白了自己失败的原因。",
+        "pinyin": "jiē guò shū de nà yī kè, lǎo wáng tūrán míngbai le zìjǐ shībài de yuányīn.",
+        "meaning": "Khoảnh khắc nhận cuốn sách, ông Vương đột nhiên hiểu ra nguyên nhân thất bại của mình."
+      },
+      {
+        "hanzi": "短短的几分钟里，我的脑子里闪过了很多想法。",
+        "pinyin": "duǎn duǎn de jǐ fēn zhōng lǐ, wǒ de nǎozi lǐ shǎn guò le hěn duō xiǎngfǎ.",
+        "meaning": "Trong vài phút ngắn ngủi, trong đầu tôi lóe lên rất nhiều suy nghĩ."
+      }
+    ],
+    "id": "g469"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Cấu trúc: Động từ + 开",
+    "formula": "Verb + 开",
+    "explanation": "Cấu trúc 'Động từ + 开' biểu thị hành động mở ra, giãn ra hoặc tách ra.",
+    "examples": [
+      {
+        "hanzi": "猴子突然站了起来，张开手臂，抱住了管理员。",
+        "pinyin": "hóuzi tūrán zhàn le qǐlái, zhāngkāi shǒubì, bào zhù le guǎnlǐyuán.",
+        "meaning": "Con khỉ đột nhiên đứng dậy, dang rộng cánh tay, ôm lấy người quản lý."
+      },
+      {
+        "hanzi": "《清明上河图》在我们的面前慢慢展开。",
+        "pinyin": "qīngmíng shànghé tú zài wǒmen de miànqián mànmàn zhǎnkāi.",
+        "meaning": "Bức tranh 'Thanh Minh Thượng Hà Đồ' từ từ mở ra trước mắt chúng tôi."
+      },
+      {
+        "hanzi": "而老鹰的洗澡方式更是直接，它们会在雨中张开双翅痛快地迎接洗礼！",
+        "pinyin": "ér lǎoyīng de xǐzǎo fāngshì gèng shì zhíjiē, tāmen huì zài yǔ zhōng zhāngkāi shuāngchì tòngkuài de yíngjiē xǐlǐ!",
+        "meaning": "Còn cách tắm của đại bàng còn trực tiếp hơn, chúng sẽ dang rộng đôi cánh trong mưa để đón nhận sự tẩy rửa một cách sảng khoái!"
+      }
+    ],
+    "id": "g470"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Lượng từ/Danh từ: 片",
+    "formula": "片 + Noun / Number + 片 + Noun",
+    "explanation": "Từ '片' vừa là danh từ chỉ vật có bề mặt phẳng, mỏng, thường không quá lớn (ví dụ: 叶片, 碎片); vừa là lượng từ dùng cho những đồ vật thành phiến, hoặc có thể dùng với âm thanh, cảnh sắc (ví dụ: 一片片).",
+    "examples": [
+      {
+        "hanzi": "瓶子里装着满满的石头、玻璃碎片和沙子。",
+        "pinyin": "píngzi lǐ zhuāngzhe mǎnmǎn de shítou, bōli suìpiàn hé shāzi.",
+        "meaning": "Trong chai chứa đầy đá, mảnh thủy tinh vỡ và cát."
+      },
+      {
+        "hanzi": "大树出的“汗”，通常是从叶片的气孔里冒出来的。",
+        "pinyin": "dà shù chū de “hàn”, tōngcháng shì cóng yèpiàn de qìkǒng lǐ mào chūlái de.",
+        "meaning": "Mồ hôi của cây lớn thường thoát ra từ lỗ khí trên lá."
+      },
+      {
+        "hanzi": "窗外有一棵大树，秋风中，叶子一片片地掉落下来。",
+        "pinyin": "chuāng wài yǒu yī kē dà shù, qiūfēng zhōng, yèzi yī piàn piàn de diàoluò xiàlái.",
+        "meaning": "Ngoài cửa sổ có một cây lớn, trong gió thu, từng chiếc lá rơi xuống."
+      }
+    ],
+    "id": "g471"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Phân biệt các cách dùng của 根本",
+    "formula": "根本 (Noun / Adj. / Adverb)",
+    "explanation": "Từ '根本' có ba cách dùng chính: (1) Danh từ: chỉ bộ phận quan trọng nhất của sự vật. (2) Tính từ: mang nghĩa 'chủ yếu, quan trọng nhất, đóng vai trò quyết định'. (3) Phó từ: biểu thị 'từ đầu đến cuối, trước sau như một' (thường dùng trong câu phủ định) hoặc 'triệt để, hoàn toàn'.",
+    "examples": [
+      {
+        "hanzi": "教育是国家的根本。",
+        "pinyin": "jiàoyù shì guójiā de gēnběn.",
+        "meaning": "Giáo dục là nền tảng của đất nước."
+      },
+      {
+        "hanzi": "这个办法只能救急，不能从根本上解决问题。",
+        "pinyin": "zhège bànfǎ zhǐ néng jiùjí, bù néng cóng gēnběn shàng jiějué wèntí.",
+        "meaning": "Biện pháp này chỉ có thể cứu cấp, không thể giải quyết vấn đề từ gốc rễ."
+      },
+      {
+        "hanzi": "谈判还算顺利，一些根本的问题都谈好了。",
+        "pinyin": "tánpàn hái suàn shùnlì, yīxiē gēnběn de wèntí dōu tán hǎo le.",
+        "meaning": "Cuộc đàm phán khá thuận lợi, một số vấn đề cơ bản đã được thảo luận xong."
+      },
+      {
+        "hanzi": "政府工作应从人民的根本利益出发。",
+        "pinyin": "zhèngfǔ gōngzuò yīng cóng rénmín de gēnběn lìyì chūfā.",
+        "meaning": "Công việc của chính phủ nên xuất phát từ lợi ích căn bản của nhân dân."
+      },
+      {
+        "hanzi": "有时候我会梦见参加考试，可是却发现自己根本读不懂考试的题目。",
+        "pinyin": "yǒu shíhou wǒ huì mèngjiàn cānjiā kǎoshì, kěshì què fāxiàn zìjǐ gēnběn dú bù dǒng kǎoshì de tímù.",
+        "meaning": "Đôi khi tôi mơ thấy mình đi thi, nhưng lại phát hiện mình hoàn toàn không đọc hiểu được đề thi."
+      },
+      {
+        "hanzi": "可是，经过测验计算发现，以大树输送管道的尺寸产生的毛细作用，根本无法把水分送到几十米高的地方。",
+        "pinyin": "kěshì, jīngguò cèyàn jìsuàn fāxiàn, yǐ dàshù shūsòng guǎndào de chǐcùn chǎnshēng de máoxì zuòyòng, gēnběn wúfǎ bǎ shuǐfèn sòng dào jǐ shí mǐ gāo de dìfang.",
+        "meaning": "Nhưng qua tính toán thí nghiệm phát hiện, tác dụng mao dẫn sinh ra từ kích thước ống dẫn của cây lớn hoàn toàn không thể đưa nước lên đến nơi cao vài chục mét."
+      },
+      {
+        "hanzi": "事情已经根本解决了。",
+        "pinyin": "shìqing yǐjīng gēnběn jiějué le.",
+        "meaning": "Sự việc đã được giải quyết triệt để."
+      },
+      {
+        "hanzi": "他根本就是在故意找我们的麻烦。",
+        "pinyin": "tā gēnběn jiù shì zài gùyì zhǎo wǒmen de máfan.",
+        "meaning": "Anh ta hoàn toàn là cố tình gây rắc rối cho chúng tôi."
+      }
+    ],
+    "id": "g472"
+  },
+  {
+    "level": "HSK 5",
+    "title": "Phân biệt 特殊 và 特别",
+    "formula": "Subj. + 特殊/特别 + (+ Obj.)",
+    "explanation": "Giống: Khi làm tính từ, đều có nghĩa là không giống với bình thường. Khác: 特殊 thường dùng trong văn viết; 特别 có thể dùng trong cả văn viết và khẩu ngữ, và còn có thể làm phó từ với ý nghĩa 'đặc biệt' (格外).",
+    "examples": [
+      {
+        "hanzi": "对我来说，他是一个特殊/特别的人。",
+        "pinyin": "duì wǒ lái shuō, tā shì yī gè tèshū/tèbié de rén.",
+        "meaning": "Đối với tôi, anh ấy là một người đặc biệt."
+      },
+      {
+        "hanzi": "因为跟蒸腾作用有关，这种特殊的提升力就被称为“蒸腾拉力“",
+        "pinyin": "yīnwèi gēn zhēngténg zuòyòng yǒuguān, zhè zhǒng tèshū de tíshēng lì jiù bèi chēngwéi “zhēngténg lālì”",
+        "meaning": "Bởi vì liên quan đến tác dụng thoát hơi nước, lực nâng đặc biệt này được gọi là 'lực kéo thoát hơi nước'."
+      },
+      {
+        "hanzi": "她穿衣服总是很特别。",
+        "pinyin": "tā chuān yīfu zǒng shì hěn tèbié.",
+        "meaning": "Cô ấy mặc quần áo luôn rất đặc biệt."
+      },
+      {
+        "hanzi": "我特别喜欢学中文，尤其是汉子。",
+        "pinyin": "wǒ tèbié xǐhuān xué zhōngwén, yóuqí shì hànzì.",
+        "meaning": "Tôi đặc biệt thích học tiếng Trung, đặc biệt là chữ Hán."
+      }
+    ],
+    "id": "g473"
+  },
+  {
+    "id": "g474",
     "level": "HSK 6",
     "title": "Cách sử dụng nâng cao của \"dao\" trái ngược",
     "formula": "Subj. + Verb + 得 + 倒 + Adj.",
@@ -9130,7 +9760,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGXXP6M"
   },
   {
-    "id": "g455",
+    "id": "g475",
     "level": "HSK 6",
     "title": "Cách sử dụng nâng cao của \"dao\" trái ngược",
     "formula": "Subj. + 倒 + Adj.",
@@ -9160,7 +9790,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGXXP6M"
   },
   {
-    "id": "g456",
+    "id": "g476",
     "level": "HSK 6",
     "title": "Cách sử dụng nâng cao của \"dao\" trái ngược",
     "formula": "你 + 倒是 + Verb + 呀 / 啊",
@@ -9190,7 +9820,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGXXP6M"
   },
   {
-    "id": "g457",
+    "id": "g477",
     "level": "HSK 6",
     "title": "Nhấn mạnh bằng \"henshi\"",
     "formula": "Subj. + 很是 + Adj.",
@@ -9220,7 +9850,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGA1B87"
   },
   {
-    "id": "g458",
+    "id": "g478",
     "level": "HSK 6",
     "title": "Nhấn mạnh bằng \"henshi\"",
     "formula": "Subj. + 很是 + 会 / 能 + Verb",
@@ -9250,7 +9880,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGA1B87"
   },
   {
-    "id": "g459",
+    "id": "g479",
     "level": "HSK 6",
     "title": "Diễn tả “đầy đủ” với “zuzu”",
     "formula": "足足 + Verb :: / :: Verb + 足足",
@@ -9275,7 +9905,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGJIFI9"
   },
   {
-    "id": "g460",
+    "id": "g480",
     "level": "HSK 6",
     "title": "Diễn tả “lặp đi lặp lại” với “yizai”",
     "formula": "Subj. + 一再 + Verb",
@@ -9305,7 +9935,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASG47D26"
   },
   {
-    "id": "g461",
+    "id": "g481",
     "level": "HSK 6",
     "title": "Diễn tả “luôn luôn trước đây” bằng “xianglai”",
     "formula": "Subject + 向来（都） + Verb/Verb Phrase",
@@ -9330,7 +9960,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGDU0XL"
   },
   {
-    "id": "g462",
+    "id": "g482",
     "level": "HSK 6",
     "title": "Diễn tả “đúng như mong đợi” bằng “guoran”",
     "formula": "Subj. + 果然 + Predicate",
@@ -9360,7 +9990,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGC11D0"
   },
   {
-    "id": "g463",
+    "id": "g483",
     "level": "HSK 6",
     "title": "Diễn tả “đúng như mong đợi” bằng “guoran”",
     "formula": "Clause 1 ，果然 ，Clause 2",
@@ -9390,7 +10020,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGC11D4"
   },
   {
-    "id": "g464",
+    "id": "g484",
     "level": "HSK 6",
     "title": "Diễn tả “như thể” với “sihu”",
     "formula": "Subj. + 似乎 ⋯⋯",
@@ -9420,7 +10050,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGB316B"
   },
   {
-    "id": "g465",
+    "id": "g485",
     "level": "HSK 6",
     "title": "Diễn tả “miễn là” với “fanshi”",
     "formula": "凡是 + Noun + 都 / 就 / 一律 + Predicate",
@@ -9450,7 +10080,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASG38F8A"
   },
   {
-    "id": "g466",
+    "id": "g486",
     "level": "HSK 6",
     "title": "Diễn đạt “trái với mong đợi” bằng “pianpian”",
     "formula": "A, Subject + 偏偏 + B",
@@ -9480,7 +10110,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGFZOLQ"
   },
   {
-    "id": "g467",
+    "id": "g487",
     "level": "HSK 6",
     "title": "Diễn tả “không có ngoại lệ” với “yilu”",
     "formula": "一律 (+ 都) + Verb / Adj.",
@@ -9510,7 +10140,7 @@ export const grammarData = [
     "url": "https://resources.allsetlearning.com/chinese/grammar/ASGC8A38"
   },
   {
-    "id": "g468",
+    "id": "g488",
     "level": "HSK 6",
     "title": "Diễn tả “không có gì ngoài” với “wufei”",
     "formula": "无非 + 是 + Noun / Verb Phrase",

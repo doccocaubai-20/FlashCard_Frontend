@@ -77,7 +77,7 @@ const getAllSentences = () => {
   const seen = new Set();
   for (const item of list) {
     if (!item.hanzi) continue;
-    const cleanHanzi = item.hanzi.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?？。！，、；：\s]/g, '');
+    const cleanHanzi = item.hanzi.replace(new RegExp('[.,/#!$%^&*;:{}=\\-_`~()?？。！，、；：\\s]', 'g'), '');
     if (!seen.has(cleanHanzi)) {
       seen.add(cleanHanzi);
       unique.push(item);
@@ -123,9 +123,9 @@ const searchRelatedSentences = (q) => {
       
       // Fallback clean check
       if (!matches) {
-        const cleanQ = trimmed.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?？。！，、；：\s]/g, '');
+        const cleanQ = trimmed.replace(new RegExp('[.,/#!$%^&*;:{}=\\-_`~()?？。！，、；：\\s]', 'g'), '');
         if (cleanQ && cleanQ.length > 0) {
-          matches = item.hanzi.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?？。！，、；：\s]/g, '').includes(cleanQ);
+          matches = item.hanzi.replace(new RegExp('[.,/#!$%^&*;:{}=\\-_`~()?？.！，、；：\\s]', 'g'), '').includes(cleanQ);
         }
       }
     } else {
@@ -170,7 +170,7 @@ export default function DictionaryScreen() {
 
   // History State
   const [history, setHistory] = useState([]);
-  const [historyLoading, setHistoryLoading] = useState(false);
+  const [_historyLoading, setHistoryLoading] = useState(false);
 
   // Favorites State
   const [favorites, setFavorites] = useState([]);
@@ -184,7 +184,7 @@ export default function DictionaryScreen() {
   const [copied, setCopied] = useState(false);
   const [aiLimit, setAiLimit] = useState({ count: 0, limit: 10 });
 
-  const loadAiLimit = async () => {
+  async function loadAiLimit() {
     try {
       const res = await dictionaryHistoryApi.getTodayCount();
       if (res.data) {
@@ -193,16 +193,16 @@ export default function DictionaryScreen() {
     } catch (err) {
       console.error('Failed to load AI limit:', err);
     }
-  };
+  }
 
-  const loadFavorites = async () => {
+  async function loadFavorites() {
     try {
       const res = await favoriteWordsApi.getFavorites();
       setFavorites(res.data || []);
     } catch (err) {
       console.error('Failed to load favorites:', err);
     }
-  };
+  }
 
   const isFavorite = (hanzi) => {
     return favorites.some((f) => f.hanzi === hanzi);
@@ -230,7 +230,7 @@ export default function DictionaryScreen() {
     }
   };
 
-  const loadHistory = async () => {
+  async function loadHistory() {
     try {
       setHistoryLoading(true);
       const res = await dictionaryHistoryApi.getHistory();
@@ -240,7 +240,7 @@ export default function DictionaryScreen() {
     } finally {
       setHistoryLoading(false);
     }
-  };
+  }
 
   useEffect(() => {
     loadHistory();
@@ -317,7 +317,7 @@ export default function DictionaryScreen() {
     return () => clearTimeout(timer);
   }, [query]);
 
-  const handleSearch = async (searchQuery) => {
+  async function handleSearch(searchQuery) {
     if (loading) return;
     const actualQuery = typeof searchQuery === 'string' ? searchQuery : query;
     const trimmedQuery = (actualQuery || '').trim();
@@ -454,7 +454,7 @@ export default function DictionaryScreen() {
 
     if (finalResults.length === 0) {
       const isHanzi = /[\u4e00-\u9fa5]/.test(trimmedQuery);
-      let decomposedResults = [];
+      let decomposedResults;
       if (isHanzi) {
         decomposedResults = await segmentHanziSentence(trimmedQuery);
       } else {
@@ -473,9 +473,9 @@ export default function DictionaryScreen() {
     // Match related example sentences in static corpora
     const matchedSentences = searchRelatedSentences(trimmedQuery);
     setRelatedSentences(matchedSentences);
-  };
+  }
 
-  const segmentPinyin = async (s) => {
+  async function segmentPinyin(s) {
     if (!s) return [];
     const memo = new Map();
     const helper = async (startIndex) => {
@@ -498,10 +498,10 @@ export default function DictionaryScreen() {
       return null;
     };
     return (await helper(0)) || [];
-  };
+  }
 
-  const segmentHanziSentence = async (text) => {
-    const cleanText = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?？。！，、；：]/g, '').trim();
+  async function segmentHanziSentence(text) {
+    const cleanText = text.replace(new RegExp('[.,/#!$%^&*;:{}=\\-_`~()?？。！，、；：]', 'g'), '').trim();
     if (!cleanText) return [];
     
     const chars = Array.from(cleanText);
@@ -537,9 +537,9 @@ export default function DictionaryScreen() {
       }
     }
     return result;
-  };
+  }
 
-  const resolvePinyinSentence = async (text) => {
+  async function resolvePinyinSentence(text) {
     const cleanText = text.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
     if (!cleanText) return [];
 
@@ -594,7 +594,7 @@ export default function DictionaryScreen() {
 
     const hanziSentence = resolvedChars.map(c => c.s).join('');
     return await segmentHanziSentence(hanziSentence);
-  };
+  }
 
   const speakSentence = (e, text) => {
     e.stopPropagation();
@@ -621,7 +621,7 @@ export default function DictionaryScreen() {
   };
 
   // Helper to dynamically get the Hán Việt of a compound word
-  const getCompoundHanViet = (word) => {
+  function getCompoundHanViet(word) {
     if (!word) return '';
     if (selectedWord && selectedWord.s === word) return selectedWord.sv || '';
     if (tabDetails && tabDetails.s === word) return tabDetails.sv || '';
@@ -631,7 +631,7 @@ export default function DictionaryScreen() {
     if (found) return found.sv || '';
     
     return '';
-  };
+  }
 
   // Handle selected word breakdown options
   const handleSelectWord = async (item) => {

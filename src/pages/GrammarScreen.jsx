@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { grammarData } from '../data/grammarData';
-import { BookOpenText, Volume2, Sparkles, Filter, ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
+import { BookOpenText, Volume2, Sparkles, Filter, ChevronDown, ChevronUp } from 'lucide-react';
 
 // Glossary mapping for grammar terminology to help beginners analyze structures
 const GRAMMAR_GLOSSARY = {

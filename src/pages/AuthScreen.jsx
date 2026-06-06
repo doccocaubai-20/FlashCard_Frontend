@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginUser, registerUser, loginWithGoogle, clearAuthError } from '../features/auth/authSlice';
@@ -10,6 +10,15 @@ export default function AuthScreen() {
   const authState = useSelector((state) => state.auth);
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+
+  const handleGoogleCredentialResponse = useCallback(async (response) => {
+    try {
+      await dispatch(loginWithGoogle({ credential: response.credential })).unwrap();
+      navigate('/', { replace: true });
+    } catch (err) {
+      console.error('Google login failed:', err);
+    }
+  }, [dispatch, navigate]);
 
   // Auto redirect if already authenticated
   useEffect(() => {
@@ -46,16 +55,7 @@ export default function AuthScreen() {
     return () => {
       document.body.removeChild(script);
     };
-  }, []);
-
-  const handleGoogleCredentialResponse = async (response) => {
-    try {
-      await dispatch(loginWithGoogle({ credential: response.credential })).unwrap();
-      navigate('/', { replace: true });
-    } catch (err) {
-      console.error('Google login failed:', err);
-    }
-  };
+  }, [handleGoogleCredentialResponse]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

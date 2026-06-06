@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, RefreshCw, Trophy, Clock, CheckCircle } from 'lucide-react';
 import { studyApi } from '../services/studyApi';
 import { fetchDeckDetails } from '../features/deck/deckSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 export default function GameScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const currentDeck = useSelector((state) => state.deck.currentDeck);
 
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +54,7 @@ export default function GameScreen() {
   }, [id, dispatch]);
 
   // Initialize a new round
-  const initializeGame = (cardList = cards) => {
+  function initializeGame(cardList = cards) {
     if (cardList.length < 3) return; // Need at least 3 cards to play
 
     // Select up to 5 random cards
@@ -98,7 +97,7 @@ export default function GameScreen() {
     setElapsedTime(0);
     setStartTime(Date.now());
     setIsFinished(false);
-  };
+  }
 
   // Card select click handler
   const handleItemClick = (item) => {

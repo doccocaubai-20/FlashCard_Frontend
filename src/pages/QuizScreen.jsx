@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, RefreshCw, Trophy, Clock, CheckCircle2, XCircle } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Trophy, Clock, CheckCircle2, XCircle, HelpCircle } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import api from '../services/api';
 
@@ -65,7 +65,7 @@ export default function QuizScreen() {
     return () => clearTimeout(timer);
   }, [timeLeft, loading, quizFinished, isAnswered, questions]);
 
-  const generateQuiz = (rawCards) => {
+  function generateQuiz(rawCards) {
     if (rawCards.length < 4) {
       setQuestions([]);
       return;
@@ -104,9 +104,9 @@ export default function QuizScreen() {
     setSelectedOption(null);
     setTimeLeft(15);
     setUserAnswers([]);
-  };
+  }
 
-  const handleOptionSelect = (option) => {
+  function handleOptionSelect(option) {
     if (isAnswered) return;
     
     setSelectedOption(option);
@@ -130,7 +130,7 @@ export default function QuizScreen() {
         isCorrect,
       },
     ]);
-  };
+  }
 
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {

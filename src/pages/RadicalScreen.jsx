@@ -189,7 +189,7 @@ export default function RadicalScreen() {
                 </div>
 
                 <div className="flex-1 overflow-y-auto pr-1 divide-y divide-hairline dark:divide-divider-dark no-scrollbar">
-                  {loading || searchingWords ? (
+                  {searchingWords ? (
                     <div className="flex flex-col items-center justify-center py-20 text-mute gap-2">
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
                       <span className="text-xs font-medium">Đang tìm các từ vựng liên quan...</span>

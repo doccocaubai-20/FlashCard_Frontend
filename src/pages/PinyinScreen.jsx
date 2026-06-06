@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { dictionaryApi } from '../services/dictionaryApi';
-import { Grid, Volume2, Sparkles, HelpCircle } from 'lucide-react';
+import { Grid, Volume2, Sparkles } from 'lucide-react';
 
 export default function PinyinScreen() {
   const [allSyllables, setAllSyllables] = useState([]);
@@ -8,7 +8,7 @@ export default function PinyinScreen() {
   const [selectedInitial, setSelectedInitial] = useState('b');
   const [selectedSyllable, setSelectedSyllable] = useState(null);
   const [syllableDetails, setSyllableDetails] = useState(null);
-  const [detailsLoading, setDetailsLoading] = useState(false);
+  const [_detailsLoading, setDetailsLoading] = useState(false);
 
   const initials = [
     { key: 'b', label: 'B' },

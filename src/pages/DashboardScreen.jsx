@@ -49,7 +49,7 @@ function HeroWord() {
     const cachedWord = localStorage.getItem('wotd_word');
     const cachedDate = localStorage.getItem('wotd_date');
     if (cachedDate === todayStr && cachedWord) {
-      try { setWotd(JSON.parse(cachedWord)); setLoading(false); return; } catch {}
+      try { setWotd(JSON.parse(cachedWord)); setLoading(false); return; } catch (err) { console.error('Failed to parse cached wotd:', err); }
     }
     (async () => {
       setLoading(true);
@@ -213,7 +213,7 @@ const quickActions = [
 // ─────────────────────────────────────────────────────────────
 // MINI HEATMAP — chỉ 7 ngày gần nhất
 // ─────────────────────────────────────────────────────────────
-function MiniWeekStrip({ data = [], streak = 0 }) {
+function MiniWeekStrip({ data = [], streak: _streak = 0 }) {
   const dayLabels = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
   const today = new Date();
 

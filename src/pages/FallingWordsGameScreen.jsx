@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllDecks, fetchFlashcardsByDeck } from '../features/deck/deckSlice';
@@ -6,7 +6,6 @@ import { dictionaryApi } from '../services/dictionaryApi';
 import { cleanDefinition } from '../utils/formatters';
 import { 
   Zap, 
-  Timer, 
   Heart, 
   RotateCcw, 
   Trophy, 
@@ -17,8 +16,7 @@ import {
   Play,
   Pause,
   Info,
-  XCircle,
-  Sparkles
+  XCircle
 } from 'lucide-react';
 
 export default function FallingWordsGameScreen() {
@@ -144,7 +142,7 @@ export default function FallingWordsGameScreen() {
 
       const keyVis = [];
       if (entry.vi) {
-        const parts = entry.vi.split(/[\/;,\(\)]/);
+        const parts = entry.vi.split(/[/;,()]/);
         parts.forEach((p) => {
           const cleaned = normalizeText(p);
           if (cleaned) keyVis.push(cleaned);
@@ -242,7 +240,7 @@ export default function FallingWordsGameScreen() {
 
               const keyVis = [];
               if (entry.vi) {
-                const parts = entry.vi.split(/[\/;,\(\)]/);
+                const parts = entry.vi.split(/[/;,()]/);
                 parts.forEach((p) => {
                   const cleaned = normalizeText(p);
                   if (cleaned) keyVis.push(cleaned);

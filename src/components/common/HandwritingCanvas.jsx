@@ -12,7 +12,6 @@ export default function HandwritingCanvas({ onRecognize, query, onDeleteLastChar
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
     
     // Set grid drawing style
     clearCanvas(true);
@@ -91,7 +90,7 @@ export default function HandwritingCanvas({ onRecognize, query, onDeleteLastChar
     setCurrentStroke({ x: [], y: [], t: [] });
   };
 
-  const clearCanvas = (resetCandidates = true) => {
+  function clearCanvas(resetCandidates = true) {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -128,7 +127,7 @@ export default function HandwritingCanvas({ onRecognize, query, onDeleteLastChar
     if (resetCandidates) {
       setCandidates([]);
     }
-  };
+  }
 
   const undo = () => {
     if (strokes.length === 0) return;

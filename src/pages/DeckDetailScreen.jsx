@@ -40,21 +40,6 @@ export default function DeckDetailScreen() {
     }
   }, [dispatch, id, isVirtual]);
 
-  const handleBulkImport = async () => {
-    const sampleImport = [
-      { deckId: id, front: '你', back: 'nǐ | bạn' },
-      { deckId: id, front: '好', back: 'hǎo | tốt' },
-    ];
-
-    try {
-      await dispatch(importFlashcards(sampleImport)).unwrap();
-      alert('Đã nhập các thẻ mẫu thành công.');
-    } catch (error) {
-      console.error(error);
-      alert('Không thể nhập các thẻ mẫu.');
-    }
-  };
-
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -91,9 +76,6 @@ export default function DeckDetailScreen() {
     event.target.value = ''; // Reset input
   };
 
-  const handleStartStudy = () => {
-    navigate('/study');
-  };
 
   const displayDeck = isVirtual ? virtualDeck : currentDeck;
   const displayCards = isVirtual ? virtualCards : flashcards;

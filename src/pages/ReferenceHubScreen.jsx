@@ -6,8 +6,7 @@ import {
   BookOpenText, 
   Library, 
   Grid, 
-  ArrowRight,
-  Sparkles
+  ArrowRight
 } from 'lucide-react';
 
 export default function ReferenceHubScreen() {

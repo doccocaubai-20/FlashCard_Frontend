@@ -9,11 +9,9 @@ import {
   ChevronLeft, 
   ArrowLeft, 
   Volume2, 
-  CheckCircle, 
   BookOpen, 
   Eye, 
-  EyeOff, 
-  RotateCcw 
+  EyeOff
 } from 'lucide-react';
 
 export default function TranslationPlaygroundScreen() {
