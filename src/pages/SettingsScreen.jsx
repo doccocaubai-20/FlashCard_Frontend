@@ -53,11 +53,11 @@ export default function SettingsScreen() {
     // Validate type
     const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     if (!allowed.includes(file.type)) {
-      setAvatarMsg('❌ Chỉ chấp nhận ảnh JPG, PNG, WebP hoặc GIF!');
+      setAvatarMsg('Chỉ chấp nhận ảnh JPG, PNG, WebP hoặc GIF!');
       return;
     }
     if (file.size > 2 * 1024 * 1024) {
-      setAvatarMsg('❌ Ảnh không được vượt quá 2MB!');
+      setAvatarMsg('Ảnh không được vượt quá 2MB!');
       return;
     }
 
@@ -66,7 +66,7 @@ export default function SettingsScreen() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const res = await api.post('/users/upload-avatar', formData, {
+      const res = await api.post('/api/users/upload-avatar', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       const { avatarUrl } = res.data;
@@ -74,7 +74,7 @@ export default function SettingsScreen() {
       setAvatarMsg('✅ Tải ảnh lên thành công!');
     } catch (err) {
       const msg = err?.response?.data?.message || 'Lỗi tải ảnh lên!';
-      setAvatarMsg(`❌ ${msg}`);
+      setAvatarMsg(`${msg}`);
     } finally {
       setAvatarUploading(false);
     }
@@ -127,7 +127,7 @@ export default function SettingsScreen() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-16 p-6">
-      
+
       {/* Page Title */}
       <div className="pb-4 border-b border-hairline dark:border-divider-dark">
         <h1 className="text-2xl font-extrabold text-ink dark:text-on-dark font-display tracking-tight">Cài đặt</h1>
@@ -159,7 +159,7 @@ export default function SettingsScreen() {
               <span className="text-sm font-semibold text-ink dark:text-on-dark block">Chế độ hiển thị</span>
               <span className="text-xs text-mute dark:text-on-dark-mute mt-0.5 block">Chọn giao diện sáng (Light) hoặc tối (Dark) cho hệ thống</span>
             </div>
-            
+
             {/* Custom Sun/Moon Switch */}
             <button
               type="button"
@@ -171,14 +171,13 @@ export default function SettingsScreen() {
               <span className="absolute left-2.5 text-amber-500 z-10 pointer-events-none select-none">
                 <Sun size={14} className={isDark ? 'opacity-30 transition-opacity' : 'opacity-100 transition-opacity'} />
               </span>
-              
+
               {/* Toggle slider button */}
               <span
-                className={`inline-block h-6.5 w-6.5 transform rounded-full bg-white dark:bg-primary shadow-sm transition-transform duration-300 ease-in-out ${
-                  isDark ? 'translate-x-10' : 'translate-x-1'
-                }`}
+                className={`inline-block h-6.5 w-6.5 transform rounded-full bg-white dark:bg-primary shadow-sm transition-transform duration-300 ease-in-out ${isDark ? 'translate-x-10' : 'translate-x-1'
+                  }`}
               />
-              
+
               {/* Moon Icon */}
               <span className="absolute right-2.5 text-primary z-10 pointer-events-none select-none">
                 <Moon size={14} className={isDark ? 'opacity-100 transition-opacity' : 'opacity-30 transition-opacity'} />
@@ -192,7 +191,7 @@ export default function SettingsScreen() {
       <div className="space-y-3">
         <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Thông tin cá nhân</h2>
         <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md shadow-sm px-6 py-4 transition-colors">
-          
+
           {/* Avatar Management Area */}
           <div className="py-6 flex flex-col items-center gap-4 border-b border-hairline dark:border-divider-dark">
             <div className="relative group">
@@ -205,7 +204,7 @@ export default function SettingsScreen() {
                   </div>
                 )}
               </div>
-              
+
               {/* Hidden File Input */}
               <input
                 type="file"
@@ -250,9 +249,8 @@ export default function SettingsScreen() {
                       key={seed}
                       type="button"
                       onClick={() => setProfileData((prev) => ({ ...prev, avatarUrl: url }))}
-                      className={`h-9 w-9 rounded-full overflow-hidden bg-white border-2 hover:scale-105 active:scale-95 transition-all cursor-pointer relative select-none ${
-                        isSelected ? 'border-primary ring-2 ring-primary/20 scale-105' : 'border-hairline dark:border-divider-dark'
-                      }`}
+                      className={`h-9 w-9 rounded-full overflow-hidden bg-white border-2 hover:scale-105 active:scale-95 transition-all cursor-pointer relative select-none ${isSelected ? 'border-primary ring-2 ring-primary/20 scale-105' : 'border-hairline dark:border-divider-dark'
+                        }`}
                     >
                       <img src={url} alt={`Avatar ${seed}`} className="h-full w-full object-cover" />
                       {isSelected && (
