@@ -190,15 +190,11 @@
   }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
 @media (min-width: 768px) {
   .mobile-header {
     display: none;
   }
+
   .sidebar-backdrop {
     display: none;
   }

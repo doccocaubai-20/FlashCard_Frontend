@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { logout } from '../../features/auth/authSlice';
-import { 
-  LayoutDashboard, 
-  BookOpen, 
-  PlusCircle, 
-  Settings, 
-  LogOut, 
-  GraduationCap, 
-  Library, 
-  ChevronDown, 
-  Gamepad2, 
-  Trophy, 
+import {
+  LayoutDashboard,
+  BookOpen,
+  PlusCircle,
+  Settings,
+  LogOut,
+  GraduationCap,
+  Library,
+  ChevronDown,
+  Gamepad2,
+  Trophy,
   Shield
 } from 'lucide-react';
 
@@ -102,18 +102,18 @@ export default function Sidebar() {
 
   return (
     <div className="sidebar-container h-full flex flex-col justify-between py-6">
-      
+
       <div>
         {/* Brand Section */}
-        <div className="sidebar-brand flex items-center gap-2.5 px-5 pb-5 border-b border-hairline dark:border-divider-dark">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white shadow-sm">
-            <BookOpen size={16} />
+        <div className="sidebar-brand flex items-center gap-3 px-5 pb-5 border-b border-hairline dark:border-divider-dark">
+          <div className="h-12 w-12 rounded-lg overflow-hidden shadow-sm">
+            <img src="/ap2.png" alt="ChongZi" className="h-full w-full object-cover" />
           </div>
           <div>
-            <span className="font-display font-bold text-base text-ink dark:text-on-dark tracking-tight">
+            <span className="font-display font-bold text-xl text-ink dark:text-on-dark tracking-tight">
               ChongZi
             </span>
-            <span className="text-[9px] font-sans font-medium text-mute dark:text-on-dark-mute block leading-none tracking-widest uppercase">
+            <span className="text-sm font-sans font-medium text-mute dark:text-on-dark-mute block leading-none tracking-widest uppercase">
               Tiếng Trung
             </span>
           </div>
@@ -124,10 +124,9 @@ export default function Sidebar() {
           <NavLink
             to="/flashcards/new"
             className={({ isActive }) =>
-              `flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg font-bold text-xs transition-all group cursor-pointer ${
-                isActive
-                  ? 'bg-primary/90 text-white scale-[0.98]'
-                  : 'bg-primary hover:bg-primary-deep text-white shadow-sm hover:shadow-md'
+              `flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg font-bold text-xs transition-all group cursor-pointer ${isActive
+                ? 'bg-primary/90 text-white scale-[0.98]'
+                : 'bg-primary hover:bg-primary-deep text-white shadow-sm hover:shadow-md'
               }`
             }
           >
@@ -135,7 +134,7 @@ export default function Sidebar() {
             <span>Thêm Thẻ mới</span>
           </NavLink>
         </div>
- 
+
         {/* Menu Navigation Grouped */}
         <div className="sidebar-menu-list flex flex-col gap-4 px-4 pt-4 overflow-y-auto max-h-[calc(100vh-210px)] select-none">
           {menuGroups.map((group, groupIdx) => {
@@ -151,17 +150,15 @@ export default function Sidebar() {
                   <span>{group.title}</span>
                   <ChevronDown
                     size={10}
-                    className={`transition-transform duration-200 shrink-0 ${
-                      isCollapsed ? '-rotate-90' : 'rotate-0'
-                    }`}
+                    className={`transition-transform duration-200 shrink-0 ${isCollapsed ? '-rotate-90' : 'rotate-0'
+                      }`}
                   />
                 </button>
-                
+
                 {/* Group Nav Items with Collapse Animation */}
-                <div 
-                  className={`flex flex-col gap-1 transition-all duration-300 overflow-hidden ${
-                    isCollapsed ? 'max-h-0 opacity-0' : 'max-h-[500px] opacity-100'
-                  }`}
+                <div
+                  className={`flex flex-col gap-1 transition-all duration-300 overflow-hidden ${isCollapsed ? 'max-h-0 opacity-0' : 'max-h-[500px] opacity-100'
+                    }`}
                 >
                   {group.items.map(({ to, label, icon: Icon }) => (
                     <NavLink
@@ -181,7 +178,7 @@ export default function Sidebar() {
           })}
         </div>
       </div>
-  
+
       {/* Footer */}
       <div className="sidebar-footer px-3 py-3.5 border-t border-hairline dark:border-divider-dark">
         <div className="flex items-center justify-between gap-2">
