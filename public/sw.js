@@ -3,6 +3,8 @@ const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/ap2.png',
+  '/log.png',
+  '/manifest.json',
   '/favicon.svg',
   'https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js',
   'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'

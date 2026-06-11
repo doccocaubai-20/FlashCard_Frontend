@@ -1,0 +1,17 @@
+{
+  "short_name": "ChongZi",
+  "name": "ChongZi Tiếng Trung",
+  "icons": [
+    {
+      "src": "/log.png",
+      "type": "image/png",
+      "sizes": "192x192 512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "theme_color": "#54cbd4",
+  "display": "standalone",
+  "orientation": "portrait"
+}
