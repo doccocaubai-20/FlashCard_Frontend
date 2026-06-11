@@ -207,15 +207,6 @@ export default function DictionaryScreen() {
       navigator.mediaDevices.enumerateDevices().then((devices) => {
         const videoInputs = devices.filter((d) => d.kind === 'videoinput');
         setVideoDevices(videoInputs);
-        if (videoInputs.length > 0) {
-          // Try to select environment (back) camera first
-          const backCam = videoInputs.find(d => 
-            d.label.toLowerCase().includes('back') || 
-            d.label.toLowerCase().includes('environment') ||
-            d.label.toLowerCase().includes('sau')
-          );
-          setSelectedDeviceId(backCam ? backCam.deviceId : videoInputs[0].deviceId);
-        }
       }).catch(err => console.error('Enumerate devices failed:', err));
     } else {
       // Clear OCR state on close
@@ -223,28 +214,47 @@ export default function DictionaryScreen() {
       setRecognizedText('');
       setOcrError('');
       setOcrProgress('');
+      setSelectedDeviceId('');
     }
   }, [showOcrScanner]);
 
   // Stream handling
   useEffect(() => {
     let activeStream = null;
-    if (showOcrScanner && selectedDeviceId && !capturedImage) {
-      navigator.mediaDevices.getUserMedia({
-        video: { deviceId: { exact: selectedDeviceId } }
-      }).then((s) => {
+    if (showOcrScanner && !capturedImage) {
+      const useFacingMode = !selectedDeviceId;
+      const constraints = useFacingMode
+        ? { video: { facingMode: 'environment' } }
+        : { video: { deviceId: { exact: selectedDeviceId } } };
+
+      navigator.mediaDevices.getUserMedia(constraints).then((s) => {
         activeStream = s;
         if (videoRef.current) {
           videoRef.current.srcObject = s;
+          videoRef.current.setAttribute('playsinline', '');
+          videoRef.current.setAttribute('muted', '');
+          videoRef.current.play().catch(e => console.log('Autoplay play failed:', e));
+        }
+
+        // Sync active device ID back to state for dropdown selector
+        const activeTrack = s.getVideoTracks()[0];
+        if (activeTrack && useFacingMode) {
+          const settings = activeTrack.getSettings();
+          if (settings && settings.deviceId) {
+            setSelectedDeviceId(settings.deviceId);
+          }
         }
       }).catch((err) => {
-        console.error('getUserMedia deviceId failed, trying fallback:', err);
+        console.error('getUserMedia failed, trying default environment fallback:', err);
         navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment' }
         }).then((s) => {
           activeStream = s;
           if (videoRef.current) {
             videoRef.current.srcObject = s;
+            videoRef.current.setAttribute('playsinline', '');
+            videoRef.current.setAttribute('muted', '');
+            videoRef.current.play().catch(e => console.log('Autoplay play failed:', e));
           }
         }).catch((e) => {
           setOcrError('Không thể truy cập camera. Vui lòng cấp quyền camera cho ứng dụng!');
