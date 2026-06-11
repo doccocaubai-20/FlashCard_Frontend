@@ -302,16 +302,28 @@ export default function DictionaryScreen() {
     }
     setOcrLoading(true);
     setOcrError('');
-    setOcrProgress('Đang nhận diện chữ Hán (OCR)... 0%');
+    setOcrProgress('Đang chuẩn bị công cụ nhận diện...');
 
     try {
       const { data: { text } } = await window.Tesseract.recognize(
         imageSource,
         'chi_sim',
         {
+          langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0',
           logger: m => {
-            if (m.status === 'recognizing text') {
-              setOcrProgress(`Đang nhận diện chữ Hán (OCR)... ${Math.round(m.progress * 100)}%`);
+            const pct = Math.round(m.progress * 100);
+            if (m.status === 'loading tesseract core') {
+              setOcrProgress(`Đang tải nhân xử lý OCR: ${pct}%`);
+            } else if (m.status === 'initializing tesseract') {
+              setOcrProgress('Đang khởi tạo nhân OCR...');
+            } else if (m.status === 'loading language traineddata') {
+              setOcrProgress(`Đang tải từ điển chữ Hán (10MB): ${pct}%`);
+            } else if (m.status === 'initializing api') {
+              setOcrProgress('Đang kết nối API nhận diện...');
+            } else if (m.status === 'recognizing text') {
+              setOcrProgress(`Đang nhận dạng chữ Hán: ${pct}%`);
+            } else {
+              setOcrProgress(`${m.status}: ${pct}%`);
             }
           }
         }
