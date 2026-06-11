@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { ArrowLeft, Sparkles, Languages } from 'lucide-react';
@@ -11,20 +11,61 @@ export default function SynonymComparisonScreen() {
   const [word2, setWord2] = useState('');
   const [loading, setLoading] = useState(false);
   const [explanation, setExplanation] = useState('');
+  const [history, setHistory] = useState([]);
+
+  // Load history on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('chongzi_synonym_history');
+      if (saved) {
+        setHistory(JSON.parse(saved));
+      }
+    } catch (e) {
+      console.error('Failed to load synonym history:', e);
+    }
+  }, []);
 
   const handleCompare = async (e) => {
     e.preventDefault();
-    if (!word1.trim() || !word2.trim()) return;
+    const w1 = word1.trim();
+    const w2 = word2.trim();
+    if (!w1 || !w2) return;
 
     setLoading(true);
     setExplanation('');
+
+    // Check if it already exists in history to save token cost
+    const key = [w1, w2].sort().join('-');
+    const cached = history.find((h) => h.key === key);
+    if (cached) {
+      setExplanation(cached.explanation);
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await api.post('/api/dictionary/compare-synonyms', {
-        word1: word1.trim(),
-        word2: word2.trim(),
+        word1: w1,
+        word2: w2,
       });
       if (res.data && res.data.explanation) {
-        setExplanation(res.data.explanation);
+        const expl = res.data.explanation;
+        setExplanation(expl);
+
+        // Update history cache
+        const newHistoryItem = {
+          key,
+          word1: w1,
+          word2: w2,
+          explanation: expl,
+          timestamp: Date.now(),
+        };
+        const updatedHistory = [
+          newHistoryItem,
+          ...history.filter((h) => h.key !== key),
+        ].slice(0, 20); // Keep last 20 comparisons
+        setHistory(updatedHistory);
+        localStorage.setItem('chongzi_synonym_history', JSON.stringify(updatedHistory));
       } else {
         showToast('Không nhận được phản hồi từ AI.', 'error');
       }
@@ -36,32 +77,135 @@ export default function SynonymComparisonScreen() {
     }
   };
 
+  const renderTableHtml = (headers, rows) => {
+    const headerCols = headers
+      .map(
+        (h) =>
+          `<th class="p-3 text-left font-mono font-bold text-xs uppercase tracking-wider text-mute border-b border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-black/35">${h}</th>`
+      )
+      .join('');
+    
+    const bodyRows = rows
+      .map((row) => {
+        const cells = row
+          .map(
+            (cell) =>
+              `<td class="p-3 text-xs leading-relaxed text-body dark:text-on-dark-mute border-b border-hairline/50 dark:border-divider-dark/40">${cell}</td>`
+          )
+          .join('');
+        return `<tr class="hover:bg-surface-bone/20 dark:hover:bg-black/10 transition-colors">${cells}</tr>`;
+      })
+      .join('');
+
+    return `
+      <div class="my-4 overflow-x-auto rounded-lg border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/30 shadow-xs">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr>${headerCols}</tr>
+          </thead>
+          <tbody class="divide-y divide-hairline dark:divide-divider-dark/40">
+            ${bodyRows}
+          </tbody>
+        </table>
+      </div>
+    `;
+  };
+
   const renderContentAsHtml = (text) => {
     if (!text) return '';
-    // Basic Markdown conversion for simplicity without extra packages
-    let html = text
+
+    // First escape HTML entities
+    let escaped = text
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/\n/g, '<br />');
+      .replace(/>/g, '&gt;');
 
-    // Bold (**text** or __text__)
-    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+    // Split by newlines to parse block elements (like tables, headers, lists)
+    const lines = escaped.split('\n');
+    const result = [];
+    
+    let inTable = false;
+    let tableHeaders = [];
+    let tableRows = [];
 
-    // Headers (###, ##, #)
-    html = html.replace(/### (.*?)(<br \/>|$)/g, '<h4 class="text-sm font-bold text-primary mt-4 mb-2">$1</h4>');
-    html = html.replace(/## (.*?)(<br \/>|$)/g, '<h3 class="text-base font-bold text-primary mt-5 mb-2">$1</h3>');
-    html = html.replace(/# (.*?)(<br \/>|$)/g, '<h2 class="text-lg font-extrabold text-primary mt-6 mb-3">$1</h2>');
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
 
-    // List items (* or -)
-    html = html.replace(/(?:^|<br \/>)[*-] (.*?)(?=<br \/>|$)/g, '<li class="ml-4 list-disc text-xs leading-relaxed mt-1">$1</li>');
+      // Check if it is a table line
+      if (line.startsWith('|') && line.endsWith('|')) {
+        // Extract cells, filtering out empty outer cells
+        const cells = line
+          .split('|')
+          .map((c) => c.trim())
+          .filter((_, idx, arr) => idx > 0 && idx < arr.length - 1);
+        
+        // Check if it is the separator line e.g., |:---|:---|
+        const isSeparator = cells.every((c) => /^:?-+:?$/.test(c));
+        
+        if (isSeparator) {
+          continue;
+        }
 
-    return html;
+        if (!inTable) {
+          inTable = true;
+          tableHeaders = cells;
+        } else {
+          tableRows.push(cells);
+        }
+        continue;
+      } else {
+        // Close table if we were in one
+        if (inTable) {
+          result.push(renderTableHtml(tableHeaders, tableRows));
+          inTable = false;
+          tableHeaders = [];
+          tableRows = [];
+        }
+      }
+
+      // Check for headers
+      if (line.startsWith('### ')) {
+        result.push(`<h4 class="text-sm font-bold text-primary mt-4 mb-2">${line.slice(4)}</h4>`);
+      } else if (line.startsWith('## ')) {
+        result.push(`<h3 class="text-base font-bold text-primary mt-5 mb-2">${line.slice(3)}</h3>`);
+      } else if (line.startsWith('# ')) {
+        result.push(`<h2 class="text-lg font-extrabold text-primary mt-6 mb-3">${line.slice(2)}</h2>`);
+      }
+      // Check for bullet lists
+      else if (line.startsWith('- ') || line.startsWith('* ')) {
+        result.push(`<li class="ml-4 list-disc text-xs leading-relaxed mt-1">${line.slice(2)}</li>`);
+      }
+      // Empty line
+      else if (line === '') {
+        result.push('<div class="h-2"></div>');
+      }
+      // Normal paragraph text
+      else {
+        result.push(`<p class="text-xs leading-relaxed text-body dark:text-on-dark-mute">${line}</p>`);
+      }
+    }
+
+    if (inTable) {
+      result.push(renderTableHtml(tableHeaders, tableRows));
+    }
+
+    let finalHtml = result.join('\n');
+
+    // Inline elements: Bold (**text** or __text__)
+    finalHtml = finalHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    finalHtml = finalHtml.replace(/__(.*?)__/g, '<strong>$1</strong>');
+
+    // Inline code tags `code`
+    finalHtml = finalHtml.replace(
+      /`(.*?)`/g,
+      '<code class="bg-surface-bone dark:bg-black/35 px-1.5 py-0.5 rounded font-mono text-[10px] text-primary font-bold border border-hairline dark:border-divider-dark">$1</code>'
+    );
+
+    return finalHtml;
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6">
       
       {/* Header */}
       <div className="flex items-center justify-between border-b border-hairline dark:border-divider-dark pb-5">
@@ -84,44 +228,86 @@ export default function SynonymComparisonScreen() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* Input Form */}
-        <div className="lg:col-span-4 bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-xl p-5 shadow-sm space-y-4 text-left">
-          <h3 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider flex items-center gap-1.5 border-b border-hairline dark:border-divider-dark pb-3">
-            <Sparkles size={14} className="text-primary" />
-            Nhập cặp từ cần so sánh
-          </h3>
-          <form onSubmit={handleCompare} className="space-y-4">
-            <div className="space-y-1">
-              <label className="text-[10px] uppercase font-bold text-mute tracking-wider">Từ thứ nhất</label>
-              <input
-                type="text"
-                required
-                value={word1}
-                onChange={(e) => setWord1(e.target.value)}
-                placeholder="Ví dụ: 觉得"
-                className="w-full text-xs p-3 rounded-lg border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-black/20 text-ink dark:text-on-dark focus:outline-none focus:border-primary transition-colors"
-              />
+        {/* Left column: Input Form & History */}
+        <div className="lg:col-span-4 space-y-6">
+          <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-xl p-5 shadow-sm space-y-4 text-left">
+            <h3 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider flex items-center gap-1.5 border-b border-hairline dark:border-divider-dark pb-3">
+              <Sparkles size={14} className="text-primary" />
+              Nhập cặp từ cần so sánh
+            </h3>
+            <form onSubmit={handleCompare} className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase font-bold text-mute tracking-wider">Từ thứ nhất</label>
+                <input
+                  type="text"
+                  required
+                  value={word1}
+                  onChange={(e) => setWord1(e.target.value)}
+                  placeholder="Ví dụ: 觉得"
+                  className="w-full text-xs p-3 rounded-lg border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-black/20 text-ink dark:text-on-dark focus:outline-none focus:border-primary transition-colors"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase font-bold text-mute tracking-wider">Từ thứ hai</label>
+                <input
+                  type="text"
+                  required
+                  value={word2}
+                  onChange={(e) => setWord2(e.target.value)}
+                  placeholder="Ví dụ: 认为"
+                  className="w-full text-xs p-3 rounded-lg border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-black/20 text-ink dark:text-on-dark focus:outline-none focus:border-primary transition-colors"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loading || !word1.trim() || !word2.trim()}
+                className="w-full py-2.5 bg-primary hover:bg-primary-deep disabled:bg-stone text-white font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 cursor-pointer transition-colors shadow-xs active:scale-95"
+              >
+                <Sparkles size={14} />
+                {loading ? 'AI đang phân tích...' : 'So sánh bằng AI'}
+              </button>
+            </form>
+          </div>
+
+          {/* History Panel */}
+          {history.length > 0 && (
+            <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-xl p-5 shadow-sm space-y-3 text-left">
+              <h4 className="text-[10px] font-bold text-mute uppercase tracking-widest border-b border-hairline dark:border-divider-dark pb-2 flex justify-between items-center select-none">
+                <span>Lịch sử đã so sánh</span>
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    setHistory([]);
+                    localStorage.removeItem('chongzi_synonym_history');
+                  }}
+                  className="text-[9px] text-red-500 hover:underline cursor-pointer"
+                >
+                  Xóa lịch sử
+                </button>
+              </h4>
+              <div className="max-h-[220px] overflow-y-auto space-y-2 pr-1">
+                {history.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => {
+                      setWord1(item.word1);
+                      setWord2(item.word2);
+                      setExplanation(item.explanation);
+                    }}
+                    className="w-full flex items-center justify-between p-2.5 rounded-lg border border-hairline dark:border-divider-dark bg-surface-bone/25 dark:bg-black/15 hover:bg-surface-bone dark:hover:bg-black text-left transition-all cursor-pointer text-xs group"
+                  >
+                    <span className="font-semibold text-ink dark:text-on-dark group-hover:text-primary transition-colors">
+                      {item.word1} vs {item.word2}
+                    </span>
+                    <span className="text-[9px] text-mute font-mono">
+                      {new Date(item.timestamp).toLocaleDateString()}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="space-y-1">
-              <label className="text-[10px] uppercase font-bold text-mute tracking-wider">Từ thứ hai</label>
-              <input
-                type="text"
-                required
-                value={word2}
-                onChange={(e) => setWord2(e.target.value)}
-                placeholder="Ví dụ: 认为"
-                className="w-full text-xs p-3 rounded-lg border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-black/20 text-ink dark:text-on-dark focus:outline-none focus:border-primary transition-colors"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading || !word1.trim() || !word2.trim()}
-              className="w-full py-2.5 bg-primary hover:bg-primary-deep disabled:bg-stone text-white font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 cursor-pointer transition-colors shadow-xs active:scale-95"
-            >
-              <Sparkles size={14} />
-              {loading ? 'AI đang phân tích...' : 'So sánh bằng AI'}
-            </button>
-          </form>
+          )}
         </div>
 
         {/* Results Panel */}
