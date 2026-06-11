@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchAllDecks, fetchFlashcardsByDeck } from '../features/deck/deckSlice';
 import { dictionaryApi } from '../services/dictionaryApi';
 import { cleanDefinition } from '../utils/formatters';
+import { useToast } from '../context/ToastContext';
 import { 
   Gamepad2, 
   Timer, 
@@ -18,6 +19,7 @@ import {
 export default function MatchingGameScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   // No local useDictionary needed
   const decks = useSelector((state) => state.deck.decks);
 
@@ -102,7 +104,7 @@ export default function MatchingGameScreen() {
     }
 
     if (pool.length < 6) {
-      alert('Không đủ từ vựng (tối thiểu 6 từ) để bắt đầu trò chơi.');
+      showToast('Không đủ từ vựng (tối thiểu 6 từ) để bắt đầu trò chơi.', 'error');
       return;
     }
 

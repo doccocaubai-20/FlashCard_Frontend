@@ -29,6 +29,7 @@ import ReferenceHubScreen from './pages/ReferenceHubScreen';
 import LeaderboardScreen from './pages/LeaderboardScreen';
 import AdminScreen from './pages/AdminScreen';
 import StatsScreen from './pages/StatsScreen';
+import SynonymComparisonScreen from './pages/SynonymComparisonScreen';
 
 function PrivateRoute({ children }) {
   const token = useSelector((state) => state.auth.token);
@@ -67,6 +68,7 @@ function App() {
         <Route path="/study" element={<StudyScreen />} />
         <Route path="/flashcards/new" element={<CreateFlashcardScreen />} />
         <Route path="/dictionary" element={<DictionaryScreen />} />
+        <Route path="/synonyms" element={<SynonymComparisonScreen />} />
         <Route path="/write" element={<FreeWriteScreen />} />
         <Route path="/radicals" element={<RadicalScreen />} />
         <Route path="/pinyin" element={<PinyinScreen />} />

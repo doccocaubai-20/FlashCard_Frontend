@@ -6,6 +6,7 @@ import { Plus, Edit3, Trash2, Folder, X, Star, Share2, Globe, Copy, Check, Downl
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { socialApi } from '../services/socialApi';
 import api from '../services/api';
+import { useToast } from '../context/ToastContext';
 
 // ─── Tab toggle ───────────────────────────────────────────────────────────────
 const TABS = [
@@ -14,6 +15,7 @@ const TABS = [
 ];
 
 export default function DeckListScreen() {
+  const { showToast } = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const decks = useSelector((state) => state.deck.decks);
@@ -81,9 +83,10 @@ export default function DeckListScreen() {
       await socialApi.importDeck(shareCode);
       setImportedCodes((prev) => new Set(prev).add(shareCode));
       dispatch(fetchAllDecks()); // refresh my decks
+      showToast('Đã nhập bộ thẻ thành công!', 'success');
     } catch (err) {
       console.error('Failed to import deck:', err);
-      alert(err.response?.data?.message || 'Không thể nhập bộ thẻ này.');
+      showToast(err.response?.data?.message || 'Không thể nhập bộ thẻ này.', 'error');
     } finally {
       setImportingDeckId(null);
     }
@@ -115,12 +118,15 @@ export default function DeckListScreen() {
     try {
       if (modalMode === 'create') {
         await dispatch(createDeck(formData)).unwrap();
+        showToast('Đã tạo bộ bài mới thành công!', 'success');
       } else {
         await dispatch(updateDeck({ id: selectedDeck.id, data: formData })).unwrap();
+        showToast('Đã lưu thay đổi bộ bài thành công!', 'success');
       }
       handleCloseModal();
     } catch (err) {
       console.error('Failed to save deck:', err);
+      showToast('Không thể lưu bộ bài.', 'error');
     }
   };
 
@@ -129,8 +135,10 @@ export default function DeckListScreen() {
     if (window.confirm(`Bạn có chắc chắn muốn xóa bộ bài "${title || 'Chưa đặt tên'}" không?`)) {
       try {
         await dispatch(deleteDeck(id)).unwrap();
+        showToast('Đã xóa bộ bài thành công!', 'success');
       } catch (err) {
         console.error('Failed to delete deck:', err);
+        showToast('Không thể xóa bộ bài.', 'error');
       }
     }
   };
@@ -142,9 +150,10 @@ export default function DeckListScreen() {
       setShareCodeResult(res.data.shareCode);
       setShareDeckTitle(res.data.title);
       dispatch(fetchAllDecks());
+      showToast('Bộ bài đã được chia sẻ công khai thành công!', 'success');
     } catch (err) {
       console.error('Failed to share deck:', err);
-      alert(err.response?.data?.message || 'Không thể chia sẻ bộ từ vựng.');
+      showToast(err.response?.data?.message || 'Không thể chia sẻ bộ từ vựng.', 'error');
     }
   };
 
@@ -593,7 +602,7 @@ export default function DeckListScreen() {
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(shareCodeResult);
-                    alert('Đã copy mã chia sẻ vào clipboard!');
+                    showToast('Đã copy mã chia sẻ vào clipboard!', 'success');
                   }}
                   className="p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded text-mute hover:text-ink transition-colors cursor-pointer"
                   title="Copy mã chia sẻ"

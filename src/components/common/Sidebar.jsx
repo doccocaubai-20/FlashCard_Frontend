@@ -183,8 +183,11 @@ export default function Sidebar() {
       <div className="sidebar-footer px-3 py-3.5 border-t border-hairline dark:border-divider-dark">
         <div className="flex items-center justify-between gap-2">
           {/* User Profile */}
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="h-8 w-8 flex-shrink-0 rounded-full bg-primary-light dark:bg-primary/20 text-primary dark:text-on-dark border border-hairline dark:border-divider-dark font-bold text-xs flex items-center justify-center shadow-sm overflow-hidden">
+          <div
+            onClick={() => navigate('/settings')}
+            className="flex items-center gap-2.5 overflow-hidden cursor-pointer hover:opacity-80 transition-opacity flex-1"
+          >
+            <div className="h-9 w-9 flex-shrink-0 rounded-full bg-primary-light dark:bg-primary/20 text-primary dark:text-on-dark border border-hairline dark:border-divider-dark font-bold text-sm flex items-center justify-center shadow-sm overflow-hidden">
               {user?.avatarUrl ? (
                 <img src={user.avatarUrl} alt="avatar" className="h-full w-full object-cover" />
               ) : (
@@ -192,10 +195,10 @@ export default function Sidebar() {
               )}
             </div>
             <div className="flex flex-col overflow-hidden text-left">
-              <span className="text-xs font-semibold text-ink dark:text-on-dark leading-none truncate">
+              <span className="text-sm font-semibold text-ink dark:text-on-dark leading-none truncate">
                 {user?.name || 'Học viên'}
               </span>
-              <span className="text-[9px] font-bold text-primary dark:text-primary mt-0.5 uppercase tracking-widest">
+              <span className="text-[10px] font-bold text-primary dark:text-primary mt-0.5 uppercase tracking-widest">
                 {user?.role === 'ADMIN' ? 'Quản trị' : 'Học viên'}
               </span>
             </div>

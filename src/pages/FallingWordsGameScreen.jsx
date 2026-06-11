@@ -18,8 +18,10 @@ import {
   Info,
   XCircle
 } from 'lucide-react';
+import { useToast } from '../context/ToastContext';
 
 export default function FallingWordsGameScreen() {
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -116,7 +118,7 @@ export default function FallingWordsGameScreen() {
     }
 
     if (pool.length === 0) {
-      alert('Nguồn từ vựng được chọn không có dữ liệu hoặc đang tải. Vui lòng chọn nguồn khác.');
+      showToast('Nguồn từ vựng được chọn không có dữ liệu hoặc đang tải. Vui lòng chọn nguồn khác.', 'warning');
       return;
     }
 

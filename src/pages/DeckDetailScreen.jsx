@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchDeckDetails, fetchFlashcardsByDeck, importFlashcards } from '../features/deck/deckSlice';
-import { Upload, Star } from 'lucide-react';
+import { Upload, Star, X } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
+import { useToast } from '../context/ToastContext';
 
 export default function DeckDetailScreen() {
+  const { showToast } = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -15,6 +17,7 @@ export default function DeckDetailScreen() {
 
   const [virtualDeck, setVirtualDeck] = useState(null);
   const [virtualCards, setVirtualCards] = useState([]);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const isVirtual = id === 'favorites';
 
   useEffect(() => {
@@ -49,7 +52,7 @@ export default function DeckDetailScreen() {
       try {
         const json = JSON.parse(e.target.result);
         if (!Array.isArray(json)) {
-          alert('Tệp tin JSON phải là một mảng các thẻ bài.');
+          showToast('Tệp tin JSON phải là một mảng các thẻ bài.', 'error');
           return;
         }
 
@@ -66,10 +69,10 @@ export default function DeckDetailScreen() {
         }));
 
         await dispatch(importFlashcards(formattedData)).unwrap();
-        alert('Nhập dữ liệu từ file JSON thành công!');
+        showToast('Nhập dữ liệu từ file JSON thành công!', 'success');
       } catch (err) {
         console.error(err);
-        alert('Lỗi: Không thể phân tích tệp tin JSON hoặc định dạng không hợp lệ.');
+        showToast('Lỗi: Không thể phân tích tệp tin JSON hoặc định dạng không hợp lệ.', 'error');
       }
     };
     reader.readAsText(file);
@@ -100,14 +103,24 @@ export default function DeckDetailScreen() {
               style={{ display: 'none' }}
             />
             {!isVirtual && (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5"
-              >
-                <Upload className="w-4 h-4" />
-                Nhập file JSON
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5"
+                >
+                  <Upload className="w-4 h-4" />
+                  Nhập file JSON
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsHelpModalOpen(true)}
+                  className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-mute hover:text-ink dark:hover:text-on-dark w-9 h-9 flex items-center justify-center text-sm font-semibold transition cursor-pointer active:scale-95 shadow-sm"
+                  title="Hướng dẫn cấu trúc file JSON"
+                >
+                  ❓
+                </button>
+              </div>
             )}
             {!isVirtual && (
               <button
@@ -172,6 +185,81 @@ export default function DeckDetailScreen() {
               )}
             </div>
           </div>
+        </div>
+      </div>
+
+      {isHelpModalOpen && (
+        <JsonFormatHelpModal onClose={() => setIsHelpModalOpen(false)} />
+      )}
+    </div>
+  );
+}
+
+// ─── Help Modal ──────────────────────────────────────────────────────────────
+function JsonFormatHelpModal({ onClose }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <div className="bg-surface-card dark:bg-surface-dark rounded-xl shadow-xl max-w-lg w-full border border-hairline dark:border-divider-dark overflow-hidden animate-in fade-in zoom-in-95 duration-200 text-left">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-hairline dark:border-divider-dark">
+          <h3 className="text-base font-bold text-ink dark:text-on-dark font-display flex items-center gap-2">
+            <span>ℹ️</span> Hướng dẫn định dạng file JSON
+          </h3>
+          <button onClick={onClose} className="text-mute hover:text-ink dark:text-on-dark-mute dark:hover:text-on-dark p-1.5 rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors cursor-pointer">
+            <X size={18} />
+          </button>
+        </div>
+        <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto text-xs text-body dark:text-on-dark-mute leading-relaxed font-sans">
+          <p>
+            Hệ thống hỗ trợ nhập bộ thẻ hàng loạt từ tệp tin <strong>.json</strong>. Tệp tin phải chứa một mảng các đối tượng thẻ bài. Bạn có thể sử dụng một trong hai định dạng dưới đây:
+          </p>
+
+          <div className="space-y-2">
+            <div className="font-bold text-ink dark:text-on-dark">Định dạng 1 (Cơ bản - Tiếng Anh):</div>
+            <pre className="bg-surface-bone dark:bg-black/30 p-3 rounded-lg overflow-x-auto font-mono text-[11px] text-primary">
+{`[
+  {
+    "hanzi": "你",
+    "pinyin": "nǐ",
+    "meaning": "bạn, anh, chị (ngôi thứ hai số ít)",
+    "exampleHanzi": "你好",
+    "examplePinyin": "nǐ hǎo",
+    "exampleMeaning": "Chào bạn"
+  }
+]`}
+            </pre>
+          </div>
+
+          <div className="space-y-2">
+            <div className="font-bold text-ink dark:text-on-dark">Định dạng 2 (Nâng cao - Tiếng Việt):</div>
+            <pre className="bg-surface-bone dark:bg-black/30 p-3 rounded-lg overflow-x-auto font-mono text-[11px] text-primary">
+{`[
+  {
+    "Tiếng Trung": "你",
+    "Pinyin": "nǐ",
+    "Từ loại": "Đại từ",
+    "Dịch nghĩa": "Bạn, anh, chị",
+    "exampleHanzi": "你好",
+    "examplePinyin": "nǐ hǎo",
+    "exampleMeaning": "Chào bạn"
+  }
+]`}
+            </pre>
+          </div>
+
+          <div className="border-t border-hairline dark:border-divider-dark pt-3">
+            <h4 className="font-bold text-ink dark:text-on-dark mb-1">Mô tả các trường thông tin:</h4>
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong>hanzi</strong> hoặc <strong>Tiếng Trung</strong> (Bắt buộc): Từ vựng hoặc câu tiếng Hán.</li>
+              <li><strong>pinyin</strong> hoặc <strong>Pinyin</strong> (Tùy chọn): Phiên âm Pinyin tương ứng.</li>
+              <li><strong>meaning</strong> / <strong>Dịch nghĩa</strong> / <strong>Từ loại</strong> (Tùy chọn): Định nghĩa tiếng Việt của từ. Nếu có cả <i>Từ loại</i> và <i>Dịch nghĩa</i>, chúng sẽ tự động được ghép lại dưới dạng <code>(Từ loại) Dịch nghĩa</code>.</li>
+              <li>Các trường ví dụ (Tùy chọn): <strong>exampleHanzi</strong> (Câu ví dụ tiếng Hán), <strong>examplePinyin</strong> (Phiên âm ví dụ), <strong>exampleMeaning</strong> (Dịch nghĩa ví dụ).</li>
+            </ul>
+          </div>
+        </div>
+        <div className="px-6 py-4 border-t border-hairline dark:border-divider-dark flex justify-end">
+          <button onClick={onClose} className="px-5 py-2 bg-primary hover:bg-primary-deep text-white font-bold text-xs rounded-full cursor-pointer transition-colors shadow-xs">
+            Đã hiểu
+          </button>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { translationData } from '../data/translationData';
+import { useToast } from '../context/ToastContext';
 import { 
   Puzzle, 
   Timer, 
@@ -18,6 +19,7 @@ import {
 
 export default function UnscrambleGameScreen() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   // Game configuration states
   const [selectedLevel, setSelectedLevel] = useState('HSK 1');
@@ -61,7 +63,7 @@ export default function UnscrambleGameScreen() {
     const poolSentences = translationData.filter((s) => s.level === selectedLevel);
     
     if (poolSentences.length === 0) {
-      alert('Không tìm thấy câu phù hợp với cấp độ đã chọn.');
+      showToast('Không tìm thấy câu phù hợp với cấp độ đã chọn.', 'warning');
       return;
     }
 

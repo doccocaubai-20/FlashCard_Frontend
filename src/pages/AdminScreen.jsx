@@ -5,6 +5,7 @@ import {
   Sparkles, Globe, Lock, Server, Filter, X,
   RefreshCw, UserCog,
 } from 'lucide-react';
+import { useToast } from '../context/ToastContext';
 
 // ─── Tab definitions ──────────────────────────────────────────────────────────
 const TABS = [
@@ -49,7 +50,7 @@ function CreateDeckModal({ onClose, onSuccess }) {
     try {
       setCreating(true);
       setError('');
-      await api.post('/api/decks', { title: title.trim(), description: description.trim(), isSystem: true });
+      await api.post('/api/admin/decks', { title: title.trim(), description: description.trim() });
       onSuccess();
     } catch (err) {
       setError(err.response?.data?.message || 'Không thể tạo bộ thẻ.');
@@ -112,8 +113,85 @@ function CreateDeckModal({ onClose, onSuccess }) {
   );
 }
 
+// ─── Edit System Deck Modal ───────────────────────────────────────────────────
+function EditDeckModal({ deck, onClose, onSuccess }) {
+  const [title, setTitle] = useState(deck.title || deck.name || '');
+  const [description, setDescription] = useState(deck.description || '');
+  const [updating, setUpdating] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!title.trim()) return;
+    try {
+      setUpdating(true);
+      setError('');
+      await api.patch(`/api/admin/decks/${deck.id}`, { title: title.trim(), description: description.trim() });
+      onSuccess();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Không thể cập nhật bộ thẻ.');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <div className="bg-surface-card dark:bg-surface-dark rounded-xl shadow-xl max-w-md w-full border border-hairline dark:border-divider-dark overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-hairline dark:border-divider-dark">
+          <h3 className="text-base font-bold text-ink dark:text-on-dark font-display flex items-center gap-2">
+            <Sparkles size={16} className="text-amber-500" />
+            Chỉnh sửa bộ thẻ hệ thống
+          </h3>
+          <button onClick={onClose} className="text-mute hover:text-ink dark:text-on-dark-mute dark:hover:text-on-dark p-1.5 rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors cursor-pointer">
+            <X size={18} />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div className="space-y-1">
+            <label className="text-[10px] uppercase font-bold text-mute tracking-wider">Tên bộ từ vựng <span className="text-primary">*</span></label>
+            <input
+              type="text"
+              required
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Ví dụ: HSK 4 Bài 1, Từ vựng đời sống..."
+              className="w-full text-xs p-3 rounded-lg border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-black/20 text-ink dark:text-on-dark focus:outline-none focus:border-primary transition-colors"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-[10px] uppercase font-bold text-mute tracking-wider">Mô tả chi tiết</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Nhập mô tả ngắn gọn về bộ từ vựng..."
+              rows={3}
+              className="w-full text-xs p-3 rounded-lg border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-black/20 text-ink dark:text-on-dark focus:outline-none focus:border-primary transition-colors resize-none"
+            />
+          </div>
+          {error && <p className="text-[11px] font-semibold text-red-500">{error}</p>}
+          <div className="flex items-center justify-end gap-3 pt-2 border-t border-hairline dark:border-divider-dark">
+            <button type="button" onClick={onClose} className="px-4 py-2 rounded-full border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark text-xs font-bold transition-colors cursor-pointer">
+              Hủy bỏ
+            </button>
+            <button
+              type="submit"
+              disabled={updating}
+              className="px-5 py-2 bg-primary hover:bg-primary-deep disabled:bg-stone text-white font-bold text-xs rounded-full flex items-center gap-1 cursor-pointer transition-colors shadow-xs"
+            >
+              {updating ? 'Đang lưu...' : 'Lưu thay đổi'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+
 // ─── Main AdminScreen ─────────────────────────────────────────────────────────
 export default function AdminScreen() {
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
 
   // ── Overview data ──
@@ -127,6 +205,7 @@ export default function AdminScreen() {
   const [decksError, setDecksError] = useState('');
   const [deckFilter, setDeckFilter] = useState('all'); // all | system | public | private
   const [isCreateDeckModalOpen, setIsCreateDeckModalOpen] = useState(false);
+  const [editingDeck, setEditingDeck] = useState(null);
 
   // ── Users tab state ──
   const [roleChanging, setRoleChanging] = useState({}); // { [userId]: true/false }
@@ -179,9 +258,10 @@ export default function AdminScreen() {
       setRoleChanging((prev) => ({ ...prev, [user.id]: true }));
       await api.patch(`/api/admin/users/${user.id}/role`, { role: newRole });
       await fetchStats(); // refresh user list inside stats
+      showToast('Đã thay đổi vai trò người dùng thành công!', 'success');
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || 'Không thể đổi vai trò người dùng.');
+      showToast(err.response?.data?.message || 'Không thể đổi vai trò người dùng.', 'error');
     } finally {
       setRoleChanging((prev) => ({ ...prev, [user.id]: false }));
     }
@@ -193,9 +273,10 @@ export default function AdminScreen() {
     try {
       await api.delete(`/api/admin/decks/${deck.id}`);
       setAdminDecks((prev) => prev.filter((d) => d.id !== deck.id));
+      showToast('Đã xóa bộ thẻ thành công!', 'success');
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || 'Không thể xóa bộ thẻ.');
+      showToast(err.response?.data?.message || 'Không thể xóa bộ thẻ.', 'error');
     }
   };
 
@@ -528,10 +609,10 @@ export default function AdminScreen() {
                         </td>
                         <td className="py-3.5 font-mono font-bold">{deck.cardCount ?? 0}</td>
                         <td className="py-3.5">
-                          {deck.owner ? (
+                          {deck.user ? (
                             <div>
-                              <div className="font-semibold text-ink dark:text-on-dark">{deck.owner.name}</div>
-                              <div className="text-[10px] text-mute font-mono">{deck.owner.email}</div>
+                              <div className="font-semibold text-ink dark:text-on-dark">{deck.user.name}</div>
+                              <div className="text-[10px] text-mute font-mono">{deck.user.email}</div>
                             </div>
                           ) : (
                             <span className="text-mute italic">Hệ thống</span>
@@ -541,12 +622,24 @@ export default function AdminScreen() {
                           {new Date(deck.createdAt).toLocaleDateString('vi-VN')}
                         </td>
                         <td className="py-3.5 pr-4 text-right">
-                          <button
-                            onClick={() => handleDeleteDeck(deck)}
-                            className="flex items-center gap-1 ml-auto px-3 py-1.5 rounded-full border border-red-500/30 text-[10px] font-bold text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors cursor-pointer"
-                          >
-                            <Trash2 size={11} /> Xóa
-                          </button>
+                          {deck.isSystem ? (
+                            <div className="flex items-center gap-1.5 justify-end">
+                              <button
+                                onClick={() => setEditingDeck(deck)}
+                                className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-primary/30 text-[10px] font-bold text-primary hover:bg-primary hover:text-white hover:border-primary transition-colors cursor-pointer"
+                              >
+                                Sửa
+                              </button>
+                              <button
+                                onClick={() => handleDeleteDeck(deck)}
+                                className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-red-500/30 text-[10px] font-bold text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors cursor-pointer"
+                              >
+                                <Trash2 size={11} /> Xóa
+                              </button>
+                            </div>
+                          ) : (
+                            <span className="text-[10px] text-mute italic">Bộ bài của user</span>
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -573,6 +666,18 @@ export default function AdminScreen() {
             setIsCreateDeckModalOpen(false);
             fetchAdminDecks();
             fetchStats();
+          }}
+        />
+      )}
+
+      {/* Edit Deck Modal */}
+      {editingDeck && (
+        <EditDeckModal
+          deck={editingDeck}
+          onClose={() => setEditingDeck(null)}
+          onSuccess={() => {
+            setEditingDeck(null);
+            fetchAdminDecks();
           }}
         />
       )}

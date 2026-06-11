@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDictionary } from '../hooks/useDictionary';
 import HandwritingCanvas from '../components/common/HandwritingCanvas';
-import { Search, BookOpen, ArrowLeft, Sparkles, Copy, Check, History, Trash2, Star, Volume2 } from 'lucide-react';
+import { Search, BookOpen, ArrowLeft, Sparkles, Copy, Check, History, Trash2, Star, Volume2, Camera, X } from 'lucide-react';
 import { dictionaryHistoryApi } from '../services/dictionaryHistoryApi';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { useSearchParams } from 'react-router-dom';
 import { translationData } from '../data/translationData';
 import { dialoguesData } from '../data/dialoguesData';
 import { grammarData } from '../data/grammarData';
+import api from '../services/api';
+import { speakChinese } from '../utils/tts';
 
 // External sentences loaded dynamically in the background
 let _externalSentences = [];
@@ -184,6 +186,161 @@ export default function DictionaryScreen() {
   const [aiLoading, setAiLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [aiLimit, setAiLimit] = useState({ count: 0, limit: 10 });
+
+  // Camera OCR states
+  const [showOcrScanner, setShowOcrScanner] = useState(false);
+  const [ocrSentenceResult, setOcrSentenceResult] = useState(null);
+  const [ocrLoading, setOcrLoading] = useState(false);
+  const [ocrProgress, setOcrProgress] = useState('');
+  const [ocrError, setOcrError] = useState('');
+  const [videoDevices, setVideoDevices] = useState([]);
+  const [selectedDeviceId, setSelectedDeviceId] = useState('');
+  const [capturedImage, setCapturedImage] = useState(null);
+  const [recognizedText, setRecognizedText] = useState('');
+
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+
+  // Enumerate video devices on open scanner
+  useEffect(() => {
+    if (showOcrScanner) {
+      navigator.mediaDevices.enumerateDevices().then((devices) => {
+        const videoInputs = devices.filter((d) => d.kind === 'videoinput');
+        setVideoDevices(videoInputs);
+        if (videoInputs.length > 0) {
+          // Try to select environment (back) camera first
+          const backCam = videoInputs.find(d => 
+            d.label.toLowerCase().includes('back') || 
+            d.label.toLowerCase().includes('environment') ||
+            d.label.toLowerCase().includes('sau')
+          );
+          setSelectedDeviceId(backCam ? backCam.deviceId : videoInputs[0].deviceId);
+        }
+      }).catch(err => console.error('Enumerate devices failed:', err));
+    } else {
+      // Clear OCR state on close
+      setCapturedImage(null);
+      setRecognizedText('');
+      setOcrError('');
+      setOcrProgress('');
+    }
+  }, [showOcrScanner]);
+
+  // Stream handling
+  useEffect(() => {
+    let activeStream = null;
+    if (showOcrScanner && selectedDeviceId && !capturedImage) {
+      navigator.mediaDevices.getUserMedia({
+        video: { deviceId: { exact: selectedDeviceId } }
+      }).then((s) => {
+        activeStream = s;
+        if (videoRef.current) {
+          videoRef.current.srcObject = s;
+        }
+      }).catch((err) => {
+        console.error('getUserMedia deviceId failed, trying fallback:', err);
+        navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' }
+        }).then((s) => {
+          activeStream = s;
+          if (videoRef.current) {
+            videoRef.current.srcObject = s;
+          }
+        }).catch((e) => {
+          setOcrError('Không thể truy cập camera. Vui lòng cấp quyền camera cho ứng dụng!');
+        });
+      });
+    }
+
+    return () => {
+      if (activeStream) {
+        activeStream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [showOcrScanner, selectedDeviceId, capturedImage]);
+
+  // Capture frame
+  const captureFrame = () => {
+    if (!videoRef.current || !canvasRef.current) return;
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    // Match canvas dimensions to video feed
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Save data URL of captured image to display it and freeze camera
+    const dataUrl = canvas.toDataURL('image/png');
+    setCapturedImage(dataUrl);
+
+    // Stop video tracks immediately to turn off camera LED
+    if (video.srcObject) {
+      video.srcObject.getTracks().forEach(track => track.stop());
+    }
+
+    // Trigger Tesseract OCR on captured canvas
+    performOcr(canvas);
+  };
+
+  // Run Tesseract OCR
+  const performOcr = async (imageSource) => {
+    if (!window.Tesseract) {
+      setOcrError('Không tìm thấy thư viện OCR. Vui lòng kiểm tra kết nối mạng hoặc thử lại!');
+      return;
+    }
+    setOcrLoading(true);
+    setOcrError('');
+    setOcrProgress('Đang nhận diện chữ Hán (OCR)... 0%');
+
+    try {
+      const { data: { text } } = await window.Tesseract.recognize(
+        imageSource,
+        'chi_sim',
+        {
+          logger: m => {
+            if (m.status === 'recognizing text') {
+              setOcrProgress(`Đang nhận diện chữ Hán (OCR)... ${Math.round(m.progress * 100)}%`);
+            }
+          }
+        }
+      );
+
+      const cleanedText = text.replace(/\s+/g, '').trim();
+      setRecognizedText(cleanedText);
+      if (!cleanedText) {
+        setOcrError('Không tìm thấy chữ Hán nào trong hình ảnh. Vui lòng thử chụp góc khác rõ hơn!');
+      } else {
+        setOcrProgress('Nhận diện thành công! Bạn có thể chỉnh sửa văn bản nếu cần.');
+      }
+    } catch (err) {
+      console.error('OCR failed:', err);
+      setOcrError('Lỗi trong quá trình nhận diện hình ảnh.');
+    } finally {
+      setOcrLoading(false);
+    }
+  };
+
+  // Submit recognized text to Backend AI analysis
+  const handleOcrAnalyze = async () => {
+    if (!recognizedText.trim()) return;
+    setOcrLoading(true);
+    setOcrError('');
+    setOcrProgress('AI đang dịch nghĩa & phân tách từ...');
+    try {
+      const res = await api.post('/api/dictionary/ocr-analyze', {
+        text: recognizedText.trim()
+      });
+      setOcrSentenceResult(res.data);
+      setShowOcrScanner(false);
+    } catch (err) {
+      console.error('OCR Analysis failed:', err);
+      setOcrError(err.response?.data?.message || 'Lỗi khi phân tích câu bằng AI.');
+    } finally {
+      setOcrLoading(false);
+    }
+  };
 
   async function loadAiLimit() {
     try {
@@ -569,13 +726,8 @@ export default function DictionaryScreen() {
   }
 
   const speakSentence = (e, text) => {
-    e.stopPropagation();
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.85;
-    window.speechSynthesis.speak(utterance);
+    if (e) e.stopPropagation();
+    speakChinese(text);
   };
 
   const handleKeyDown = (e) => {
@@ -916,19 +1068,29 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                   {tabDetails?.s === tabDetails?.t ? 'Từ vựng' : 'Giản thể'}
                 </span>
 
-                {tabDetails && (
-                  <button
-                    type="button"
-                    onClick={handleToggleFavorite}
-                    className={`absolute top-4 right-4 p-2 rounded-full border transition-all cursor-pointer ${
-                      isFavorite(tabDetails.s)
-                        ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
-                        : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
-                    }`}
-                    title={isFavorite(tabDetails.s) ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
-                  >
-                    <Star size={16} fill={isFavorite(tabDetails.s) ? 'currentColor' : 'none'} />
-                  </button>
+                 {tabDetails && (
+                  <div className="absolute top-4 right-4 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={(e) => speakSentence(e, tabDetails.s)}
+                      className="p-2 rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-primary hover:text-primary-deep shadow-sm flex items-center justify-center cursor-pointer active:scale-95 transition-all"
+                      title="Phát âm từ này"
+                    >
+                      <Volume2 size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleToggleFavorite}
+                      className={`p-2 rounded-full border transition-all cursor-pointer ${
+                        isFavorite(tabDetails.s)
+                          ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
+                          : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
+                      }`}
+                      title={isFavorite(tabDetails.s) ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
+                    >
+                      <Star size={16} fill={isFavorite(tabDetails.s) ? 'currentColor' : 'none'} />
+                    </button>
+                  </div>
                 )}
 
                 <h2 className="text-6xl md:text-7xl font-bold text-ink dark:text-on-dark tracking-wide font-display py-4">
@@ -1043,9 +1205,17 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="w-full pl-11 pr-4 py-3 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark shadow-sm"
+                    className="w-full pl-11 pr-12 py-3 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm text-ink dark:text-on-dark shadow-sm"
                   />
                   <Search className="absolute left-4 top-3.5 text-mute" size={16} />
+                  <button
+                    type="button"
+                    onClick={() => setShowOcrScanner(true)}
+                    className="absolute right-4 top-2.5 p-1.5 rounded-full text-mute hover:text-primary hover:bg-surface-bone dark:hover:bg-black transition-colors cursor-pointer"
+                    title="Quét chữ bằng Camera (OCR)"
+                  >
+                    <Camera size={18} />
+                  </button>
                 </div>
                 <button
                   type="button"
@@ -1058,6 +1228,73 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                 </button>
               </div>                {/* Results List */}
               <div className="flex-1 min-h-[450px] max-h-[600px] overflow-y-auto pr-1 flex flex-col gap-3">
+                {ocrSentenceResult && (
+                  <div className="bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/30 p-5 rounded-xl text-left space-y-4 animate-fade-in relative shadow-sm">
+                    <button
+                      type="button"
+                      onClick={() => setOcrSentenceResult(null)}
+                      className="absolute top-4 right-4 text-mute hover:text-ink dark:hover:text-on-dark font-bold text-xs cursor-pointer"
+                    >
+                      ✕ Đóng
+                    </button>
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-bold tracking-wider uppercase text-primary bg-primary/15 px-2.5 py-1 rounded-full">
+                        Kết quả quét Camera AI
+                      </span>
+                      <div className="flex items-center gap-2 pt-2">
+                        <h3 className="text-xl font-display font-extrabold text-ink dark:text-on-dark leading-none">
+                          {ocrSentenceResult.originalText}
+                        </h3>
+                        <button
+                          type="button"
+                          onClick={(e) => speakSentence(e, ocrSentenceResult.originalText)}
+                          className="h-7 w-7 rounded-full bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark text-primary flex items-center justify-center cursor-pointer active:scale-95 transition-all"
+                        >
+                          <Volume2 size={12} />
+                        </button>
+                      </div>
+                      <p className="text-sm font-mono font-bold text-primary dark:text-link">
+                        {ocrSentenceResult.pinyin}
+                      </p>
+                      <p className="text-xs text-body dark:text-on-dark-mute italic font-medium leading-relaxed mt-1">
+                        Dịch nghĩa: {ocrSentenceResult.translation}
+                      </p>
+                    </div>
+
+                    <div className="border-t border-hairline dark:border-divider-dark pt-3.5 space-y-2.5">
+                      <h4 className="text-[11px] font-bold text-mute uppercase tracking-wider">
+                        Phân tách từ tố (Click để tra nghĩa chi tiết)
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {ocrSentenceResult.words && ocrSentenceResult.words.map((item, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={async () => {
+                              const matches = await lookupMultiple('hanzi', item.word);
+                              const exact = matches.find(m => m.s === item.word || m.t === item.word);
+                              if (exact) {
+                                handleSelectWord(exact);
+                              } else {
+                                handleSelectWord({
+                                  s: item.word,
+                                  t: item.word,
+                                  p: '',
+                                  vi: item.meaning || 'Chưa cập nhật nghĩa trong từ điển',
+                                  isVirtual: true
+                                });
+                              }
+                            }}
+                            className="px-3 py-1.5 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark rounded-lg text-xs font-semibold text-ink dark:text-on-dark hover:border-primary/50 transition-all cursor-pointer flex flex-col items-center gap-0.5"
+                          >
+                            <span className="font-bold text-sm text-primary">{item.word}</span>
+                            <span className="text-[9px] text-mute font-normal">{item.meaning}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {isSearching && (
                   <div className="flex flex-col items-center justify-center py-20 text-mute gap-3">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -1288,6 +1525,142 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
 
       </div>
 
+      {/* OCR Camera Scanner Modal */}
+      {showOcrScanner && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-2xl max-w-lg w-full p-6 flex flex-col gap-4 shadow-xl text-left relative">
+            <button
+              type="button"
+              onClick={() => setShowOcrScanner(false)}
+              className="absolute top-4 right-4 text-mute hover:text-ink dark:hover:text-on-dark p-2 rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center gap-2 border-b border-hairline dark:border-divider-dark pb-3">
+              <Camera size={20} className="text-primary" />
+              <div>
+                <h3 className="font-display font-extrabold text-lg text-ink dark:text-on-dark">Quét chữ bằng Camera (OCR)</h3>
+                <p className="text-xs text-mute mt-0.5">Sử dụng camera để bóc tách chữ Hán và dịch nghĩa bằng AI.</p>
+              </div>
+            </div>
+
+            {ocrError && (
+              <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-lg text-xs font-semibold">
+                ⚠️ {ocrError}
+              </div>
+            )}
+
+            {/* Video viewport / Captured image preview */}
+            <div className="relative bg-black rounded-xl overflow-hidden aspect-video border border-hairline dark:border-divider-dark flex items-center justify-center">
+              {!capturedImage ? (
+                <>
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Target frame overlay */}
+                  <div className="absolute inset-8 border-2 border-dashed border-primary/60 rounded-lg pointer-events-none flex items-center justify-center">
+                    <span className="bg-black/60 text-white text-[9px] px-2 py-1 rounded font-bold tracking-wider uppercase">
+                      Căn chữ Hán vào khung này
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <img
+                  src={capturedImage}
+                  alt="Captured frame"
+                  className="w-full h-full object-cover"
+                />
+              )}
+
+              {/* Loader overlay */}
+              {ocrLoading && (
+                <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white gap-3 p-4 text-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <span className="text-xs font-semibold tracking-wide animate-pulse">{ocrProgress}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Camera Select dropdown */}
+            {!capturedImage && videoDevices.length > 1 && (
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase font-bold text-mute tracking-wider">Chọn Camera</label>
+                <select
+                  value={selectedDeviceId}
+                  onChange={(e) => setSelectedDeviceId(e.target.value)}
+                  className="w-full text-xs p-2 rounded-lg border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-black/20 text-ink dark:text-on-dark focus:outline-none focus:border-primary cursor-pointer"
+                >
+                  {videoDevices.map((device, idx) => (
+                    <option key={device.deviceId} value={device.deviceId}>
+                      {device.label || `Camera ${idx + 1}`}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* Textarea for review once recognized */}
+            {recognizedText && (
+              <div className="space-y-1 text-left">
+                <label className="text-[10px] uppercase font-bold text-mute tracking-wider">
+                  Chữ Hán nhận diện được (Click để sửa lại nếu sai)
+                </label>
+                <textarea
+                  value={recognizedText}
+                  onChange={(e) => setRecognizedText(e.target.value)}
+                  rows={2}
+                  className="w-full text-sm p-3 rounded-lg border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-black/20 text-ink dark:text-on-dark focus:outline-none focus:border-primary resize-none font-display font-semibold"
+                />
+              </div>
+            )}
+
+            {/* Controls */}
+            <div className="flex gap-3 mt-2">
+              {capturedImage ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCapturedImage(null);
+                      setRecognizedText('');
+                      setOcrError('');
+                      setOcrProgress('');
+                    }}
+                    className="flex-1 py-2.5 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark rounded-xl text-ink dark:text-on-dark text-xs font-bold transition-all cursor-pointer text-center"
+                  >
+                    Chụp lại
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleOcrAnalyze}
+                    disabled={ocrLoading || !recognizedText.trim()}
+                    className="flex-1 py-2.5 bg-primary hover:bg-primary-deep text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm active:scale-95 disabled:bg-stone"
+                  >
+                    <Sparkles size={14} />
+                    Dịch & Phân tích bằng AI
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={captureFrame}
+                  disabled={ocrError.includes('Không thể truy cập camera')}
+                  className="w-full py-2.5 bg-primary hover:bg-primary-deep text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm active:scale-95 disabled:bg-stone"
+                >
+                  <Camera size={14} />
+                  Chụp và Nhận diện chữ
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      <canvas ref={canvasRef} style={{ display: 'none' }} />
     </div>
   );
 }

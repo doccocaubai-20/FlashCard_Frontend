@@ -9,7 +9,21 @@ export default function Flashcard({
   showPinyinOnFront = false,
   onTogglePinyinOnFront
 }) {
-  const { character, pinyin, meaning } = cardData || {};
+  const { character: frontChar, pinyin: frontPinyin, meaning: frontMeaning } = cardData || {};
+  const [backCardData, setBackCardData] = React.useState(cardData);
+
+  React.useEffect(() => {
+    if (isFlipped) {
+      setBackCardData(cardData);
+    } else {
+      const timer = setTimeout(() => {
+        setBackCardData(cardData);
+      }, 700); // Delay matches transition-transform duration-700
+      return () => clearTimeout(timer);
+    }
+  }, [isFlipped, cardData]);
+
+  const { character: backChar, pinyin: backPinyin, meaning: backMeaning } = backCardData || {};
 
   const cardStyle = {
     transformStyle: 'preserve-3d',
@@ -64,7 +78,7 @@ export default function Flashcard({
               <div className="flex flex-col items-center">
                 {/* Clean Ink or Accent Orange Text */}
                 <div className="text-9xl font-display font-extrabold tracking-tight text-ink dark:text-on-dark">
-                  {character || '漢'}
+                  {frontChar || '漢'}
                 </div>
                 
                 {/* Pinyin element (space reserved to prevent shifting) */}
@@ -73,13 +87,13 @@ export default function Flashcard({
                     showPinyinOnFront ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
                   }`}
                 >
-                  {pinyin || ''}
+                  {frontPinyin || ''}
                 </div>
               </div>
             ) : (
               <>
                 <div className="text-3xl font-display font-extrabold tracking-tight max-w-md px-4 leading-normal text-primary">
-                  {meaning || 'Nghĩa tiếng Việt...'}
+                  {frontMeaning || 'Nghĩa tiếng Việt...'}
                 </div>
               </>
             )}
@@ -103,13 +117,13 @@ export default function Flashcard({
             
             <div className="rounded-md bg-surface-card dark:bg-surface-dark p-6 border border-hairline dark:border-divider-dark">
               <div className="text-7xl font-display font-extrabold text-primary tracking-tight">
-                {character || '漢'}
+                {backChar || '漢'}
               </div>
               <div className="mt-2 text-2xl font-mono font-bold text-ink dark:text-on-dark">
-                {pinyin || 'hàn'}
+                {backPinyin || 'hàn'}
               </div>
               <div className="mt-4 text-lg font-medium text-body dark:text-on-dark-mute border-l-4 border-primary pl-3 leading-relaxed">
-                {meaning || 'nghĩa tiếng Việt...'}
+                {backMeaning || 'nghĩa tiếng Việt...'}
               </div>
             </div>
           </div>

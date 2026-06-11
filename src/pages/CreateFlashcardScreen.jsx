@@ -6,6 +6,7 @@ import { PlusCircle, ArrowLeft, Sparkles, CheckSquare, Square, Save, Loader2 } f
 import { useDictionary } from '../hooks/useDictionary';
 import HandwritingCanvas from '../components/common/HandwritingCanvas';
 import { aiFlashcardApi } from '../services/aiFlashcardApi';
+import { useToast } from '../context/ToastContext';
 
 // ─── Tab definitions ──────────────────────────────────────────────────────────
 const TABS = [
@@ -27,6 +28,7 @@ const HSK_LEVELS = [
 const COUNT_OPTIONS = [5, 10, 15, 20, 30];
 
 export default function CreateFlashcardScreen() {
+  const { showToast } = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -85,9 +87,10 @@ export default function CreateFlashcardScreen() {
       setAiSaveDeckId(String(newDeck.id));
       setShowNewDeckInput(false);
       setNewDeckTitle('');
+      showToast('Đã tạo bộ bài mới thành công!', 'success');
     } catch (err) {
       console.error('Failed to create new deck:', err);
-      alert('Không thể tạo bộ bài mới. Vui lòng thử lại.');
+      showToast('Không thể tạo bộ bài mới. Vui lòng thử lại.', 'error');
     } finally {
       setIsCreatingDeck(false);
     }

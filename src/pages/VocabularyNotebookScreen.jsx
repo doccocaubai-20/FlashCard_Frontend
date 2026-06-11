@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
+import { useToast } from '../context/ToastContext';
 import { 
   Star, 
   Search, 
@@ -17,6 +18,7 @@ import {
 
 export default function VocabularyNotebookScreen() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   // Starred words states
   const [favorites, setFavorites] = useState([]);
@@ -98,7 +100,7 @@ export default function VocabularyNotebookScreen() {
   // CSV Export Action (Excel compatible)
   const handleExportCSV = () => {
     if (favorites.length === 0) {
-      alert('Không có từ vựng nào để xuất dữ liệu.');
+      showToast('Không có từ vựng nào để xuất dữ liệu.', 'warning');
       return;
     }
 

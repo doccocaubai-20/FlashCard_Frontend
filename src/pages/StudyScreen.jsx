@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import { fetchTodayStudy, submitReview } from '../features/study/studySlice';
 import { fetchAllDecks } from '../features/deck/deckSlice';
+import { useToast } from '../context/ToastContext';
 import { studyApi } from '../services/studyApi';
 import Flashcard from '../components/flashcard/Flashcard';
 import SRSButtons from '../components/study/SRSButtons';
@@ -18,6 +19,7 @@ import {
 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { useDictionary } from '../hooks/useDictionary';
+import { speakChinese } from '../utils/tts';
 
 // SVG blossom logo
 function BlossomIcon({ className }) {
@@ -33,6 +35,7 @@ function WritingPractice({ character }) {
   const containerRef = useRef(null);
   const writerRef = useRef(null);
   const [mode, setMode] = useState('idle'); // idle, quiz
+  const { showToast } = useToast();
 
   const cleanChar = character.split(/[｜|]/)[0].trim();
   const chars = Array.from(cleanChar);
@@ -82,7 +85,7 @@ function WritingPractice({ character }) {
     setMode('quiz');
     writerRef.current.quiz({
       onComplete: (_summary) => {
-        alert('Tuyệt vời! Bạn đã viết chính xác từ này!');
+        showToast('Tuyệt vời! Bạn đã viết chính xác từ này!', 'success');
         setMode('idle');
       }
     });
@@ -165,24 +168,17 @@ function SpeakingPractice({ character, pinyin }) {
   const [transcript, setTranscript] = useState('');
   const [result, setResult] = useState(null); // 'success', 'fail', null
   const recognitionRef = useRef(null);
+  const { showToast } = useToast();
 
-  // Text to Speech Pronunciation Guide
   const handleSpeakGuide = () => {
-    if (!window.speechSynthesis) {
-      alert('Trình duyệt của bạn không hỗ trợ Text-to-Speech.');
-      return;
-    }
-    const utterance = new SpeechSynthesisUtterance(character);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.8;
-    window.speechSynthesis.speak(utterance);
+    speakChinese(character);
   };
 
   // Start Speech Recognition
   const handleStartListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert('Trình duyệt của bạn không hỗ trợ nhận dạng giọng nói (Speech Recognition). Vui lòng thử trên Google Chrome hoặc Safari.');
+      showToast('Trình duyệt của bạn không hỗ trợ nhận dạng giọng nói (Speech Recognition). Vui lòng thử trên Google Chrome hoặc Safari.', 'warning');
       return;
     }
 
@@ -289,11 +285,7 @@ function AIExampleBox({ card }) {
 
   const handleSpeakExample = (e) => {
     e.stopPropagation();
-    if (!window.speechSynthesis) return;
-    const utterance = new SpeechSynthesisUtterance(card.exampleHanzi);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.85;
-    window.speechSynthesis.speak(utterance);
+    speakChinese(card.exampleHanzi);
   };
 
   return (
@@ -358,6 +350,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 export default function StudyScreen() {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
+  const { showToast } = useToast();
   const deckIdParam = searchParams.get('deckId');
   
   // Redux study state
@@ -481,6 +474,59 @@ export default function StudyScreen() {
 
   const [showWriting, setShowWriting] = useState(false);
   const [showSpeaking, setShowSpeaking] = useState(false);
+  const [pendingSyncCount, setPendingSyncCount] = useState(0);
+
+  // Sync offline queued reviews to backend
+  const syncOfflineReviews = async () => {
+    const pendingStr = localStorage.getItem('chongzi_pending_reviews');
+    if (!pendingStr) return;
+    try {
+      const pending = JSON.parse(pendingStr);
+      if (pending.length === 0) return;
+      console.log(`Syncing ${pending.length} offline reviews...`);
+      
+      for (const review of pending) {
+        await dispatch(submitReview({ cardId: review.cardId, rating: review.rating })).unwrap();
+      }
+      
+      localStorage.removeItem('chongzi_pending_reviews');
+      setPendingSyncCount(0);
+      console.log('Successfully synced offline reviews.');
+    } catch (err) {
+      console.error('Failed to sync offline reviews:', err);
+    }
+  };
+
+  // Check pending reviews count from localStorage
+  const checkPendingSync = () => {
+    try {
+      const pendingStr = localStorage.getItem('chongzi_pending_reviews');
+      if (pendingStr) {
+        const pending = JSON.parse(pendingStr);
+        setPendingSyncCount(pending.length);
+      } else {
+        setPendingSyncCount(0);
+      }
+    } catch (e) {
+      setPendingSyncCount(0);
+    }
+  };
+
+  useEffect(() => {
+    checkPendingSync();
+    const interval = setInterval(checkPendingSync, 3000);
+    
+    // Register online listener
+    window.addEventListener('online', syncOfflineReviews);
+    if (navigator.onLine) {
+      syncOfflineReviews();
+    }
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('online', syncOfflineReviews);
+    };
+  }, []);
 
   useEffect(() => {
     activeQueueRef.current = activeQueue;
@@ -510,6 +556,20 @@ export default function StudyScreen() {
     loadFavorites();
   }, [dispatch]);
 
+  // Cache allCards in localStorage
+  useEffect(() => {
+    if (allCards && allCards.length > 0) {
+      localStorage.setItem('chongzi_offline_all_cards', JSON.stringify(allCards));
+    }
+  }, [allCards]);
+
+  // Cache todayCards in localStorage
+  useEffect(() => {
+    if (todayCards && todayCards.length > 0) {
+      localStorage.setItem('chongzi_offline_cards', JSON.stringify(todayCards));
+    }
+  }, [todayCards]);
+
   useEffect(() => {
     if (selectedDeckId === 'favorites') {
       setStudyMode('classic');
@@ -535,7 +595,28 @@ export default function StudyScreen() {
         deckName: 'Từ vựng yêu thích'
       }));
     }
+    
     let list = studyMode === 'srs' ? todayCards : allCards;
+    
+    // Offline fallback
+    if (!navigator.onLine) {
+      if (studyMode === 'srs') {
+        const cached = localStorage.getItem('chongzi_offline_cards');
+        if (cached) {
+          try {
+            list = JSON.parse(cached);
+          } catch (e) {}
+        }
+      } else {
+        const cached = localStorage.getItem('chongzi_offline_all_cards');
+        if (cached) {
+          try {
+            list = JSON.parse(cached);
+          } catch (e) {}
+        }
+      }
+    }
+    
     if (selectedDeckId !== 'all') {
       list = list.filter((c) => c.deckId === Number(selectedDeckId));
     }
@@ -582,7 +663,7 @@ export default function StudyScreen() {
   // Start study session
   const handleStartStudy = () => {
     if (filteredQueue.length === 0) {
-      alert('Không tìm thấy từ vựng nào khớp với cấu hình học của bạn!');
+      showToast('Không tìm thấy từ vựng nào khớp với cấu hình học của bạn!', 'warning');
       return;
     }
 
@@ -658,7 +739,7 @@ export default function StudyScreen() {
 
   const handleStartPassive = () => {
     if (filteredQueue.length === 0) {
-      alert('Không tìm thấy từ vựng nào khớp với cấu hình học của bạn!');
+      showToast('Không tìm thấy từ vựng nào khớp với cấu hình học của bạn!', 'warning');
       return;
     }
 
@@ -749,15 +830,24 @@ export default function StudyScreen() {
     }
   };
 
-  // Spaced Repetition rating score submission
   const handleRate = async (rating) => {
     const currentCard = activeQueue[currentIndex];
     if (!currentCard) return;
 
     try {
       if (studyMode === 'srs') {
-        // Dispatch to backend database
-        await dispatch(submitReview({ cardId: currentCard.id, rating })).unwrap();
+        if (navigator.onLine) {
+          // Dispatch to backend database
+          await dispatch(submitReview({ cardId: currentCard.id, rating })).unwrap();
+        } else {
+          // Offline: Queue review
+          const pendingStr = localStorage.getItem('chongzi_pending_reviews') || '[]';
+          const pending = JSON.parse(pendingStr);
+          pending.push({ cardId: currentCard.id, rating, timestamp: Date.now() });
+          localStorage.setItem('chongzi_pending_reviews', JSON.stringify(pending));
+          setPendingSyncCount(pending.length);
+          console.log('Saved review offline:', currentCard.id, rating);
+        }
       }
       
       // Move next
@@ -887,8 +977,11 @@ export default function StudyScreen() {
             <ArrowLeft size={14} />
             Thoát
           </button>
-          <div className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute">
+          <div className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute flex items-center gap-1.5">
             THẺ {currentIndex + 1} / {activeQueue.length}
+            {!navigator.onLine && (
+              <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" title="Ngoại tuyến" />
+            )}
           </div>
           <div className="px-3 py-1 bg-surface-bone dark:bg-black/30 border border-hairline dark:border-divider-dark text-primary text-[10px] font-mono font-bold rounded-full">
             {studyMode === 'srs' ? 'Spaced Repetition' : 'Classic Mode'}
@@ -1181,12 +1274,33 @@ export default function StudyScreen() {
           <BlossomIcon className="h-8 w-8" />
         </div>
         <div>
-          <h1 className="font-display text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight">Flashcard Study</h1>
+          <h1 className="font-display text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight flex items-center gap-2">
+            <span>Flashcard Study</span>
+            {!navigator.onLine && (
+              <span className="text-[10px] bg-amber-500/10 border border-amber-500/30 text-amber-500 font-mono font-bold px-2 py-0.5 rounded-full uppercase">
+                Ngoại tuyến
+              </span>
+            )}
+          </h1>
           <p className="text-mute dark:text-on-dark-mute text-sm mt-1">
             Lật thẻ để kiểm tra trí nhớ. Đánh dấu từ bạn đã biết, ôn tập từ bạn chưa thuộc.
           </p>
         </div>
       </div>
+
+      {pendingSyncCount > 0 && (
+        <div className="bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-500 p-4 rounded-xl text-xs flex items-center justify-between font-mono font-bold shadow-xs">
+          <span>⚠️ Có {pendingSyncCount} kết quả học ngoại tuyến đang chờ mạng để đồng bộ...</span>
+          {navigator.onLine && (
+            <button
+              onClick={syncOfflineReviews}
+              className="px-3.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-full text-[10px] font-mono transition-colors cursor-pointer"
+            >
+              Đồng bộ ngay
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Row: Bộ bài Selector */}
       <div className="space-y-3">

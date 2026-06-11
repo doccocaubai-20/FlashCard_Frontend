@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { dictionaryApi } from '../services/dictionaryApi';
+import { speakChinese } from '../utils/tts';
 
 // ─────────────────────────────────────────────────────────────
 // HERO: Chữ Hán Hôm Nay — trung tâm trang chủ
@@ -66,11 +67,8 @@ function HeroWord() {
   }, []);
 
   const handleSpeak = () => {
-    if (!wotd || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(wotd.s);
-    u.lang = 'zh-CN'; u.rate = 0.8;
-    window.speechSynthesis.speak(u);
+    if (!wotd) return;
+    speakChinese(wotd.s);
   };
 
   if (loading || !wotd) {

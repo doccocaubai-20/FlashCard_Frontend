@@ -6,7 +6,8 @@ import {
   BookOpenText, 
   Library, 
   Grid, 
-  ArrowRight
+  ArrowRight,
+  Sparkles
 } from 'lucide-react';
 
 export default function ReferenceHubScreen() {
@@ -20,6 +21,14 @@ export default function ReferenceHubScreen() {
       path: '/dictionary',
       color: 'from-blue-500/10 to-indigo-500/10 border-blue-500/30 text-blue-500',
       badge: 'Công cụ tra cứu'
+    },
+    {
+      title: 'So sánh Từ đồng nghĩa AI',
+      description: 'Phân tích và phân biệt sự khác nhau chi tiết về ngữ cảnh, ngữ pháp giữa các cặp từ đồng nghĩa trong tiếng Trung (ví dụ: 觉得 vs 认为) bằng AI.',
+      icon: Sparkles,
+      path: '/synonyms',
+      color: 'from-pink-500/10 to-rose-500/10 border-pink-500/30 text-pink-500',
+      badge: 'Trí tuệ nhân tạo'
     },
     {
       title: 'Sổ tay từ vựng đã lưu',
