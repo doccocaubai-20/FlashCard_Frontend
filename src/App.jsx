@@ -32,6 +32,7 @@ import LeaderboardScreen from './pages/LeaderboardScreen';
 import AdminScreen from './pages/AdminScreen';
 import StatsScreen from './pages/StatsScreen';
 import SynonymComparisonScreen from './pages/SynonymComparisonScreen';
+import ChatbotScreen from './pages/ChatbotScreen';
 
 function PrivateRoute({ children }) {
   const token = useSelector((state) => state.auth.token);
@@ -94,6 +95,7 @@ function App() {
             <AdminScreen />
           </AdminRoute>
         } />
+        <Route path="/chat" element={<ChatbotScreen />} />
         <Route path="/settings" element={<SettingsScreen />} />
       </Route>
 

@@ -13,7 +13,8 @@ import {
   ChevronDown,
   Gamepad2,
   Trophy,
-  Shield
+  Shield,
+  MessageSquare
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -43,6 +44,7 @@ export default function Sidebar() {
       items: [
         { to: '/study-hub', label: 'Khu học tập HSK', icon: GraduationCap },
         { to: '/game-arcade', label: 'Đấu trường game', icon: Gamepad2 },
+        { to: '/chat', label: 'AI Chatbot', icon: MessageSquare },
       ]
     },
     {
