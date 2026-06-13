@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, RefreshCw, Trophy, Clock, CheckCircle2, XCircle, HelpCircle } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Trophy, Clock, CheckCircle2, XCircle, HelpCircle, Eye, EyeOff } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import api from '../services/api';
 
@@ -18,6 +18,7 @@ export default function QuizScreen() {
   const [quizFinished, setQuizFinished] = useState(false);
   const [timeLeft, setTimeLeft] = useState(15);
   const [userAnswers, setUserAnswers] = useState([]); // Array to store user's choices
+  const [showPinyin, setShowPinyin] = useState(true);
 
   const isVirtual = id === 'favorites';
 
@@ -106,13 +107,14 @@ export default function QuizScreen() {
     setUserAnswers([]);
   }
 
-  function handleOptionSelect(option) {
+  const handleOptionSelect = useCallback((option) => {
     if (isAnswered) return;
     
     setSelectedOption(option);
     setIsAnswered(true);
 
     const currentQuestion = questions[currentQuestionIndex];
+    if (!currentQuestion) return;
     const isCorrect = option === currentQuestion.correctOption;
 
     if (isCorrect) {
@@ -130,9 +132,9 @@ export default function QuizScreen() {
         isCorrect,
       },
     ]);
-  }
+  }, [isAnswered, questions, currentQuestionIndex]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
       setSelectedOption(null);
@@ -141,7 +143,39 @@ export default function QuizScreen() {
     } else {
       setQuizFinished(true);
     }
-  };
+  }, [currentQuestionIndex, questions.length]);
+
+  // Keyboard Shortcuts: Keys 1-4 to select options, Space/Enter to advance
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (quizFinished) return;
+
+      const currentQuestion = questions[currentQuestionIndex];
+      if (!currentQuestion) return;
+
+      if (!isAnswered) {
+        if (['1', '2', '3', '4'].includes(e.key)) {
+          e.preventDefault();
+          const optionIndex = parseInt(e.key, 10) - 1;
+          const option = currentQuestion.options[optionIndex];
+          if (option !== undefined) {
+            handleOptionSelect(option);
+          }
+        }
+      } else {
+        if (e.key === 'Enter' || e.key === ' ' || e.code === 'Space' || e.code === 'Enter') {
+          e.preventDefault();
+          handleNext();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isAnswered, quizFinished, questions, currentQuestionIndex, handleOptionSelect, handleNext]);
 
   const handleReplay = () => {
     generateQuiz(cards);
@@ -291,17 +325,32 @@ export default function QuizScreen() {
 
       {/* Calligraphy Question Card */}
       <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md p-8 text-center space-y-4 shadow-sm relative overflow-hidden transition-colors">
-        <span className="text-[10px] uppercase font-bold text-mute dark:text-on-dark-mute tracking-widest absolute top-4">
+        <span className="text-[10px] uppercase font-bold text-mute dark:text-on-dark-mute tracking-widest absolute top-4 left-6">
           Nghĩa của từ này là gì?
         </span>
+
+        {/* Toggle Pinyin Button */}
+        <button
+          type="button"
+          onClick={() => setShowPinyin((prev) => !prev)}
+          className="absolute top-3 right-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-hairline dark:border-divider-dark bg-surface-card/85 dark:bg-surface-dark/85 hover:bg-surface-bone dark:hover:bg-black px-3 py-1.5 text-[10px] font-semibold text-ink dark:text-on-dark shadow-sm backdrop-blur transition-all duration-200 cursor-pointer"
+          title="Ẩn/Hiện phiên âm Pinyin"
+        >
+          {showPinyin ? <EyeOff size={12} className="text-primary" /> : <Eye size={12} className="text-primary" />}
+          <span className="font-mono">{showPinyin ? 'Ẩn Pinyin' : 'Hiện Pinyin'}</span>
+        </button>
         
         <h2 className="text-7xl font-display font-extrabold text-ink dark:text-on-dark py-6 leading-none">
           {currentQuestion?.card.hanzi}
         </h2>
         
-        <p className="text-lg font-mono font-bold text-primary">
+        <div 
+          className={`text-lg font-mono font-bold text-primary transition-all duration-300 h-6 flex items-center justify-center ${
+            showPinyin ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+          }`}
+        >
           {currentQuestion?.card.pinyin || ' '}
-        </p>
+        </div>
       </div>
 
       {/* Multiple Choice Options List */}

@@ -52,6 +52,22 @@ export default function StudyHubScreen() {
       path: '/translation',
       color: 'from-red-500/10 to-rose-500/10 border-red-500/30 text-red-500',
       badge: 'Dịch thuật & Cú pháp'
+    },
+    {
+      title: 'Luyện viết tự do HSK',
+      description: 'Luyện viết chữ Hán tự do không giới hạn nét vẽ, tự động nhận diện chữ qua nét vẽ và tra nghĩa từ điển.',
+      icon: PenTool,
+      path: '/scribble-write',
+      color: 'from-amber-500/10 to-yellow-500/10 border-amber-500/30 text-amber-500',
+      badge: 'Viết tự do nháp'
+    },
+    {
+      title: 'Luyện nói tự do AI',
+      description: 'Nói bất kỳ điều gì bằng tiếng Trung, AI sẽ gõ chữ, kiểm tra phiên âm Pinyin và tra nghĩa từ điển.',
+      icon: Mic,
+      path: '/speaking-sandbox',
+      color: 'from-emerald-500/10 to-teal-500/10 border-emerald-500/30 text-emerald-500',
+      badge: 'Luyện nói tự do'
     }
   ];
 

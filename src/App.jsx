@@ -21,6 +21,8 @@ import MatchingGameScreen from './pages/MatchingGameScreen';
 import TranslationPlaygroundScreen from './pages/TranslationPlaygroundScreen';
 import VocabularyNotebookScreen from './pages/VocabularyNotebookScreen';
 import SpeakingScreen from './pages/SpeakingScreen';
+import ScribbleWriteScreen from './pages/ScribbleWriteScreen';
+import FreestyleSpeakingScreen from './pages/FreestyleSpeakingScreen';
 import UnscrambleGameScreen from './pages/UnscrambleGameScreen';
 import FallingWordsGameScreen from './pages/FallingWordsGameScreen';
 import StudyHubScreen from './pages/StudyHubScreen';
@@ -70,11 +72,13 @@ function App() {
         <Route path="/dictionary" element={<DictionaryScreen />} />
         <Route path="/synonyms" element={<SynonymComparisonScreen />} />
         <Route path="/write" element={<FreeWriteScreen />} />
+        <Route path="/scribble-write" element={<ScribbleWriteScreen />} />
         <Route path="/radicals" element={<RadicalScreen />} />
         <Route path="/pinyin" element={<PinyinScreen />} />
         <Route path="/grammar" element={<GrammarScreen />} />
         <Route path="/dialogues" element={<DialogueScreen />} />
         <Route path="/speaking" element={<SpeakingScreen />} />
+        <Route path="/speaking-sandbox" element={<FreestyleSpeakingScreen />} />
         <Route path="/games/unscramble" element={<UnscrambleGameScreen />} />
         <Route path="/games/falling" element={<FallingWordsGameScreen />} />
         <Route path="/games/matching" element={<MatchingGameScreen />} />
