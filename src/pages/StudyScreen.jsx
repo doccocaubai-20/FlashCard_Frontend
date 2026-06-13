@@ -409,21 +409,45 @@ export default function StudyScreen() {
     if (!hanzi) return;
     const cleanHanzi = hanzi.split(/[｜|]/)[0].trim();
     const alreadyFav = isFavorite(cleanHanzi);
+
+    // --- Cập nhật Lạc quan (Optimistic Update) ---
+    const previousFavorites = [...favorites];
+    if (alreadyFav) {
+      // Xóa ngay lập tức trên UI
+      setFavorites((prev) => prev.filter((f) => f.hanzi !== cleanHanzi));
+    } else {
+      // Thêm tạm thời lên UI
+      const tempFav = {
+        id: -Date.now(), // ID âm tạm thời
+        hanzi: cleanHanzi,
+        pinyin: pinyin || '',
+        sv: '',
+        vi: meaning || '',
+      };
+      setFavorites((prev) => [tempFav, ...prev]);
+    }
+    // ---------------------------------------------
+
     try {
       if (alreadyFav) {
         await favoriteWordsApi.deleteFavoriteByHanzi(cleanHanzi);
       } else {
-        const sv = (await getCompoundHanViet(cleanHanzi)) || '';
-        await favoriteWordsApi.addFavorite({
+        const res = await favoriteWordsApi.addFavorite({
           hanzi: cleanHanzi,
           pinyin: pinyin || '',
-          sv,
           vi: meaning || '',
         });
+
+        // Thay thế bản ghi tạm bằng bản ghi thật từ database response
+        setFavorites((prev) =>
+          prev.map((f) => (f.hanzi === cleanHanzi ? res.data : f))
+        );
       }
       loadFavorites();
     } catch (err) {
       console.error('Failed to toggle favorite:', err);
+      // Hoàn tác về trạng thái cũ nếu API lỗi
+      setFavorites(previousFavorites);
     }
   };
 

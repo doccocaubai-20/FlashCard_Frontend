@@ -392,21 +392,47 @@ export default function DictionaryScreen() {
     if (!selectedWord) return;
     const hanzi = selectedWord.s;
     const alreadyFav = isFavorite(hanzi);
+
+    // --- Cập nhật Lạc quan (Optimistic Update) ---
+    const previousFavorites = [...favorites];
+    if (alreadyFav) {
+      // Xóa ngay lập tức trên UI
+      setFavorites((prev) => prev.filter((f) => f.hanzi !== hanzi));
+    } else {
+      // Thêm tạm thời lên UI
+      const tempFav = {
+        id: -Date.now(),
+        hanzi,
+        pinyin: selectedWord.p || '',
+        sv: '',
+        vi: selectedWord.vi || '',
+      };
+      setFavorites((prev) => [tempFav, ...prev]);
+    }
+    // ---------------------------------------------
+
     try {
       if (alreadyFav) {
         await favoriteWordsApi.deleteFavoriteByHanzi(hanzi);
       } else {
         const sv = getCompoundHanViet(hanzi) || '';
-        await favoriteWordsApi.addFavorite({
+        const res = await favoriteWordsApi.addFavorite({
           hanzi,
           pinyin: selectedWord.p || '',
           sv,
           vi: selectedWord.vi || '',
         });
+
+        // Thay thế bản ghi tạm bằng bản ghi thật từ database
+        setFavorites((prev) =>
+          prev.map((f) => (f.hanzi === hanzi ? res.data : f))
+        );
       }
       loadFavorites();
     } catch (err) {
       console.error('Failed to toggle favorite:', err);
+      // Hoàn tác về trạng thái cũ nếu API lỗi
+      setFavorites(previousFavorites);
     }
   };
 
