@@ -4,8 +4,6 @@ import {
   ArrowLeft, 
   Trash2, 
   RotateCcw, 
-  Check, 
-  Grid, 
   Grid3X3, 
   Volume2, 
   Copy, 
@@ -77,7 +75,7 @@ export default function ScribbleWriteScreen() {
   // Set up grid and brush on mount and settings changes
   useEffect(() => {
     drawGridBackground();
-  }, [showGrid, brushColor, brushWidth]);
+  }, [showGrid, brushColor, brushWidth, strokes]);
 
   // Setup drawing coordinates
   const getCoordinates = (e) => {
@@ -166,7 +164,7 @@ export default function ScribbleWriteScreen() {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Draw calligraphic grid
+    // Draw calligraphic Tian Zi Ge cells row
     if (showGrid) {
       const isDark = document.documentElement.classList.contains('dark');
       ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(32, 32, 32, 0.1)';
@@ -174,16 +172,38 @@ export default function ScribbleWriteScreen() {
       ctx.setLineDash([4, 4]);
 
       ctx.beginPath();
-      // Center lines
-      ctx.moveTo(0, canvas.height / 2);
-      ctx.lineTo(canvas.width, canvas.height / 2);
-      ctx.moveTo(canvas.width / 2, 0);
-      ctx.lineTo(canvas.width / 2, canvas.height);
-      // Diagonals
-      ctx.moveTo(0, 0);
-      ctx.lineTo(canvas.width, canvas.height);
-      ctx.moveTo(canvas.width, 0);
-      ctx.lineTo(0, canvas.height);
+      
+      const boxSize = canvas.height;
+      const numBoxes = Math.ceil(canvas.width / boxSize);
+      for (let b = 0; b < numBoxes; b++) {
+        const startX = b * boxSize;
+        const endX = Math.min(startX + boxSize, canvas.width);
+        
+        // Draw vertical solid separator between squares
+        if (b > 0) {
+          ctx.setLineDash([]);
+          ctx.moveTo(startX, 0);
+          ctx.lineTo(startX, canvas.height);
+          ctx.setLineDash([4, 4]);
+        }
+        
+        // Horizontal center line
+        ctx.moveTo(startX, canvas.height / 2);
+        ctx.lineTo(endX, canvas.height / 2);
+        
+        // Vertical center line
+        const centerX = startX + boxSize / 2;
+        if (centerX < canvas.width) {
+          ctx.moveTo(centerX, 0);
+          ctx.lineTo(centerX, canvas.height);
+        }
+        
+        // Diagonals
+        ctx.moveTo(startX, 0);
+        ctx.lineTo(endX, canvas.height);
+        ctx.moveTo(endX, 0);
+        ctx.lineTo(startX, canvas.height);
+      }
       ctx.stroke();
       ctx.setLineDash([]); // reset
     }
@@ -265,8 +285,8 @@ export default function ScribbleWriteScreen() {
             requests: [
               {
                 writing_guide: {
-                  writing_area_width: 300,
-                  writing_area_height: 300
+                  writing_area_width: 1200,
+                  writing_area_height: 220
                 },
                 pre_segments: [],
                 max_num_results: 12,
@@ -340,55 +360,62 @@ export default function ScribbleWriteScreen() {
               <Sparkles size={22} className="text-primary animate-pulse" />
               Luyện viết tự do HSK
             </h1>
-            <p className="text-xs text-mute mt-0.5">Bảng vẽ nháp chữ Hán không giới hạn nét vẽ, tự động phân tích chữ viết.</p>
+            <p className="text-xs text-mute mt-0.5">Bảng vẽ nháp chữ Hán dài, không giới hạn nét vẽ, tự động phân tích chữ viết.</p>
           </div>
         </div>
       </div>
 
-      {/* Main Content Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+      {/* Row 1: The Wide Whiteboard Drawing Canvas (Full Width) */}
+      <div className="bg-surface-card dark:bg-surface-dark/40 p-6 rounded-xl border border-hairline dark:border-white/5 shadow-sm space-y-4 text-left">
         
-        {/* Left Canvas Scribble Column (5/12 grid) */}
-        <div className="lg:col-span-5 bg-surface-card dark:bg-surface-dark/40 p-6 rounded-xl border border-hairline dark:border-white/5 shadow-sm flex flex-col justify-between min-h-[500px]">
+        {/* Canvas Header Control Menu */}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Bảng viết chữ Hán dài (Tianzige Row)</span>
+            {loading && (
+              <span className="text-[10px] bg-primary/10 text-primary px-2.5 py-0.5 rounded-full font-mono font-bold animate-pulse">
+                Đang nhận dạng...
+              </span>
+            )}
+          </div>
           
-          {/* Canvas header controls */}
-          <div className="flex justify-between items-center pb-2.5">
-            <span className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Bảng vẽ tự do</span>
-            <button
-              onClick={() => setShowGrid(!showGrid)}
-              className={`p-1.5 rounded-full border transition-all cursor-pointer ${
-                showGrid 
-                  ? 'bg-primary/10 border-primary/30 text-primary' 
-                  : 'bg-surface-card border-hairline hover:bg-surface-bone text-mute'
-              }`}
-              title="Ẩn/Hiện ô lưới chữ Hán"
-            >
-              <Grid3X3 size={15} />
-            </button>
-          </div>
+          <button
+            onClick={() => setShowGrid(!showGrid)}
+            className={`p-1.5 rounded-full border transition-all cursor-pointer ${
+              showGrid 
+                ? 'bg-primary/10 border-primary/30 text-primary' 
+                : 'bg-surface-card border-hairline hover:bg-surface-bone text-mute'
+            }`}
+            title="Ẩn/Hiện ô lưới viết chữ Hán"
+          >
+            <Grid3X3 size={15} />
+          </button>
+        </div>
 
-          {/* Interactive Whiteboard Canvas */}
-          <div className="relative aspect-square w-full max-w-[320px] mx-auto border-2 border-hairline dark:border-divider-dark rounded-xl bg-canvas dark:bg-black/40 shadow-inner overflow-hidden cursor-crosshair">
-            <canvas
-              ref={canvasRef}
-              width={300}
-              height={300}
-              onMouseDown={startDrawing}
-              onMouseMove={draw}
-              onMouseUp={stopDrawing}
-              onMouseLeave={stopDrawing}
-              onTouchStart={startDrawing}
-              onTouchMove={draw}
-              onTouchEnd={stopDrawing}
-              className="w-full h-full block touch-none"
-            />
-          </div>
+        {/* Wide Whiteboard Canvas Wrapper */}
+        <div className="relative w-full border-2 border-hairline dark:border-divider-dark rounded-xl bg-canvas dark:bg-black/45 shadow-inner overflow-hidden cursor-crosshair h-[240px]">
+          <canvas
+            ref={canvasRef}
+            width={1200}
+            height={220}
+            onMouseDown={startDrawing}
+            onMouseMove={draw}
+            onMouseUp={stopDrawing}
+            onMouseLeave={stopDrawing}
+            onTouchStart={startDrawing}
+            onTouchMove={draw}
+            onTouchEnd={stopDrawing}
+            className="w-full h-full block touch-none"
+          />
+        </div>
 
-          {/* Brush Color & Thickness Tools */}
-          <div className="space-y-3 py-3 border-t border-hairline dark:border-white/5 mt-4">
+        {/* Canvas Controls Toolbar */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-hairline dark:border-white/5">
+          
+          <div className="flex flex-wrap items-center gap-6">
             {/* Color Palette */}
             <div className="flex items-center gap-3">
-              <span className="text-[10px] font-mono font-bold text-mute uppercase tracking-wider w-12 text-left">Màu mực:</span>
+              <span className="text-[10px] font-mono font-bold text-mute uppercase tracking-wider">Màu mực:</span>
               <div className="flex gap-2">
                 {colorsList.map((c) => (
                   <button
@@ -409,7 +436,7 @@ export default function ScribbleWriteScreen() {
 
             {/* Thickness */}
             <div className="flex items-center gap-3">
-              <span className="text-[10px] font-mono font-bold text-mute uppercase tracking-wider w-12 text-left">Nét cọ:</span>
+              <span className="text-[10px] font-mono font-bold text-mute uppercase tracking-wider">Nét cọ:</span>
               <div className="flex gap-2">
                 {[
                   { label: 'Mỏng', width: 3 },
@@ -433,12 +460,12 @@ export default function ScribbleWriteScreen() {
             </div>
           </div>
 
-          {/* Reset / Undo Buttons */}
-          <div className="flex gap-2 justify-center pt-2">
+          {/* Reset / Undo buttons */}
+          <div className="flex gap-2 min-w-[200px]">
             <button
               onClick={undo}
               disabled={strokes.length === 0}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-hairline dark:border-divider-dark text-xs font-mono font-semibold text-ink dark:text-on-dark rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer bg-surface-card dark:bg-surface-dark shadow-sm"
+              className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2 border border-hairline dark:border-divider-dark text-xs font-mono font-semibold text-ink dark:text-on-dark rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer bg-surface-card dark:bg-surface-dark shadow-sm"
             >
               <RotateCcw size={13} />
               Hoàn tác
@@ -446,96 +473,89 @@ export default function ScribbleWriteScreen() {
             <button
               onClick={() => clearBoard(true)}
               disabled={strokes.length === 0 && candidates.length === 0}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-hairline dark:border-divider-dark text-xs font-mono font-semibold text-ink dark:text-on-dark rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer bg-surface-card dark:bg-surface-dark shadow-sm"
+              className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2 border border-hairline dark:border-divider-dark text-xs font-mono font-semibold text-ink dark:text-on-dark rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer bg-surface-card dark:bg-surface-dark shadow-sm"
             >
               <Trash2 size={13} />
-              Xóa sạch
+              Xóa bảng vẽ
             </button>
           </div>
 
         </div>
 
-        {/* Right Candidate / Notepad Column (7/12 grid) */}
-        <div className="lg:col-span-7 bg-surface-card dark:bg-surface-dark/40 p-6 rounded-xl border border-hairline dark:border-white/5 shadow-sm flex flex-col justify-between min-h-[500px] text-left">
-          
-          <div className="space-y-5 flex-1 flex flex-col">
+      </div>
+
+      {/* Row 2: Candidates & Notepad (Split grid) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        
+        {/* Left: Candidates Column (5/12 grid) */}
+        <div className="lg:col-span-5 bg-surface-card dark:bg-surface-dark/40 p-6 rounded-xl border border-hairline dark:border-white/5 shadow-sm flex flex-col justify-between text-left min-h-[200px]">
+          <div className="space-y-3 w-full">
+            <span className="block text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Kết quả chữ nhận diện được:</span>
             
-            {/* 1. Candidates Row */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="block text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Ký tự nhận diện được:</span>
-                {loading && (
-                  <span className="text-[9px] bg-primary/10 text-primary px-2.5 py-0.5 rounded-full font-mono font-bold animate-pulse">
-                    Đang xử lý...
-                  </span>
-                )}
-              </div>
-              
-              <div className="flex flex-wrap gap-2 min-h-[56px] items-center bg-surface-bone/50 dark:bg-black/30 p-3 rounded-lg border border-hairline dark:border-divider-dark">
-                {candidates.length > 0 ? (
-                  candidates.map((char) => (
-                    <button
-                      key={char}
-                      onClick={() => handleSelectCandidate(char)}
-                      className="w-10 h-10 flex items-center justify-center bg-surface-card dark:bg-surface-dark hover:bg-surface-bone dark:hover:bg-black border border-hairline dark:border-divider-dark hover:border-primary dark:hover:border-primary text-ink dark:text-on-dark font-extrabold rounded-md text-xl transition-all cursor-pointer shadow-sm active:scale-95"
-                    >
-                      {char}
-                    </button>
-                  ))
-                ) : (
-                  <span className="text-xs text-mute dark:text-on-dark-mute italic flex items-center gap-1.5">
-                    <Info size={13} className="text-primary shrink-0" />
-                    Vẽ chữ Hán bừa bãi lên bảng vẽ bên trái để AI phân tích nét và đề xuất chữ ở đây.
-                  </span>
-                )}
-              </div>
+            <div className="flex flex-wrap gap-2.5 min-h-[120px] items-start content-start bg-surface-bone/50 dark:bg-black/30 p-4 rounded-xl border border-hairline dark:border-divider-dark overflow-y-auto">
+              {candidates.length > 0 ? (
+                candidates.map((char) => (
+                  <button
+                    key={char}
+                    onClick={() => handleSelectCandidate(char)}
+                    className="w-12 h-12 flex items-center justify-center bg-surface-card dark:bg-surface-dark hover:bg-surface-bone dark:hover:bg-black border border-hairline dark:border-divider-dark hover:border-primary dark:hover:border-primary text-ink dark:text-on-dark font-extrabold rounded-lg text-xl transition-all cursor-pointer shadow-sm active:scale-95"
+                  >
+                    {char}
+                  </button>
+                ))
+              ) : (
+                <span className="text-xs text-mute dark:text-on-dark-mute italic flex items-center gap-1.5">
+                  <Info size={13} className="text-primary shrink-0" />
+                  Hãy vẽ chữ Hán lên bảng viết dài bên trên để hiển thị gợi ý chữ ở đây.
+                </span>
+              )}
             </div>
-
-            {/* 2. Text Notepad Area */}
-            <div className="space-y-2 flex-1 flex flex-col">
-              <div className="flex items-center justify-between">
-                <span className="block text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Sổ tay nháp tạm thời:</span>
-                <span className="text-[10px] font-mono text-mute">{notepadText.length} ký tự</span>
-              </div>
-              
-              <div className="relative flex-1 flex flex-col min-h-[140px]">
-                <textarea
-                  value={notepadText}
-                  onChange={(e) => setNotepadText(e.target.value)}
-                  placeholder="Gõ hoặc viết chữ để lưu trữ văn bản ở đây..."
-                  className="w-full flex-1 p-4 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-base text-ink dark:text-on-dark shadow-sm resize-none"
-                />
-                
-                {notepadText && (
-                  <div className="absolute bottom-3 right-3 flex items-center gap-1.5">
-                    <button
-                      onClick={handleSpeakText}
-                      className="p-2 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full text-primary shadow-sm hover:scale-105 transition-all cursor-pointer"
-                      title="Phát âm toàn văn bản"
-                    >
-                      <Volume2 size={15} />
-                    </button>
-                    <button
-                      onClick={handleCopyText}
-                      className="p-2 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full text-primary shadow-sm hover:scale-105 transition-all cursor-pointer"
-                      title="Sao chép văn bản"
-                    >
-                      <Copy size={15} />
-                    </button>
-                    <button
-                      onClick={() => setNotepadText('')}
-                      className="p-2 bg-surface-card hover:bg-red-50 dark:hover:bg-red-950/20 border border-hairline dark:border-divider-dark rounded-full text-red-500 shadow-sm hover:scale-105 transition-all cursor-pointer"
-                      title="Xóa toàn bộ"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-
           </div>
+        </div>
 
+        {/* Right: Text Notepad Column (7/12 grid) */}
+        <div className="lg:col-span-7 bg-surface-card dark:bg-surface-dark/40 p-6 rounded-xl border border-hairline dark:border-white/5 shadow-sm flex flex-col justify-between text-left min-h-[200px]">
+          <div className="space-y-3 w-full flex-1 flex flex-col">
+            <div className="flex items-center justify-between">
+              <span className="block text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Sổ tay lưu trữ chữ viết:</span>
+              <span className="text-[10px] font-mono text-mute">{notepadText.length} ký tự</span>
+            </div>
+            
+            <div className="relative flex-1 flex flex-col min-h-[120px]">
+              <textarea
+                value={notepadText}
+                onChange={(e) => setNotepadText(e.target.value)}
+                placeholder="Văn bản đã nhận diện sẽ tự động lưu vào đây..."
+                className="w-full flex-1 p-4 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-base text-ink dark:text-on-dark shadow-sm resize-none"
+              />
+              
+              {notepadText && (
+                <div className="absolute bottom-3 right-3 flex items-center gap-1.5">
+                  <button
+                    onClick={handleSpeakText}
+                    className="p-2 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full text-primary shadow-sm hover:scale-105 transition-all cursor-pointer"
+                    title="Đọc phát âm"
+                  >
+                    <Volume2 size={15} />
+                  </button>
+                  <button
+                    onClick={handleCopyText}
+                    className="p-2 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full text-primary shadow-sm hover:scale-105 transition-all cursor-pointer"
+                    title="Sao chép"
+                  >
+                    <Copy size={15} />
+                  </button>
+                  <button
+                    onClick={() => setNotepadText('')}
+                    className="p-2 bg-surface-card hover:bg-red-50 dark:hover:bg-red-950/20 border border-hairline dark:border-divider-dark rounded-full text-red-500 shadow-sm hover:scale-105 transition-all cursor-pointer"
+                    title="Xóa hết"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
       </div>
