@@ -261,14 +261,7 @@ export default function DashboardScreen() {
   const [showRoadmap, setShowRoadmap] = useState(false);
   const [showAiMentor, setShowAiMentor] = useState(false);
   const [shopFeedback, setShopFeedback] = useState('');
-  const [inventory, setInventory] = useState(() => {
-    try {
-      const saved = localStorage.getItem('chongzi_inventory');
-      return saved ? JSON.parse(saved) : { streakFreeze: 0, xpBoost: 0 };
-    } catch {
-      return { streakFreeze: 0, xpBoost: 0 };
-    }
-  });
+  const [xpBoostTimeLeft, setXpBoostTimeLeft] = useState('');
 
   // Daily Quiz interactive state
   const [selectedQuizOption, setSelectedQuizOption] = useState(null);
@@ -376,23 +369,55 @@ export default function DashboardScreen() {
     }
 
     try {
-      await statsApi.buyItem(price);
-      // Update inventory local storage
-      const newInv = { ...inventory };
-      if (itemName === 'freeze') newInv.streakFreeze += 1;
-      if (itemName === 'booster') newInv.xpBoost += 1;
-      
-      setInventory(newInv);
-      localStorage.setItem('chongzi_inventory', JSON.stringify(newInv));
-      
+      await statsApi.buyItem(price, itemName);
       setShopFeedback('Mua vật phẩm thành công!');
       setTimeout(() => setShopFeedback(''), 3000);
-      dispatch(fetchSummary()); // Refresh coin stats
+      dispatch(fetchSummary()); // Refresh stats & inventory in DB
     } catch (err) {
       console.error(err);
-      setShopFeedback('Lỗi máy chủ khi thanh toán.');
+      setShopFeedback(err.response?.data?.message || 'Lỗi máy chủ khi thanh toán.');
+      setTimeout(() => setShopFeedback(''), 3000);
     }
   };
+
+  // Use XP Boost potion
+  const handleUseXpBoost = async () => {
+    try {
+      await statsApi.useXpBoost();
+      setShopFeedback('Đã kích hoạt Thần Dược Nhân Đôi XP! 🧪');
+      setTimeout(() => setShopFeedback(''), 3000);
+      dispatch(fetchSummary()); // Refresh stats & countdown
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || 'Không thể sử dụng bình nhân đôi XP.');
+    }
+  };
+
+  // Real-time Countdown Timer for XP Boost
+  useEffect(() => {
+    if (!summary?.xpBoostUntil) {
+      setXpBoostTimeLeft('');
+      return;
+    }
+
+    const interval = setInterval(() => {
+      const until = new Date(summary.xpBoostUntil).getTime();
+      const now = Date.now();
+      const diff = until - now;
+
+      if (diff <= 0) {
+        setXpBoostTimeLeft('');
+        clearInterval(interval);
+        dispatch(fetchSummary()); // Refresh stats after boost expires
+      } else {
+        const minutes = Math.floor(diff / (60 * 1000));
+        const seconds = Math.floor((diff % (60 * 1000)) / 1000);
+        setXpBoostTimeLeft(`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [summary?.xpBoostUntil, dispatch]);
 
   // Helper coordinate calculators for SVG Radar Chart (Pentagon)
   const calculateRadarPath = (writing, speaking, reading, listening, vocab) => {
@@ -632,6 +657,14 @@ export default function DashboardScreen() {
 
         {/* Floating Stats Capsule */}
         <div className="flex items-center gap-3 bg-white/5 border border-white/10 backdrop-blur-md px-4 py-2 rounded-full shadow-md w-fit">
+          {xpBoostTimeLeft && (
+            <>
+              <div className="flex items-center gap-1 text-xs font-black text-purple-400 animate-pulse" title="Thần dược nhân đôi XP đang hiệu lực!">
+                <span>⚡ X2 XP: {xpBoostTimeLeft}</span>
+              </div>
+              <div className="h-3 w-px bg-white/15" />
+            </>
+          )}
           <div className="flex items-center gap-1 text-xs font-semibold text-amber-500" title="Chuỗi ôn tập liên tục">
             <Flame size={14} className="fill-current" />
             <span>{streak} ngày</span>
@@ -736,11 +769,13 @@ export default function DashboardScreen() {
           <ZenGarden summary={summary} onHarvestSuccess={() => dispatch(fetchSummary())} />
         </div>
 
-        {/* PANEL PHẢI: Tabbed Quests & Quiz (3 cols) */}
-        <div className="lg:col-span-3 bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 flex flex-col justify-between shadow-lg relative overflow-hidden">
-          <div className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-blue-500/5 blur-2xl pointer-events-none" />
-          
-          <div className="flex flex-col h-full justify-between">
+        {/* PANEL PHẢI: Tabbed Quests & Quiz + Inventory (3 cols) */}
+        <div className="lg:col-span-3 flex flex-col gap-4">
+          {/* Card 1: Tabbed Quests & Quiz */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 flex flex-col justify-between shadow-lg relative overflow-hidden flex-1">
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-blue-500/5 blur-2xl pointer-events-none" />
+            
+            <div className="flex flex-col h-full justify-between">
             {/* Tab Header Selectors */}
             <div className="flex bg-white/5 border border-white/10 rounded-xl p-1 mb-3 shrink-0">
               <button
@@ -936,7 +971,83 @@ export default function DashboardScreen() {
             </div>
           </div>
         </div>
+
+        {/* Card 2: Inventory */}
+        <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 shadow-lg relative overflow-hidden shrink-0">
+          <div className="absolute top-0 right-0 w-16 h-16 rounded-full bg-primary/5 blur-xl pointer-events-none" />
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-1.5">
+              <ShoppingBag size={14} className="text-primary" />
+              <h3 className="text-xs font-bold text-white uppercase tracking-wider">Túi Đồ Vật Phẩm</h3>
+            </div>
+            <button
+              onClick={() => setShowShop(true)}
+              className="text-[9px] font-black uppercase text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full hover:bg-primary hover:text-slate-950 transition-all cursor-pointer"
+            >
+              Cửa hàng
+            </button>
+          </div>
+
+          <div className="space-y-2.5">
+            {/* Item 1: Streak Freeze */}
+            <div className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-500 shrink-0">
+                  <Flame size={14} className="fill-current" />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-[10px] font-bold text-white truncate">Bảo Mệnh Đan</h4>
+                  <p className="text-[8px] text-white/50 truncate">Tự động giữ chuỗi khi nghỉ học</p>
+                </div>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="text-[10px] font-mono font-bold text-white bg-white/5 border border-white/5 px-2 py-1 rounded-md">
+                  x{summary?.streakFreezeCount ?? 0}
+                </span>
+              </div>
+            </div>
+
+            {/* Item 2: XP Boost */}
+            <div className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400 shrink-0">
+                  <Sparkles size={14} />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-[10px] font-bold text-white truncate">Thần Dược Nhân Đôi</h4>
+                  <p className="text-[8px] text-white/50 truncate">Nhân đôi XP học tập trong 1 giờ</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="text-[10px] font-mono font-bold text-white bg-white/5 border border-white/5 px-2 py-1 rounded-md mr-1">
+                  x{summary?.xpBoostCount ?? 0}
+                </span>
+                {xpBoostTimeLeft ? (
+                  <button
+                    disabled
+                    className="px-2 py-1 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30 text-[9px] font-bold animate-pulse cursor-not-allowed shrink-0"
+                  >
+                    {xpBoostTimeLeft}
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleUseXpBoost}
+                    disabled={!(summary?.xpBoostCount > 0)}
+                    className={`px-2.5 py-1 rounded-full text-[9px] font-bold transition-all shrink-0 ${
+                      summary?.xpBoostCount > 0
+                        ? 'bg-primary hover:bg-primary-deep text-slate-950 font-black cursor-pointer'
+                        : 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed'
+                    }`}
+                  >
+                    Kích hoạt
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
 
       {/* 3. Bottom macOS-style Interactive Dock */}
       <div className="flex justify-center w-full mt-4 pb-2">
@@ -1049,11 +1160,11 @@ export default function DashboardScreen() {
                   <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
                     💊 Bảo Mệnh Đan <span className="text-[9px] text-white/50 normal-case font-normal">(Streak Freeze)</span>
                   </h4>
-                  <p className="text-[10px] text-white/60 pr-4">Đóng băng chuỗi ngày học nếu bạn bận đột xuất. Hiện có: {inventory.streakFreeze}</p>
+                  <p className="text-[10px] text-white/60 pr-4">Đóng băng chuỗi ngày học nếu bạn bận đột xuất. Hiện có: {summary?.streakFreezeCount ?? 0}</p>
                 </div>
                 <button
                   onClick={() => handleBuyItem('freeze', 50)}
-                  className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-deep text-white text-[10px] font-bold shadow-xs cursor-pointer shrink-0"
+                  className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-deep text-slate-950 text-[10px] font-bold shadow-xs cursor-pointer shrink-0"
                 >
                   50 Xu
                 </button>
@@ -1065,11 +1176,11 @@ export default function DashboardScreen() {
                   <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
                     🧪 Thần Dược Nhân Đôi <span className="text-[9px] text-white/50 normal-case font-normal">(Double XP)</span>
                   </h4>
-                  <p className="text-[10px] text-white/60 pr-4">Nhân đôi điểm kinh nghiệm trong 1 giờ để leo rank. Hiện có: {inventory.xpBoost}</p>
+                  <p className="text-[10px] text-white/60 pr-4">Nhân đôi điểm kinh nghiệm trong 1 giờ để leo rank. Hiện có: {summary?.xpBoostCount ?? 0}</p>
                 </div>
                 <button
                   onClick={() => handleBuyItem('booster', 100)}
-                  className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-deep text-white text-[10px] font-bold shadow-xs cursor-pointer shrink-0"
+                  className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-deep text-slate-950 text-[10px] font-bold shadow-xs cursor-pointer shrink-0"
                 >
                   100 Xu
                 </button>
