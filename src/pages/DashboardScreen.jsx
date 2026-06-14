@@ -9,12 +9,15 @@ import {
   BookOpen, Gamepad2, Search, PlusCircle,
   ArrowRight, ChevronRight, Flame, GraduationCap,
   Trophy, Settings, Shield, ShoppingBag, LayoutGrid, HelpCircle,
-  TrendingUp, Award, User, RefreshCw, X, ShoppingCart, MessageSquare, CheckCircle2
+  TrendingUp, Award, User, RefreshCw, X, ShoppingCart, MessageSquare, CheckCircle2,
+  Loader2
 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { dictionaryApi } from '../services/dictionaryApi';
 import { speakChinese } from '../utils/tts';
 import { useTheme } from '../context/ThemeContext';
+import ZenGarden from '../components/stats/ZenGarden';
+
 
 
 // ─────────────────────────────────────────────────────────────
@@ -276,22 +279,29 @@ export default function DashboardScreen() {
     return localStorage.getItem('chongzi_daily_quiz_completed') === todayStr;
   });
 
-  // Sample static Daily Quiz question
-  const dailyQuiz = {
-    question: 'Chữ Hán nào dưới đây mang ý nghĩa là "Khó" (Nán/Difficult)?',
-    options: [
-      { text: 'A. 难 (nán)', isCorrect: true },
-      { text: 'B. 易 (yì)', isCorrect: false },
-      { text: 'C. 忙 (máng)', isCorrect: false },
-      { text: 'D. 慢 (màn)', isCorrect: false }
-    ]
-  };
+  // Dynamic Daily HSK Quiz state
+  const [dailyQuiz, setDailyQuiz] = useState(null);
+  const [quizLoading, setQuizLoading] = useState(true);
+  const [rightPanelTab, setRightPanelTab] = useState('quests'); // 'quests' | 'quiz'
 
   const [quests, setQuests] = useState([]);
   const [questsLoading, setQuestsLoading] = useState(true);
 
+  const loadDailyQuiz = async () => {
+    try {
+      setQuizLoading(true);
+      const res = await statsApi.getDailyQuiz();
+      setDailyQuiz(res.data);
+    } catch (err) {
+      console.error('Failed to load daily quiz:', err);
+    } finally {
+      setQuizLoading(false);
+    }
+  };
+
   const loadQuests = async () => {
     try {
+      setQuestsLoading(true);
       const res = await statsApi.getQuests();
       setQuests(res.data || []);
     } catch (err) {
@@ -306,6 +316,7 @@ export default function DashboardScreen() {
     dispatch(fetchHeatmap());
     dispatch(fetchAllDecks());
     loadQuests();
+    loadDailyQuiz();
   }, [dispatch]);
 
   const streak = summary?.streak ?? 0;
@@ -335,7 +346,7 @@ export default function DashboardScreen() {
 
   // Submit Daily Quiz answer
   const handleAnswerQuiz = async () => {
-    if (hasCompletedTodayQuiz || selectedQuizOption === null) return;
+    if (!dailyQuiz || hasCompletedTodayQuiz || selectedQuizOption === null) return;
     const opt = dailyQuiz.options[selectedQuizOption];
     if (opt.isCorrect) {
       setQuizStatus('correct');
@@ -352,7 +363,7 @@ export default function DashboardScreen() {
       }
     } else {
       setQuizStatus('incorrect');
-      setQuizFeedback('Đáp án chưa chính xác, hãy ôn tập lại từ vựng HSK 1 và thử lại nhé!');
+      setQuizFeedback('Đáp án chưa chính xác, hãy thử lại nhé!');
     }
   };
 
@@ -652,19 +663,19 @@ export default function DashboardScreen() {
       {/* 2. Main floating panels (Left, Center, Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 my-6 items-stretch flex-1">
         
-        {/* PANEL TRÁI: Skill Radar (4 cols) */}
-        <div className="lg:col-span-4 bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-5 flex flex-col justify-between shadow-lg relative overflow-hidden">
+        {/* PANEL TRÁI: Skill Radar (3 cols) */}
+        <div className="lg:col-span-3 bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-5 flex flex-col justify-between shadow-lg relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 rounded-full bg-primary/5 blur-xl pointer-events-none" />
           <div>
             <span className="text-[10px] font-sans font-bold text-white/50 uppercase tracking-widest block mb-1">
               HỒ SƠ NĂNG LỰC
             </span>
-            <h2 className="text-base font-bold text-white">Chỉ số ngũ giác</h2>
+            <h2 className="text-sm font-bold text-white">Chỉ số ngũ giác</h2>
           </div>
 
           {/* SVG Radar Chart */}
-          <div className="flex items-center justify-center my-4">
-            <svg width="180" height="180" viewBox="0 0 180 180">
+          <div className="flex items-center justify-center my-3">
+            <svg width="150" height="150" viewBox="0 0 180 180">
               {/* Grid backgrounds */}
               {radarGridPaths.map((path, idx) => (
                 <path
@@ -682,7 +693,7 @@ export default function DashboardScreen() {
               <line x1="90" y1="90" x2="55" y2="139" stroke="rgba(255, 255, 255, 0.12)" strokeWidth="1" />
               <line x1="90" y1="90" x2="33" y2="71" stroke="rgba(255, 255, 255, 0.12)" strokeWidth="1" />
 
-              {/* Data area (Sample calculated percentages based on actual stats) */}
+              {/* Data area */}
               <path
                 d={calculateRadarPath(
                   Math.min(100, 30 + (studiedCards / 5) * 10), // Viết
@@ -720,195 +731,208 @@ export default function DashboardScreen() {
           </div>
         </div>
 
-        {/* PANEL GIỮA: Quiz & Quick Info (5 cols) */}
-        <div className="lg:col-span-5 flex flex-col gap-4">
-          
-          {/* Card 1: Interactive Daily HSK Quiz */}
-          <div className="flex-1 bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-5 flex flex-col justify-between shadow-lg">
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-sans font-bold text-white/50 uppercase tracking-widest">
-                  THỬ THÁCH NHANH HÀNG NGÀY
-                </span>
-                <span className="text-[9px] font-sans font-bold text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded">
-                  +20 XP
-                </span>
-              </div>
-              <h3 className="text-xs font-medium text-white/95 mt-2 leading-relaxed">
-                {dailyQuiz.question}
-              </h3>
-            </div>
-
-            {/* Quiz Options */}
-            <div className="space-y-2 my-4">
-              {dailyQuiz.options.map((opt, index) => (
-                <button
-                  key={index}
-                  onClick={() => !hasCompletedTodayQuiz && setSelectedQuizOption(index)}
-                  disabled={hasCompletedTodayQuiz}
-                  className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center justify-between cursor-pointer border ${
-                    selectedQuizOption === index
-                      ? 'bg-primary/20 border-primary text-white font-semibold shadow-inner'
-                      : 'bg-white/5 hover:bg-white/10 border-white/5 text-white/80'
-                  } ${hasCompletedTodayQuiz ? 'cursor-not-allowed opacity-80' : ''}`}
-                >
-                  <span>{opt.text}</span>
-                  {hasCompletedTodayQuiz && opt.isCorrect && (
-                    <span className="text-[9px] font-bold uppercase text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded border border-green-500/20">Đúng</span>
-                  )}
-                </button>
-              ))}
-            </div>
-
-            {/* Submit quiz action */}
-            <div className="flex items-center justify-between gap-3 border-t border-white/5 pt-3">
-              <span className="text-[10px] text-white/50">
-                {quizStatus === 'idle' ? 'Lưu ý: Chỉ làm 1 lần/ngày' : quizFeedback}
-              </span>
-              {!hasCompletedTodayQuiz ? (
-                <button
-                  onClick={handleAnswerQuiz}
-                  disabled={selectedQuizOption === null}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all shadow-xs cursor-pointer ${
-                    selectedQuizOption !== null
-                      ? 'bg-primary hover:bg-primary-deep text-white'
-                      : 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed'
-                  }`}
-                >
-                  Trả lời ngay
-                </button>
-              ) : (
-                <span className="text-xs font-semibold text-green-400 flex items-center gap-1">
-                  ✓ Đã hoàn thành
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Card 2: Daily Quests */}
-          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-5 flex flex-col justify-between shadow-lg">
-            <div className="flex items-center justify-between mb-3 border-b border-white/5 pb-2">
-              <div>
-                <span className="text-[10px] font-sans font-bold text-white/50 uppercase tracking-widest block">
-                  NHIỆM VỤ HÀNG NGÀY
-                </span>
-                <h3 className="text-xs font-bold text-white mt-0.5">Tiến độ hôm nay</h3>
-              </div>
-              <span className="text-[8px] font-medium text-white/30">Tự làm mới lúc 00:00</span>
-            </div>
-
-            {questsLoading ? (
-              <div className="py-6 flex justify-center items-center">
-                <RefreshCw size={18} className="animate-spin text-white/40" />
-              </div>
-            ) : (
-              <div className="space-y-2.5">
-                {quests.map((q) => {
-                  const percent = Math.min(100, Math.round((q.progress / q.target) * 100));
-                  return (
-                    <div
-                      key={q.id}
-                      className={`p-2.5 rounded-xl border transition-all ${
-                        q.completed
-                          ? 'bg-green-500/10 border-green-500/20 text-white/80'
-                          : 'bg-white/5 border-white/5 hover:bg-white/10 text-white'
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex items-start gap-2 min-w-0 flex-1">
-                          <div className={`p-1.5 rounded-lg shrink-0 ${q.completed ? 'bg-green-500/15' : 'bg-white/5'}`}>
-                            {getQuestIcon(q.questType)}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <h4 className={`text-[11px] font-semibold truncate ${q.completed ? 'text-green-400 line-through' : 'text-white'}`}>
-                              {q.title}
-                            </h4>
-                            <p className="text-[9px] text-white/40 truncate mt-0.5">{q.description}</p>
-                          </div>
-                        </div>
-                        <div className="text-right shrink-0">
-                          <span className="text-[10px] font-mono font-bold block">
-                            {q.progress}/{q.target}
-                          </span>
-                          <span className="text-[8px] font-bold text-sky-400 block mt-0.5">
-                            +{q.xpReward} XP / +{q.coinReward} Xu
-                          </span>
-                        </div>
-                      </div>
-                      <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden mt-2 border border-white/5">
-                        <div
-                          className={`h-full rounded-full transition-all duration-500 ${
-                            q.completed ? 'bg-green-500' : 'bg-sky-400'
-                          }`}
-                          style={{ width: `${percent}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+        {/* PANEL GIỮA: Zen Vocabulary Garden (6 cols) */}
+        <div className="lg:col-span-6 flex flex-col items-stretch">
+          <ZenGarden summary={summary} onHarvestSuccess={() => dispatch(fetchSummary())} />
         </div>
 
-        {/* PANEL PHẢI: Goal & AI Mentor (3 cols) */}
-        <div className="lg:col-span-3 bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-5 flex flex-col justify-between shadow-lg relative overflow-hidden">
+        {/* PANEL PHẢI: Tabbed Quests & Quiz (3 cols) */}
+        <div className="lg:col-span-3 bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 flex flex-col justify-between shadow-lg relative overflow-hidden">
           <div className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-blue-500/5 blur-2xl pointer-events-none" />
           
-          <div>
-            <span className="text-[10px] font-sans font-bold text-white/50 uppercase tracking-widest block mb-1">
-              MỤC TIÊU 7 NGÀY
-            </span>
-            <h2 className="text-base font-bold text-white">Tiến độ tuần</h2>
-          </div>
-
-          {/* Weekly circular progress */}
-          <div className="flex flex-col items-center justify-center my-4 space-y-2">
-            <div className="relative flex items-center justify-center">
-              <svg width="100" height="100" className="transform -rotate-90">
-                <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,0.06)" strokeWidth="6" fill="transparent" />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="42"
-                  stroke="#ea2804"
-                  strokeWidth="6"
-                  fill="transparent"
-                  strokeDasharray={2 * Math.PI * 42}
-                  strokeDashoffset={2 * Math.PI * 42 * (1 - Math.min(1, studiedCards / dailyTarget))}
-                  strokeLinecap="round"
-                  className="transition-all duration-500"
-                />
-              </svg>
-              <div className="absolute flex flex-col items-center justify-center">
-                <span className="text-base font-black tracking-tighter text-white">
-                  {Math.round(Math.min(100, (studiedCards / dailyTarget) * 100))}%
-                </span>
-                <span className="text-[8px] font-bold text-white/50 uppercase">Đạt</span>
-              </div>
-            </div>
-            <span className="text-[10px] text-white/70 font-medium text-center">
-              Đã ôn {studiedCards} / {dailyTarget} thẻ bài
-            </span>
-          </div>
-
-          {/* AI Mentor glowing holographic orb */}
-          <div className="border-t border-white/10 pt-4 flex items-center gap-3">
-            <div className="relative shrink-0">
-              <div
-                onClick={() => setShowAiMentor(true)}
-                className="w-11 h-11 rounded-full bg-gradient-to-tr from-blue-500 via-cyan-400 to-indigo-300 shadow-[0_0_20px_rgba(59,130,246,0.8)] animate-pulse cursor-pointer hover:scale-105 transition-transform flex items-center justify-center"
-                title="Mở gợi ý từ AI Mentor"
+          <div className="flex flex-col h-full justify-between">
+            {/* Tab Header Selectors */}
+            <div className="flex bg-white/5 border border-white/10 rounded-xl p-1 mb-3 shrink-0">
+              <button
+                onClick={() => setRightPanelTab('quests')}
+                className={`flex-1 text-center py-1.5 rounded-lg text-[10px] font-black tracking-wider uppercase transition-all cursor-pointer ${
+                  rightPanelTab === 'quests'
+                    ? 'bg-primary text-slate-950 font-bold'
+                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                }`}
               >
-                <Sparkles size={16} className="text-white" />
-              </div>
-              <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-500 text-[8px] font-bold border border-white/15">
-                !
-              </span>
+                Nhiệm vụ
+              </button>
+              <button
+                onClick={() => setRightPanelTab('quiz')}
+                className={`flex-1 text-center py-1.5 rounded-lg text-[10px] font-black tracking-wider uppercase transition-all cursor-pointer ${
+                  rightPanelTab === 'quiz'
+                    ? 'bg-primary text-slate-950 font-bold'
+                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                Thử thách
+              </button>
             </div>
-            <div className="min-w-0">
-              <h4 className="text-xs font-bold text-white leading-none">AI Mentor</h4>
-              <span className="text-[9px] text-white/60 block mt-1">Sẵn sàng đưa ra gợi ý ôn tập nước rút.</span>
+
+            {/* Tab Content Area */}
+            <div className="flex-1 flex flex-col justify-between min-h-0">
+              {rightPanelTab === 'quests' ? (
+                // TAB 1: QUESTS & WEEK PROGRESS
+                <div className="flex flex-col justify-between h-full flex-1">
+                  <div className="space-y-2 max-h-[170px] overflow-y-auto pr-1">
+                    {questsLoading ? (
+                      <div className="py-8 flex justify-center items-center">
+                        <Loader2 size={18} className="animate-spin text-white/40" />
+                      </div>
+                    ) : (
+                      quests.map((q) => {
+                        const percent = Math.min(100, Math.round((q.progress / q.target) * 100));
+                        return (
+                          <div
+                            key={q.id}
+                            className={`p-2 rounded-xl border transition-all ${
+                              q.completed
+                                ? 'bg-green-500/10 border-green-500/20 text-white/80'
+                                : 'bg-white/5 border-white/5 hover:bg-white/10 text-white'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-1">
+                              <div className="flex items-start gap-1.5 min-w-0 flex-1">
+                                <div className={`p-1 rounded-md shrink-0 ${q.completed ? 'bg-green-500/15' : 'bg-white/5'}`}>
+                                  {getQuestIcon(q.questType)}
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <h4 className={`text-[10px] font-bold truncate ${q.completed ? 'text-green-400 line-through' : 'text-white'}`}>
+                                    {q.title}
+                                  </h4>
+                                </div>
+                              </div>
+                              <div className="text-right shrink-0">
+                                <span className="text-[9px] font-mono font-bold block">
+                                  {q.progress}/{q.target}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden mt-1.5 border border-white/5">
+                              <div
+                                className={`h-full rounded-full transition-all duration-500 ${
+                                  q.completed ? 'bg-green-500' : 'bg-sky-400'
+                                }`}
+                                style={{ width: `${percent}%` }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Weekly Progress bar */}
+                  <div className="border-t border-white/10 pt-3 mt-3 flex items-center justify-between gap-3 shrink-0">
+                    <div className="relative flex items-center justify-center shrink-0">
+                      <svg width="60" height="60" className="transform -rotate-90">
+                        <circle cx="30" cy="30" r="24" stroke="rgba(255,255,255,0.06)" strokeWidth="4" fill="transparent" />
+                        <circle
+                          cx="30"
+                          cy="30"
+                          r="24"
+                          stroke="#ea2804"
+                          strokeWidth="4"
+                          fill="transparent"
+                          strokeDasharray={2 * Math.PI * 24}
+                          strokeDashoffset={2 * Math.PI * 24 * (1 - Math.min(1, studiedCards / dailyTarget))}
+                          strokeLinecap="round"
+                          className="transition-all duration-500"
+                        />
+                      </svg>
+                      <div className="absolute flex flex-col items-center justify-center">
+                        <span className="text-[10px] font-black tracking-tighter text-white">
+                          {Math.round(Math.min(100, (studiedCards / dailyTarget) * 100))}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[8px] font-sans font-bold text-white/50 uppercase tracking-widest block">MỤC TIÊU TUẦN</span>
+                      <span className="text-[11px] text-white font-bold block mt-0.5">Đã ôn {studiedCards}/{dailyTarget} thẻ</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                // TAB 2: DYNAMIC DAILY HSK QUIZ
+                <div className="flex flex-col justify-between h-full flex-1">
+                  {quizLoading ? (
+                    <div className="py-12 flex flex-col justify-center items-center gap-2">
+                      <Loader2 size={20} className="animate-spin text-white/40" />
+                      <span className="text-[10px] text-white/40">Đang chuẩn bị câu hỏi...</span>
+                    </div>
+                  ) : dailyQuiz ? (
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-widest">TRẮC NGHIỆM ĐỘNG</span>
+                          <span className="text-[8px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">+20 XP</span>
+                        </div>
+                        <h3 className="text-[11px] font-bold text-white leading-relaxed mb-3">
+                          {dailyQuiz.question}
+                        </h3>
+                        
+                        <div className="space-y-1.5">
+                          {dailyQuiz.options.map((opt, index) => (
+                            <button
+                              key={index}
+                              onClick={() => !hasCompletedTodayQuiz && setSelectedQuizOption(index)}
+                              disabled={hasCompletedTodayQuiz}
+                              className={`w-full text-left px-3 py-2.5 rounded-xl text-[10px] font-semibold transition-all flex items-center justify-between cursor-pointer border ${
+                                selectedQuizOption === index
+                                  ? 'bg-primary/25 border-primary text-white'
+                                  : 'bg-white/5 hover:bg-white/10 border-white/5 text-white/80'
+                              } ${hasCompletedTodayQuiz ? 'cursor-not-allowed opacity-80' : ''}`}
+                            >
+                              <span className="truncate pr-2">{opt.text}</span>
+                              {hasCompletedTodayQuiz && opt.isCorrect && (
+                                <span className="text-[8px] font-black uppercase text-green-400 bg-green-500/10 px-1.5 py-0.2 rounded border border-green-500/20">ĐÚNG</span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="border-t border-white/5 pt-2.5 mt-3 flex items-center justify-between gap-2 shrink-0">
+                        <span className="text-[9px] text-white/40 leading-snug truncate max-w-[120px]">
+                          {quizStatus === 'idle' ? 'Trả lời để nhận thưởng' : quizFeedback}
+                        </span>
+                        {!hasCompletedTodayQuiz ? (
+                          <button
+                            onClick={handleAnswerQuiz}
+                            disabled={selectedQuizOption === null}
+                            className={`px-3.5 py-1.5 rounded-full text-[10px] font-black transition-all shadow-xs cursor-pointer ${
+                              selectedQuizOption !== null
+                                ? 'bg-primary hover:bg-primary-deep text-slate-950 font-bold'
+                                : 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed'
+                            }`}
+                          >
+                            Gửi đi
+                          </button>
+                        ) : (
+                          <span className="text-[10px] font-bold text-green-400">✓ Đã hoàn thành</span>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="py-12 text-center text-[10px] text-white/40">
+                      Không có câu hỏi hôm nay.
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* AI Mentor glowing holographic orb */}
+            <div className="border-t border-white/10 pt-3 mt-3 flex items-center gap-3 shrink-0">
+              <div className="relative shrink-0">
+                <div
+                  onClick={() => setShowAiMentor(true)}
+                  className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-500 via-cyan-400 to-indigo-300 shadow-[0_0_12px_rgba(59,130,246,0.6)] animate-pulse cursor-pointer hover:scale-105 transition-transform flex items-center justify-center"
+                  title="Mở gợi ý từ AI Mentor"
+                >
+                  <Sparkles size={14} className="text-white" />
+                </div>
+              </div>
+              <div className="min-w-0">
+                <h4 className="text-[10px] font-black text-white leading-none">AI Mentor gợi ý</h4>
+                <span className="text-[8px] text-white/40 block mt-1">Khuyên dùng học tập hôm nay.</span>
+              </div>
             </div>
           </div>
         </div>

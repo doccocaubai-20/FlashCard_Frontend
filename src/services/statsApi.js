@@ -9,4 +9,7 @@ export const statsApi = {
     buyItem: (price) => api.post('/api/stats/buy-item', { price }),
     getQuests: (tzOffset = 420) => api.get('/api/stats/quests', { params: { tzOffset } }),
     incrementQuestProgress: (questType, amount, tzOffset = 420) => api.put('/api/stats/quests/progress', { questType, amount, tzOffset }),
+    getDailyQuiz: (tzOffset = 420) => api.get('/api/stats/daily-quiz', { params: { tzOffset } }),
+    getGardenState: (tzOffset = 420) => api.get('/api/stats/garden', { params: { tzOffset } }),
+    harvestGarden: (tzOffset = 420) => api.post('/api/stats/garden/harvest', { tzOffset }),
 };

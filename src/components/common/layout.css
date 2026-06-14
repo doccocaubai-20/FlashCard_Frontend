@@ -254,4 +254,69 @@
   -webkit-backdrop-filter: blur(16px) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ── Zen Vocabulary Garden Animations ── */
+@keyframes sway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(2.5deg);
+  }
+}
+
+.animate-sway {
+  animation: sway 4s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.5)) url(#goldGlow);
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(253, 224, 71, 0.8)) url(#goldGlow);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes floatCloud {
+  0% {
+    transform: translateX(-150px);
+  }
+  100% {
+    transform: translateX(550px);
+  }
+}
+
+.animate-float-cloud {
+  animation: floatCloud 40s linear infinite;
+}
+
+@keyframes floatCoin {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(-15px) scale(1.1);
+  }
+  85% {
+    opacity: 1;
+    transform: translateY(-55px) scale(1);
+  }
+  100% {
+    transform: translateY(-70px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.animate-float-coin {
+  animation: floatCoin 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
