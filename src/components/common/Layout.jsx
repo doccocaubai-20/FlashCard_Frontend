@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { Menu, X } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 import './layout.css';
 
 export default function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
+  const { viewMode } = useTheme();
 
   // Automatically close sidebar on route/navigation changes
   useEffect(() => {
@@ -14,7 +16,8 @@ export default function Layout() {
   }, [location.pathname]);
 
   return (
-    <div className="app-layout">
+    <div className={`app-layout ${viewMode === 'gamified' ? 'gamified-active' : ''}`}>
+
       {/* Mobile Top Header Bar */}
       <header className="mobile-header">
         <button

@@ -6,15 +6,19 @@ import App from './App.jsx';
 import './index.css';
 import store from './store';
 import { ToastProvider } from './context/ToastContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         <ToastProvider>
-          <App />
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
         </ToastProvider>
       </BrowserRouter>
     </Provider>
   </StrictMode>,
 );
+

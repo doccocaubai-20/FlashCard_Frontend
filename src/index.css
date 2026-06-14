@@ -258,3 +258,91 @@
 .dark * {
   scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
+
+/* ── Giao diện Game hoá toàn cục (CSS Variables & Global Glassmorphism) ── */
+.gamified-active {
+  /* Neon Sky Blue làm tông chính */
+  --color-primary: #38bdf8;
+  --color-primary-deep: #0284c7;
+  --color-primary-light: rgba(56, 189, 248, 0.15);
+  --color-on-primary: #ffffff;
+
+  /* Màu chữ sáng rõ rệt trên nền tối */
+  --color-ink: #ffffff;
+  --color-body: rgba(255, 255, 255, 0.85);
+  --color-charcoal: rgba(255, 255, 255, 0.7);
+  --color-mute: rgba(255, 255, 255, 0.5);
+  --color-ash: rgba(255, 255, 255, 0.35);
+  --color-stone: rgba(255, 255, 255, 0.2);
+
+  /* Nền trong suốt mờ ảo */
+  --color-canvas: transparent;
+  --color-surface-bone: rgba(255, 255, 255, 0.05);
+  --color-surface-card: rgba(255, 255, 255, 0.06);
+  --color-surface-dark: rgba(16, 16, 24, 0.5);
+  --color-surface-deep: rgba(10, 10, 16, 0.7);
+
+  /* Viền siêu mảnh màu trắng đục */
+  --color-hairline: rgba(255, 255, 255, 0.08);
+  --color-divider-dark: rgba(255, 255, 255, 0.08);
+}
+
+/* Áp dụng hiệu ứng kính mờ cho toàn bộ các loại thẻ, bao gồm cả thẻ cũ */
+.gamified-active .ui-card,
+.gamified-active .ui-card-hover,
+.gamified-active .rounded-md.border,
+.gamified-active .rounded-md.border-hairline,
+.gamified-active .rounded-xl.border,
+.gamified-active .rounded-xl.border-hairline,
+.gamified-active .bg-surface-card {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Ghi đè các nền cứng thường dùng */
+.gamified-active .bg-white,
+.gamified-active .bg-gray-50,
+.gamified-active .bg-slate-50,
+.gamified-active .bg-gray-100,
+.gamified-active .bg-slate-100,
+.gamified-active .bg-surface-bone {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  color: #ffffff !important;
+}
+
+/* Viền phân cách */
+.gamified-active .border-hairline,
+.gamified-active .border-divider-dark,
+.gamified-active .border-gray-200,
+.gamified-active .border-slate-200,
+.gamified-active .divide-hairline > * + *,
+.gamified-active .divide-divider-dark > * + * {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Form inputs & dropdowns kính mờ */
+.gamified-active input,
+.gamified-active textarea,
+.gamified-active select {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+.gamified-active input::placeholder,
+.gamified-active textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Đồng bộ scrollbar màu Neon cho phong cách vũ trụ */
+.gamified-active ::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.2) !important;
+}
+
+.gamified-active ::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.45) !important;
+}

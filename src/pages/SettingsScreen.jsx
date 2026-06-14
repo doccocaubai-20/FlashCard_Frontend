@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../features/auth/authSlice';
 import { Sun, Moon, Camera, Check, ShieldAlert, Loader2 } from 'lucide-react';
 import api from '../services/api';
+import { useTheme } from '../context/ThemeContext';
+
 
 const predefinedAvatarSeeds = ['Felix', 'Chloe', 'Buddy', 'Buster', 'Coco', 'Angel'];
 
@@ -13,19 +15,14 @@ export default function SettingsScreen() {
   const _error = useSelector((state) => state.auth.error);
 
   // 1. Dark Mode State and Logic
-  const [isDark, setIsDark] = useState(() => {
-    return document.documentElement.classList.contains('dark') || localStorage.getItem('theme') === 'dark';
-  });
+  const { classicTheme, setClassicTheme } = useTheme();
+  const isDark = classicTheme === 'dark';
+  const setIsDark = (val) => {
+    const nextVal = typeof val === 'function' ? val(isDark) : val;
+    setClassicTheme(nextVal ? 'dark' : 'light');
+  };
 
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [isDark]);
+
 
   // 2. Profile Form State
   const [profileData, setProfileData] = useState({
