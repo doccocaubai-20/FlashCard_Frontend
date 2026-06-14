@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import HandwritingCanvas from '../components/common/HandwritingCanvas';
 import { useDictionary } from '../hooks/useDictionary';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
+import { statsApi } from '../services/statsApi';
 import { BookOpen, Star, Volume2, ArrowRight } from 'lucide-react';
 
 export default function FreeWriteScreen() {
@@ -485,6 +486,7 @@ export default function FreeWriteScreen() {
           character: summary.character
         });
         setMode('idle');
+        statsApi.incrementQuestProgress('WRITE_PRACTICE', 1).catch(err => console.error(err));
       }
     });
   }

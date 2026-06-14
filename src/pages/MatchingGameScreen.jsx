@@ -5,6 +5,7 @@ import { fetchAllDecks, fetchFlashcardsByDeck } from '../features/deck/deckSlice
 import { dictionaryApi } from '../services/dictionaryApi';
 import { cleanDefinition } from '../utils/formatters';
 import { useToast } from '../context/ToastContext';
+import { statsApi } from '../services/statsApi';
 import { 
   Gamepad2, 
   Timer, 
@@ -179,6 +180,7 @@ export default function MatchingGameScreen() {
             next.add(card1.wordId);
             if (next.size === 6) {
               setGameWon(true);
+              statsApi.incrementQuestProgress('PLAY_GAME', 1).catch(err => console.error(err));
             }
             return next;
           });

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, RefreshCw, Trophy, Clock, CheckCircle } from 'lucide-react';
 import { studyApi } from '../services/studyApi';
+import { statsApi } from '../services/statsApi';
 import { fetchDeckDetails } from '../features/deck/deckSlice';
 import { useDispatch } from 'react-redux';
 
@@ -134,6 +135,7 @@ export default function GameScreen() {
       // Check if all are matched
       if (newMatched.size === boardItems.length / 2) {
         setIsFinished(true);
+        statsApi.incrementQuestProgress('PLAY_GAME', 1).catch(err => console.error(err));
       }
     } else {
       // MISMATCH error

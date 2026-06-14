@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useDictionary } from '../hooks/useDictionary';
 import { useToast } from '../context/ToastContext';
+import { statsApi } from '../services/statsApi';
 
 export default function FreestyleSpeakingScreen() {
   const navigate = useNavigate();
@@ -55,6 +56,7 @@ export default function FreestyleSpeakingScreen() {
         const spacer = prev ? ' ' : '';
         return prev + spacer + transcript;
       });
+      statsApi.incrementQuestProgress('SPEAK_PRACTICE', 1).catch(err => console.error(err));
     };
 
     rec.onerror = (event) => {

@@ -9,7 +9,7 @@ import {
   BookOpen, Gamepad2, Search, PlusCircle,
   ArrowRight, ChevronRight, Flame, GraduationCap,
   Trophy, Settings, Shield, ShoppingBag, LayoutGrid, HelpCircle,
-  TrendingUp, Award, User, RefreshCw, X, ShoppingCart
+  TrendingUp, Award, User, RefreshCw, X, ShoppingCart, MessageSquare, CheckCircle2
 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { dictionaryApi } from '../services/dictionaryApi';
@@ -225,6 +225,19 @@ function MiniWeekStrip({ data = [], streak = 0 }) {
   );
 }
 
+const getQuestIcon = (type) => {
+  switch (type) {
+    case 'STUDY_CARDS': return <BookOpen size={14} className="text-blue-400" />;
+    case 'AI_CHAT': return <MessageSquare size={14} className="text-green-400" />;
+    case 'DICTIONARY_LOOKUP': return <Search size={14} className="text-teal-400" />;
+    case 'FAVORITE_WORD': return <Star size={14} className="text-yellow-400" />;
+    case 'PLAY_GAME': return <Gamepad2 size={14} className="text-purple-400" />;
+    case 'WRITE_PRACTICE': return <PenTool size={14} className="text-rose-400" />;
+    case 'SPEAK_PRACTICE': return <Volume2 size={14} className="text-amber-400" />;
+    default: return <Sparkles size={14} className="text-primary" />;
+  }
+};
+
 // ─────────────────────────────────────────────────────────────
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────
@@ -274,10 +287,25 @@ export default function DashboardScreen() {
     ]
   };
 
+  const [quests, setQuests] = useState([]);
+  const [questsLoading, setQuestsLoading] = useState(true);
+
+  const loadQuests = async () => {
+    try {
+      const res = await statsApi.getQuests();
+      setQuests(res.data || []);
+    } catch (err) {
+      console.error('Failed to load quests:', err);
+    } finally {
+      setQuestsLoading(false);
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchSummary());
     dispatch(fetchHeatmap());
     dispatch(fetchAllDecks());
+    loadQuests();
   }, [dispatch]);
 
   const streak = summary?.streak ?? 0;
@@ -757,26 +785,69 @@ export default function DashboardScreen() {
             </div>
           </div>
 
-          {/* Card 2: Quick Learn (HSK Tip) */}
-          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-5 flex items-center justify-between shadow-lg">
-            <div className="space-y-1.5 flex-1 pr-4">
-              <span className="text-[10px] font-sans font-bold text-white/50 uppercase tracking-widest block">
-                HỌC NHANH TRONG 5 PHÚT
-              </span>
-              <h3 className="text-sm font-bold text-white leading-snug">
-                Cách phân biệt trợ từ kết cấu "的", "地", "得"
-              </h3>
-              <p className="text-[10px] text-white/60 line-clamp-1">
-                Bí quyết viết đúng ngữ pháp HSK 3 & 4 không bao giờ bị nhầm lẫn.
-              </p>
+          {/* Card 2: Daily Quests */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-5 flex flex-col justify-between shadow-lg">
+            <div className="flex items-center justify-between mb-3 border-b border-white/5 pb-2">
+              <div>
+                <span className="text-[10px] font-sans font-bold text-white/50 uppercase tracking-widest block">
+                  NHIỆM VỤ HÀNG NGÀY
+                </span>
+                <h3 className="text-xs font-bold text-white mt-0.5">Tiến độ hôm nay</h3>
+              </div>
+              <span className="text-[8px] font-medium text-white/30">Tự làm mới lúc 00:00</span>
             </div>
-            <Link
-              to="/grammar"
-              className="h-10 w-10 shrink-0 bg-primary/20 text-primary border border-primary/20 rounded-xl flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-sm cursor-pointer"
-              title="Đọc ngay"
-            >
-              <ArrowRight size={16} />
-            </Link>
+
+            {questsLoading ? (
+              <div className="py-6 flex justify-center items-center">
+                <RefreshCw size={18} className="animate-spin text-white/40" />
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {quests.map((q) => {
+                  const percent = Math.min(100, Math.round((q.progress / q.target) * 100));
+                  return (
+                    <div
+                      key={q.id}
+                      className={`p-2.5 rounded-xl border transition-all ${
+                        q.completed
+                          ? 'bg-green-500/10 border-green-500/20 text-white/80'
+                          : 'bg-white/5 border-white/5 hover:bg-white/10 text-white'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-start gap-2 min-w-0 flex-1">
+                          <div className={`p-1.5 rounded-lg shrink-0 ${q.completed ? 'bg-green-500/15' : 'bg-white/5'}`}>
+                            {getQuestIcon(q.questType)}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h4 className={`text-[11px] font-semibold truncate ${q.completed ? 'text-green-400 line-through' : 'text-white'}`}>
+                              {q.title}
+                            </h4>
+                            <p className="text-[9px] text-white/40 truncate mt-0.5">{q.description}</p>
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <span className="text-[10px] font-mono font-bold block">
+                            {q.progress}/{q.target}
+                          </span>
+                          <span className="text-[8px] font-bold text-sky-400 block mt-0.5">
+                            +{q.xpReward} XP / +{q.coinReward} Xu
+                          </span>
+                        </div>
+                      </div>
+                      <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden mt-2 border border-white/5">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${
+                            q.completed ? 'bg-green-500' : 'bg-sky-400'
+                          }`}
+                          style={{ width: `${percent}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 

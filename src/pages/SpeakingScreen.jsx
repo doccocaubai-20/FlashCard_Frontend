@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { translationData } from '../data/translationData';
+import { statsApi } from '../services/statsApi';
 import { 
   Mic, 
   MicOff, 
@@ -69,6 +70,7 @@ export default function SpeakingScreen() {
     setGradedChars(results);
     setScore(finalScore);
     setChecked(true);
+    statsApi.incrementQuestProgress('SPEAK_PRACTICE', 1).catch(err => console.error(err));
   };
 
   // Initialize Web Speech Recognition
