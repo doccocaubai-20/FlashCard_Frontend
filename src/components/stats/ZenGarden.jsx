@@ -254,6 +254,16 @@ export default function ZenGarden({ summary, onHarvestSuccess }) {
                 onMouseEnter={() => setHoveredPlant(item)}
                 onMouseLeave={() => setHoveredPlant(null)}
               >
+                {/* Transparent Hover Target overlay to prevent flickering */}
+                <circle
+                  cx={x}
+                  cy={y - (item.stage === 'seed' ? 8 : item.stage === 'sprout' ? 16 : item.stage === 'sapling' ? 25 : 35)}
+                  r={item.stage === 'seed' ? 16 : item.stage === 'sprout' ? 24 : item.stage === 'sapling' ? 32 : 42}
+                  fill="white"
+                  fillOpacity="0"
+                  pointerEvents="all"
+                />
+
                 {/* 1. SEED STAGE */}
                 {item.stage === 'seed' && (
                   <g>
