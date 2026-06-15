@@ -614,6 +614,8 @@ export default function StudyScreen() {
         id: f.id,
         deckId: 'favorites',
         hanzi: f.hanzi,
+        character: f.hanzi,
+        front: f.hanzi,
         pinyin: f.pinyin || '',
         meaning: f.vi || '',
         deckName: 'Từ vựng yêu thích'
