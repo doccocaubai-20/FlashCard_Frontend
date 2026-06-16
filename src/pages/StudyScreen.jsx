@@ -997,7 +997,7 @@ export default function StudyScreen() {
   if (isStudyStarted) {
     const currentCard = activeQueue[currentIndex];
     return (
-      <div className="max-w-4xl mx-auto space-y-6 pb-12">
+      <div className="max-w-6xl mx-auto space-y-6 pb-12">
         {/* Navigation Top Bar */}
         <div className="flex items-center justify-between border-b border-hairline dark:border-divider-dark pb-4">
           <button
@@ -1034,127 +1034,138 @@ export default function StudyScreen() {
           )}
         </div>
 
-        {/* Flashcard Area */}
-        <div className="flex flex-col items-center justify-center pt-4">
-          {currentCard ? (
-            <div className="relative w-full max-w-xl">
-              <Flashcard 
-                cardData={currentCard} 
-                isFlipped={isFlipped} 
-                onFlip={handleFlip} 
-                frontFaceMode={frontFaceMode}
-                showPinyinOnFront={showPinyinOnFront}
-                onTogglePinyinOnFront={() => setShowPinyinOnFront((prev) => !prev)}
-              />
+        {/* Main Content Area: Responsive Grid (Side-by-side on desktop, vertical on mobile) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-4">
+          
+          {/* Left Column (5 cols): Flashcard, SRS Ratings, and Navigation */}
+          <div className="lg:col-span-5 flex flex-col items-center space-y-6 w-full">
+            {currentCard ? (
+              <div className="relative w-full max-w-xl mx-auto">
+                <Flashcard 
+                  cardData={currentCard} 
+                  isFlipped={isFlipped} 
+                  onFlip={handleFlip} 
+                  frontFaceMode={frontFaceMode}
+                  showPinyinOnFront={showPinyinOnFront}
+                  onTogglePinyinOnFront={() => setShowPinyinOnFront((prev) => !prev)}
+                />
+                
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleToggleFavorite(currentCard.hanzi, currentCard.pinyin, currentCard.meaning);
+                  }}
+                  className={`absolute top-5 left-5 z-30 p-2 rounded-full border transition-all cursor-pointer ${
+                    isFavorite(currentCard.hanzi)
+                      ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
+                      : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
+                  }`}
+                  title={isFavorite(currentCard.hanzi) ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
+                >
+                  <Star size={16} fill={isFavorite(currentCard.hanzi) ? 'currentColor' : 'none'} />
+                </button>
+              </div>
+            ) : (
+              <div className="text-mute dark:text-on-dark-mute font-mono text-center">Lỗi: Không tìm thấy thẻ bài.</div>
+            )}
+
+            {/* Spaced Repetition Panel (shown only in SRS mode) */}
+            {studyMode === 'srs' && (
+              <div className="w-full max-w-xl mx-auto text-center">
+                {isFlipped ? (
+                  <div className="w-full bg-surface-card dark:bg-surface-dark/40 border border-hairline dark:border-divider-dark rounded-md p-5 shadow-sm">
+                    <SRSButtons onRate={handleRate} />
+                  </div>
+                ) : (
+                  <div className="py-4 bg-surface-bone/50 dark:bg-black/20 border border-dashed border-hairline dark:border-divider-dark rounded-md text-xs text-mute dark:text-on-dark-mute font-semibold">
+                    Chạm vào thẻ để lật xem nghĩa (hoặc phím Cách)
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Unified Navigation Buttons (Back & Next) */}
+            <div className="flex items-center justify-between gap-6 w-full max-w-xl mx-auto pt-2">
+              <button
+                type="button"
+                onClick={handlePrevClassic}
+                disabled={currentIndex === 0}
+                className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-surface-card hover:bg-surface-bone disabled:opacity-40 dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark font-mono font-bold rounded-full transition-all cursor-pointer border border-hairline dark:border-divider-dark"
+              >
+                <ArrowLeft size={14} />
+                Quay lại
+              </button>
               
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleToggleFavorite(currentCard.hanzi, currentCard.pinyin, currentCard.meaning);
-                }}
-                className={`absolute top-5 left-5 z-30 p-2 rounded-full border transition-all cursor-pointer ${
-                  isFavorite(currentCard.hanzi)
-                    ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
-                    : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
-                }`}
-                title={isFavorite(currentCard.hanzi) ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
+                onClick={studyMode === 'srs' ? handleSkip : handleNextClassic}
+                className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-primary hover:bg-primary-deep text-white font-mono font-bold rounded-full transition-all cursor-pointer shadow-sm active:scale-[0.98]"
               >
-                <Star size={16} fill={isFavorite(currentCard.hanzi) ? 'currentColor' : 'none'} />
+                <span>{currentIndex === activeQueue.length - 1 ? 'Hoàn thành' : 'Tiếp theo'}</span>
+                <ArrowRight size={14} />
               </button>
             </div>
-          ) : (
-            <div className="text-mute dark:text-on-dark-mute font-mono">Lỗi: Không tìm thấy thẻ bài.</div>
-          )}
-        </div>
+          </div>
 
-        {/* Footer controls: Unified buttons for BOTH modes */}
-        <div className="mt-8 flex flex-col items-center justify-center w-full max-w-xl mx-auto space-y-6">
-          
-          {/* Spaced Repetition Panel (shown only in SRS mode) */}
-          {studyMode === 'srs' && (
-            <div className="w-full text-center">
-              {isFlipped ? (
-                <div className="w-full bg-surface-card dark:bg-surface-dark/40 border border-hairline dark:border-divider-dark rounded-md p-5 shadow-sm">
-                  <SRSButtons onRate={handleRate} />
+          {/* Right Column (7 cols): Interactive Practice Tools (Writing, Speaking, AI Example Box) */}
+          <div className="lg:col-span-7 w-full space-y-6">
+            {currentCard && isFlipped ? (
+              <div className="w-full space-y-6 bg-surface-card dark:bg-surface-dark/20 border border-hairline dark:border-divider-dark rounded-xl p-6 shadow-sm">
+                
+                {/* Practice Mode Toggle Buttons */}
+                <div className="flex gap-4 w-full">
+                  <button
+                    type="button"
+                    onClick={() => setShowWriting((prev) => !prev)}
+                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 border rounded-full transition-all cursor-pointer text-xs font-mono font-bold shadow-sm ${
+                      showWriting
+                        ? 'bg-primary text-white border-transparent'
+                        : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
+                    }`}
+                  >
+                    ✍️ {showWriting ? 'Ẩn luyện viết' : 'Luyện viết'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowSpeaking((prev) => !prev)}
+                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 border rounded-full transition-all cursor-pointer text-xs font-mono font-bold shadow-sm ${
+                      showSpeaking
+                        ? 'bg-primary text-white border-transparent'
+                        : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
+                    }`}
+                  >
+                    🎙️ {showSpeaking ? 'Ẩn luyện nói' : 'Luyện nói'}
+                  </button>
                 </div>
-              ) : (
-                <div className="py-4 bg-surface-bone/50 dark:bg-black/20 border border-dashed border-hairline dark:border-divider-dark rounded-md text-xs text-mute dark:text-on-dark-mute font-semibold">
-                  Chạm vào thẻ để lật xem nghĩa (hoặc phím Cách)
-                </div>
-              )}
-            </div>
-          )}
 
-          {/* Interactive Tools Panel: Writing, Speaking, and AI Example (Shown when flipped) */}
-          {currentCard && isFlipped && (
-            <div className="w-full space-y-6">
-              {/* Practice Mode Toggle Buttons */}
-              <div className="flex gap-4 w-full px-4">
-                <button
-                  type="button"
-                  onClick={() => setShowWriting((prev) => !prev)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 border rounded-full transition-all cursor-pointer text-xs font-mono font-bold shadow-sm ${
-                    showWriting
-                      ? 'bg-primary text-white border-transparent'
-                      : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-                  }`}
-                >
-                  ✍️ {showWriting ? 'Ẩn luyện viết' : 'Luyện viết'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowSpeaking((prev) => !prev)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 border rounded-full transition-all cursor-pointer text-xs font-mono font-bold shadow-sm ${
-                    showSpeaking
-                      ? 'bg-primary text-white border-transparent'
-                      : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-                  }`}
-                >
-                  🎙️ {showSpeaking ? 'Ẩn luyện nói' : 'Luyện nói'}
-                </button>
+                {/* Conditional Sub-panels */}
+                {showWriting && (
+                  <div className="w-full transition-all duration-300">
+                    <WritingPractice character={currentCard.hanzi} />
+                  </div>
+                )}
+
+                {showSpeaking && (
+                  <div className="w-full transition-all duration-300">
+                    <SpeakingPractice character={currentCard.hanzi} pinyin={currentCard.pinyin} />
+                  </div>
+                )}
+
+                {/* AI Example Sentence Generator & Reader */}
+                <div className="w-full">
+                  <AIExampleBox card={currentCard} onExampleUpdated={handleExampleUpdated} />
+                </div>
               </div>
-
-              {/* Conditional Sub-panels */}
-              {showWriting && (
-                <div className="w-full transition-all duration-300">
-                  <WritingPractice character={currentCard.hanzi} />
-                </div>
-              )}
-
-              {showSpeaking && (
-                <div className="w-full transition-all duration-300">
-                  <SpeakingPractice character={currentCard.hanzi} pinyin={currentCard.pinyin} />
-                </div>
-              )}
-
-              {/* AI Example Sentence Generator & Reader */}
-              <div className="w-full px-4">
-                <AIExampleBox card={currentCard} onExampleUpdated={handleExampleUpdated} />
+            ) : (
+              <div className="w-full bg-surface-card/30 dark:bg-surface-dark/10 border border-dashed border-hairline dark:border-divider-dark rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[360px] space-y-4">
+                <div className="text-4xl animate-bounce">💡</div>
+                <h4 className="font-display font-extrabold text-base text-ink dark:text-on-dark">Công cụ học tập tương tác</h4>
+                <p className="text-xs text-mute dark:text-on-dark-mute max-w-sm leading-relaxed font-sans">
+                  Chạm vào thẻ bài (hoặc nhấn phím Cách) để lật xem nghĩa. Hệ thống sẽ mở ra các công cụ luyện viết nét chữ, luyện nói phát âm, và sinh câu ví dụ AI tương ứng cho từ vựng này.
+                </p>
               </div>
-            </div>
-          )}
-
-          {/* Unified Navigation Buttons (Back & Next) */}
-          <div className="flex items-center justify-between gap-6 w-full px-4 pt-2">
-            <button
-              type="button"
-              onClick={handlePrevClassic}
-              disabled={currentIndex === 0}
-              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-surface-card hover:bg-surface-bone disabled:opacity-40 dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark font-mono font-bold rounded-full transition-all cursor-pointer border border-hairline dark:border-divider-dark"
-            >
-              <ArrowLeft size={14} />
-              Quay lại
-            </button>
-            
-            <button
-              type="button"
-              onClick={studyMode === 'srs' ? handleSkip : handleNextClassic}
-              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-primary hover:bg-primary-deep text-white font-mono font-bold rounded-full transition-all cursor-pointer shadow-sm active:scale-[0.98]"
-            >
-              <span>{currentIndex === activeQueue.length - 1 ? 'Hoàn thành' : 'Tiếp theo'}</span>
-              <ArrowRight size={14} />
-            </button>
+            )}
           </div>
 
         </div>
