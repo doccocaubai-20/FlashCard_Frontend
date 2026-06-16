@@ -693,6 +693,10 @@ export default function StudyScreen() {
       return;
     }
 
+    if (selectedDeckId === 'favorites' && studyMode === 'srs') {
+      setStudyMode('classic');
+    }
+
     let cardsToStudy = [...filteredQueue];
     if (isShuffleEnabled) {
       for (let i = cardsToStudy.length - 1; i > 0; i--) {
@@ -1354,11 +1358,17 @@ export default function StudyScreen() {
         <div className="grid gap-4 sm:grid-cols-2">
           {/* Backed Repetition Block */}
           <button
-            onClick={() => setStudyMode('srs')}
-            className={`p-6 rounded-md border transition-all text-left flex items-start gap-4 cursor-pointer hover:shadow-sm ${
-              studyMode === 'srs'
-                ? 'bg-primary border-transparent text-white'
-                : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
+            onClick={() => {
+              if (selectedDeckId === 'favorites') return;
+              setStudyMode('srs');
+            }}
+            disabled={selectedDeckId === 'favorites'}
+            className={`p-6 rounded-md border transition-all text-left flex items-start gap-4 hover:shadow-sm ${
+              selectedDeckId === 'favorites'
+                ? 'opacity-40 cursor-not-allowed bg-surface-card border-hairline dark:bg-surface-dark text-ink dark:text-on-dark'
+                : studyMode === 'srs'
+                  ? 'bg-primary border-transparent text-white'
+                  : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
             }`}
           >
             <div className={`p-3 rounded-full ${
