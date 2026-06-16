@@ -162,20 +162,33 @@ function WritingPractice({ character }) {
   );
 }
 
-// Speaking Practice sub-component using native Web Speech API
+// Speaking Practice sub-component using native Web Speech API and MediaRecorder
 function SpeakingPractice({ character, pinyin }) {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [result, setResult] = useState(null); // 'success', 'fail', null
+  const [audioUrl, setAudioUrl] = useState(null);
+  
   const recognitionRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
   const { showToast } = useToast();
 
   const handleSpeakGuide = () => {
     speakChinese(character);
   };
 
-  // Start Speech Recognition
-  const handleStartListening = () => {
+  const handlePlayRecording = () => {
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
+      audio.play().catch((err) => {
+        console.error('Playback error:', err);
+      });
+    }
+  };
+
+  // Start Speech Recognition & MediaRecorder
+  const handleStartListening = async () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       showToast('Trình duyệt của bạn không hỗ trợ nhận dạng giọng nói (Speech Recognition). Vui lòng thử trên Google Chrome hoặc Safari.', 'warning');
@@ -189,6 +202,36 @@ function SpeakingPractice({ character, pinyin }) {
       return;
     }
 
+    // 1. Request microphone and start recording
+    let audioStream;
+    try {
+      audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(audioStream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+      setAudioUrl(null); // Clear previous recording
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const url = URL.createObjectURL(audioBlob);
+        setAudioUrl(url);
+        audioStream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+    } catch (err) {
+      console.error('Error starting media recorder:', err);
+      showToast('Không thể truy cập microphone. Vui lòng cấp quyền micro cho trang web!', 'warning');
+      return;
+    }
+
+    // 2. Start Speech Recognition
     const recognition = new SpeechRecognition();
     recognition.lang = 'zh-CN';
     recognition.interimResults = false;
@@ -204,10 +247,16 @@ function SpeakingPractice({ character, pinyin }) {
     recognition.onerror = (e) => {
       console.error(e);
       setIsListening(false);
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop();
+      }
     };
 
     recognition.onend = () => {
       setIsListening(false);
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop();
+      }
     };
 
     recognition.onresult = (e) => {
@@ -226,6 +275,15 @@ function SpeakingPractice({ character, pinyin }) {
 
     recognition.start();
   };
+
+  // Clean up URL object on unmount
+  useEffect(() => {
+    return () => {
+      if (audioUrl) {
+        URL.revokeObjectURL(audioUrl);
+      }
+    };
+  }, [audioUrl]);
 
   return (
     <div className="flex flex-col items-center gap-4 bg-surface-bone dark:bg-black/20 border border-hairline dark:border-divider-dark rounded-md p-5 w-full max-w-sm mx-auto shadow-sm">
@@ -252,6 +310,17 @@ function SpeakingPractice({ character, pinyin }) {
         >
           🎙️ {isListening ? 'Đang nghe...' : 'Nói ngay'}
         </button>
+
+        {audioUrl && (
+          <button
+            type="button"
+            onClick={handlePlayRecording}
+            className="flex h-10 px-4 items-center justify-center rounded-full bg-amber-500 hover:bg-amber-600 text-white font-mono text-xs font-bold shadow-sm transition-all cursor-pointer gap-1.5"
+            title="Nghe lại phát âm của bạn"
+          >
+            🎧 Nghe lại
+          </button>
+        )}
       </div>
 
       {transcript && (
@@ -273,7 +342,7 @@ function SpeakingPractice({ character, pinyin }) {
       )}
 
       <p className="text-[10px] text-mute dark:text-on-dark-mute leading-relaxed text-center max-w-[240px]">
-        Nhấp 🔊 để nghe phát âm mẫu của từ <strong className="font-mono">"{pinyin}"</strong>, nhấp 🎙️ rồi đọc theo để kiểm tra khả năng phát âm của bạn.
+        Nhấp 🔊 để nghe phát âm mẫu, nhấp 🎙️ rồi đọc theo để kiểm tra và nhấn 🎧 để nghe lại giọng nói của bạn.
       </p>
     </div>
   );
