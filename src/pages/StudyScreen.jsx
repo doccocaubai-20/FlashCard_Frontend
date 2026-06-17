@@ -672,7 +672,7 @@ export default function StudyScreen() {
   // Load today study cards depending on selectedDeckId
   useEffect(() => {
     if (selectedDeckId !== 'favorites') {
-      dispatch(fetchTodayStudy(selectedDeckId === 'all' ? undefined : Number(selectedDeckId)));
+      dispatch(fetchTodayStudy({ deckId: selectedDeckId === 'all' ? undefined : Number(selectedDeckId) }));
     }
   }, [dispatch, selectedDeckId]);
 
@@ -754,6 +754,12 @@ export default function StudyScreen() {
       window.speechSynthesis?.cancel();
     };
   }, []);
+
+  const handleLoadExtraCards = (count) => {
+    const deckId = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
+    dispatch(fetchTodayStudy({ deckId, extra: count }));
+    showToast(`Đã nạp thêm ${count} từ mới vào hàng đợi ôn tập!`, 'success');
+  };
 
   // Start study session
   const handleStartStudy = () => {
@@ -1463,12 +1469,49 @@ export default function StudyScreen() {
               <p className={`text-xs mt-1 leading-5 ${studyMode === 'srs' ? 'text-white/80' : 'text-mute dark:text-on-dark-mute'}`}>
                 Ôn tập thông minh. Thẻ tự động nhắc lại dựa theo thuật toán ghi nhớ SM-2.
               </p>
-              <div className={`mt-3 inline-flex items-center px-2.5 py-1 text-[10px] font-mono font-bold rounded-full uppercase ${
-                studyMode === 'srs'
-                  ? 'bg-white/20 text-white'
-                  : 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary'
-              }`}>
-                {todayCards.length} thẻ đến hạn hôm nay
+              <div className="flex flex-wrap items-center gap-2 mt-3">
+                <div className={`inline-flex items-center px-2.5 py-1 text-[10px] font-mono font-bold rounded-full uppercase ${
+                  studyMode === 'srs'
+                    ? 'bg-white/20 text-white'
+                    : 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary'
+                }`}>
+                  {todayCards.length} thẻ đến hạn hôm nay
+                </div>
+
+                {todayCards.length === 0 && selectedDeckId !== 'favorites' && (
+                  <div className="flex gap-1.5 z-40">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLoadExtraCards(10);
+                      }}
+                      className={`px-2 py-0.5 text-[9px] font-mono font-bold rounded shadow-sm border transition-all cursor-pointer ${
+                        studyMode === 'srs'
+                          ? 'bg-white/10 hover:bg-white/25 border-white/25 text-white'
+                          : 'bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-semibold'
+                      }`}
+                      title="Nạp thêm 10 từ mới để học"
+                    >
+                      +10 từ mới
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLoadExtraCards(20);
+                      }}
+                      className={`px-2 py-0.5 text-[9px] font-mono font-bold rounded shadow-sm border transition-all cursor-pointer ${
+                        studyMode === 'srs'
+                          ? 'bg-white/10 hover:bg-white/25 border-white/25 text-white'
+                          : 'bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-semibold'
+                      }`}
+                      title="Nạp thêm 20 từ mới để học"
+                    >
+                      +20 từ mới
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </button>

@@ -9,9 +9,11 @@ const initialState = {
   error: null,
 };
 
-export const fetchTodayStudy = createAsyncThunk('study/fetchTodayStudy', async (deckId, { rejectWithValue }) => {
+export const fetchTodayStudy = createAsyncThunk('study/fetchTodayStudy', async (params, { rejectWithValue }) => {
   try {
-    const response = await studyApi.getToday(deckId);
+    const deckId = params && typeof params === 'object' ? params.deckId : params;
+    const extra = params && typeof params === 'object' ? params.extra : undefined;
+    const response = await studyApi.getToday(deckId, extra);
     return response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message);
