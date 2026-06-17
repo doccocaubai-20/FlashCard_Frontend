@@ -243,7 +243,7 @@ export default function GameScreen() {
                     : isWrong
                     ? 'border-red-500 bg-red-500/10 text-red-500 animate-shake'
                     : isSelected
-                    ? 'border-primary bg-primary/10 text-primary scale-102 ring-2 ring-primary/20'
+                    ? 'border-primary bg-primary/15 text-primary ring-2 ring-primary/40 shadow-[0_0_12px_rgba(15,82,87,0.3)] dark:shadow-[0_0_15px_rgba(15,82,87,0.55)]'
                     : 'bg-surface-card dark:bg-surface-dark hover:bg-surface-bone dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark hover:-translate-y-0.5'
                 }`}
               >

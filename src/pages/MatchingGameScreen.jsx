@@ -324,7 +324,7 @@ export default function MatchingGameScreen() {
                       : isFailed
                       ? 'bg-red-50 dark:bg-red-950/20 border-red-500/80 text-red-600 dark:text-red-400 scale-95 animate-pulse'
                       : isSelected
-                      ? 'bg-primary/10 border-primary text-primary scale-98 ring-2 ring-primary/20'
+                      ? 'bg-primary/15 border-primary text-primary ring-2 ring-primary/40 shadow-[0_0_12px_rgba(15,82,87,0.3)] dark:shadow-[0_0_15px_rgba(15,82,87,0.55)]'
                       : 'bg-surface-card hover:bg-surface-bone/35 dark:bg-surface-dark dark:hover:bg-black/30 border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
                   }`}
                 >
