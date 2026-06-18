@@ -14,7 +14,8 @@ import {
   Gamepad2,
   Trophy,
   Shield,
-  MessageSquare
+  MessageSquare,
+  ClipboardList
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -44,6 +45,7 @@ export default function Sidebar() {
       items: [
         { to: '/study-hub', label: 'Khu học tập HSK', icon: GraduationCap },
         { to: '/game-arcade', label: 'Đấu trường game', icon: Gamepad2 },
+        { to: '/hsk-exams', label: 'Luyện đề HSK', icon: ClipboardList },
         { to: '/chat', label: 'AI Chatbot', icon: MessageSquare },
       ]
     },

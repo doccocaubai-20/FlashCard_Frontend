@@ -1,0 +1,200 @@
+[
+  {
+    "id": "hsk1-mock-1",
+    "hskLevel": 1,
+    "title": "Đề mô phỏng HSK 1 - Đề số 01",
+    "description": "40 câu hỏi Nghe và Đọc hiểu. Thời gian làm bài 35 phút. Thang điểm 200.",
+    "questions": [
+      {
+        "id": "hsk1-q1",
+        "section": "listening",
+        "type": "multiple-choice",
+        "questionText": "Nghe và chọn bức tranh đúng tương ứng với từ nghe được:",
+        "audioUrl": "https://raw.githubusercontent.com/hugolpz/audio-cmn/master/cmn-2c700cb9.mp3",
+        "audioText": "谢谢",
+        "options": ["Cảm ơn (谢谢)", "Xin chào (你好)", "Tạm biệt (再见)", "Xin lỗi (对不起)"],
+        "correctAnswer": "Cảm ơn (谢谢)"
+      },
+      {
+        "id": "hsk1-q2",
+        "section": "listening",
+        "type": "multiple-choice",
+        "questionText": "Nghe và chọn từ đúng với cách phát âm nghe được:",
+        "audioUrl": "https://raw.githubusercontent.com/hugolpz/audio-cmn/master/cmn-02263435.mp3",
+        "audioText": "医生",
+        "options": ["Học sinh (学生)", "Giáo viên (老师)", "Bác sĩ (医生)", "Tài xế (司机)"],
+        "correctAnswer": "Bác sĩ (医生)"
+      },
+      {
+        "id": "hsk1-q3",
+        "section": "listening",
+        "type": "multiple-choice",
+        "questionText": "Nghe và chọn số lượng đúng tương ứng:",
+        "audioUrl": "https://raw.githubusercontent.com/hugolpz/audio-cmn/master/cmn-2e06ce9c.mp3",
+        "audioText": "星期五",
+        "options": ["Thứ Hai (星期一)", "Thứ Năm (星期四)", "Thứ Sáu (星期五)", "Chủ Nhật (星期日)"],
+        "correctAnswer": "Thứ Sáu (星期五)"
+      },
+      {
+        "id": "hsk1-q4",
+        "section": "reading",
+        "type": "multiple-choice",
+        "questionText": "Chọn nghĩa phù hợp cho câu chữ Hán sau: '这儿有五个人。'",
+        "pinyin": "Zhè'er yǒu wǔ gè rén.",
+        "options": ["Ở đây có 4 người.", "Ở đây có 5 người.", "Ở kia có 5 người.", "Họ có 5 người."],
+        "correctAnswer": "Ở đây có 5 người."
+      },
+      {
+        "id": "hsk1-q5",
+        "section": "reading",
+        "type": "multiple-choice",
+        "questionText": "Chọn từ thích hợp điền vào chỗ trống: '我喜欢吃___。'",
+        "pinyin": "Wǒ xǐhuān chī ___.",
+        "options": ["苹果 (táo)", "茶 (trà)", "衣服 (quần áo)", "电脑 (máy tính)"],
+        "correctAnswer": "苹果 (táo)"
+      }
+    ]
+  },
+  {
+    "id": "hsk2-mock-1",
+    "hskLevel": 2,
+    "title": "Đề mô phỏng HSK 2 - Đề số 01",
+    "description": "60 câu hỏi Nghe và Đọc hiểu. Thời gian làm bài 50 phút. Thang điểm 200.",
+    "questions": [
+      {
+        "id": "hsk2-q1",
+        "section": "listening",
+        "type": "multiple-choice",
+        "questionText": "Nghe hội thoại và chọn bức tranh đúng:",
+        "audioUrl": "https://raw.githubusercontent.com/hugolpz/audio-cmn/master/cmn-e18e3c15.mp3",
+        "audioText": "买自行车",
+        "options": ["Mua xe đạp (买自行车)", "Đi tàu hỏa (坐火车)", "Đón taxi (打车)", "Đi bộ (走路)"],
+        "correctAnswer": "Mua xe đạp (买自行车)"
+      },
+      {
+        "id": "hsk2-q2",
+        "section": "listening",
+        "type": "multiple-choice",
+        "questionText": "Nghe và xác nhận hành động được nhắc tới:",
+        "audioUrl": "https://raw.githubusercontent.com/hugolpz/audio-cmn/master/cmn-0cc6963f.mp3",
+        "audioText": "唱歌",
+        "options": ["Nhảy múa (跳舞)", "Hát ca (唱歌)", "Đọc sách (读书)", "Chạy bộ (跑步)"],
+        "correctAnswer": "Hát ca (唱歌)"
+      },
+      {
+        "id": "hsk2-q3",
+        "section": "reading",
+        "type": "multiple-choice",
+        "questionText": "Chọn nghĩa phù hợp cho câu sau: '天气太热 rồi, 多喝水。'",
+        "pinyin": "Tiānqì tài rè le, duō hē shuǐ.",
+        "options": [
+          "Thời tiết lạnh quá, uống ít nước thôi.",
+          "Thời tiết nóng quá, hãy uống nhiều nước.",
+          "Trời mưa rồi, hãy ở nhà đi.",
+          "Thời tiết ấm áp, đi chơi thôi."
+        ],
+        "correctAnswer": "Thời tiết nóng quá, hãy uống nhiều nước."
+      },
+      {
+        "id": "hsk2-q4",
+        "section": "reading",
+        "type": "multiple-choice",
+        "questionText": "Chọn từ thích hợp điền vào chỗ trống: '他每天坐___去上班。'",
+        "pinyin": "Tā měitiān zuò ___ qù shàngbān.",
+        "options": ["公共汽车 (xe buýt)", "报纸 (báo chí)", "西瓜 (dưa hấu)", "晴天 (ngày nắng)"],
+        "correctAnswer": "公共汽车 (xe buýt)"
+      }
+    ]
+  },
+  {
+    "id": "hsk3-mock-1",
+    "hskLevel": 3,
+    "title": "Đề mô phỏng HSK 3 - Đề số 01",
+    "description": "80 câu hỏi Nghe, Đọc hiểu và Viết. Thời gian làm bài 85 phút. Thang điểm 300.",
+    "questions": [
+      {
+        "id": "hsk3-q1",
+        "section": "listening",
+        "type": "multiple-choice",
+        "questionText": "Nghe đoạn hội thoại ngắn và chọn câu trả lời đúng cho câu hỏi:",
+        "audioUrl": "https://raw.githubusercontent.com/hugolpz/audio-cmn/master/cmn-190ea472.mp3",
+        "audioText": "历史",
+        "options": ["Môn Toán (数学)", "Môn Lịch sử (历史)", "Môn Địa lý (地理)", "Môn Thể dục (体育)"],
+        "correctAnswer": "Môn Lịch sử (历史)"
+      },
+      {
+        "id": "hsk3-q2",
+        "section": "reading",
+        "type": "multiple-choice",
+        "questionText": "Chọn từ trái nghĩa với từ gạch chân: '这件衣服太贵了。'",
+        "pinyin": "Zhè jiàn yīfu tài guì le. (Từ cần chọn trái nghĩa với 贵)",
+        "options": ["便宜 (rẻ)", "漂亮 (đẹp)", "暖和 (ấm)", "舒服 (dễ chịu)"],
+        "correctAnswer": "便宜 (rẻ)"
+      },
+      {
+        "id": "hsk3-q3",
+        "section": "writing",
+        "type": "arrange",
+        "questionText": "Sắp xếp các từ sau thành câu hoàn chỉnh:",
+        "pinyin": "tā / de / hànyǔ / hěn / hǎo (Từ gợi ý: 他 / 的 / 汉语 / 很 / 好)",
+        "words": ["他的", "汉语", "很好"],
+        "correctAnswer": "His Chinese is very good."
+      },
+      {
+        "id": "hsk3-q4",
+        "section": "writing",
+        "type": "arrange",
+        "questionText": "Sắp xếp các từ sau thành câu hoàn chỉnh:",
+        "pinyin": "wǒ / xǐhuān / chī / píngguǒ (Từ gợi ý: 我 / 喜欢 / 吃 / 苹果)",
+        "words": ["我", "喜欢", "吃", "苹果"],
+        "correctAnswer": "I like to eat apples."
+      }
+    ]
+  },
+  {
+    "id": "hsk6-mock-1",
+    "hskLevel": 6,
+    "title": "Đề mô phỏng HSK 6 - Đề số 01",
+    "description": "101 câu hỏi Nghe, Đọc hiểu và Viết. Thời gian làm bài 135 phút. Thang điểm 300.",
+    "questions": [
+      {
+        "id": "hsk6-q1",
+        "section": "listening",
+        "type": "multiple-choice",
+        "questionText": "Nghe đoạn văn ngắn dưới đây và chọn nhận định chính xác nhất:",
+        "audioUrl": "https://raw.githubusercontent.com/hugolpz/audio-cmn/master/cmn-da9142f9.mp3",
+        "audioText": "环境保护是当今社会面临的重要课题，需要人人参与。",
+        "options": [
+          "Bảo vệ môi trường không quan trọng lắm. (环境保护不重要)",
+          "Chỉ chính phủ mới cần bảo vệ môi trường. (只有政府需要保护环境)",
+          "Bảo vệ môi trường là vấn đề cấp bách cần mọi người tham gia. (环境保护需要人人参与)",
+          "Kinh tế phát triển quan trọng hơn môi trường. (经济发展比环境更重要)"
+        ],
+        "correctAnswer": "Bảo vệ môi trường là vấn đề cấp bách cần mọi người tham gia. (环境保护需要人人参与)"
+      },
+      {
+        "id": "hsk6-q2",
+        "section": "reading",
+        "type": "multiple-choice",
+        "questionText": "Chọn từ/cụm từ thích hợp điền vào chỗ trống để hoàn thành đoạn văn chính xác về ngữ pháp và phong cách:",
+        "pinyin": "Thử thách chọn thành ngữ thích hợp...",
+        "options": [
+          "半途而废 (bỏ cuộc giữa chừng)",
+          "坚持不懈 (kiên trì không mệt mỏi)",
+          "一 quạt chín sào (nôn nóng thành công)",
+          "自相矛盾 (tự mâu thuẫn)"
+        ],
+        "correctAnswer": "坚持不懈 (kiên trì không mệt mỏi)"
+      },
+      {
+        "id": "hsk6-q3",
+        "section": "writing",
+        "type": "arrange",
+        "questionText": "Sắp xếp các từ sau thành câu đúng ngữ pháp tiếng Trung cao cấp:",
+        "pinyin": "Gợi ý sắp xếp câu phức...",
+        "words": ["只有", "坚持不懈地", "努力", "才能", "取得", "最后的", "胜利"],
+        "correctAnswer": "Only through unremitting efforts can final victory be achieved."
+      }
+    ]
+  }
+]
