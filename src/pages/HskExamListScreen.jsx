@@ -237,7 +237,7 @@ export default function HskExamListScreen() {
       {/* Quick Test banner card */}
       <div className="space-y-4">
         <h2 className="text-sm font-mono font-bold text-mute uppercase tracking-widest">
-          Bài luyện tập nhanh (HSK 1-5, cân bằng)
+          Bài thi HSK 1 chính thức (Đề chuẩn)
         </h2>
         <div 
           onClick={() => navigate('/hsk-exams/hsk1-mock-1/play')}
@@ -258,15 +258,15 @@ export default function HskExamListScreen() {
             </div>
             <div className="space-y-0.5">
               <div className="text-[9px] font-mono uppercase opacity-75">Số câu</div>
-              <div className="text-xs font-bold font-mono">5 Câu mẫu</div>
+              <div className="text-xs font-bold font-mono">40 Câu</div>
             </div>
             <div className="space-y-0.5">
               <div className="text-[9px] font-mono uppercase opacity-75">Thời gian</div>
-              <div className="text-xs font-bold font-mono">11 phút</div>
+              <div className="text-xs font-bold font-mono">35 phút</div>
             </div>
             <div className="space-y-0.5">
               <div className="text-[9px] font-mono uppercase opacity-75">Tổng điểm</div>
-              <div className="text-xs font-bold font-mono">100 分</div>
+              <div className="text-xs font-bold font-mono">200 分</div>
             </div>
           </div>
         </div>

@@ -20,31 +20,12 @@ import mockExamsData from '../data/hskMockExams.json';
 import { hskExamApi } from '../services/hskExamApi';
 import { useToast } from '../context/ToastContext';
 
-// Import HSK level JSON files
-import hsk1Data from '../data/tu_vung_hsk1.json';
-import hsk2Data from '../data/tu_vung_hsk2.json';
-import hsk3Data from '../data/tu_vung_hsk3.json';
-import hsk4Data from '../data/tu_vung_hsk4.json';
-import hsk5Data from '../data/tu_vung_hsk5.json';
-import hsk6Data from '../data/tu_vung_hsk6.json';
-import hsk79Data from '../data/tu_vung_hsk7_9.json';
+// Import HSK question bank
+import hskQuestionBank from '../data/hskQuestionBank.json';
 
-// Helper to generate full HSK exam dynamically
+// Helper to generate full HSK exam dynamically from the Question Bank
 function generateHskExam(level) {
-  let vocab = [];
-  switch (level) {
-    case 1: vocab = hsk1Data; break;
-    case 2: vocab = hsk2Data; break;
-    case 3: vocab = hsk3Data; break;
-    case 4: vocab = hsk4Data; break;
-    case 5: vocab = hsk5Data; break;
-    case 6: vocab = hsk6Data; break;
-    case 7: vocab = hsk79Data; break;
-    default: vocab = hsk1Data;
-  }
-
-  // Shuffle the vocabulary pool
-  const pool = [...vocab].sort(() => 0.5 - Math.random());
+  const bank = hskQuestionBank[level.toString()] || hskQuestionBank['1'];
   
   // Determine counts based on level
   let listeningCount = 20;
@@ -69,106 +50,28 @@ function generateHskExam(level) {
   } else if (level === 6) {
     listeningCount = 50;
     readingCount = 50;
-    writingCount = 1; // 1 writing essay
+    writingCount = 1; // 1 essay
   }
 
-  const totalQuestionsNeeded = listeningCount + readingCount;
-  const selectedWords = pool.slice(0, totalQuestionsNeeded);
-  const generated = [];
+  // Shuffle and pick questions from each section
+  const selectedListening = [...(bank.listening || [])]
+    .sort(() => 0.5 - Math.random())
+    .slice(0, listeningCount);
 
-  // Helper to get distractors for multiple choice options
-  const getDistractors = (correctWord, key, count = 3) => {
-    return vocab
-      .filter(w => w && w['Tiếng Trung'] !== correctWord['Tiếng Trung'] && w[key])
-      .sort(() => 0.5 - Math.random())
-      .slice(0, count)
-      .map(w => w[key]);
-  };
+  const selectedReading = [...(bank.reading || [])]
+    .sort(() => 0.5 - Math.random())
+    .slice(0, readingCount);
 
-  let wordIndex = 0;
+  const selectedWriting = [...(bank.writing || [])]
+    .sort(() => 0.5 - Math.random())
+    .slice(0, writingCount);
 
-  // 1. Generate Listening Questions
-  for (let i = 0; i < listeningCount; i++) {
-    const word = selectedWords[wordIndex++];
-    if (!word) break;
-
-    const isMeaningType = i % 2 === 0;
-    const correctAns = isMeaningType ? word['Dịch nghĩa'] : word['Tiếng Trung'];
-    
-    // Distractors
-    const dist = isMeaningType 
-      ? getDistractors(word, 'Dịch nghĩa') 
-      : getDistractors(word, 'Tiếng Trung');
-    
-    const options = [correctAns, ...dist].sort(() => 0.5 - Math.random());
-
-    generated.push({
-      id: `q-list-${i}`,
-      section: 'listening',
-      type: 'multiple-choice',
-      questionText: isMeaningType 
-        ? 'Nghe phát âm và chọn nghĩa tiếng Việt chính xác nhất:' 
-        : 'Nghe phát âm và chọn chữ Hán tương ứng:',
-      audioText: word['Tiếng Trung'],
-      options,
-      correctAnswer: correctAns,
-      pinyin: word['Pinyin']
-    });
-  }
-
-  // 2. Generate Reading Questions
-  for (let i = 0; i < readingCount; i++) {
-    const word = selectedWords[wordIndex++];
-    if (!word) break;
-
-    const isMeaningType = i % 2 === 0;
-    const correctAns = isMeaningType ? word['Dịch nghĩa'] : word['Tiếng Trung'];
-
-    const dist = isMeaningType 
-      ? getDistractors(word, 'Dịch nghĩa') 
-      : getDistractors(word, 'Tiếng Trung');
-    
-    const options = [correctAns, ...dist].sort(() => 0.5 - Math.random());
-
-    generated.push({
-      id: `q-read-${i}`,
-      section: 'reading',
-      type: 'multiple-choice',
-      questionText: isMeaningType
-        ? `Chọn nghĩa tiếng Việt phù hợp cho chữ Hán: "${word['Tiếng Trung']}"`
-        : `Chọn chữ Hán tương ứng với nghĩa Việt: "${word['Dịch nghĩa']}"`,
-      options,
-      correctAnswer: correctAns,
-      pinyin: isMeaningType ? null : word['Pinyin']
-    });
-  }
-
-  // 3. Generate Writing Questions (Rearrange sentence)
-  const wordsWithExamples = vocab.filter(w => w.exampleHanzi && w.exampleHanzi.length > 2);
-  const shuffledExamples = wordsWithExamples.sort(() => 0.5 - Math.random());
-
-  for (let i = 0; i < writingCount; i++) {
-    const word = shuffledExamples[i % shuffledExamples.length];
-    if (!word) break;
-
-    const cleanSentence = word.exampleHanzi.replace(/[。,，？！?!]/g, '').trim();
-    
-    // Split into character blocks
-    const wordsBlocks = Array.from(cleanSentence).sort(() => 0.5 - Math.random());
-
-    generated.push({
-      id: `q-write-${i}`,
-      section: 'writing',
-      type: 'arrange',
-      questionText: 'Sắp xếp các chữ Hán sau thành câu hoàn chỉnh:',
-      pinyin: `Phiên âm gợi ý: ${word.examplePinyin || ''}`,
-      meaningHint: `Nghĩa gợi ý: ${word.exampleMeaning || ''}`,
-      words: wordsBlocks,
-      correctAnswer: cleanSentence
-    });
-  }
-
-  return generated;
+  // Combine into a single list and return
+  return [
+    ...selectedListening,
+    ...selectedReading,
+    ...selectedWriting
+  ];
 }
 
 export default function HskExamPlayerScreen() {
@@ -566,10 +469,20 @@ export default function HskExamPlayerScreen() {
               )}
 
               {/* Question text */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <h3 className="text-base font-bold text-ink dark:text-on-dark leading-relaxed">
                   {currentQ.questionText}
                 </h3>
+                {currentQ.sentence && (
+                  <div className="text-2xl font-display font-bold text-center tracking-wide my-4 p-4 bg-surface-bone/20 dark:bg-black/10 rounded-md border border-hairline dark:border-divider-dark select-text">
+                    {currentQ.sentence}
+                  </div>
+                )}
+                {currentQ.statement && (
+                  <div className="p-4 bg-primary/5 border border-primary/20 rounded-md text-ink dark:text-on-dark font-sans text-sm font-semibold italic text-center my-3">
+                    Nhận định: "{currentQ.statement}"
+                  </div>
+                )}
                 {currentQ.pinyin && (
                   <p className="text-xs text-mute font-mono tracking-wide">{currentQ.pinyin}</p>
                 )}
