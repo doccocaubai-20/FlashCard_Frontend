@@ -260,9 +260,13 @@ export default function MatchingGameScreen() {
                 onChange={(e) => setSelectedSource(e.target.value)}
                 className="w-full bg-surface-bone dark:bg-black/35 border border-hairline dark:border-divider-dark text-sm font-semibold py-2 px-3 rounded-md outline-none text-ink dark:text-on-dark focus:ring-1 focus:ring-primary"
               >
-                <option value="hsk1">Từ vựng HSK Cấp 1</option>
-                <option value="hsk2">Từ vựng HSK Cấp 2</option>
-                <option value="hsk3">Từ vựng HSK Cấp 3</option>
+                 <option value="hsk1">Từ vựng HSK Cấp 1</option>
+                 <option value="hsk2">Từ vựng HSK Cấp 2</option>
+                 <option value="hsk3">Từ vựng HSK Cấp 3</option>
+                 <option value="hsk4">Từ vựng HSK Cấp 4</option>
+                 <option value="hsk5">Từ vựng HSK Cấp 5</option>
+                 <option value="hsk6">Từ vựng HSK Cấp 6</option>
+                 <option value="hsk7">Từ vựng HSK Cấp 7-9</option>
                 {decks?.map((d) => (
                   <option key={d.id} value={`deck_${d.id}`}>Bộ bài: {d.title || d.name}</option>
                 ))}
