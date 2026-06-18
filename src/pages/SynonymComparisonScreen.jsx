@@ -65,7 +65,11 @@ export default function SynonymComparisonScreen() {
           ...history.filter((h) => h.key !== key),
         ].slice(0, 20); // Keep last 20 comparisons
         setHistory(updatedHistory);
-        localStorage.setItem('chongzi_synonym_history', JSON.stringify(updatedHistory));
+        try {
+          localStorage.setItem('chongzi_synonym_history', JSON.stringify(updatedHistory));
+        } catch (e) {
+          console.warn('Failed to save synonym history in localStorage:', e);
+        }
       } else {
         showToast('Không nhận được phản hồi từ AI.', 'error');
       }

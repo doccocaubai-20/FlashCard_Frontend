@@ -208,10 +208,14 @@ export default function FallingWordsGameScreen() {
               // Update high score
               setScore((finalScore) => {
                 setHighScore((currHigh) => {
-                  if (finalScore > currHigh) {
-                    localStorage.setItem('falling_words_highscore', finalScore.toString());
-                    return finalScore;
-                  }
+                   if (finalScore > currHigh) {
+                     try {
+                       localStorage.setItem('falling_words_highscore', finalScore.toString());
+                     } catch (e) {
+                       console.warn('Failed to save falling words highscore:', e);
+                     }
+                     return finalScore;
+                   }
                   return currHigh;
                 });
                 return finalScore;

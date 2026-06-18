@@ -474,7 +474,7 @@ export default function StudyScreen() {
     return parts.join(' ').replace(/\s+/g, ' ').trim();
   };
 
-  const handleToggleFavorite = async (hanzi, pinyin, meaning) => {
+  const handleToggleFavorite = async (hanzi, pinyin, meaning, exampleHanzi = '', examplePinyin = '', exampleMeaning = '') => {
     if (!hanzi) return;
     const cleanHanzi = hanzi.split(/[｜|]/)[0].trim();
     const alreadyFav = isFavorite(cleanHanzi);
@@ -492,6 +492,9 @@ export default function StudyScreen() {
         pinyin: pinyin || '',
         sv: '',
         vi: meaning || '',
+        exampleHanzi: exampleHanzi || '',
+        examplePinyin: examplePinyin || '',
+        exampleMeaning: exampleMeaning || '',
       };
       setFavorites((prev) => [tempFav, ...prev]);
     }
@@ -505,6 +508,9 @@ export default function StudyScreen() {
           hanzi: cleanHanzi,
           pinyin: pinyin || '',
           vi: meaning || '',
+          exampleHanzi: exampleHanzi || '',
+          examplePinyin: examplePinyin || '',
+          exampleMeaning: exampleMeaning || '',
         });
 
         // Thay thế bản ghi tạm bằng bản ghi thật từ database response
@@ -695,6 +701,9 @@ export default function StudyScreen() {
         front: f.hanzi,
         pinyin: f.pinyin || '',
         meaning: f.vi || '',
+        exampleHanzi: f.exampleHanzi || '',
+        examplePinyin: f.examplePinyin || '',
+        exampleMeaning: f.exampleMeaning || '',
         deckName: 'Từ vựng yêu thích'
       }));
     }
@@ -955,9 +964,18 @@ export default function StudyScreen() {
         } else {
           // Offline: Queue review
           const pendingStr = localStorage.getItem('chongzi_pending_reviews') || '[]';
-          const pending = JSON.parse(pendingStr);
+          let pending = [];
+          try {
+            pending = JSON.parse(pendingStr);
+          } catch (e) {
+            pending = [];
+          }
           pending.push({ cardId: currentCard.id, rating, timestamp: Date.now() });
-          localStorage.setItem('chongzi_pending_reviews', JSON.stringify(pending));
+          try {
+            localStorage.setItem('chongzi_pending_reviews', JSON.stringify(pending));
+          } catch (e) {
+            console.warn('Failed to save pending reviews offline (quota exceeded):', e);
+          }
           setPendingSyncCount(pending.length);
           console.log('Saved review offline:', currentCard.id, rating);
         }
@@ -1137,7 +1155,14 @@ export default function StudyScreen() {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleToggleFavorite(currentCard.hanzi, currentCard.pinyin, currentCard.meaning);
+                    handleToggleFavorite(
+                      currentCard.hanzi,
+                      currentCard.pinyin,
+                      currentCard.meaning,
+                      currentCard.exampleHanzi,
+                      currentCard.examplePinyin,
+                      currentCard.exampleMeaning
+                    );
                   }}
                   className={`absolute top-5 left-5 z-30 p-2 rounded-full border transition-all cursor-pointer ${
                     isFavorite(currentCard.hanzi)

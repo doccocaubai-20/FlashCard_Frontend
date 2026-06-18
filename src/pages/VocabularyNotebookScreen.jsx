@@ -340,6 +340,20 @@ export default function VocabularyNotebookScreen() {
                       <p className="text-xs font-semibold text-body dark:text-on-dark-mute pt-1 leading-relaxed">
                         {item.vi}
                       </p>
+
+                      {item.exampleHanzi && (
+                        <div className="mt-2 bg-surface-bone/20 dark:bg-black/10 border-l-2 border-primary/50 pl-3 py-1.5 space-y-0.5 text-[11px] rounded-r-sm">
+                          <p className="font-semibold text-ink dark:text-on-dark leading-relaxed">
+                            {item.exampleHanzi}
+                          </p>
+                          {item.examplePinyin && (
+                            <p className="text-primary font-mono">{item.examplePinyin}</p>
+                          )}
+                          {item.exampleMeaning && (
+                            <p className="text-mute dark:text-on-dark-mute italic">{item.exampleMeaning}</p>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     {/* Unstar / Delete action */}

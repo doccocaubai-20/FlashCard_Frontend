@@ -65,8 +65,12 @@ function HeroWord() {
       try {
         const res = await dictionaryApi.getWordOfTheDay();
         if (res.data) {
-          localStorage.setItem('wotd_word', JSON.stringify(res.data));
-          localStorage.setItem('wotd_date', todayStr);
+          try {
+            localStorage.setItem('wotd_word', JSON.stringify(res.data));
+            localStorage.setItem('wotd_date', todayStr);
+          } catch (e) {
+            console.warn('Failed to cache Word of the Day (quota exceeded):', e);
+          }
           setWotd(res.data);
         }
       } catch (err) { console.error(err); }
@@ -345,7 +349,11 @@ export default function DashboardScreen() {
       setQuizStatus('correct');
       setQuizFeedback('Chính xác! Bạn nhận được +20 XP và +10 ChongZi Coins!');
       const todayStr = new Date().toISOString().split('T')[0];
-      localStorage.setItem('chongzi_daily_quiz_completed', todayStr);
+      try {
+        localStorage.setItem('chongzi_daily_quiz_completed', todayStr);
+      } catch (e) {
+        console.warn('Failed to save daily quiz status (quota exceeded):', e);
+      }
       setHasCompletedTodayQuiz(true);
       try {
         // Update database score

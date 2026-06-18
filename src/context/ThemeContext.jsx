@@ -33,12 +33,20 @@ export function ThemeProvider({ children }) {
   const toggleViewMode = () => {
     const next = viewMode === 'classic' ? 'gamified' : 'classic';
     setViewMode(next);
-    localStorage.setItem('chongzi_dashboard_mode', next);
+    try {
+      localStorage.setItem('chongzi_dashboard_mode', next);
+    } catch (e) {
+      console.warn('Failed to save dashboard mode in localStorage:', e);
+    }
   };
 
   const updateClassicTheme = (theme) => {
     setClassicTheme(theme);
-    localStorage.setItem('theme', theme);
+    try {
+      localStorage.setItem('theme', theme);
+    } catch (e) {
+      console.warn('Failed to save theme in localStorage:', e);
+    }
   };
 
   return (
