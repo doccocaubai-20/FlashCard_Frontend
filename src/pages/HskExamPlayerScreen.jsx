@@ -20,6 +20,157 @@ import mockExamsData from '../data/hskMockExams.json';
 import { hskExamApi } from '../services/hskExamApi';
 import { useToast } from '../context/ToastContext';
 
+// Import HSK level JSON files
+import hsk1Data from '../data/tu_vung_hsk1.json';
+import hsk2Data from '../data/tu_vung_hsk2.json';
+import hsk3Data from '../data/tu_vung_hsk3.json';
+import hsk4Data from '../data/tu_vung_hsk4.json';
+import hsk5Data from '../data/tu_vung_hsk5.json';
+import hsk6Data from '../data/tu_vung_hsk6.json';
+import hsk79Data from '../data/tu_vung_hsk7_9.json';
+
+// Helper to generate full HSK exam dynamically
+function generateHskExam(level) {
+  let vocab = [];
+  switch (level) {
+    case 1: vocab = hsk1Data; break;
+    case 2: vocab = hsk2Data; break;
+    case 3: vocab = hsk3Data; break;
+    case 4: vocab = hsk4Data; break;
+    case 5: vocab = hsk5Data; break;
+    case 6: vocab = hsk6Data; break;
+    case 7: vocab = hsk79Data; break;
+    default: vocab = hsk1Data;
+  }
+
+  // Shuffle the vocabulary pool
+  const pool = [...vocab].sort(() => 0.5 - Math.random());
+  
+  // Determine counts based on level
+  let listeningCount = 20;
+  let readingCount = 20;
+  let writingCount = 0;
+  
+  if (level === 2) {
+    listeningCount = 35;
+    readingCount = 25;
+  } else if (level === 3) {
+    listeningCount = 40;
+    readingCount = 30;
+    writingCount = 10;
+  } else if (level === 4) {
+    listeningCount = 45;
+    readingCount = 40;
+    writingCount = 15;
+  } else if (level === 5) {
+    listeningCount = 45;
+    readingCount = 45;
+    writingCount = 10;
+  } else if (level === 6) {
+    listeningCount = 50;
+    readingCount = 50;
+    writingCount = 1; // 1 writing essay
+  }
+
+  const totalQuestionsNeeded = listeningCount + readingCount;
+  const selectedWords = pool.slice(0, totalQuestionsNeeded);
+  const generated = [];
+
+  // Helper to get distractors for multiple choice options
+  const getDistractors = (correctWord, key, count = 3) => {
+    return vocab
+      .filter(w => w && w['Tiếng Trung'] !== correctWord['Tiếng Trung'] && w[key])
+      .sort(() => 0.5 - Math.random())
+      .slice(0, count)
+      .map(w => w[key]);
+  };
+
+  let wordIndex = 0;
+
+  // 1. Generate Listening Questions
+  for (let i = 0; i < listeningCount; i++) {
+    const word = selectedWords[wordIndex++];
+    if (!word) break;
+
+    const isMeaningType = i % 2 === 0;
+    const correctAns = isMeaningType ? word['Dịch nghĩa'] : word['Tiếng Trung'];
+    
+    // Distractors
+    const dist = isMeaningType 
+      ? getDistractors(word, 'Dịch nghĩa') 
+      : getDistractors(word, 'Tiếng Trung');
+    
+    const options = [correctAns, ...dist].sort(() => 0.5 - Math.random());
+
+    generated.push({
+      id: `q-list-${i}`,
+      section: 'listening',
+      type: 'multiple-choice',
+      questionText: isMeaningType 
+        ? 'Nghe phát âm và chọn nghĩa tiếng Việt chính xác nhất:' 
+        : 'Nghe phát âm và chọn chữ Hán tương ứng:',
+      audioText: word['Tiếng Trung'],
+      options,
+      correctAnswer: correctAns,
+      pinyin: word['Pinyin']
+    });
+  }
+
+  // 2. Generate Reading Questions
+  for (let i = 0; i < readingCount; i++) {
+    const word = selectedWords[wordIndex++];
+    if (!word) break;
+
+    const isMeaningType = i % 2 === 0;
+    const correctAns = isMeaningType ? word['Dịch nghĩa'] : word['Tiếng Trung'];
+
+    const dist = isMeaningType 
+      ? getDistractors(word, 'Dịch nghĩa') 
+      : getDistractors(word, 'Tiếng Trung');
+    
+    const options = [correctAns, ...dist].sort(() => 0.5 - Math.random());
+
+    generated.push({
+      id: `q-read-${i}`,
+      section: 'reading',
+      type: 'multiple-choice',
+      questionText: isMeaningType
+        ? `Chọn nghĩa tiếng Việt phù hợp cho chữ Hán: "${word['Tiếng Trung']}"`
+        : `Chọn chữ Hán tương ứng với nghĩa Việt: "${word['Dịch nghĩa']}"`,
+      options,
+      correctAnswer: correctAns,
+      pinyin: isMeaningType ? null : word['Pinyin']
+    });
+  }
+
+  // 3. Generate Writing Questions (Rearrange sentence)
+  const wordsWithExamples = vocab.filter(w => w.exampleHanzi && w.exampleHanzi.length > 2);
+  const shuffledExamples = wordsWithExamples.sort(() => 0.5 - Math.random());
+
+  for (let i = 0; i < writingCount; i++) {
+    const word = shuffledExamples[i % shuffledExamples.length];
+    if (!word) break;
+
+    const cleanSentence = word.exampleHanzi.replace(/[。,，？！?!]/g, '').trim();
+    
+    // Split into character blocks
+    const wordsBlocks = Array.from(cleanSentence).sort(() => 0.5 - Math.random());
+
+    generated.push({
+      id: `q-write-${i}`,
+      section: 'writing',
+      type: 'arrange',
+      questionText: 'Sắp xếp các chữ Hán sau thành câu hoàn chỉnh:',
+      pinyin: `Phiên âm gợi ý: ${word.examplePinyin || ''}`,
+      meaningHint: `Nghĩa gợi ý: ${word.exampleMeaning || ''}`,
+      words: wordsBlocks,
+      correctAnswer: cleanSentence
+    });
+  }
+
+  return generated;
+}
+
 export default function HskExamPlayerScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -41,11 +192,10 @@ export default function HskExamPlayerScreen() {
 
   // Audio Playback
   const [isPlaying, setIsPlaying] = useState(false);
-  const [audioError, setAudioError] = useState(false);
   const audioRef = useRef(null);
   const timerIntervalRef = useRef(null);
 
-  // Initialize Exam
+  // Initialize Exam dynamically
   useEffect(() => {
     const foundExam = mockExamsData.find(e => e.id === id);
     if (!foundExam) {
@@ -53,8 +203,12 @@ export default function HskExamPlayerScreen() {
       navigate('/hsk-exams');
       return;
     }
+    
+    // Dynamically generate the full question set based on level
+    const generatedQuestions = generateHskExam(foundExam.hskLevel);
+    
     setExam(foundExam);
-    setQuestions(foundExam.questions || []);
+    setQuestions(generatedQuestions);
     setTimeLeft(foundExam.duration || 1800);
     
     // Clear answers
@@ -87,7 +241,6 @@ export default function HskExamPlayerScreen() {
   // Cleanup audio on question change
   useEffect(() => {
     setIsPlaying(false);
-    setAudioError(false);
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
@@ -96,7 +249,6 @@ export default function HskExamPlayerScreen() {
     // Reset arrange draft if the new question is arrange type
     const q = questions[currentIdx];
     if (q && q.type === 'arrange') {
-      // If user already answered, parse it, otherwise empty
       const saved = userAnswers[q.id];
       if (saved) {
         setArrangeDraft(saved.split(' '));
@@ -106,44 +258,31 @@ export default function HskExamPlayerScreen() {
     }
   }, [currentIdx, questions]);
 
+  // TTS speech output for dynamic audio
   const handlePlayAudio = (q) => {
     if (isPlaying) {
-      audioRef.current?.pause();
+      window.speechSynthesis.cancel();
       setIsPlaying(false);
       return;
     }
 
-    if (!audioRef.current) {
-      audioRef.current = new Audio(q.audioUrl);
-      audioRef.current.addEventListener('ended', () => {
-        setIsPlaying(false);
-      });
-      audioRef.current.addEventListener('error', () => {
-        setAudioError(true);
-        setIsPlaying(false);
-        // Fallback to TTS automatically
-        playTTS(q.audioText);
-      });
+    if (!window.speechSynthesis) {
+      showToast('Trình duyệt không hỗ trợ phát âm thanh!', 'warning');
+      return;
     }
 
-    audioRef.current.play().then(() => {
-      setIsPlaying(true);
-    }).catch(err => {
-      console.error('Audio playback failed, falling back to TTS:', err);
-      setAudioError(true);
-      playTTS(q.audioText);
-    });
-  };
-
-  const playTTS = (text) => {
-    if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
+    const utterance = new SpeechSynthesisUtterance(q.audioText);
     utterance.lang = 'zh-CN';
     utterance.rate = 0.8;
+    
     window.speechSynthesis.speak(utterance);
     setIsPlaying(true);
+    
     utterance.onend = () => {
+      setIsPlaying(false);
+    };
+    utterance.onerror = () => {
       setIsPlaying(false);
     };
   };
@@ -153,11 +292,8 @@ export default function HskExamPlayerScreen() {
     if (isSubmitted) return;
     
     let nextDraft = [...arrangeDraft];
-    if (nextDraft.includes(word)) {
-      nextDraft = nextDraft.filter(w => w !== word);
-    } else {
-      nextDraft.push(word);
-    }
+    // Allow multiple duplicates of same characters by index
+    nextDraft.push(word);
     setArrangeDraft(nextDraft);
 
     // Update answers mapping
@@ -165,6 +301,15 @@ export default function HskExamPlayerScreen() {
     setUserAnswers(prev => ({
       ...prev,
       [qId]: answerStr
+    }));
+  };
+
+  const clearArrangeDraft = (qId) => {
+    if (isSubmitted) return;
+    setArrangeDraft([]);
+    setUserAnswers(prev => ({
+      ...prev,
+      [qId]: ''
     }));
   };
 
@@ -191,19 +336,13 @@ export default function HskExamPlayerScreen() {
       const ans = userAnswers[q.id] || '';
       
       if (q.type === 'arrange') {
-        // Rearrange sentences: check words sequence length or matching
-        // In simple simulation, we check if the user grouped all target words
         const sortedUser = ans.trim();
-        // Compare with correct answer or list matching
-        // For simplicity, we compare join keys or string matches. Let's make it flexible:
         const cleanUser = sortedUser.replace(/\s+/g, '');
-        // For example HSK 3: "他 的 汉语 很好" -> "他的汉语很好"
-        const cleanCorrect = q.words.join('');
+        const cleanCorrect = q.correctAnswer.replace(/\s+/g, '');
         if (cleanUser === cleanCorrect) {
           correct++;
         }
       } else {
-        // Multiple choice
         if (ans === q.correctAnswer) {
           correct++;
         }
@@ -230,7 +369,6 @@ export default function HskExamPlayerScreen() {
     } catch (err) {
       console.error('Failed to submit exam result:', err);
       showToast('Lỗi khi nộp bài thi lên hệ thống.', 'error');
-      // Set local score anyway so user sees results
       setScoreResult(resultPayload);
       setIsSubmitted(true);
     }
@@ -282,8 +420,8 @@ export default function HskExamPlayerScreen() {
 
           {/* Question Grid Map */}
           <div className="space-y-3">
-            <span className="text-[9px] font-mono font-bold text-mute uppercase tracking-widest block">Sơ đồ câu hỏi</span>
-            <div className="grid grid-cols-5 gap-2">
+            <span className="text-[9px] font-mono font-bold text-mute uppercase tracking-widest block">Sơ đồ câu hỏi ({questions.length} câu)</span>
+            <div className="grid grid-cols-5 gap-2 max-h-60 overflow-y-auto pr-1">
               {questions.map((q, idx) => {
                 const isCurrent = idx === currentIdx;
                 const isAnswered = userAnswers[q.id] !== undefined && userAnswers[q.id] !== '';
@@ -293,11 +431,10 @@ export default function HskExamPlayerScreen() {
                   btnClass = 'border-primary ring-2 ring-primary/20 text-primary font-bold';
                 } else if (isAnswered) {
                   if (isSubmitted) {
-                    // Check if correct
                     let isCorrect = false;
                     const ans = userAnswers[q.id];
                     if (q.type === 'arrange') {
-                      isCorrect = ans.replace(/\s+/g, '') === q.words.join('');
+                      isCorrect = ans.replace(/\s+/g, '') === q.correctAnswer.replace(/\s+/g, '');
                     } else {
                       isCorrect = ans === q.correctAnswer;
                     }
@@ -389,18 +526,18 @@ export default function HskExamPlayerScreen() {
                 {isSubmitted && (
                   <span className={`inline-flex items-center gap-1 text-[10px] font-mono font-bold ${
                     (currentQ.type === 'arrange' 
-                      ? (userAnswers[currentQ.id]?.replace(/\s+/g, '') === currentQ.words.join('')) 
+                      ? (userAnswers[currentQ.id]?.replace(/\s+/g, '') === currentQ.correctAnswer.replace(/\s+/g, '')) 
                       : (userAnswers[currentQ.id] === currentQ.correctAnswer))
                       ? 'text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-sm border border-emerald-500/20'
                       : 'text-red-400 bg-red-500/10 px-2 py-0.5 rounded-sm border border-red-500/20'
                   }`}>
                     {((currentQ.type === 'arrange' 
-                      ? (userAnswers[currentQ.id]?.replace(/\s+/g, '') === currentQ.words.join('')) 
+                      ? (userAnswers[currentQ.id]?.replace(/\s+/g, '') === currentQ.correctAnswer.replace(/\s+/g, '')) 
                       : (userAnswers[currentQ.id] === currentQ.correctAnswer))) 
                       ? <CheckCircle2 size={11} /> 
                       : <XCircle size={11} />}
                     {((currentQ.type === 'arrange' 
-                      ? (userAnswers[currentQ.id]?.replace(/\s+/g, '') === currentQ.words.join('')) 
+                      ? (userAnswers[currentQ.id]?.replace(/\s+/g, '') === currentQ.correctAnswer.replace(/\s+/g, '')) 
                       : (userAnswers[currentQ.id] === currentQ.correctAnswer))) ? 'Đúng' : 'Sai'}
                   </span>
                 )}
@@ -415,9 +552,7 @@ export default function HskExamPlayerScreen() {
                   <div className="text-center space-y-1">
                     <span className="text-[10px] font-mono font-bold text-mute uppercase tracking-widest">Phát âm thanh hội thoại</span>
                     <p className="text-xs text-mute/70 dark:text-on-dark-mute/70">
-                      {audioError 
-                        ? '⚠️ Lỗi kết nối mạng, phát âm thanh mô phỏng' 
-                        : 'Bấm nút phát để nghe giọng đọc của người bản xứ.'}
+                      Bấm nút phát để nghe giọng đọc của giáo viên bản xứ.
                     </p>
                   </div>
                   <button
@@ -436,7 +571,10 @@ export default function HskExamPlayerScreen() {
                   {currentQ.questionText}
                 </h3>
                 {currentQ.pinyin && (
-                  <p className="text-xs text-mute font-mono tracking-wide">Gợi ý: {currentQ.pinyin}</p>
+                  <p className="text-xs text-mute font-mono tracking-wide">{currentQ.pinyin}</p>
+                )}
+                {currentQ.meaningHint && (
+                  <p className="text-xs text-mute font-mono tracking-wide">{currentQ.meaningHint}</p>
                 )}
               </div>
 
@@ -477,13 +615,12 @@ export default function HskExamPlayerScreen() {
                   {/* Draft sentence created by user */}
                   <div className="min-h-12 p-3 bg-surface-bone/30 dark:bg-black/15 border border-dashed border-hairline dark:border-divider-dark rounded-md flex flex-wrap gap-2 items-center">
                     {arrangeDraft.length === 0 ? (
-                      <span className="text-xs text-mute/60 italic">Bấm các ô chữ phía dưới để sắp xếp câu...</span>
+                      <span className="text-xs text-mute/60 italic">Bấm các chữ phía dưới theo thứ tự để ghép câu...</span>
                     ) : (
                       arrangeDraft.map((word, wIdx) => (
                         <span
                           key={`${word}-${wIdx}`}
-                          onClick={() => handleWordBlockClick(word, currentQ.id)}
-                          className="px-3 py-1.5 bg-primary/10 border border-primary/20 text-primary text-xs font-semibold rounded-md cursor-pointer hover:bg-primary/20 transition-all select-none"
+                          className="px-3 py-1.5 bg-primary/10 border border-primary/20 text-primary text-xs font-semibold rounded-md select-none"
                         >
                           {word}
                         </span>
@@ -493,10 +630,24 @@ export default function HskExamPlayerScreen() {
 
                   {/* Word block choices */}
                   <div className="space-y-2">
-                    <span className="text-[9px] font-mono font-bold text-mute uppercase tracking-widest block">Khối từ lựa chọn</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[9px] font-mono font-bold text-mute uppercase tracking-widest block">Khối từ lựa chọn</span>
+                      {!isSubmitted && arrangeDraft.length > 0 && (
+                        <button
+                          onClick={() => clearArrangeDraft(currentQ.id)}
+                          className="text-[10px] font-mono font-bold text-red-400 hover:text-red-500 cursor-pointer"
+                        >
+                          Làm lại câu này
+                        </button>
+                      )}
+                    </div>
                     <div className="flex flex-wrap gap-3">
                       {currentQ.words.map((word, wIdx) => {
-                        const isChosen = arrangeDraft.includes(word);
+                        // Count occurrences in draft vs options
+                        const countInDraft = arrangeDraft.filter(w => w === word).length;
+                        const countInOptions = currentQ.words.filter(w => w === word).length;
+                        const isChosen = countInDraft >= countInOptions;
+
                         return (
                           <button
                             key={`${word}-${wIdx}`}
@@ -519,8 +670,7 @@ export default function HskExamPlayerScreen() {
                   {isSubmitted && (
                     <div className="p-4 bg-surface-bone/40 dark:bg-black/20 border border-hairline dark:border-divider-dark rounded-md text-xs space-y-1">
                       <div className="font-semibold text-mute">Đáp án chuẩn HSK:</div>
-                      <div className="font-bold text-primary text-sm font-sans">{currentQ.words.join(' ')}</div>
-                      <div className="text-[10px] text-mute font-mono mt-1">Nghĩa tiếng Anh: {currentQ.correctAnswer}</div>
+                      <div className="font-bold text-primary text-sm font-sans">{currentQ.correctAnswer}</div>
                     </div>
                   )}
 
