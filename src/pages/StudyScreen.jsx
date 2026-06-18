@@ -652,14 +652,22 @@ export default function StudyScreen() {
   // Cache allCards in localStorage
   useEffect(() => {
     if (allCards && allCards.length > 0) {
-      localStorage.setItem('chongzi_offline_all_cards', JSON.stringify(allCards));
+      try {
+        localStorage.setItem('chongzi_offline_all_cards', JSON.stringify(allCards));
+      } catch (e) {
+        console.warn('Failed to cache all cards in localStorage (quota exceeded):', e);
+      }
     }
   }, [allCards]);
 
   // Cache todayCards in localStorage
   useEffect(() => {
     if (todayCards && todayCards.length > 0) {
-      localStorage.setItem('chongzi_offline_cards', JSON.stringify(todayCards));
+      try {
+        localStorage.setItem('chongzi_offline_cards', JSON.stringify(todayCards));
+      } catch (e) {
+        console.warn('Failed to cache today cards in localStorage (quota exceeded):', e);
+      }
     }
   }, [todayCards]);
 
