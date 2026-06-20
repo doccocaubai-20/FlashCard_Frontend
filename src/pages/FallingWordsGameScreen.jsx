@@ -607,20 +607,12 @@ export default function FallingWordsGameScreen() {
 
               <button
                 type="button"
-                onClick={() => setHintMode(prev => prev === 'none' ? 'pinyin' : 'none')}
-                className="flex-1 py-3 px-3 border border-slate-700 bg-slate-800 hover:bg-slate-750 text-slate-300 hover:text-white rounded-md font-bold text-xs cursor-pointer transition-colors flex items-center justify-center gap-1.5"
-                title="Ẩn/Hiện Pinyin"
-              >
-                {hintMode === 'none' ? 'Hiện Pinyin' : 'Ẩn Pinyin'}
-              </button>
-
-              <button
-                type="button"
                 onClick={() => setGameStarted(false)}
-                className="py-3 px-3 border border-slate-700 hover:bg-slate-800 text-slate-400 hover:text-white rounded-md cursor-pointer transition-colors shrink-0"
+                className="flex-1 py-3 px-3 border border-slate-700 bg-slate-800 hover:bg-slate-750 text-slate-400 hover:text-white rounded-md font-bold text-xs cursor-pointer transition-colors flex items-center justify-center gap-1.5"
                 title="Thoát phòng"
               >
-                <ArrowLeft size={14} />
+                <ArrowLeft size={13} />
+                <span>Thoát phòng</span>
               </button>
             </div>
 

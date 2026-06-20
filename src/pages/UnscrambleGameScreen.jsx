@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { translationData } from '../data/translationData';
+import unscrambleQuestionBank from '../data/unscrambleQuestionBank.json';
 import { useToast } from '../context/ToastContext';
 import { 
   Puzzle, 
@@ -60,7 +60,7 @@ export default function UnscrambleGameScreen() {
   // Start game round
   const startGame = () => {
     // Filter sentences by level
-    const poolSentences = translationData.filter((s) => s.level === selectedLevel);
+    const poolSentences = unscrambleQuestionBank.filter((s) => s.level === selectedLevel);
     
     if (poolSentences.length === 0) {
       showToast('Không tìm thấy câu phù hợp với cấp độ đã chọn.', 'warning');
@@ -86,14 +86,28 @@ export default function UnscrambleGameScreen() {
   const setupSentence = (sentence) => {
     if (!sentence) return;
 
-    // Create unique-identity tokens from sentence tokens
-    const initialPool = sentence.tokens.map((t, idx) => ({
-      id: `token_${idx}`,
+    // Create unique-identity tokens from sentence tokens (correct items)
+    const correctPool = sentence.tokens.map((t, idx) => ({
+      id: `token_correct_${idx}`,
       word: t.word,
       pinyin: t.pinyin,
       meaning: t.meaning,
+      isDistractor: false,
       originalIndex: idx
     }));
+
+    // Create unique-identity tokens from sentence distractors (distractor items)
+    const distractorPool = (sentence.distractors || []).map((d, idx) => ({
+      id: `token_dist_${idx}`,
+      word: d.word,
+      pinyin: d.pinyin,
+      meaning: d.meaning,
+      isDistractor: true,
+      originalIndex: -1
+    }));
+
+    // Combine correct tokens and distractors
+    const initialPool = [...correctPool, ...distractorPool];
 
     // Shuffle pool
     const shuffledPool = [...initialPool].sort(() => 0.5 - Math.random());
@@ -227,13 +241,13 @@ export default function UnscrambleGameScreen() {
             </p>
           </div>
 
-          <div className="flex justify-center gap-3 py-2">
-            {['HSK 1', 'HSK 2', 'HSK 3'].map((lvl) => (
+          <div className="flex flex-wrap justify-center gap-3 py-2">
+            {['HSK 1', 'HSK 2', 'HSK 3', 'HSK 4', 'HSK 5', 'HSK 6', 'HSK 7-9'].map((lvl) => (
               <button
                 key={lvl}
                 type="button"
                 onClick={() => setSelectedLevel(lvl)}
-                className={`px-6 py-2.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+                className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${
                   selectedLevel === lvl
                     ? 'bg-primary border-transparent text-white shadow-md'
                     : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
