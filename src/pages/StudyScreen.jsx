@@ -638,12 +638,23 @@ export default function StudyScreen() {
     setShowSpeaking(false);
   }, [currentIndex]);
 
-  // Load backend cards on mount
+  // Fetch decks and favorites once on mount
+  useEffect(() => {
+    dispatch(fetchAllDecks());
+    loadFavorites();
+  }, [dispatch]);
+
+  // Load backend cards for the selected deck dynamically
   useEffect(() => {
     const loadAllCards = async () => {
+      if (selectedDeckId === 'favorites') {
+        setAllCards([]);
+        return;
+      }
       try {
         setIsAllCardsLoading(true);
-        const res = await studyApi.getAllCards();
+        const deckIdParam = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
+        const res = await studyApi.getAllCards(deckIdParam);
         setAllCards(res.data || []);
       } catch (e) {
         console.error('Failed to load all cards:', e);
@@ -652,9 +663,7 @@ export default function StudyScreen() {
       }
     };
     loadAllCards();
-    dispatch(fetchAllDecks());
-    loadFavorites();
-  }, [dispatch]);
+  }, [selectedDeckId]);
 
   // Cache allCards in localStorage
   useEffect(() => {

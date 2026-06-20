@@ -194,7 +194,7 @@ export default function DeckDetailScreen() {
           
           <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/30 p-5">
             <h2 className="text-base font-bold text-ink dark:text-on-dark font-display tracking-tight">Danh sách thẻ bài</h2>
-            <div className="mt-4 space-y-3 max-h-[500px] overflow-y-auto pr-1">
+            <div className="mt-4 space-y-3 pr-1">
               {displayCards?.length > 0 ? (
                 displayCards.map((card) => (
                   <div key={card.id || card.front} className="rounded-md border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-surface-dark/20 p-4 transition-colors relative group">

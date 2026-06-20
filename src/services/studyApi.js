@@ -8,6 +8,6 @@ export const studyApi = {
         const query = params.length > 0 ? `?${params.join('&')}` : '';
         return api.get(`/api/study/today${query}`);
     },
-    getAllCards: () => api.get('/api/study/all-cards'),
+    getAllCards: (deckId) => api.get('/api/study/all-cards', { params: { deckId } }),
     review: (data) => api.post('/api/study/review', data),
 };
