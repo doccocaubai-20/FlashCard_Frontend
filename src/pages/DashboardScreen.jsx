@@ -10,7 +10,7 @@ import {
   ArrowRight, ChevronRight, Flame, GraduationCap,
   Trophy, Settings, Shield, ShoppingBag, LayoutGrid, HelpCircle,
   TrendingUp, Award, User, RefreshCw, X, ShoppingCart, MessageSquare, CheckCircle2,
-  Loader2
+  Loader2, Trash2
 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { dictionaryApi } from '../services/dictionaryApi';
