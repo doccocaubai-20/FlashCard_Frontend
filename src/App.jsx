@@ -35,6 +35,7 @@ import SynonymComparisonScreen from './pages/SynonymComparisonScreen';
 import ChatbotScreen from './pages/ChatbotScreen';
 import HskExamListScreen from './pages/HskExamListScreen';
 import HskExamPlayerScreen from './pages/HskExamPlayerScreen';
+import GardenScreen from './pages/GardenScreen';
 
 function PrivateRoute({ children }) {
   const token = useSelector((state) => state.auth.token);
@@ -100,6 +101,7 @@ function App() {
         <Route path="/chat" element={<ChatbotScreen />} />
         <Route path="/hsk-exams" element={<HskExamListScreen />} />
         <Route path="/hsk-exams/:id/play" element={<HskExamPlayerScreen />} />
+        <Route path="/garden" element={<GardenScreen />} />
         <Route path="/settings" element={<SettingsScreen />} />
       </Route>
 

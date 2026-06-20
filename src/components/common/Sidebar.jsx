@@ -15,7 +15,8 @@ import {
   Trophy,
   Shield,
   MessageSquare,
-  ClipboardList
+  ClipboardList,
+  Sprout
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -37,6 +38,7 @@ export default function Sidebar() {
       items: [
         { to: '/', label: 'Dashboard', icon: LayoutDashboard },
         { to: '/decks', label: 'Bộ bài', icon: BookOpen },
+        { to: '/garden', label: 'Vườn từ vựng', icon: Sprout },
         { to: '/leaderboard', label: 'Bảng xếp hạng', icon: Trophy },
       ]
     },

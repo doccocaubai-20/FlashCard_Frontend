@@ -284,6 +284,25 @@ export default function DashboardScreen() {
   const [quests, setQuests] = useState([]);
   const [questsLoading, setQuestsLoading] = useState(true);
 
+  const [gardenSummary, setGardenSummary] = useState(null);
+  const [gardenLoading, setGardenLoading] = useState(true);
+
+  const loadGardenSummary = async () => {
+    try {
+      setGardenLoading(true);
+      const res = await statsApi.getGardenState();
+      setGardenSummary(res.data);
+    } catch (err) {
+      console.error('Failed to load garden summary:', err);
+    } finally {
+      setGardenLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadGardenSummary();
+  }, [summary]);
+
   const loadDailyQuiz = async () => {
     try {
       setQuizLoading(true);
@@ -772,9 +791,135 @@ export default function DashboardScreen() {
           </div>
         </div>
 
-        {/* PANEL GIỮA: Zen Vocabulary Garden (6 cols) */}
-        <div className="lg:col-span-6 flex flex-col items-stretch">
-          <ZenGarden summary={summary} onHarvestSuccess={() => dispatch(fetchSummary())} />
+        {/* PANEL GIỮA: Chinh Phục & Khu Vườn (6 cols) */}
+        <div className="lg:col-span-6 flex flex-col gap-4">
+          {/* 1. Word of the Day */}
+          <HeroWord />
+
+          {/* 2. Zen Garden Preview Card */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-5 flex flex-col justify-between shadow-lg relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-green-500/5 blur-2xl pointer-events-none" />
+            
+            <div>
+              <div className="flex justify-between items-center border-b border-white/5 pb-2.5 mb-3.5">
+                <div>
+                  <span className="text-[9px] font-sans font-bold text-white/50 uppercase tracking-widest block">
+                    NÔNG TRẠI HỌC TẬP
+                  </span>
+                  <h3 className="text-sm font-bold text-white mt-0.5">Khu vườn Zen Từ vựng</h3>
+                </div>
+                <Link 
+                  to="/garden"
+                  className="text-xs bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-xl font-bold hover:bg-primary/20 transition-all flex items-center gap-1 cursor-pointer"
+                >
+                  Vào vườn 🌳
+                </Link>
+              </div>
+
+              {/* Garden status summary */}
+              <div className="grid grid-cols-4 gap-2 mb-3.5">
+                <div className="bg-yellow-500/10 border border-yellow-500/20 p-2 rounded-xl text-center">
+                  <span className="text-xl block">🌳</span>
+                  <span className="text-[10px] text-white/50 block mt-1">Cổ thụ</span>
+                  <span className="text-xs font-mono font-bold text-yellow-400">{gardenSummary?.goldenTreesCount || 0}</span>
+                </div>
+                <div className="bg-emerald-500/10 border border-emerald-500/20 p-2 rounded-xl text-center">
+                  <span className="text-xl block">🌿</span>
+                  <span className="text-[10px] text-white/50 block mt-1">Cây con</span>
+                  <span className="text-xs font-mono font-bold text-emerald-400">{gardenSummary?.saplingsCount || 0}</span>
+                </div>
+                <div className="bg-green-500/10 border border-green-500/20 p-2 rounded-xl text-center">
+                  <span className="text-xl block">🌱</span>
+                  <span className="text-[10px] text-white/50 block mt-1">Mầm non</span>
+                  <span className="text-xs font-mono font-bold text-green-400">{gardenSummary?.sproutsCount || 0}</span>
+                </div>
+                <div className="bg-amber-500/10 border border-amber-500/20 p-2 rounded-xl text-center">
+                  <span className="text-xl block">🟤</span>
+                  <span className="text-[10px] text-white/50 block mt-1">Hạt giống</span>
+                  <span className="text-xs font-mono font-bold text-amber-500">{gardenSummary?.seedsCount || 0}</span>
+                </div>
+              </div>
+
+              {/* Grass Mini representation preview */}
+              <div className="h-10 w-full rounded-lg bg-[#143217]/50 border border-[#2e6d30]/25 flex items-center justify-center gap-1.5 px-3 mb-3.5">
+                {gardenSummary?.plants?.length > 0 ? (
+                  gardenSummary.plants.slice(0, 8).map((plant, idx) => (
+                    <span 
+                      key={idx} 
+                      className="text-lg animate-sway"
+                      style={{ animationDelay: `${idx * 0.3}s`, transformOrigin: 'bottom center' }}
+                      title={plant.hanzi}
+                    >
+                      {plant.stage === 'seed' ? '🟤' : plant.stage === 'sprout' ? '🌱' : plant.stage === 'sapling' ? '🌿' : '🌳'}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-[10px] text-white/40">Chưa có cây nào được trồng. Hãy học từ vựng để gieo hạt!</span>
+                )}
+              </div>
+
+              {/* Weed status alert */}
+              {gardenSummary?.overdueCount > 0 ? (
+                <div className="flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 px-3 py-2 rounded-xl text-xs text-rose-300">
+                  <Trash2 size={14} className="text-rose-400 animate-bounce" />
+                  <span>Vườn đang có <strong>{gardenSummary.overdueCount} cỏ dại</strong>! Hãy ôn tập thẻ học ngay để dọn dẹp.</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 px-3 py-2 rounded-xl text-xs text-green-300">
+                  <CheckCircle2 size={14} className="text-green-400" />
+                  <span>Bãi cỏ sạch đẹp và tươi tốt! Không có cỏ dại.</span>
+                </div>
+              )}
+            </div>
+
+            {/* Quick enter garden button */}
+            <Link 
+              to="/garden"
+              className="mt-3.5 w-full py-2.5 rounded-xl bg-gradient-to-r from-green-600 to-emerald-500 text-white font-bold text-xs hover:brightness-110 transition-all flex items-center justify-center gap-1.5 shadow-md cursor-pointer border border-green-500/30"
+            >
+              VÀO BÃI CỎ CHI TIẾT (PvZ STYLE) 🌿
+            </Link>
+          </div>
+
+          {/* 3. Quick Actions Arena */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-5 shadow-lg relative overflow-hidden">
+            <div className="absolute -bottom-10 -left-10 w-24 h-24 rounded-full bg-blue-500/5 blur-xl pointer-events-none" />
+            
+            <span className="text-[9px] font-sans font-bold text-white/50 uppercase tracking-widest block mb-2.5">
+              ĐẤU TRƯỜNG CHINH PHỤC
+            </span>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <Link 
+                to="/study-hub"
+                className="bg-white/5 hover:bg-white/10 border border-white/5 hover:border-primary/20 p-3 rounded-xl flex flex-col items-center text-center transition-all group"
+              >
+                <span className="text-2xl group-hover:scale-110 transition-transform duration-300">🎓</span>
+                <span className="text-[10px] font-bold text-white mt-1.5 block">Khu học tập</span>
+              </Link>
+              <Link 
+                to="/game-arcade"
+                className="bg-white/5 hover:bg-white/10 border border-white/5 hover:border-primary/20 p-3 rounded-xl flex flex-col items-center text-center transition-all group"
+              >
+                <span className="text-2xl group-hover:scale-110 transition-transform duration-300">🎮</span>
+                <span className="text-[10px] font-bold text-white mt-1.5 block">Đấu trường game</span>
+              </Link>
+              <Link 
+                to="/hsk-exams"
+                className="bg-white/5 hover:bg-white/10 border border-white/5 hover:border-primary/20 p-3 rounded-xl flex flex-col items-center text-center transition-all group"
+              >
+                <span className="text-2xl group-hover:scale-110 transition-transform duration-300">🏆</span>
+                <span className="text-[10px] font-bold text-white mt-1.5 block">Luyện thi HSK</span>
+              </Link>
+              <Link 
+                to="/chat"
+                className="bg-white/5 hover:bg-white/10 border border-white/5 hover:border-primary/20 p-3 rounded-xl flex flex-col items-center text-center transition-all group"
+              >
+                <span className="text-2xl group-hover:scale-110 transition-transform duration-300">💬</span>
+                <span className="text-[10px] font-bold text-white mt-1.5 block">AI Chatbot</span>
+              </Link>
+            </div>
+          </div>
         </div>
 
         {/* PANEL PHẢI: Tabbed Quests & Quiz + Inventory (3 cols) */}

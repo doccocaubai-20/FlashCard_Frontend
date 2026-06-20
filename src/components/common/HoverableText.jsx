@@ -103,8 +103,8 @@ export function HanziTooltip({ char, children, hideMeaning = false }) {
         drawingColor: '#87ecf2',
         highlightColor: '#ff6a3d',
         showCharacter: true,
-        strokeAnimationSpeed: 4.0,
-        delayBetweenStrokes: 15,
+        strokeAnimationSpeed: 1.25,
+        delayBetweenStrokes: 180,
       });
       writer.animateCharacter();
     }
