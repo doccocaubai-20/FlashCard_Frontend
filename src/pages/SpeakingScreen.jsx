@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { translationData } from '../data/translationData';
 import { statsApi } from '../services/statsApi';
+import HoverableText from '../components/common/HoverableText';
 import { 
   Mic, 
   MicOff, 
@@ -281,7 +282,7 @@ export default function SpeakingScreen() {
                   ) : (
                     /* Default display characters */
                     <span className="text-ink dark:text-on-dark font-display font-extrabold">
-                      {currentSentence.hanzi}
+                      <HoverableText text={currentSentence.hanzi} />
                     </span>
                   )}
 

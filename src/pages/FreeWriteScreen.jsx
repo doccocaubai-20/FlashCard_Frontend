@@ -378,7 +378,7 @@ export default function FreeWriteScreen() {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleSearch();
+      handleSearch(query);
     }
   };
 

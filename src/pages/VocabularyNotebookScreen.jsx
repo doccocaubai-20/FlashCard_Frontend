@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   Volume2
 } from 'lucide-react';
+import HoverableText from '../components/common/HoverableText';
 
 export default function VocabularyNotebookScreen() {
   const navigate = useNavigate();
@@ -312,11 +313,14 @@ export default function VocabularyNotebookScreen() {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 
-                          onClick={(e) => handleSpeak(e, item.hanzi)}
-                          className="text-2xl font-extrabold text-ink dark:text-on-dark font-display cursor-pointer hover:text-primary transition-colors flex items-center gap-1.5"
+                          className="text-2xl font-extrabold text-ink dark:text-on-dark font-display flex items-center gap-1.5"
                         >
-                          {item.hanzi}
-                          <Volume2 size={14} className="text-mute/50 hover:text-primary" />
+                          <HoverableText text={item.hanzi} />
+                          <Volume2 
+                            size={14} 
+                            className="text-mute/50 hover:text-primary cursor-pointer p-0.5" 
+                            onClick={(e) => handleSpeak(e, item.hanzi)}
+                          />
                         </h3>
                         {item.hsk && (
                           <span className="text-[8px] font-extrabold uppercase bg-primary/10 border border-primary/20 text-primary px-1.5 py-0.5 rounded">
@@ -344,7 +348,7 @@ export default function VocabularyNotebookScreen() {
                       {item.exampleHanzi && (
                         <div className="mt-2 bg-surface-bone/20 dark:bg-black/10 border-l-2 border-primary/50 pl-3 py-1.5 space-y-0.5 text-[11px] rounded-r-sm">
                           <p className="font-semibold text-ink dark:text-on-dark leading-relaxed">
-                            {item.exampleHanzi}
+                            <HoverableText text={item.exampleHanzi} />
                           </p>
                           {item.examplePinyin && (
                             <p className="text-primary font-mono">{item.examplePinyin}</p>

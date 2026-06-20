@@ -6,6 +6,7 @@ import { fetchAllDecks } from '../features/deck/deckSlice';
 import { useToast } from '../context/ToastContext';
 import { studyApi } from '../services/studyApi';
 import Flashcard from '../components/flashcard/Flashcard';
+import HoverableText from '../components/common/HoverableText';
 import SRSButtons from '../components/study/SRSButtons';
 import { 
   Layers, 
@@ -377,7 +378,7 @@ function AIExampleBox({ card }) {
           </button>
           
           <p className="text-2xl font-display font-bold text-ink dark:text-on-dark leading-relaxed">
-            {card.exampleHanzi}
+            <HoverableText text={card.exampleHanzi} />
           </p>
           <p className="text-sm font-mono font-semibold text-primary dark:text-primary">
             {card.examplePinyin}
@@ -1323,7 +1324,7 @@ export default function StudyScreen() {
 
             {/* Hanzi Display */}
             <h2 className={`font-display text-6xl font-extrabold text-primary transition-all duration-300 ${passiveStatus === 'speaking_hanzi' ? 'scale-105' : ''}`}>
-              {currentCard.hanzi}
+              <HoverableText text={currentCard.hanzi} />
             </h2>
 
             {/* Pinyin */}

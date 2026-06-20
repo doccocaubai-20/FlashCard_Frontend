@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Play, Square, Volume2, ArrowRight, ExternalLink } from 'lucide-react';
 import { dialoguesData } from '../data/dialoguesData';
+import HoverableText from '../components/common/HoverableText';
 
 export default function DialogueScreen() {
   const navigate = useNavigate();
@@ -261,7 +262,7 @@ export default function DialogueScreen() {
 
                         {/* Hanzi */}
                         <div className="text-xl font-extrabold text-ink dark:text-on-dark font-display tracking-wide mb-1 pr-6">
-                          {line.hanzi}
+                          <HoverableText text={line.hanzi} />
                         </div>
                         {/* Pinyin */}
                         <div className="text-xs font-mono font-bold text-primary mb-2">
@@ -304,7 +305,9 @@ export default function DialogueScreen() {
                     {selectedDialogue.vocabulary.map((vocab, idx) => (
                       <div key={idx} className="bg-surface-bone/50 dark:bg-black/20 p-4 rounded-md border border-hairline dark:border-divider-dark flex justify-between items-start">
                         <div>
-                          <div className="text-lg font-extrabold text-ink dark:text-on-dark font-display">{vocab.word}</div>
+                          <div className="text-lg font-extrabold text-ink dark:text-on-dark font-display">
+                            <HoverableText text={vocab.word} />
+                          </div>
                           <div className="text-xs font-mono font-bold text-primary mt-0.5">{vocab.pinyin}</div>
                           <div className="text-sm text-body dark:text-on-dark-mute mt-1.5 font-medium">{vocab.definition}</div>
                         </div>
@@ -346,7 +349,9 @@ export default function DialogueScreen() {
                             <span className="w-2 h-2 rounded-full bg-primary" />
                             <div>
                               <p className="text-sm font-semibold text-ink dark:text-on-dark">Cấu trúc xuất hiện trong dòng: </p>
-                              <p className="text-xs text-mute dark:text-on-dark-mute italic mt-0.5">"{line.hanzi}"</p>
+                              <p className="text-xs text-mute dark:text-on-dark-mute italic mt-0.5">
+                                "<HoverableText text={line.hanzi} />"
+                              </p>
                             </div>
                           </div>
                           <button

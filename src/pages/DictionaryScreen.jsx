@@ -10,6 +10,7 @@ import { dialoguesData } from '../data/dialoguesData';
 import { grammarData } from '../data/grammarData';
 import api from '../services/api';
 import { speakChinese } from '../utils/tts';
+import HoverableText from '../components/common/HoverableText';
 
 // External sentences loaded dynamically in the background
 let _externalSentences = [];
@@ -1515,7 +1516,7 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                             >
                               <div className="flex-1 space-y-1">
                                 <div className="text-lg font-display font-extrabold text-ink dark:text-on-dark">
-                                  {sentence.hanzi}
+                                  <HoverableText text={sentence.hanzi} />
                                 </div>
                                 <div className="text-xs font-mono font-bold text-primary dark:text-link">
                                   {sentence.pinyin}

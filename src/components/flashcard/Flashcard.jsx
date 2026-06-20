@@ -1,5 +1,6 @@
 import React from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import HoverableText from '../common/HoverableText';
 
 export default function Flashcard({ 
   cardData, 
@@ -78,7 +79,7 @@ export default function Flashcard({
               <div className="flex flex-col items-center">
                 {/* Clean Ink or Accent Orange Text */}
                 <div className="text-9xl font-display font-extrabold tracking-tight text-ink dark:text-on-dark">
-                  {frontChar || '漢'}
+                  <HoverableText text={frontChar || '漢'} />
                 </div>
                 
                 {/* Pinyin element (space reserved to prevent shifting) */}
@@ -117,7 +118,7 @@ export default function Flashcard({
             
             <div className="rounded-md bg-surface-card dark:bg-surface-dark p-6 border border-hairline dark:border-divider-dark">
               <div className="text-7xl font-display font-extrabold text-primary tracking-tight">
-                {backChar || '漢'}
+                <HoverableText text={backChar || '漢'} />
               </div>
               <div className="mt-2 text-2xl font-mono font-bold text-ink dark:text-on-dark">
                 {backPinyin || 'hàn'}

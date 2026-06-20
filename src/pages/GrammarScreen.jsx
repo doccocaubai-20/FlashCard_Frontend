@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { grammarData } from '../data/grammarData';
 import { BookOpenText, Volume2, Sparkles, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import HoverableText from '../components/common/HoverableText';
 
 // Glossary mapping for grammar terminology to help beginners analyze structures
 const GRAMMAR_GLOSSARY = {
@@ -379,7 +380,7 @@ export default function GrammarScreen() {
                           >
                             <div className="space-y-1 flex-1 text-left min-w-0">
                               <p className="text-lg font-display font-extrabold text-ink dark:text-on-dark leading-relaxed group-hover:text-primary transition-colors">
-                                {ex.hanzi}
+                                <HoverableText text={ex.hanzi} />
                               </p>
                               <p className="text-xs font-mono font-semibold text-primary">
                                 {ex.pinyin}

@@ -73,6 +73,15 @@ export const deleteDeck = createAsyncThunk('deck/deleteDeck', async (id, { rejec
   }
 });
 
+export const deleteFlashcard = createAsyncThunk('deck/deleteFlashcard', async (id, { rejectWithValue }) => {
+  try {
+    await flashcardApi.delete(id);
+    return id;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+});
+
 export const createFlashcard = createAsyncThunk('deck/createFlashcard', async (cardData, { rejectWithValue }) => {
   try {
     const response = await flashcardApi.create(cardData);
@@ -188,6 +197,18 @@ const deckSlice = createSlice({
         state.decks = state.decks.filter((d) => d.id !== action.payload);
       })
       .addCase(deleteDeck.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(deleteFlashcard.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(deleteFlashcard.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.flashcards = state.flashcards.filter((c) => c.id !== action.payload);
+      })
+      .addCase(deleteFlashcard.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       })

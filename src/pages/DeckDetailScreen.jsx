@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchDeckDetails, fetchFlashcardsByDeck, importFlashcards } from '../features/deck/deckSlice';
-import { Upload, Star, X } from 'lucide-react';
+import { fetchDeckDetails, fetchFlashcardsByDeck, importFlashcards, deleteFlashcard } from '../features/deck/deckSlice';
+import { Upload, Star, X, Trash2 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { useToast } from '../context/ToastContext';
+import HoverableText from '../components/common/HoverableText';
 
 export default function DeckDetailScreen() {
   const { showToast } = useToast();
@@ -80,8 +81,31 @@ export default function DeckDetailScreen() {
   };
 
 
+  const user = useSelector((state) => state.auth.user);
   const displayDeck = isVirtual ? virtualDeck : currentDeck;
   const displayCards = isVirtual ? virtualCards : flashcards;
+
+  const canDelete = isVirtual || (displayDeck && (!displayDeck.isSystem || user?.role === 'ADMIN'));
+
+  const handleDeleteCard = async (cardId, front) => {
+    if (!window.confirm(`Bạn có chắc chắn muốn xóa thẻ "${front}" này không?`)) {
+      return;
+    }
+
+    try {
+      if (isVirtual) {
+        await favoriteWordsApi.deleteFavorite(cardId);
+        setVirtualCards((prev) => prev.filter((c) => c.id !== cardId));
+        showToast('Đã xóa thẻ khỏi mục yêu thích.', 'success');
+      } else {
+        await dispatch(deleteFlashcard(cardId)).unwrap();
+        showToast('Xóa thẻ bài thành công.', 'success');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Có lỗi xảy ra khi xóa thẻ bài.', 'error');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -173,9 +197,21 @@ export default function DeckDetailScreen() {
             <div className="mt-4 space-y-3 max-h-[500px] overflow-y-auto pr-1">
               {displayCards?.length > 0 ? (
                 displayCards.map((card) => (
-                  <div key={card.id || card.front} className="rounded-md border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-surface-dark/20 p-4 transition-colors">
-                    <div className="text-lg font-extrabold text-ink dark:text-on-dark font-display">{card.front}</div>
-                    <p className="mt-2 text-sm text-body dark:text-on-dark-mute font-medium leading-relaxed">{card.back}</p>
+                  <div key={card.id || card.front} className="rounded-md border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-surface-dark/20 p-4 transition-colors relative group">
+                    <div className="text-lg font-extrabold text-ink dark:text-on-dark font-display">
+                      <HoverableText text={card.front} />
+                    </div>
+                    <p className="mt-2 text-sm text-body dark:text-on-dark-mute font-medium leading-relaxed pr-8">{card.back}</p>
+                    {canDelete && (
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteCard(card.id, card.front)}
+                        className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-950/30 text-mute hover:text-red-500 transition-colors opacity-60 hover:opacity-100 cursor-pointer"
+                        title="Xóa thẻ này"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    )}
                   </div>
                 ))
               ) : (
