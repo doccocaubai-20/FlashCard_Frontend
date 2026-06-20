@@ -9,6 +9,118 @@ import {
 } from 'lucide-react';
 import { speakChinese } from '../utils/tts';
 
+// 3D Grass Land Patch background rendering for Cells
+function renderLandPatchBackground(row, col, isSelected, isEmpty, isOverdue) {
+  const isEven = (row + col) % 2 === 0;
+  
+  const grassGradId = `grassGrad-${row}-${col}`;
+  const dirtGradId = `dirtGrad-${row}-${col}`;
+  const soilGradId = `soilGrad-${row}-${col}`;
+
+  return (
+    <svg viewBox="0 0 160 160" className="absolute inset-0 w-full h-full pointer-events-none z-0 select-none overflow-visible">
+      <defs>
+        {/* Grass gradient for checkered look */}
+        <linearGradient id={grassGradId} x1="0%" y1="0%" x2="100%" y2="100%">
+          {isEven ? (
+            <>
+              <stop offset="0%" stopColor="#1e4d2b" />
+              <stop offset="50%" stopColor="#2d6a3f" />
+              <stop offset="100%" stopColor="#1b4d32" />
+            </>
+          ) : (
+            <>
+              <stop offset="0%" stopColor="#143c22" />
+              <stop offset="50%" stopColor="#1d4d29" />
+              <stop offset="100%" stopColor="#102f1a" />
+            </>
+          )}
+        </linearGradient>
+
+        {/* 3D Dirt edge gradient */}
+        <linearGradient id={dirtGradId} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#5c2e0b" />
+          <stop offset="100%" stopColor="#271003" />
+        </linearGradient>
+
+        {/* Central soil radial gradient */}
+        <radialGradient id={soilGradId} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#1c0d02" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#2c1401" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      {/* 3D block drop shadow */}
+      <rect x="10" y="26" width="140" height="124" rx="20" fill="#010308" opacity="0.75" filter="blur(6px)" />
+
+      {/* Dirt Side/Bottom (3D block thickness) */}
+      <path 
+        d="M 12 75 Q 12 125 28 125 L 132 125 Q 148 125 148 75 L 148 112 Q 148 136 132 136 L 28 136 Q 12 136 12 112 Z" 
+        fill={`url(#${dirtGradId})`} 
+      />
+      {/* Dirt cracks and textures for premium look */}
+      <path d="M 22 116 Q 40 123 80 119 Q 120 123 138 116" stroke="#3d1d04" strokeWidth="2.5" fill="none" opacity="0.6" />
+      <path d="M 38 125 Q 80 128 122 125" stroke="#1c0d02" strokeWidth="2" fill="none" opacity="0.8" />
+
+      {/* Tiny pebbles at base */}
+      <circle cx="34" cy="122" r="3.5" fill="#4b5563" />
+      <circle cx="126" cy="123" r="4" fill="#374151" />
+      <circle cx="131" cy="126" r="2" fill="#4b5563" />
+
+      {/* Top Grass Surface Card Plate */}
+      <rect 
+        x="12" 
+        y="14" 
+        width="136" 
+        height="104" 
+        rx="18" 
+        fill={`url(#${grassGradId})`} 
+        stroke={isSelected ? "#eab308" : isEven ? "#387a4c" : "#245e35"} 
+        strokeWidth={isSelected ? "3" : "1.5"} 
+        filter={isSelected ? "drop-shadow(0 0 4px rgba(234,179,8,0.6))" : "none"}
+      />
+
+      {/* Central planting soil details */}
+      {!isEmpty ? (
+        <>
+          <ellipse cx="80" cy="74" rx="44" ry="19" fill={`url(#${soilGradId})`} />
+          <ellipse cx="80" cy="74" rx="32" ry="12" fill="#2c1401" opacity="0.75" />
+        </>
+      ) : (
+        /* Sprout/Planted placeholder */
+        <g opacity="0.12" stroke="#ffffff" strokeWidth="1.5" strokeDasharray="3,3" fill="none">
+          <ellipse cx="80" cy="74" rx="20" ry="8" />
+          <path d="M 80 74 L 80 62 Q 76 56 78 50 M 80 62 Q 85 58 83 52" />
+        </g>
+      )}
+
+      {/* Little grass blades on top face */}
+      <path d="M 26 42 Q 22 32 20 35 Q 24 38 26 42" fill="#4ade80" opacity="0.5" />
+      <path d="M 26 42 Q 29 30 31 33 Q 29 38 26 42" fill="#22c55e" opacity="0.6" />
+      
+      <path d="M 134 82 Q 138 72 140 75 Q 135 78 134 82" fill="#4ade80" opacity="0.5" />
+
+      {/* Tiny flowers to mimic PvZ environment */}
+      {isEven && !isOverdue && (
+        <>
+          <circle cx="112" cy="34" r="1.5" fill="#ffffff" />
+          <circle cx="110.5" cy="32.5" r="1.2" fill="#ffffff" />
+          <circle cx="113.5" cy="32.5" r="1.2" fill="#ffffff" />
+          <circle cx="110.5" cy="35.5" r="1.2" fill="#ffffff" />
+          <circle cx="113.5" cy="35.5" r="1.2" fill="#ffffff" />
+          <circle cx="112" cy="34" r="0.6" fill="#fbbf24" />
+        </>
+      )}
+      {!isEven && isOverdue && (
+        <>
+          {/* Wilted brown leaf particle */}
+          <path d="M 115 32 Q 112 36 109 33" stroke="#b45309" strokeWidth="1" fill="none" opacity="0.5" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 export default function GardenScreen() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -102,13 +214,6 @@ export default function GardenScreen() {
     harvestReward = 0
   } = garden || {};
 
-  // Alternate checkered colors for PvZ meadow look
-  const getGrassTileStyle = (row, col) => {
-    const isEven = (row + col) % 2 === 0;
-    return isEven
-      ? 'bg-[#183921]/90 border border-[#2e6d30]/20'
-      : 'bg-[#102c19]/90 border border-[#214f24]/20';
-  };
 
   const columns = 5;
   // Ensure we have a clean grid matching the plants length, min 15 cells (3 rows)
@@ -518,16 +623,15 @@ export default function GardenScreen() {
                   return (
                     <div 
                       key={`empty-${tileIndex}`}
-                      className={`relative flex flex-col items-center justify-center min-h-[145px] aspect-square rounded-2xl transition-all duration-300 hover:brightness-105 group/tile ${getGrassTileStyle(row, col)}`}
+                      className="relative flex flex-col items-center justify-center min-h-[145px] aspect-square bg-transparent rounded-2xl transition-all duration-300 hover:brightness-105 group/tile overflow-visible"
                     >
+                      {/* 3D Grass Land Background */}
+                      {renderLandPatchBackground(row, col, false, true, false)}
+
                       {/* Plot Outline and sprout placeholder */}
-                      <div className="absolute inset-0 flex flex-col items-center justify-center p-2 text-white/5 group-hover/tile:text-white/20 transition-all duration-300">
-                        <svg viewBox="0 0 60 60" className="w-8 h-8 opacity-20 group-hover/tile:opacity-60 transition-all duration-300">
-                          <ellipse cx="30" cy="45" rx="14" ry="5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3,3" />
-                          <path d="M 30 45 L 30 35 M 30 35 Q 26 31 28 27 M 30 35 Q 34 32 32 28" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                        </svg>
-                        <span className="text-[7px] font-sans font-bold opacity-0 group-hover/tile:opacity-40 transition-opacity mt-1 select-none text-center leading-tight">
-                          Trồng cây mới<br/>khi học từ vựng
+                      <div className="absolute inset-0 flex flex-col items-center justify-center p-2 text-white/10 group-hover/tile:text-white/30 transition-all duration-300 z-10">
+                        <span className="text-[9px] font-sans font-black opacity-30 group-hover/tile:opacity-75 transition-opacity mt-12 select-none text-center leading-tight text-emerald-200">
+                          Đất trống
                         </span>
                       </div>
                     </div>
@@ -545,26 +649,27 @@ export default function GardenScreen() {
                       setSelectedPlant(plant);
                       setAlmanacOpen(true);
                     }}
-                    className={`relative flex flex-col items-center justify-between p-2 min-h-[145px] aspect-square rounded-2xl transition-all duration-300 cursor-pointer hover:scale-[1.04] shadow-md group/plant ${getGrassTileStyle(row, col)} ${
-                      isSelected 
-                        ? 'ring-4 ring-yellow-400 shadow-[0_0_20px_rgba(245,158,11,0.5)] z-10 scale-[1.02]' 
-                        : 'hover:brightness-110 hover:ring-2 hover:ring-white/10'
+                    className={`relative flex flex-col items-center justify-between p-2 min-h-[145px] aspect-square bg-transparent rounded-2xl transition-all duration-300 cursor-pointer hover:scale-[1.04] group/plant overflow-visible ${
+                      isSelected ? 'z-10 scale-[1.02]' : ''
                     }`}
                   >
+                    {/* 3D Grass Land Background */}
+                    {renderLandPatchBackground(row, col, isSelected, false, isOverdue)}
+
                     {/* Visual Plant graphic */}
-                    <div className="w-full flex-1 flex items-center justify-center relative mt-2">
+                    <div className="w-full flex-1 flex items-center justify-center relative mt-1 pb-4 z-10">
                       {getPlantGraphic(plant, tileIndex)}
 
                       {/* Overdue/Withered Pill Badge */}
                       {isOverdue && (
-                        <div className="absolute top-0.5 right-0.5 bg-rose-600/90 text-white rounded-full px-1.5 py-0.5 text-[8px] font-black border border-white/20 shadow">
+                        <div className="absolute top-2.5 right-2.5 bg-rose-600/90 text-white rounded-full px-2 py-0.5 text-[8px] font-black border border-white/20 shadow animate-pulse z-20">
                           Héo
                         </div>
                       )}
                     </div>
 
                     {/* Plant Wood Tag Name Board */}
-                    <div className="bg-[#4a2608] border border-[#2b1604] text-orange-100 px-2 py-0.5 rounded-lg shadow text-center max-w-[90%] font-serif font-black text-xs relative z-10 select-none tracking-wider group-hover/plant:bg-[#5c2e0b] transition-all">
+                    <div className="absolute bottom-1 bg-gradient-to-b from-[#5c2e0b] to-[#3a1a03] border-2 border-[#2b1604] text-orange-100 px-3 py-0.5 rounded-md shadow-[0_3px_5px_rgba(0,0,0,0.6)] text-center max-w-[85%] font-serif font-black text-xs z-10 select-none tracking-wider group-hover/plant:from-[#733d0f] group-hover/plant:to-[#4a2608] transition-all">
                       {hanzi}
                     </div>
                   </div>
