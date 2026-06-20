@@ -1338,6 +1338,38 @@ export default function DashboardScreen() {
                   100 Xu
                 </button>
               </div>
+
+              {/* Item 3: Water (+10 Water) */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-white/5">
+                <div className="space-y-1">
+                  <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+                    💧 Thùng Nước Sạch <span className="text-[9px] text-white/50 normal-case font-normal">(+10 Nước)</span>
+                  </h4>
+                  <p className="text-[10px] text-white/60 pr-4">Bổ sung thêm 10 nước sạch để tưới cây. Hiện có: {summary?.water ?? 35} Nước</p>
+                </div>
+                <button
+                  onClick={() => handleBuyItem('water', 10)}
+                  className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-deep text-slate-950 text-[10px] font-bold shadow-xs cursor-pointer shrink-0"
+                >
+                  10 Xu
+                </button>
+              </div>
+
+              {/* Item 4: Fertilizer (+5 Fertilizer) */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-white/5">
+                <div className="space-y-1">
+                  <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+                    🌱 Phân Bón Sinh Trưởng <span className="text-[9px] text-white/50 normal-case font-normal">(+5 Phân bón)</span>
+                  </h4>
+                  <p className="text-[10px] text-white/60 pr-4">Bổ sung thêm 5 phân bón thúc đẩy sinh cảnh. Hiện có: {summary?.fertilizer ?? 55} Phân bón</p>
+                </div>
+                <button
+                  onClick={() => handleBuyItem('fertilizer', 15)}
+                  className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-deep text-slate-950 text-[10px] font-bold shadow-xs cursor-pointer shrink-0"
+                >
+                  15 Xu
+                </button>
+              </div>
             </div>
 
             <div className="pt-2 text-center">
