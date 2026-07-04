@@ -352,7 +352,7 @@ export default function FloatingDictionary() {
                 <div className="flex justify-between items-start border-b border-white/5 pb-3">
                   <div>
                     <h3 className="text-3xl font-black text-yellow-400 tracking-wide font-serif">
-                      <HoverableText text={selectedWord.s} />
+                      <HoverableText text={selectedWord.s} className="relative inline-block cursor-help hover:opacity-80 transition-opacity" />
                     </h3>
                     <div className="text-[11px] font-bold text-white/50 mt-1 font-mono">
                       <span>{selectedWord.p}</span>
@@ -432,7 +432,7 @@ export default function FloatingDictionary() {
                       <div className="flex-1 min-w-0 pr-3">
                         <div className="flex items-baseline gap-2">
                           <span className="text-sm font-black text-yellow-400 font-serif">
-                            <HoverableText text={item.s} />
+                            <HoverableText text={item.s} className="relative inline-block cursor-help hover:opacity-80 transition-opacity" />
                           </span>
                           <span className="text-[10px] text-white/40 truncate font-mono">{item.p}</span>
                         </div>
@@ -479,7 +479,7 @@ export default function FloatingDictionary() {
                       <div className="flex-1 min-w-0 pr-3">
                         <div className="flex items-baseline gap-2">
                           <span className="text-xs font-black text-yellow-500 font-serif">
-                            <HoverableText text={item.s} />
+                            <HoverableText text={item.s} className="relative inline-block cursor-help hover:opacity-80 transition-opacity" />
                           </span>
                           <span className="text-[9px] text-white/40 truncate font-mono">{item.p}</span>
                         </div>

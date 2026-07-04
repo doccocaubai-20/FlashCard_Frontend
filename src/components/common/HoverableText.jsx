@@ -13,7 +13,7 @@ const cleanDefinition = (vi) => {
   return trimmed;
 };
 
-export function HanziTooltip({ char, children, hideMeaning = false }) {
+export function HanziTooltip({ char, children, hideMeaning = false, className = "" }) {
   const [isHovered, setIsHovered] = useState(false);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -134,14 +134,15 @@ export function HanziTooltip({ char, children, hideMeaning = false }) {
     }, 150); // 150ms debounce window
   };
 
-  return (
-    <span 
-      ref={triggerRef}
-      className="relative group/tooltip inline-block cursor-help border-b border-dashed border-primary/40 hover:text-primary transition-colors px-[1px]"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {children}
+    const triggerClass = className || "relative group/tooltip inline-block cursor-help border-b border-dashed border-primary/40 hover:text-primary transition-colors px-[1px]";
+    return (
+      <span 
+        ref={triggerRef}
+        className={triggerClass}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {children}
 
       {isHovered && (
         <span 
@@ -151,7 +152,7 @@ export function HanziTooltip({ char, children, hideMeaning = false }) {
         >
           <span 
             onClick={(e) => e.stopPropagation()}
-            className={`p-4 bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl shadow-xl flex gap-3 text-left font-sans normal-case tracking-normal ${
+            className={`p-4 bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl shadow-xl flex gap-3 text-left font-sans normal-case tracking-normal text-slate-800 dark:text-slate-200 ${
               hideMeaning ? 'w-44' : 'w-72'
             }`}
           >
@@ -197,7 +198,7 @@ export function HanziTooltip({ char, children, hideMeaning = false }) {
   );
 }
 
-export default function HoverableText({ text, hideMeaning = false }) {
+export default function HoverableText({ text, hideMeaning = false, className = "" }) {
   if (!text) return null;
   const chars = Array.from(text);
   return (
@@ -206,7 +207,7 @@ export default function HoverableText({ text, hideMeaning = false }) {
         const isChinese = /[\u4e00-\u9fa5]/.test(char);
         if (isChinese) {
           return (
-            <HanziTooltip key={`${char}_${index}`} char={char} hideMeaning={hideMeaning}>
+            <HanziTooltip key={`${char}_${index}`} char={char} hideMeaning={hideMeaning} className={className}>
               {char}
             </HanziTooltip>
           );
