@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { Menu, X } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import FloatingDictionary from './FloatingDictionary';
 import './layout.css';
 
 export default function Layout() {
@@ -62,6 +63,9 @@ export default function Layout() {
           <Outlet />
         </div>
       </main>
+
+      {/* Globally Floating Dictionary Bubble */}
+      <FloatingDictionary />
     </div>
   );
 }
