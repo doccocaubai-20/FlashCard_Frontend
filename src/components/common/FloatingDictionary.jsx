@@ -254,7 +254,7 @@ export default function FloatingDictionary() {
         className={`fixed w-14 h-14 rounded-full flex items-center justify-center pointer-events-auto cursor-grab active:cursor-grabbing transition-transform select-none border border-white/20 shadow-2xl z-[99999] ${
           isOpen
             ? 'bg-rose-600 text-white rotate-90'
-            : 'bg-gradient-to-tr from-emerald-500 to-teal-400 text-white hover:scale-105 active:scale-95 animate-pulse'
+            : 'bg-gradient-to-tr from-sky-500 via-teal-400 to-indigo-500 text-white hover:scale-105 active:scale-95 animate-pulse hover:shadow-[0_0_20px_rgba(56,189,248,0.75)]'
         }`}
         title="Tra từ điển nhanh"
       >
@@ -268,12 +268,21 @@ export default function FloatingDictionary() {
             right: `${Math.min(window.innerWidth - 370, position.x)}px`,
             bottom: `${Math.min(window.innerHeight - 520, position.y + 64)}px`
           }}
-          className="fixed w-[350px] max-h-[480px] bg-slate-900/95 border border-white/10 rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl pointer-events-auto flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200 z-[99998] text-white font-sans"
+          style={{
+            right: `${Math.min(window.innerWidth - 370, position.x)}px`,
+            bottom: `${Math.min(window.innerHeight - 520, position.y + 64)}px`,
+            backgroundImage: `linear-gradient(to bottom, rgba(88, 28, 135, 0.35) 0%, rgba(15, 23, 42, 0.97) 60%), url('https://images.unsplash.com/photo-1538370965046-79c0d6907d47?q=80&w=600')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            boxShadow: '0 0 25px rgba(56, 189, 248, 0.25), 0 10px 35px rgba(0, 0, 0, 0.6)',
+            borderColor: 'rgba(56, 189, 248, 0.3)',
+          }}
+          className="fixed w-[350px] max-h-[480px] border rounded-2xl backdrop-blur-xl pointer-events-auto flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200 z-[99998] text-white font-sans"
         >
           {/* Header */}
           <div className="flex items-center justify-between p-3 border-b border-white/5 bg-white/2">
             <div className="flex items-center gap-2">
-              <BookOpen size={16} className="text-emerald-400" />
+              <BookOpen size={16} className="text-sky-400" />
               <span className="text-xs font-black tracking-tight text-white/90">SỔ TRA TỪ ĐIỂN NHANH</span>
             </div>
             <button
@@ -294,7 +303,7 @@ export default function FloatingDictionary() {
                   placeholder="Tra bính âm, chữ Hán, nghĩa Việt..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  className="w-full h-9 bg-black/40 border border-white/10 rounded-xl px-3 pl-8 text-xs placeholder-white/30 text-white focus:outline-none focus:border-emerald-500/50 transition-all font-sans"
+                  className="w-full h-9 bg-black/40 border border-white/10 rounded-xl px-3 pl-8 text-xs placeholder-white/30 text-white focus:outline-none focus:border-sky-400/50 transition-all font-sans"
                 />
                 <Search size={14} className="absolute left-2.5 top-2.5 text-white/30" />
                 {query && (
@@ -313,7 +322,7 @@ export default function FloatingDictionary() {
                   onClick={() => setActiveTab('results')}
                   className={`pb-1 px-1 transition-all ${
                     activeTab === 'results'
-                      ? 'text-emerald-400 border-b-2 border-emerald-500'
+                      ? 'text-sky-400 border-b-2 border-sky-400'
                       : 'text-white/40 hover:text-white/70'
                   }`}
                 >
@@ -323,7 +332,7 @@ export default function FloatingDictionary() {
                   onClick={() => setActiveTab('history')}
                   className={`pb-1 px-1 transition-all flex items-center gap-1 ${
                     activeTab === 'history'
-                      ? 'text-emerald-400 border-b-2 border-emerald-500'
+                      ? 'text-sky-400 border-b-2 border-sky-400'
                       : 'text-white/40 hover:text-white/70'
                   }`}
                 >
@@ -342,7 +351,7 @@ export default function FloatingDictionary() {
                 {/* Back to list */}
                 <button
                   onClick={() => setSelectedWord(null)}
-                  className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 hover:text-emerald-300 transition-colors"
+                  className="flex items-center gap-1.5 text-[10px] font-bold text-sky-400 hover:text-sky-300 transition-colors"
                 >
                   <ArrowLeft size={12} />
                   <span>Quay lại danh sách</span>
@@ -357,7 +366,7 @@ export default function FloatingDictionary() {
                     <div className="text-[11px] font-bold text-white/50 mt-1 font-mono">
                       <span>{selectedWord.p}</span>
                       {selectedWord.sv && (
-                        <span className="ml-2 text-emerald-400">[{selectedWord.sv.toUpperCase()}]</span>
+                        <span className="ml-2 text-sky-400">[{selectedWord.sv.toUpperCase()}]</span>
                       )}
                     </div>
                   </div>
@@ -365,7 +374,7 @@ export default function FloatingDictionary() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => speakChinese(selectedWord.s)}
-                      className="p-2 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/25 rounded-xl text-emerald-400 cursor-pointer transition-all"
+                      className="p-2 bg-sky-500/10 border border-sky-500/20 hover:bg-sky-500/25 rounded-xl text-sky-400 cursor-pointer transition-all"
                       title="Phát âm"
                     >
                       <Volume2 size={16} />
@@ -403,7 +412,7 @@ export default function FloatingDictionary() {
                 <Link
                   to={`/dictionary?word=${encodeURIComponent(selectedWord.s)}`}
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center gap-1.5 w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] font-bold text-white/80 hover:text-white transition-all mt-4 cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 w-full py-2 bg-gradient-to-r from-sky-500/10 to-indigo-500/10 border border-sky-500/25 hover:from-sky-500/20 hover:to-indigo-500/20 rounded-xl text-[10px] font-bold text-sky-200 hover:text-white transition-all mt-4 cursor-pointer"
                 >
                   <Link2 size={12} />
                   <span>Xem chi tiết đầy đủ (Ví dụ & AI Giải nghĩa)</span>
@@ -418,7 +427,7 @@ export default function FloatingDictionary() {
                 </div>
               ) : loading ? (
                 <div className="flex flex-col items-center justify-center py-14 space-y-2 text-white/40">
-                  <Loader2 size={20} className="animate-spin text-emerald-400" />
+                  <Loader2 size={20} className="animate-spin text-sky-400" />
                   <span className="text-[9px] font-bold">Đang tra cứu từ điển...</span>
                 </div>
               ) : results.length > 0 ? (
