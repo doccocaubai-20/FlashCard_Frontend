@@ -5,11 +5,13 @@ import { useDictionary } from '../../hooks/useDictionary';
 const cleanDefinition = (vi) => {
   if (!vi) return '';
   const trimmed = vi.trim();
-  if (trimmed.length < 50) return trimmed;
-  // Split by semicolon and take first 2 parts to keep popup concise
-  const parts = trimmed.split(';');
-  if (parts.length > 2) {
-    return parts.slice(0, 2).map((p) => p.trim()).join('; ') + '...';
+  const parts = trimmed.split(/[\/;]/).map(p => p.trim()).filter(Boolean);
+  if (parts.length > 0) {
+    if (parts.length > 1) {
+      const combined = parts.slice(0, 2).join('; ');
+      return combined.length > 45 ? parts[0] + '...' : combined;
+    }
+    return parts[0].length > 45 ? parts[0].slice(0, 45) + '...' : parts[0];
   }
   return trimmed;
 };
@@ -115,7 +117,7 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
       });
       writer.animateCharacter();
     }
-  }, [isHovered, char, data]);
+  }, [isHovered, char, data, coords]);
 
   const handleSpeak = (e) => {
     e.stopPropagation();
