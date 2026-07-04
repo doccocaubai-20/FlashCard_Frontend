@@ -6,6 +6,7 @@ import {
   BookOpen, Search, X, Volume2, Star, ArrowLeft, History, Loader2, Link2 
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import HoverableText from './HoverableText';
 
 export default function FloatingDictionary() {
   const { lookupMultiple, loading } = useDictionary();
@@ -351,7 +352,7 @@ export default function FloatingDictionary() {
                 <div className="flex justify-between items-start border-b border-white/5 pb-3">
                   <div>
                     <h3 className="text-3xl font-black text-yellow-400 tracking-wide font-serif">
-                      {selectedWord.s}
+                      <HoverableText text={selectedWord.s} />
                     </h3>
                     <div className="text-[11px] font-bold text-white/50 mt-1 font-mono">
                       <span>{selectedWord.p}</span>
@@ -430,7 +431,9 @@ export default function FloatingDictionary() {
                     >
                       <div className="flex-1 min-w-0 pr-3">
                         <div className="flex items-baseline gap-2">
-                          <span className="text-sm font-black text-yellow-400 font-serif">{item.s}</span>
+                          <span className="text-sm font-black text-yellow-400 font-serif">
+                            <HoverableText text={item.s} />
+                          </span>
                           <span className="text-[10px] text-white/40 truncate font-mono">{item.p}</span>
                         </div>
                         <p className="text-[10px] text-white/60 truncate mt-0.5 font-sans">{item.vi}</p>
@@ -475,7 +478,9 @@ export default function FloatingDictionary() {
                     >
                       <div className="flex-1 min-w-0 pr-3">
                         <div className="flex items-baseline gap-2">
-                          <span className="text-xs font-black text-yellow-500 font-serif">{item.s}</span>
+                          <span className="text-xs font-black text-yellow-500 font-serif">
+                            <HoverableText text={item.s} />
+                          </span>
                           <span className="text-[9px] text-white/40 truncate font-mono">{item.p}</span>
                         </div>
                       </div>
