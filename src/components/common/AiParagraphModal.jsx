@@ -14,33 +14,24 @@ export default function AiParagraphModal({ deckId, flashcards = [], onClose, onS
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
-  // Mặc định chọn tối đa 15 từ đầu tiên khi mở modal
+  // Mặc định chọn tất cả từ vựng khi mở modal
   useEffect(() => {
     if (flashcards && flashcards.length > 0) {
-      setSelectedWords(flashcards.slice(0, 15).map((c) => c.front || c.hanzi));
+      setSelectedWords(flashcards.map((c) => c.front || c.hanzi));
     }
   }, [flashcards]);
 
   const handleToggleWord = (word) => {
     setSelectedWords((prev) => {
       const isSelected = prev.includes(word);
-      if (!isSelected && prev.length >= 20) {
-        setError('Chỉ được chọn tối đa 20 từ để đảm bảo đoạn văn AI viết có chất lượng tốt nhất.');
-        return prev;
-      }
       setError('');
       return isSelected ? prev.filter((w) => w !== word) : [...prev, word];
     });
   };
 
   const handleSelectAll = () => {
-    if (flashcards.length > 20) {
-      setSelectedWords(flashcards.slice(0, 20).map((c) => c.front || c.hanzi));
-      setError('Đã tự động chọn 20 từ đầu tiên (giới hạn tối đa 20 từ).');
-    } else {
-      setSelectedWords(flashcards.map((c) => c.front || c.hanzi));
-      setError('');
-    }
+    setSelectedWords(flashcards.map((c) => c.front || c.hanzi));
+    setError('');
   };
 
   const handleDeselectAll = () => {
@@ -48,18 +39,14 @@ export default function AiParagraphModal({ deckId, flashcards = [], onClose, onS
     setError('');
   };
 
-  const handleSelectFirst20 = () => {
-    setSelectedWords(flashcards.slice(0, 20).map((c) => c.front || c.hanzi));
+  const handleSelectFirst30 = () => {
+    setSelectedWords(flashcards.slice(0, 30).map((c) => c.front || c.hanzi));
     setError('');
   };
 
   const handleGenerate = async () => {
     if (selectedWords.length === 0) {
       setError('Vui lòng chọn ít nhất 1 từ để tạo đoạn văn.');
-      return;
-    }
-    if (selectedWords.length > 20) {
-      setError('Vui lòng chỉ chọn tối đa 20 từ.');
       return;
     }
 
@@ -175,10 +162,10 @@ export default function AiParagraphModal({ deckId, flashcards = [], onClose, onS
                   </button>
                   <button
                     type="button"
-                    onClick={handleSelectFirst20}
+                    onClick={handleSelectFirst30}
                     className="px-2.5 py-1 text-xs rounded border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black/30 text-ink dark:text-on-dark transition cursor-pointer font-medium"
                   >
-                    Chọn 20 từ đầu
+                    Chọn 30 từ đầu
                   </button>
                   <button
                     type="button"
@@ -232,7 +219,7 @@ export default function AiParagraphModal({ deckId, flashcards = [], onClose, onS
               </div>
 
               <div className="text-xs font-semibold text-right text-mute dark:text-on-dark-mute">
-                Đã chọn: <span className="text-primary font-bold">{selectedWords.length}</span> / {flashcards.length} từ <span className="text-amber-500 font-bold">(Tối đa 20 từ)</span>
+                Đã chọn: <span className="text-primary font-bold">{selectedWords.length}</span> / {flashcards.length} từ
               </div>
             </div>
           )}
