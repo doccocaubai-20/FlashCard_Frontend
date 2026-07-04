@@ -2,10 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchDeckDetails, fetchFlashcardsByDeck, importFlashcards, deleteFlashcard } from '../features/deck/deckSlice';
-import { Upload, Star, X, Trash2 } from 'lucide-react';
+import { Upload, Star, X, Trash2, Volume2, Copy, Check } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
+import { deckApi } from '../services/deckApi';
+import { speakChinese } from '../utils/tts';
 import { useToast } from '../context/ToastContext';
 import HoverableText from '../components/common/HoverableText';
+import AiParagraphModal from '../components/common/AiParagraphModal';
 
 export default function DeckDetailScreen() {
   const { showToast } = useToast();
@@ -19,7 +22,19 @@ export default function DeckDetailScreen() {
   const [virtualDeck, setVirtualDeck] = useState(null);
   const [virtualCards, setVirtualCards] = useState([]);
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+  const [isAiParagraphModalOpen, setIsAiParagraphModalOpen] = useState(false);
+  const [savedParagraphs, setSavedParagraphs] = useState([]);
   const isVirtual = id === 'favorites';
+
+  const fetchParagraphs = () => {
+    if (!isVirtual && id) {
+      deckApi.getSavedParagraphs(id)
+        .then((res) => {
+          setSavedParagraphs(res.data || []);
+        })
+        .catch((err) => console.error('Failed to fetch saved paragraphs:', err));
+    }
+  };
 
   useEffect(() => {
     if (isVirtual) {
@@ -41,6 +56,7 @@ export default function DeckDetailScreen() {
     } else if (id) {
       dispatch(fetchDeckDetails(id));
       dispatch(fetchFlashcardsByDeck(id));
+      fetchParagraphs();
     }
   }, [dispatch, id, isVirtual]);
 
@@ -107,6 +123,21 @@ export default function DeckDetailScreen() {
     }
   };
 
+  const handleDeleteParagraph = async (paragraphId) => {
+    if (!window.confirm('Bạn có chắc chắn muốn xóa đoạn văn đã lưu này không?')) {
+      return;
+    }
+
+    try {
+      await deckApi.deleteParagraph(id, paragraphId);
+      setSavedParagraphs((prev) => prev.filter((p) => p.id !== paragraphId));
+      showToast('Xóa đoạn văn đã lưu thành công.', 'success');
+    } catch (err) {
+      console.error(err);
+      showToast('Có lỗi xảy ra khi xóa đoạn văn.', 'error');
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/50 p-6 shadow-sm transition-colors">
@@ -169,6 +200,15 @@ export default function DeckDetailScreen() {
             >
               🎧 Nghe viết
             </button>
+            {!isVirtual && (
+              <button
+                type="button"
+                onClick={() => setIsAiParagraphModalOpen(true)}
+                className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
+              >
+                🤖 Đoạn văn AI
+              </button>
+            )}
             <button
               type="button"
               onClick={() => navigate(`/study?deckId=${id}`)}
@@ -224,8 +264,38 @@ export default function DeckDetailScreen() {
         </div>
       </div>
 
+      {/* Đoạn văn ôn tập đã lưu */}
+      {!isVirtual && savedParagraphs.length > 0 && (
+        <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/50 p-6 shadow-sm mt-6">
+          <h3 className="text-lg font-bold text-ink dark:text-on-dark font-display flex items-center gap-2">
+            📚 Đoạn văn ôn tập đã lưu ({savedParagraphs.length})
+          </h3>
+          <p className="text-xs text-mute dark:text-on-dark-mute mt-1 mb-5">
+            Danh sách các đoạn văn do AI viết từ từ vựng trong bộ bài được bạn chọn lưu trữ lại.
+          </p>
+
+          <div className="space-y-6">
+            {savedParagraphs.map((paragraph) => (
+              <SavedParagraphCard
+                key={paragraph.id}
+                paragraph={paragraph}
+                onDelete={handleDeleteParagraph}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       {isHelpModalOpen && (
         <JsonFormatHelpModal onClose={() => setIsHelpModalOpen(false)} />
+      )}
+      {isAiParagraphModalOpen && (
+        <AiParagraphModal
+          deckId={id}
+          flashcards={displayCards}
+          onClose={() => setIsAiParagraphModalOpen(false)}
+          onSaveSuccess={fetchParagraphs}
+        />
       )}
     </div>
   );
@@ -297,6 +367,119 @@ function JsonFormatHelpModal({ onClose }) {
             Đã hiểu
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Saved Paragraph Card Component ──────────────────────────────────────────
+function SavedParagraphCard({ paragraph, onDelete }) {
+  const [expanded, setExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleSpeak = (e) => {
+    e.stopPropagation();
+    speakChinese(paragraph.hanzi);
+  };
+
+  const handleCopy = (e) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(paragraph.hanzi);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    onDelete(paragraph.id);
+  };
+
+  return (
+    <div className="rounded-xl border border-hairline dark:border-divider-dark bg-surface-bone/30 dark:bg-black/10 p-5 space-y-4 hover:shadow-md transition-all relative">
+      <div className="flex items-start justify-between gap-4">
+        <div className="pr-24 space-y-1">
+          <div className="text-[10px] font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
+            Từ vựng ôn tập: {paragraph.words.join(', ')}
+          </div>
+          <div className="text-xl font-extrabold text-ink dark:text-on-dark font-display leading-loose">
+            <HoverableText text={paragraph.hanzi} />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={handleSpeak}
+            className="p-2 rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark hover:text-primary transition cursor-pointer active:scale-95 shadow-xs"
+            title="Nghe đọc"
+          >
+            <Volume2 size={14} />
+          </button>
+          <button
+            onClick={handleCopy}
+            className="p-2 rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark hover:text-primary transition cursor-pointer active:scale-95 shadow-xs"
+            title="Sao chép"
+          >
+            {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+          </button>
+          <button
+            onClick={handleDelete}
+            className="p-2 rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-red-50 dark:hover:bg-red-950/20 text-mute hover:text-red-500 transition cursor-pointer active:scale-95 shadow-xs"
+            title="Xóa đoạn văn"
+          >
+            <Trash2 size={14} />
+          </button>
+        </div>
+      </div>
+
+      <div className="border-t border-hairline dark:border-divider-dark/50 pt-3">
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="text-xs text-primary font-bold hover:underline flex items-center gap-1 cursor-pointer"
+        >
+          {expanded ? '🔼 Thu gọn phiên âm & dịch nghĩa' : '🔽 Xem phiên âm & dịch nghĩa'}
+        </button>
+
+        {expanded && (
+          <div className="grid gap-4 md:grid-cols-2 mt-4 animate-in fade-in slide-in-from-top-1 duration-200">
+            <div className="p-4 rounded-lg bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark/50">
+              <div className="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wider mb-1">
+                Phiên âm Pinyin
+              </div>
+              <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed font-medium">
+                {paragraph.pinyin}
+              </p>
+            </div>
+            <div className="p-4 rounded-lg bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark/50">
+              <div className="text-[10px] font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-wider mb-1">
+                Dịch nghĩa Tiếng Việt
+              </div>
+              <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed font-medium">
+                {paragraph.meaning}
+              </p>
+            </div>
+            
+            {paragraph.wordUsage && (
+              <div className="md:col-span-2 mt-2 space-y-2">
+                <div className="text-[10px] font-bold text-ink dark:text-on-dark uppercase tracking-wider">
+                  Giải nghĩa từ vựng trong văn cảnh
+                </div>
+                <div className="border border-hairline dark:border-divider-dark rounded-lg overflow-hidden divide-y divide-hairline dark:divide-divider-dark bg-surface-card dark:bg-surface-dark/25">
+                  {(Array.isArray(paragraph.wordUsage) ? paragraph.wordUsage : []).map((item, idx) => (
+                    <div key={idx} className="p-3 flex flex-col sm:flex-row sm:items-start gap-2 hover:bg-surface-bone/10 transition-colors">
+                      <div className="sm:w-1/4 shrink-0">
+                        <span className="text-xs font-bold text-ink dark:text-on-dark">{item.word}</span>
+                        <span className="block text-[10px] text-mute dark:text-on-dark-mute font-medium">{item.pinyin} - {item.meaning}</span>
+                      </div>
+                      <div className="text-xs text-body dark:text-on-dark-mute font-medium leading-relaxed">
+                        {item.explanation}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
