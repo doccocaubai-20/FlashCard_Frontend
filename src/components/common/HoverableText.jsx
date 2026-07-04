@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useDictionary } from '../../hooks/useDictionary';
 
@@ -22,11 +22,13 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
   const writerContainerRef = useRef(null);
   const triggerRef = useRef(null);
   const leaveTimeoutRef = useRef(null);
-  const [coords, setCoords] = useState({ top: 0, left: 0 });
+  const [coords, setCoords] = useState(null);
+  const [alignClass, setAlignClass] = useState('left-1/2 -translate-x-1/2'); // for legacy backup if needed, but not strictly needed now
 
   // Reset states when character changes to prevent state leakage from React component reuse
   useEffect(() => {
     setData(null);
+    setCoords(null);
     if (leaveTimeoutRef.current) {
       clearTimeout(leaveTimeoutRef.current);
       leaveTimeoutRef.current = null;
@@ -41,7 +43,7 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isHovered && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
       const tooltipWidth = hideMeaning ? 176 : 288;
@@ -136,6 +138,7 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
   const handleMouseLeave = () => {
     leaveTimeoutRef.current = setTimeout(() => {
       setIsHovered(false);
+      setCoords(null);
     }, 150); // 150ms debounce window
   };
 
@@ -149,7 +152,7 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
       >
         {children}
 
-        {isHovered && createPortal(
+        {isHovered && coords && createPortal(
           <span 
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
