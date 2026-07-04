@@ -239,7 +239,7 @@ export default function FloatingDictionary() {
   const handleTouchEnd = () => endDrag();
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-50">
+    <div className="fixed inset-0 pointer-events-none z-[99999]">
       
       {/* Bubble Launcher Trigger */}
       <button
@@ -251,7 +251,7 @@ export default function FloatingDictionary() {
           right: `${position.x}px`,
           bottom: `${position.y}px`
         }}
-        className={`fixed w-14 h-14 rounded-full flex items-center justify-center pointer-events-auto cursor-grab active:cursor-grabbing transition-transform select-none border border-white/20 shadow-2xl z-[99] ${
+        className={`fixed w-14 h-14 rounded-full flex items-center justify-center pointer-events-auto cursor-grab active:cursor-grabbing transition-transform select-none border border-white/20 shadow-2xl z-[99999] ${
           isOpen
             ? 'bg-rose-600 text-white rotate-90'
             : 'bg-gradient-to-tr from-emerald-500 to-teal-400 text-white hover:scale-105 active:scale-95 animate-pulse'
@@ -268,7 +268,7 @@ export default function FloatingDictionary() {
             right: `${Math.min(window.innerWidth - 370, position.x)}px`,
             bottom: `${Math.min(window.innerHeight - 520, position.y + 64)}px`
           }}
-          className="fixed w-[350px] max-h-[480px] bg-slate-900/95 border border-white/10 rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl pointer-events-auto flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200 z-[98] text-white font-sans"
+          className="fixed w-[350px] max-h-[480px] bg-slate-900/95 border border-white/10 rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl pointer-events-auto flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200 z-[99998] text-white font-sans"
         >
           {/* Header */}
           <div className="flex items-center justify-between p-3 border-b border-white/5 bg-white/2">

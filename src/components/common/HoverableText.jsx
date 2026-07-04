@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useDictionary } from '../../hooks/useDictionary';
 
 const cleanDefinition = (vi) => {
@@ -21,7 +22,7 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
   const writerContainerRef = useRef(null);
   const triggerRef = useRef(null);
   const leaveTimeoutRef = useRef(null);
-  const [alignClass, setAlignClass] = useState('left-1/2 -translate-x-1/2');
+  const [coords, setCoords] = useState({ top: 0, left: 0 });
 
   // Reset states when character changes to prevent state leakage from React component reuse
   useEffect(() => {
@@ -43,18 +44,22 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
   useEffect(() => {
     if (isHovered && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
-      const spaceLeft = rect.left;
-      const spaceRight = window.innerWidth - rect.right;
       const tooltipWidth = hideMeaning ? 176 : 288;
-      const halfWidth = tooltipWidth / 2;
+      const tooltipHeight = hideMeaning ? 90 : 140;
 
-      if (spaceLeft < halfWidth + 16) {
-        setAlignClass('left-0 translate-x-0');
-      } else if (spaceRight < halfWidth + 16) {
-        setAlignClass('right-0 left-auto translate-x-0');
-      } else {
-        setAlignClass('left-1/2 -translate-x-1/2');
+      // Calculate horizontal alignment centered on character trigger
+      let left = rect.left + rect.width / 2 - tooltipWidth / 2;
+      // Prevent overflow viewport edges
+      left = Math.max(16, Math.min(window.innerWidth - tooltipWidth - 16, left));
+
+      // Calculate vertical alignment: default above the trigger
+      let top = rect.top - tooltipHeight - 8;
+      // If not enough space above, position below the trigger
+      if (top < 16) {
+        top = rect.bottom + 8;
       }
+
+      setCoords({ top, left });
     }
   }, [isHovered, hideMeaning]);
 
@@ -144,58 +149,65 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
       >
         {children}
 
-      {isHovered && (
-        <span 
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          className={`absolute bottom-full pb-2 z-[999] pointer-events-auto transition-all duration-200 ${alignClass}`}
-        >
+        {isHovered && createPortal(
           <span 
-            onClick={(e) => e.stopPropagation()}
-            className={`p-4 bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl shadow-xl flex gap-3 text-left font-sans normal-case tracking-normal text-slate-800 dark:text-slate-200 ${
-              hideMeaning ? 'w-44' : 'w-72'
-            }`}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            style={{
+              position: 'fixed',
+              top: `${coords.top}px`,
+              left: `${coords.left}px`,
+              zIndex: 99999,
+            }}
+            className="pointer-events-auto transition-all duration-200"
           >
-            {/* Text definition part */}
-            <span className="flex-1 min-w-0 flex flex-col justify-between">
-              <span>
-                <span className="flex items-baseline gap-1.5 mb-1.5 flex-wrap">
-                  <span className="text-xl font-bold font-display text-primary">{char}</span>
-                  {data?.p && <span className="text-xs font-mono font-bold text-ink dark:text-on-dark">{data.p}</span>}
-                  {data?.sv && <span className="text-[10px] font-mono font-bold text-amber-500 uppercase">{data.sv}</span>}
+            <span 
+              onClick={(e) => e.stopPropagation()}
+              className={`p-4 bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl shadow-xl flex gap-3 text-left font-sans normal-case tracking-normal text-slate-800 dark:text-slate-200 ${
+                hideMeaning ? 'w-44' : 'w-72'
+              }`}
+            >
+              {/* Text definition part */}
+              <span className="flex-1 min-w-0 flex flex-col justify-between">
+                <span>
+                  <span className="flex items-baseline gap-1.5 mb-1.5 flex-wrap">
+                    <span className="text-xl font-bold font-display text-primary">{char}</span>
+                    {data?.p && <span className="text-xs font-mono font-bold text-ink dark:text-on-dark">{data.p}</span>}
+                    {data?.sv && <span className="text-[10px] font-mono font-bold text-amber-500 uppercase">{data.sv}</span>}
+                  </span>
+                  {!hideMeaning && (
+                    <span className="block text-xs text-body dark:text-on-dark-mute leading-relaxed font-medium line-clamp-3">
+                      {loading ? 'Đang tải...' : cleanDefinition(data?.vi || '...')}
+                    </span>
+                  )}
                 </span>
-                {!hideMeaning && (
-                  <span className="block text-xs text-body dark:text-on-dark-mute leading-relaxed font-medium line-clamp-3">
-                    {loading ? 'Đang tải...' : cleanDefinition(data?.vi || '...')}
-                  </span>
-                )}
+                
+                <span className="mt-2.5 flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={handleSpeak}
+                    className="text-[9px] bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 rounded font-mono font-bold hover:bg-primary/20 transition cursor-pointer"
+                  >
+                    🔊 Đọc
+                  </button>
+                  {data?.hsk && (
+                    <span className="text-[9px] bg-amber-500/10 border border-amber-500/20 text-amber-500 px-2 py-0.5 rounded font-mono font-bold">
+                      HSK {data.hsk}
+                    </span>
+                  )}
+                </span>
               </span>
-              
-              <span className="mt-2.5 flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={handleSpeak}
-                  className="text-[9px] bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 rounded font-mono font-bold hover:bg-primary/20 transition cursor-pointer"
-                >
-                  🔊 Đọc
-                </button>
-                {data?.hsk && (
-                  <span className="text-[9px] bg-amber-500/10 border border-amber-500/20 text-amber-500 px-2 py-0.5 rounded font-mono font-bold">
-                    HSK {data.hsk}
-                  </span>
-                )}
-              </span>
-            </span>
 
-            {/* Handwriting practice box */}
-            <span className="w-[74px] h-[74px] shrink-0 border border-hairline dark:border-divider-dark bg-surface-bone/35 dark:bg-black/25 rounded-lg flex items-center justify-center p-0.5 relative overflow-hidden select-none">
-              <span ref={writerContainerRef} className="w-[70px] h-[70px]" />
+              {/* Handwriting practice box */}
+              <span className="w-[74px] h-[74px] shrink-0 border border-hairline dark:border-divider-dark bg-surface-bone/35 dark:bg-black/25 rounded-lg flex items-center justify-center p-0.5 relative overflow-hidden select-none">
+                <span ref={writerContainerRef} className="w-[70px] h-[70px]" />
+              </span>
             </span>
-          </span>
-        </span>
-      )}
-    </span>
-  );
+          </span>,
+          document.body
+        )}
+      </span>
+    );
 }
 
 export default function HoverableText({ text, hideMeaning = false, className = "" }) {
