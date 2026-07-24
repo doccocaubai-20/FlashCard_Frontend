@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { updateProfile } from '../features/auth/authSlice';
 import { Sun, Moon, Camera, Check, ShieldAlert, Loader2, Globe } from 'lucide-react';
 import api from '../services/api';
 import { useTheme } from '../context/ThemeContext';
-import { t, SUPPORTED_LANGUAGES } from '../utils/i18n';
 
 const predefinedAvatarSeeds = ['Felix', 'Chloe', 'Buddy', 'Buster', 'Coco', 'Angel'];
 
@@ -13,7 +13,7 @@ export default function SettingsScreen() {
   const user = useSelector((state) => state.auth.user);
   const isLoading = useSelector((state) => state.auth.isLoading);
   const _error = useSelector((state) => state.auth.error);
-  const lang = user?.nativeLanguage || 'vi';
+  const { t } = useTranslation();
 
   // 1. Dark Mode State and Logic
   const { classicTheme, setClassicTheme } = useTheme();
@@ -92,7 +92,7 @@ export default function SettingsScreen() {
           },
         })
       ).unwrap();
-      setProfileMsg(t('save_profile_btn', profileData.nativeLanguage) + ' ' + (profileData.nativeLanguage === 'en' ? 'successfully!' : 'thành công!'));
+      setProfileMsg(t('settings.profile_success'));
     } catch (err) {
       console.error(err);
       setProfileMsg('Cập nhật thất bại. Vui lòng thử lại.');
@@ -123,30 +123,35 @@ export default function SettingsScreen() {
     }
   };
 
+  const languageOptions = [
+    { code: 'vi', name: t('settings.vietnamese'), flag: '🇻🇳' },
+    { code: 'en', name: t('settings.english'), flag: '🇬🇧' },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-16 p-6">
 
       {/* Page Title */}
       <div className="pb-4 border-b border-hairline dark:border-divider-dark">
         <h1 className="text-2xl font-extrabold text-ink dark:text-on-dark font-display tracking-tight">
-          {t('settings_title', lang)}
+          {t('settings.title')}
         </h1>
       </div>
 
       {/* Section 1: Tài khoản */}
       <div className="space-y-3">
         <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
-          {t('account_section', lang)}
+          {t('settings.account')}
         </h2>
         <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md divide-y divide-hairline dark:divide-divider-dark shadow-sm px-6 transition-colors">
           <div className="py-4 flex items-center justify-between">
-            <span className="text-sm font-semibold text-ink dark:text-on-dark">{t('email_address', lang)}</span>
+            <span className="text-sm font-semibold text-ink dark:text-on-dark">{t('settings.email')}</span>
             <span className="text-sm text-body dark:text-on-dark-mute font-medium">{user?.email || 'Chưa thiết lập'}</span>
           </div>
           <div className="py-4 flex items-center justify-between">
-            <span className="text-sm font-semibold text-ink dark:text-on-dark">{t('account_type', lang)}</span>
+            <span className="text-sm font-semibold text-ink dark:text-on-dark">{t('settings.account_type')}</span>
             <span className="inline-flex items-center px-3 py-1 bg-surface-bone dark:bg-surface-dark text-ink dark:text-on-dark text-xs font-bold rounded-full border border-hairline dark:border-divider-dark">
-              {user?.role === 'ADMIN' ? t('admin_role', lang) : t('student_role', lang)}
+              {user?.role === 'ADMIN' ? t('common.admin') : t('common.student')}
             </span>
           </div>
         </div>
@@ -155,7 +160,7 @@ export default function SettingsScreen() {
       {/* Section: Ngôn ngữ mẹ (Native Language) */}
       <div className="space-y-3">
         <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
-          {t('native_language_section', lang)}
+          {t('settings.native_language')}
         </h2>
         <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md shadow-sm p-6 transition-colors space-y-4">
           <div className="flex items-start gap-3">
@@ -164,37 +169,37 @@ export default function SettingsScreen() {
             </div>
             <div>
               <span className="text-sm font-semibold text-ink dark:text-on-dark block">
-                {t('native_language_section', lang)}
+                {t('settings.native_language')}
               </span>
               <span className="text-xs text-mute dark:text-on-dark-mute mt-0.5 block leading-relaxed">
-                {t('native_language_desc', lang)}
+                {t('settings.native_language_desc')}
               </span>
             </div>
           </div>
 
-          {/* Grid of supported language selection cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
-            {SUPPORTED_LANGUAGES.map((item) => {
+          {/* 2 Language Option Cards (vi and en) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            {languageOptions.map((item) => {
               const isSelected = profileData.nativeLanguage === item.code;
               return (
                 <button
                   key={item.code}
                   type="button"
                   onClick={() => setProfileData((prev) => ({ ...prev, nativeLanguage: item.code }))}
-                  className={`p-3.5 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer select-none active:scale-[0.98] ${
+                  className={`p-4 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer select-none active:scale-[0.98] ${
                     isSelected
-                      ? 'border-primary bg-primary/10 text-primary font-bold shadow-xs ring-1 ring-primary'
+                      ? 'border-primary bg-primary/10 text-primary font-bold ring-2 ring-primary/30 shadow-sm'
                       : 'border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/80 text-ink dark:text-on-dark hover:bg-surface-bone dark:hover:bg-black/30'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 overflow-hidden">
-                    <span className="text-xl shrink-0">{item.flag}</span>
-                    <div className="overflow-hidden">
-                      <span className="text-xs font-bold block truncate">{item.name}</span>
-                      <span className="text-[10px] text-mute dark:text-on-dark-mute block font-medium uppercase tracking-wider">{item.code}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl shrink-0">{item.flag}</span>
+                    <div>
+                      <span className="text-sm font-bold block">{item.name}</span>
+                      <span className="text-[11px] text-mute dark:text-on-dark-mute block font-mono uppercase tracking-wider mt-0.5">{item.code}</span>
                     </div>
                   </div>
-                  {isSelected && <Check size={16} className="text-primary shrink-0 ml-1" />}
+                  {isSelected && <Check size={20} className="text-primary shrink-0 ml-2 stroke-[3]" />}
                 </button>
               );
             })}
@@ -204,12 +209,14 @@ export default function SettingsScreen() {
 
       {/* Section 2: Giao diện (Sun/Moon switch) */}
       <div className="space-y-3">
-        <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Giao diện</h2>
+        <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
+          {t('settings.appearance')}
+        </h2>
         <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md shadow-sm px-6 transition-colors">
           <div className="py-5 flex items-center justify-between">
             <div>
-              <span className="text-sm font-semibold text-ink dark:text-on-dark block">Chế độ hiển thị</span>
-              <span className="text-xs text-mute dark:text-on-dark-mute mt-0.5 block">Chọn giao diện sáng (Light) hoặc tối (Dark) cho hệ thống</span>
+              <span className="text-sm font-semibold text-ink dark:text-on-dark block">{t('settings.dark_mode')}</span>
+              <span className="text-xs text-mute dark:text-on-dark-mute mt-0.5 block">{t('settings.dark_mode_desc')}</span>
             </div>
 
             {/* Custom Sun/Moon Switch */}

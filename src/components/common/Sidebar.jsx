@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { logout } from '../../features/auth/authSlice';
-import { t } from '../../utils/i18n';
 import {
   LayoutDashboard,
   BookOpen,
@@ -24,7 +24,7 @@ export default function Sidebar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
-  const lang = user?.nativeLanguage || 'vi';
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -36,42 +36,42 @@ export default function Sidebar() {
   // Grouped menu items to optimize UX navigation flow
   const menuGroups = [
     {
-      title: t('overview', lang),
+      title: t('nav.overview'),
       items: [
-        { to: '/', label: t('nav_dashboard', lang), icon: LayoutDashboard },
-        { to: '/decks', label: t('nav_decks', lang), icon: BookOpen },
-        { to: '/garden', label: t('nav_garden', lang), icon: Sprout },
-        { to: '/leaderboard', label: t('nav_leaderboard', lang), icon: Trophy },
+        { to: '/', label: t('nav.dashboard'), icon: LayoutDashboard },
+        { to: '/decks', label: t('nav.decks'), icon: BookOpen },
+        { to: '/garden', label: t('nav.garden'), icon: Sprout },
+        { to: '/leaderboard', label: t('nav.leaderboard'), icon: Trophy },
       ]
     },
     {
-      title: t('study_practice', lang),
+      title: t('nav.study_practice'),
       items: [
-        { to: '/study-hub', label: t('nav_study_hub', lang), icon: GraduationCap },
-        { to: '/game-arcade', label: t('nav_game_arcade', lang), icon: Gamepad2 },
-        { to: '/hsk-exams', label: t('nav_hsk_exams', lang), icon: ClipboardList },
-        { to: '/chat', label: t('nav_ai_chat', lang), icon: MessageSquare },
+        { to: '/study-hub', label: t('nav.study_hub'), icon: GraduationCap },
+        { to: '/game-arcade', label: t('nav.game_arcade'), icon: Gamepad2 },
+        { to: '/hsk-exams', label: t('nav.hsk_exams'), icon: ClipboardList },
+        { to: '/chat', label: t('nav.ai_chatbot'), icon: MessageSquare },
       ]
     },
     {
-      title: t('reference_tools', lang),
+      title: t('nav.search_tools'),
       items: [
-        { to: '/reference-hub', label: t('nav_reference_hub', lang), icon: Library },
+        { to: '/reference-hub', label: t('nav.reference_hub'), icon: Library },
       ]
     },
     {
-      title: t('system', lang),
+      title: t('nav.system'),
       items: [
-        { to: '/settings', label: t('nav_settings', lang), icon: Settings },
+        { to: '/settings', label: t('nav.settings'), icon: Settings },
       ]
     }
   ];
 
   if (user?.role === 'ADMIN') {
     menuGroups.push({
-      title: t('admin_group', lang),
+      title: t('nav.admin_group'),
       items: [
-        { to: '/admin', label: t('nav_admin', lang), icon: Shield },
+        { to: '/admin', label: t('nav.admin_cms'), icon: Shield },
       ]
     });
   }
@@ -139,7 +139,7 @@ export default function Sidebar() {
             }
           >
             <PlusCircle size={14} className="group-hover:rotate-90 transition-transform duration-300" />
-            <span>Thêm Thẻ mới</span>
+            <span>{t('nav.add_card')}</span>
           </NavLink>
         </div>
 
@@ -204,10 +204,10 @@ export default function Sidebar() {
             </div>
             <div className="flex flex-col overflow-hidden text-left">
               <span className="text-sm font-semibold text-ink dark:text-on-dark leading-none truncate">
-                {user?.name || 'Học viên'}
+                {user?.name || t('common.student')}
               </span>
               <span className="text-[10px] font-bold text-primary dark:text-primary mt-0.5 uppercase tracking-widest">
-                {user?.role === 'ADMIN' ? 'Quản trị' : 'Học viên'}
+                {user?.role === 'ADMIN' ? t('common.admin') : t('common.student')}
               </span>
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function Sidebar() {
           <button
             onClick={handleLogout}
             className="flex items-center justify-center p-1.5 rounded-lg text-mute hover:text-primary hover:bg-primary/8 dark:hover:bg-primary/15 transition-all cursor-pointer"
-            title="Đăng xuất"
+            title={t('common.logout')}
           >
             <LogOut size={15} />
           </button>

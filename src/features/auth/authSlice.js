@@ -1,8 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { authApi } from '../../services/authApi';
+import i18n from '../../i18n';
+
+const syncLanguage = (userData) => {
+  if (userData && userData.nativeLanguage) {
+    const lang = userData.nativeLanguage === 'en' ? 'en' : 'vi';
+    i18n.changeLanguage(lang);
+  }
+};
 
 const token = localStorage.getItem('token') || null;
 const user = token ? JSON.parse(localStorage.getItem('user') || 'null') : null;
+if (user) {
+  syncLanguage(user);
+}
 
 const initialState = {
   user,
@@ -103,6 +114,7 @@ const authSlice = createSlice({
         }
         if (resolvedUser) {
           localStorage.setItem('user', JSON.stringify(resolvedUser));
+          syncLanguage(resolvedUser);
         }
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -125,6 +137,7 @@ const authSlice = createSlice({
         }
         if (resolvedUser) {
           localStorage.setItem('user', JSON.stringify(resolvedUser));
+          syncLanguage(resolvedUser);
         }
       })
       .addCase(loginWithGoogle.rejected, (state, action) => {
@@ -147,6 +160,7 @@ const authSlice = createSlice({
         }
         if (resolvedUser) {
           localStorage.setItem('user', JSON.stringify(resolvedUser));
+          syncLanguage(resolvedUser);
         }
       })
       .addCase(registerUser.rejected, (state, action) => {
@@ -162,6 +176,7 @@ const authSlice = createSlice({
         state.user = action.payload;
         state.isAuthenticated = true;
         state.error = null;
+        syncLanguage(action.payload);
       })
       .addCase(fetchMe.rejected, (state, action) => {
         state.isLoading = false;
@@ -176,6 +191,7 @@ const authSlice = createSlice({
         state.user = action.payload;
         state.error = null;
         localStorage.setItem('user', JSON.stringify(action.payload));
+        syncLanguage(action.payload);
       })
       .addCase(updateProfile.rejected, (state, action) => {
         state.isLoading = false;
