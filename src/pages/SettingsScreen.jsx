@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import i18n from '../i18n';
 import { updateProfile } from '../features/auth/authSlice';
 import { Sun, Moon, Camera, Check, ShieldAlert, Loader2, Globe } from 'lucide-react';
 import api from '../services/api';
@@ -31,6 +32,21 @@ export default function SettingsScreen() {
     nativeLanguage: user?.nativeLanguage || 'vi',
   });
 
+  // Keep profileData in sync if user state updates from redux
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        name: user.name || '',
+        avatarUrl: user.avatarUrl || '',
+        age: user.age || '',
+        nativeLanguage: user.nativeLanguage || 'vi',
+      });
+      if (user.nativeLanguage) {
+        i18n.changeLanguage(user.nativeLanguage === 'en' ? 'en' : 'vi');
+      }
+    }
+  }, [user]);
+
   // 3. Password Form State
   const [passwordData, setPasswordData] = useState({
     password: '',
@@ -41,6 +57,11 @@ export default function SettingsScreen() {
   const [passwordMsg, setPasswordMsg] = useState('');
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarMsg, setAvatarMsg] = useState('');
+
+  const handleLanguageSelect = (code) => {
+    setProfileData((prev) => ({ ...prev, nativeLanguage: code }));
+    i18n.changeLanguage(code);
+  };
 
   // Handle file upload via API → Supabase Storage
   const handleAvatarFileChange = async (e) => {
@@ -92,6 +113,7 @@ export default function SettingsScreen() {
           },
         })
       ).unwrap();
+      i18n.changeLanguage(profileData.nativeLanguage === 'en' ? 'en' : 'vi');
       setProfileMsg(t('settings.profile_success'));
     } catch (err) {
       console.error(err);
@@ -185,7 +207,7 @@ export default function SettingsScreen() {
                 <button
                   key={item.code}
                   type="button"
-                  onClick={() => setProfileData((prev) => ({ ...prev, nativeLanguage: item.code }))}
+                  onClick={() => handleLanguageSelect(item.code)}
                   className={`p-4 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer select-none active:scale-[0.98] ${
                     isSelected
                       ? 'border-primary bg-primary/10 text-primary font-bold ring-2 ring-primary/30 shadow-sm'
@@ -248,7 +270,9 @@ export default function SettingsScreen() {
 
       {/* Section 3: Thông tin cá nhân (Avatar + Form) */}
       <div className="space-y-3">
-        <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Thông tin cá nhân</h2>
+        <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
+          {t('settings.profile_info')}
+        </h2>
         <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md shadow-sm px-6 py-4 transition-colors">
 
           {/* Avatar Management Area */}
@@ -283,7 +307,7 @@ export default function SettingsScreen() {
                 ) : (
                   <Camera size={20} className="text-white/90" />
                 )}
-                <span className="text-white/90">{avatarUploading ? 'Đang tải...' : 'Tải ảnh lên'}</span>
+                <span className="text-white/90">{avatarUploading ? t('common.loading') : t('settings.upload_image')}</span>
               </label>
             </div>
 
@@ -297,7 +321,7 @@ export default function SettingsScreen() {
             {/* Quick Predefined Avatar Selector Gallery */}
             <div className="space-y-2.5 text-center w-full max-w-sm">
               <span className="text-[10px] font-black text-mute dark:text-on-dark-mute uppercase tracking-wider block">
-                Hoặc chọn nhanh Avatar minh hoạ
+                {t('settings.avatar')}
               </span>
               <div className="flex justify-center gap-2 flex-wrap">
                 {predefinedAvatarSeeds.map((seed) => {
@@ -327,7 +351,7 @@ export default function SettingsScreen() {
           {/* Text Profile Form */}
           <form onSubmit={handleProfileSubmit} className="divide-y divide-hairline dark:divide-divider-dark mt-4">
             <div className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <span className="text-sm font-semibold text-ink dark:text-on-dark">Họ và tên</span>
+              <span className="text-sm font-semibold text-ink dark:text-on-dark">{t('settings.display_name')}</span>
               <div className="w-full sm:max-w-md">
                 <input
                   type="text"
@@ -340,7 +364,7 @@ export default function SettingsScreen() {
             </div>
 
             <div className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <span className="text-sm font-semibold text-ink dark:text-on-dark">Tuổi</span>
+              <span className="text-sm font-semibold text-ink dark:text-on-dark">{t('settings.age')}</span>
               <div className="w-full sm:max-w-md">
                 <input
                   type="number"
@@ -353,7 +377,7 @@ export default function SettingsScreen() {
 
             <div className="py-4 flex items-center justify-between gap-4">
               {profileMsg ? (
-                <span className={`text-xs font-semibold ${profileMsg.includes('thành công') ? 'text-emerald-600 dark:text-emerald-400' : 'text-primary'}`}>
+                <span className={`text-xs font-semibold ${profileMsg.includes('thành công') || profileMsg.includes('success') ? 'text-emerald-600 dark:text-emerald-400' : 'text-primary'}`}>
                   {profileMsg}
                 </span>
               ) : <div />}
@@ -362,7 +386,7 @@ export default function SettingsScreen() {
                 disabled={isLoading}
                 className="px-5 py-2.5 bg-primary hover:bg-primary-deep disabled:bg-stone text-white text-sm font-bold rounded-full transition-all cursor-pointer hover:shadow active:scale-[0.98]"
               >
-                {isLoading ? 'Đang lưu...' : 'Lưu thông tin'}
+                {isLoading ? t('common.saving') : t('settings.save_profile')}
               </button>
             </div>
           </form>
@@ -372,11 +396,13 @@ export default function SettingsScreen() {
       {/* Section 4: Mật khẩu (LOCAL accounts only) */}
       {user?.authProvider === 'LOCAL' ? (
         <div className="space-y-3">
-          <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Tài khoản và bảo mật</h2>
+          <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
+            {t('settings.password_section')}
+          </h2>
           <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md shadow-sm px-6 py-2 transition-colors">
             <form onSubmit={handlePasswordSubmit} className="divide-y divide-hairline dark:divide-divider-dark">
               <div className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <span className="text-sm font-semibold text-ink dark:text-on-dark">Mật khẩu mới</span>
+                <span className="text-sm font-semibold text-ink dark:text-on-dark">{t('settings.new_password')}</span>
                 <div className="w-full sm:max-w-md">
                   <input
                     type="password"
@@ -390,7 +416,7 @@ export default function SettingsScreen() {
               </div>
 
               <div className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <span className="text-sm font-semibold text-ink dark:text-on-dark">Xác nhận mật khẩu mới</span>
+                <span className="text-sm font-semibold text-ink dark:text-on-dark">{t('settings.confirm_password')}</span>
                 <div className="w-full sm:max-w-md">
                   <input
                     type="password"
@@ -405,7 +431,7 @@ export default function SettingsScreen() {
 
               <div className="py-4 flex items-center justify-between gap-4">
                 {passwordMsg ? (
-                  <span className={`text-xs font-semibold ${passwordMsg.includes('thành công') ? 'text-emerald-600 dark:text-emerald-400' : 'text-primary'}`}>
+                  <span className={`text-xs font-semibold ${passwordMsg.includes('thành công') || passwordMsg.includes('success') ? 'text-emerald-600 dark:text-emerald-400' : 'text-primary'}`}>
                     {passwordMsg}
                   </span>
                 ) : <div />}
@@ -414,7 +440,7 @@ export default function SettingsScreen() {
                   disabled={isLoading}
                   className="px-5 py-2.5 bg-primary hover:bg-primary-deep disabled:bg-stone text-white text-sm font-bold rounded-full transition-all cursor-pointer hover:shadow active:scale-[0.98]"
                 >
-                  {isLoading ? 'Đang đổi...' : 'Đổi mật khẩu'}
+                  {isLoading ? t('common.saving') : t('settings.change_password')}
                 </button>
               </div>
             </form>
