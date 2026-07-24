@@ -2,6 +2,48 @@ import React from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import HoverableText from '../common/HoverableText';
 
+function parsePosAndMeaning(meaning) {
+  if (!meaning) return { pos: '', meaning: '' };
+  
+  // Kiểm tra cấu trúc dạng: (Từ loại) Nghĩa của từ
+  const match = meaning.match(/^\s*\(\s*([^)]+)\s*\)\s*(.*)$/);
+  if (match) {
+    const rawPos = match[1].trim();
+    const cleanMeaning = match[2].trim();
+    const posLower = rawPos.toLowerCase();
+    let posAbbr = rawPos;
+    
+    if (posLower === 'danh từ' || posLower === 'n' || posLower === 'noun') {
+      posAbbr = 'n';
+    } else if (posLower === 'động từ' || posLower === 'v' || posLower === 'verb') {
+      posAbbr = 'v';
+    } else if (posLower === 'tính từ' || posLower === 'adj' || posLower === 'adjective') {
+      posAbbr = 'adj';
+    } else if (posLower === 'đại từ' || posLower === 'pron' || posLower === 'pronoun') {
+      posAbbr = 'pron';
+    } else if (posLower === 'phó từ' || posLower === 'trạng từ' || posLower === 'adv' || posLower === 'adverb') {
+      posAbbr = 'adv';
+    } else if (posLower === 'giới từ' || posLower === 'prep' || posLower === 'preposition') {
+      posAbbr = 'prep';
+    } else if (posLower === 'liên từ' || posLower === 'conj' || posLower === 'conjunction') {
+      posAbbr = 'conj';
+    } else if (posLower === 'thán từ' || posLower === 'int' || posLower === 'interjection') {
+      posAbbr = 'int';
+    } else if (posLower === 'trợ từ' || posLower === 'part' || posLower === 'particle') {
+      posAbbr = 'part';
+    } else if (posLower === 'lượng từ' || posLower === 'm' || posLower === 'measure word' || posLower === 'classifier') {
+      posAbbr = 'm';
+    } else if (posLower === 'số từ' || posLower === 'num' || posLower === 'numeral') {
+      posAbbr = 'num';
+    } else if (posLower === 'trợ động từ' || posLower === 'aux' || posLower === 'auxiliary verb') {
+      posAbbr = 'aux';
+    }
+    
+    return { pos: posAbbr, meaning: cleanMeaning };
+  }
+  return { pos: '', meaning: meaning };
+}
+
 export default function Flashcard({ 
   cardData, 
   isFlipped, 
@@ -11,6 +53,7 @@ export default function Flashcard({
   onTogglePinyinOnFront
 }) {
   const { character: frontChar, pinyin: frontPinyin, meaning: frontMeaning } = cardData || {};
+  const { pos: frontPos, meaning: cleanFrontMeaning } = parsePosAndMeaning(frontMeaning);
   const [backCardData, setBackCardData] = React.useState(cardData);
 
   React.useEffect(() => {
@@ -25,6 +68,7 @@ export default function Flashcard({
   }, [isFlipped, cardData]);
 
   const { character: backChar, pinyin: backPinyin, meaning: backMeaning } = backCardData || {};
+  const { pos: backPos, meaning: cleanBackMeaning } = parsePosAndMeaning(backMeaning);
 
   const cardStyle = {
     transformStyle: 'preserve-3d',
@@ -92,11 +136,16 @@ export default function Flashcard({
                 </div>
               </div>
             ) : (
-              <>
+              <div className="flex flex-col items-center gap-2">
                 <div className="text-3xl font-display font-extrabold tracking-tight max-w-md px-4 leading-normal text-primary">
-                  {frontMeaning || 'Nghĩa tiếng Việt...'}
+                  {cleanFrontMeaning || 'Nghĩa tiếng Việt...'}
                 </div>
-              </>
+                {frontPos && (
+                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 bg-primary/10 text-primary rounded-full mt-2 tracking-wider">
+                    {frontPos}
+                  </span>
+                )}
+              </div>
             )}
           </div>
 
@@ -123,8 +172,13 @@ export default function Flashcard({
               <div className="mt-2 text-2xl font-mono font-bold text-ink dark:text-on-dark">
                 {backPinyin || 'hàn'}
               </div>
-              <div className="mt-4 text-lg font-medium text-body dark:text-on-dark-mute border-l-4 border-primary pl-3 leading-relaxed">
-                {backMeaning || 'nghĩa tiếng Việt...'}
+              <div className="mt-4 text-lg font-medium text-body dark:text-on-dark-mute border-l-4 border-primary pl-3 leading-relaxed flex flex-col items-start gap-1">
+                <div>{cleanBackMeaning || 'nghĩa tiếng Việt...'}</div>
+                {backPos && (
+                  <span className="text-[11px] font-mono font-bold px-2 py-0.5 bg-primary/10 text-primary rounded-full mt-1.5 tracking-wider">
+                    {backPos}
+                  </span>
+                )}
               </div>
             </div>
           </div>

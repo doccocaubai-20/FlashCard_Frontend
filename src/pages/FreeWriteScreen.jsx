@@ -25,6 +25,7 @@ export default function FreeWriteScreen() {
   const [mode, setMode] = useState('idle'); // idle, quiz
   const [activeCharIndex, setActiveCharIndex] = useState(0);
   const [resetKey, setResetKey] = useState(0);
+  const [showOutline, setShowOutline] = useState(false);
 
   // Quiz grading states
   const [quizScore, setQuizScore] = useState(100);
@@ -416,7 +417,7 @@ export default function FreeWriteScreen() {
       width: 220,
       height: 220,
       padding: 5,
-      showOutline: true,
+      showOutline: showOutline,
       strokeColor,
       outlineColor,
       drawingColor,
@@ -427,7 +428,7 @@ export default function FreeWriteScreen() {
 
     writerRef.current = writer;
     setMode('idle');
-  }, [targetChar, resetKey]);
+  }, [targetChar, resetKey, showOutline]);
 
   const handleAnimate = () => {
     if (!writerRef.current) return;
@@ -589,6 +590,16 @@ export default function FreeWriteScreen() {
                 Làm mới
               </button>
             </div>
+
+            <label className="flex items-center gap-2 text-xs font-bold text-mute dark:text-on-dark-mute cursor-pointer select-none mt-1.5">
+              <input
+                type="checkbox"
+                checked={showOutline}
+                onChange={(e) => setShowOutline(e.target.checked)}
+                className="rounded text-primary focus:ring-primary border-hairline dark:border-white/10"
+              />
+              Hiện nét gợi ý
+            </label>
           </div>
         ) : (
           <div className="lg:col-span-5 bg-surface-card dark:bg-surface-dark/30 p-6 rounded-xl border border-dashed border-hairline dark:border-white/5 shadow-sm flex flex-col items-center justify-center py-20 text-mute text-center min-h-[550px] transition-colors">

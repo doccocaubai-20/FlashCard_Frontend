@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../features/auth/authSlice';
-import { Sun, Moon, Camera, Check, ShieldAlert, Loader2 } from 'lucide-react';
+import { Sun, Moon, Camera, Check, ShieldAlert, Loader2, Globe } from 'lucide-react';
 import api from '../services/api';
 import { useTheme } from '../context/ThemeContext';
-
+import { t, SUPPORTED_LANGUAGES } from '../utils/i18n';
 
 const predefinedAvatarSeeds = ['Felix', 'Chloe', 'Buddy', 'Buster', 'Coco', 'Angel'];
 
@@ -13,6 +13,7 @@ export default function SettingsScreen() {
   const user = useSelector((state) => state.auth.user);
   const isLoading = useSelector((state) => state.auth.isLoading);
   const _error = useSelector((state) => state.auth.error);
+  const lang = user?.nativeLanguage || 'vi';
 
   // 1. Dark Mode State and Logic
   const { classicTheme, setClassicTheme } = useTheme();
@@ -22,13 +23,12 @@ export default function SettingsScreen() {
     setClassicTheme(nextVal ? 'dark' : 'light');
   };
 
-
-
   // 2. Profile Form State
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
     avatarUrl: user?.avatarUrl || '',
     age: user?.age || '',
+    nativeLanguage: user?.nativeLanguage || 'vi',
   });
 
   // 3. Password Form State
@@ -88,10 +88,11 @@ export default function SettingsScreen() {
             name: profileData.name,
             avatarUrl: profileData.avatarUrl,
             age: profileData.age ? Number(profileData.age) : null,
+            nativeLanguage: profileData.nativeLanguage,
           },
         })
       ).unwrap();
-      setProfileMsg('Cập nhật thông tin cá nhân thành công!');
+      setProfileMsg(t('save_profile_btn', profileData.nativeLanguage) + ' ' + (profileData.nativeLanguage === 'en' ? 'successfully!' : 'thành công!'));
     } catch (err) {
       console.error(err);
       setProfileMsg('Cập nhật thất bại. Vui lòng thử lại.');
@@ -127,22 +128,76 @@ export default function SettingsScreen() {
 
       {/* Page Title */}
       <div className="pb-4 border-b border-hairline dark:border-divider-dark">
-        <h1 className="text-2xl font-extrabold text-ink dark:text-on-dark font-display tracking-tight">Cài đặt</h1>
+        <h1 className="text-2xl font-extrabold text-ink dark:text-on-dark font-display tracking-tight">
+          {t('settings_title', lang)}
+        </h1>
       </div>
 
       {/* Section 1: Tài khoản */}
       <div className="space-y-3">
-        <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Tài khoản</h2>
+        <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
+          {t('account_section', lang)}
+        </h2>
         <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md divide-y divide-hairline dark:divide-divider-dark shadow-sm px-6 transition-colors">
           <div className="py-4 flex items-center justify-between">
-            <span className="text-sm font-semibold text-ink dark:text-on-dark">Địa chỉ email</span>
+            <span className="text-sm font-semibold text-ink dark:text-on-dark">{t('email_address', lang)}</span>
             <span className="text-sm text-body dark:text-on-dark-mute font-medium">{user?.email || 'Chưa thiết lập'}</span>
           </div>
           <div className="py-4 flex items-center justify-between">
-            <span className="text-sm font-semibold text-ink dark:text-on-dark">Loại tài khoản</span>
+            <span className="text-sm font-semibold text-ink dark:text-on-dark">{t('account_type', lang)}</span>
             <span className="inline-flex items-center px-3 py-1 bg-surface-bone dark:bg-surface-dark text-ink dark:text-on-dark text-xs font-bold rounded-full border border-hairline dark:border-divider-dark">
-              {user?.role === 'ADMIN' ? 'Quản trị viên' : 'Học viên'}
+              {user?.role === 'ADMIN' ? t('admin_role', lang) : t('student_role', lang)}
             </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Section: Ngôn ngữ mẹ (Native Language) */}
+      <div className="space-y-3">
+        <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
+          {t('native_language_section', lang)}
+        </h2>
+        <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md shadow-sm p-6 transition-colors space-y-4">
+          <div className="flex items-start gap-3">
+            <div className="p-2.5 bg-primary/10 text-primary rounded-xl shrink-0 mt-0.5">
+              <Globe size={20} />
+            </div>
+            <div>
+              <span className="text-sm font-semibold text-ink dark:text-on-dark block">
+                {t('native_language_section', lang)}
+              </span>
+              <span className="text-xs text-mute dark:text-on-dark-mute mt-0.5 block leading-relaxed">
+                {t('native_language_desc', lang)}
+              </span>
+            </div>
+          </div>
+
+          {/* Grid of supported language selection cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
+            {SUPPORTED_LANGUAGES.map((item) => {
+              const isSelected = profileData.nativeLanguage === item.code;
+              return (
+                <button
+                  key={item.code}
+                  type="button"
+                  onClick={() => setProfileData((prev) => ({ ...prev, nativeLanguage: item.code }))}
+                  className={`p-3.5 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer select-none active:scale-[0.98] ${
+                    isSelected
+                      ? 'border-primary bg-primary/10 text-primary font-bold shadow-xs ring-1 ring-primary'
+                      : 'border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/80 text-ink dark:text-on-dark hover:bg-surface-bone dark:hover:bg-black/30'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 overflow-hidden">
+                    <span className="text-xl shrink-0">{item.flag}</span>
+                    <div className="overflow-hidden">
+                      <span className="text-xs font-bold block truncate">{item.name}</span>
+                      <span className="text-[10px] text-mute dark:text-on-dark-mute block font-medium uppercase tracking-wider">{item.code}</span>
+                    </div>
+                  </div>
+                  {isSelected && <Check size={16} className="text-primary shrink-0 ml-1" />}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

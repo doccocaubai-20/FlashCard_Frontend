@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { logout } from '../../features/auth/authSlice';
+import { t } from '../../utils/i18n';
 import {
   LayoutDashboard,
   BookOpen,
@@ -23,6 +24,7 @@ export default function Sidebar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  const lang = user?.nativeLanguage || 'vi';
 
   const handleLogout = () => {
     dispatch(logout());
@@ -34,42 +36,42 @@ export default function Sidebar() {
   // Grouped menu items to optimize UX navigation flow
   const menuGroups = [
     {
-      title: 'Tổng quan',
+      title: t('overview', lang),
       items: [
-        { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-        { to: '/decks', label: 'Bộ bài', icon: BookOpen },
-        { to: '/garden', label: 'Vườn từ vựng', icon: Sprout },
-        { to: '/leaderboard', label: 'Bảng xếp hạng', icon: Trophy },
+        { to: '/', label: t('nav_dashboard', lang), icon: LayoutDashboard },
+        { to: '/decks', label: t('nav_decks', lang), icon: BookOpen },
+        { to: '/garden', label: t('nav_garden', lang), icon: Sprout },
+        { to: '/leaderboard', label: t('nav_leaderboard', lang), icon: Trophy },
       ]
     },
     {
-      title: 'Học & Ôn luyện',
+      title: t('study_practice', lang),
       items: [
-        { to: '/study-hub', label: 'Khu học tập HSK', icon: GraduationCap },
-        { to: '/game-arcade', label: 'Đấu trường game', icon: Gamepad2 },
-        { to: '/hsk-exams', label: 'Luyện đề HSK', icon: ClipboardList },
-        { to: '/chat', label: 'AI Chatbot', icon: MessageSquare },
+        { to: '/study-hub', label: t('nav_study_hub', lang), icon: GraduationCap },
+        { to: '/game-arcade', label: t('nav_game_arcade', lang), icon: Gamepad2 },
+        { to: '/hsk-exams', label: t('nav_hsk_exams', lang), icon: ClipboardList },
+        { to: '/chat', label: t('nav_ai_chat', lang), icon: MessageSquare },
       ]
     },
     {
-      title: 'Tra cứu & Công cụ',
+      title: t('reference_tools', lang),
       items: [
-        { to: '/reference-hub', label: 'Tra cứu & Thư viện', icon: Library },
+        { to: '/reference-hub', label: t('nav_reference_hub', lang), icon: Library },
       ]
     },
     {
-      title: 'Hệ thống',
+      title: t('system', lang),
       items: [
-        { to: '/settings', label: 'Cài đặt', icon: Settings },
+        { to: '/settings', label: t('nav_settings', lang), icon: Settings },
       ]
     }
   ];
 
   if (user?.role === 'ADMIN') {
     menuGroups.push({
-      title: 'Quản trị (Admin)',
+      title: t('admin_group', lang),
       items: [
-        { to: '/admin', label: 'Admin CMS', icon: Shield },
+        { to: '/admin', label: t('nav_admin', lang), icon: Shield },
       ]
     });
   }

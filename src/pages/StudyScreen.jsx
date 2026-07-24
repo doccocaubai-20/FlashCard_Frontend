@@ -36,6 +36,7 @@ function WritingPractice({ character }) {
   const containerRef = useRef(null);
   const writerRef = useRef(null);
   const [mode, setMode] = useState('idle'); // idle, quiz
+  const [showOutline, setShowOutline] = useState(false);
   const { showToast } = useToast();
 
   const cleanChar = character.split(/[｜|]/)[0].trim();
@@ -60,7 +61,7 @@ function WritingPractice({ character }) {
       width: 200,
       height: 200,
       padding: 5,
-      showOutline: true,
+      showOutline: showOutline,
       strokeColor,
       outlineColor,
       drawingColor,
@@ -71,7 +72,7 @@ function WritingPractice({ character }) {
 
     writerRef.current = writer;
     setMode('idle');
-  }, [targetChar]);
+  }, [targetChar, showOutline]);
 
   const handleAnimate = () => {
     if (!writerRef.current) return;
@@ -154,6 +155,17 @@ function WritingPractice({ character }) {
           Làm mới
         </button>
       </div>
+
+      <label className="flex items-center gap-2 text-xs font-bold text-mute dark:text-on-dark-mute cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={showOutline}
+          onChange={(e) => setShowOutline(e.target.checked)}
+          className="rounded text-primary focus:ring-primary border-hairline dark:border-white/10"
+        />
+        Hiện nét gợi ý
+      </label>
+
       <p className="text-[10px] text-mute dark:text-on-dark-mute leading-relaxed text-center max-w-[240px]">
         {mode === 'quiz' 
           ? 'Hãy vẽ các nét theo đúng thứ tự hiển thị. Thư viện sẽ tự động chấm điểm nét vẽ của bạn.' 
