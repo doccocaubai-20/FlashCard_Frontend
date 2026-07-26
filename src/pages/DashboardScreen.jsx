@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { fetchSummary, fetchHeatmap } from '../features/stats/statsSlice';
 import { fetchAllDecks } from '../features/deck/deckSlice';
 import { statsApi } from '../services/statsApi';
@@ -8,15 +9,14 @@ import {
   Sparkles, Volume2, Star, PenTool,
   BookOpen, Gamepad2, Search, PlusCircle,
   ArrowRight, ChevronRight, Flame, GraduationCap,
-  Trophy, Settings, Shield, ShoppingBag, LayoutGrid, HelpCircle,
-  TrendingUp, Award, User, RefreshCw, X, ShoppingCart, MessageSquare, CheckCircle2,
+  Trophy, ShoppingBag, LayoutGrid,
+  TrendingUp, Award, RefreshCw, X, ShoppingCart, CheckCircle2,
   Loader2, Trash2
 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { dictionaryApi } from '../services/dictionaryApi';
 import { speakChinese } from '../utils/tts';
 import { useTheme } from '../context/ThemeContext';
-import ZenGarden from '../components/stats/ZenGarden';
 
 
 
@@ -178,7 +178,7 @@ function HeroWord() {
   );
 }
 
-function MiniWeekStrip({ data = [], streak = 0 }) {
+function MiniWeekStrip({ data = [], _streak = 0 }) {
   const dayLabels = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
   const today = new Date();
 
@@ -232,18 +232,6 @@ function MiniWeekStrip({ data = [], streak = 0 }) {
   );
 }
 
-const getQuestIcon = (type) => {
-  switch (type) {
-    case 'STUDY_CARDS': return <BookOpen size={14} className="text-blue-400" />;
-    case 'AI_CHAT': return <MessageSquare size={14} className="text-green-400" />;
-    case 'DICTIONARY_LOOKUP': return <Search size={14} className="text-teal-400" />;
-    case 'FAVORITE_WORD': return <Star size={14} className="text-yellow-400" />;
-    case 'PLAY_GAME': return <Gamepad2 size={14} className="text-purple-400" />;
-    case 'WRITE_PRACTICE': return <PenTool size={14} className="text-rose-400" />;
-    case 'SPEAK_PRACTICE': return <Volume2 size={14} className="text-amber-400" />;
-    default: return <Sparkles size={14} className="text-primary" />;
-  }
-};
 
 // ─────────────────────────────────────────────────────────────
 // MAIN COMPONENT
@@ -251,6 +239,7 @@ const getQuestIcon = (type) => {
 export default function DashboardScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Core Global States
   const user = useSelector((state) => state.auth.user);
@@ -279,23 +268,15 @@ export default function DashboardScreen() {
   // Dynamic Daily HSK Quiz state
   const [dailyQuiz, setDailyQuiz] = useState(null);
   const [quizLoading, setQuizLoading] = useState(true);
-  const [rightPanelTab, setRightPanelTab] = useState('quests'); // 'quests' | 'quiz'
-
-  const [quests, setQuests] = useState([]);
-  const [questsLoading, setQuestsLoading] = useState(true);
 
   const [gardenSummary, setGardenSummary] = useState(null);
-  const [gardenLoading, setGardenLoading] = useState(true);
 
   const loadGardenSummary = async () => {
     try {
-      setGardenLoading(true);
       const res = await statsApi.getGardenState();
       setGardenSummary(res.data);
     } catch (err) {
       console.error('Failed to load garden summary:', err);
-    } finally {
-      setGardenLoading(false);
     }
   };
 
@@ -315,23 +296,10 @@ export default function DashboardScreen() {
     }
   };
 
-  const loadQuests = async () => {
-    try {
-      setQuestsLoading(true);
-      const res = await statsApi.getQuests();
-      setQuests(res.data || []);
-    } catch (err) {
-      console.error('Failed to load quests:', err);
-    } finally {
-      setQuestsLoading(false);
-    }
-  };
-
   useEffect(() => {
     dispatch(fetchSummary());
     dispatch(fetchHeatmap());
     dispatch(fetchAllDecks());
-    loadQuests();
     loadDailyQuiz();
   }, [dispatch]);
 
@@ -349,12 +317,12 @@ export default function DashboardScreen() {
   const xpProgress = xp % 1000; // xp progress in current level (0 to 1000)
   
   const getScholarTitle = (lvl) => {
-    if (lvl >= 50) return 'Trạng Nguyên';
-    if (lvl >= 35) return 'Thám Hoa';
-    if (lvl >= 25) return 'Tiến Sĩ';
-    if (lvl >= 15) return 'Cử Nhân';
-    if (lvl >= 6) return 'Tú Tài';
-    return 'Đồng Sinh';
+    if (lvl >= 50) return t('dashboard.title_trang_nguyen');
+    if (lvl >= 35) return t('dashboard.title_tham_hoa');
+    if (lvl >= 25) return t('dashboard.title_tien_si');
+    if (lvl >= 15) return t('dashboard.title_cu_nhan');
+    if (lvl >= 6) return t('dashboard.title_tu_tai');
+    return t('dashboard.title_dong_sinh');
   };
   const scholarTitle = getScholarTitle(userLevel);
 
@@ -366,7 +334,7 @@ export default function DashboardScreen() {
     const opt = dailyQuiz.options[selectedQuizOption];
     if (opt.isCorrect) {
       setQuizStatus('correct');
-      setQuizFeedback('Chính xác! Bạn nhận được +20 XP và +10 ChongZi Coins!');
+      setQuizFeedback(t('dashboard.quiz_correct_feedback'));
       const todayStr = new Date().toISOString().split('T')[0];
       try {
         localStorage.setItem('chongzi_daily_quiz_completed', todayStr);
@@ -383,26 +351,26 @@ export default function DashboardScreen() {
       }
     } else {
       setQuizStatus('incorrect');
-      setQuizFeedback('Đáp án chưa chính xác, hãy thử lại nhé!');
+      setQuizFeedback(t('dashboard.quiz_incorrect_feedback'));
     }
   };
 
   // Buy item from shop
   const handleBuyItem = async (itemName, price) => {
     if (coins < price) {
-      setShopFeedback('Số lượng xu ChongZi tích lũy không đủ!');
+      setShopFeedback(t('dashboard.shop_feedback_fail'));
       setTimeout(() => setShopFeedback(''), 3000);
       return;
     }
 
     try {
       await statsApi.buyItem(price, itemName);
-      setShopFeedback('Mua vật phẩm thành công!');
+      setShopFeedback(t('dashboard.shop_feedback_success'));
       setTimeout(() => setShopFeedback(''), 3000);
       dispatch(fetchSummary()); // Refresh stats & inventory in DB
     } catch (err) {
       console.error(err);
-      setShopFeedback(err.response?.data?.message || 'Lỗi máy chủ khi thanh toán.');
+      setShopFeedback(err.response?.data?.message || t('common.error'));
       setTimeout(() => setShopFeedback(''), 3000);
     }
   };
@@ -675,10 +643,10 @@ export default function DashboardScreen() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
         <div>
           <span className="text-[9px] font-sans font-bold uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">
-            {scholarTitle} (Cấp {userLevel})
+            {scholarTitle} ({t('common.level')} {userLevel})
           </span>
           <h1 className="text-xl font-bold font-sans tracking-tight text-white mt-1">
-            Chào buổi chiều, {firstName}!
+            {t('dashboard.welcome_time')} {firstName}!
           </h1>
         </div>
 
@@ -686,25 +654,25 @@ export default function DashboardScreen() {
         <div className="flex items-center gap-3 bg-white/5 border border-white/10 backdrop-blur-md px-4 py-2 rounded-full shadow-md w-fit">
           {xpBoostTimeLeft && (
             <>
-              <div className="flex items-center gap-1 text-xs font-black text-purple-400 animate-pulse" title="Thần dược nhân đôi XP đang hiệu lực!">
+              <div className="flex items-center gap-1 text-xs font-black text-purple-400 animate-pulse" title={t('dashboard.booster_potion')}>
                 <span>⚡ X2 XP: {xpBoostTimeLeft}</span>
               </div>
               <div className="h-3 w-px bg-white/15" />
             </>
           )}
-          <div className="flex items-center gap-1 text-xs font-semibold text-amber-500" title="Chuỗi ôn tập liên tục">
+          <div className="flex items-center gap-1 text-xs font-semibold text-amber-500" title={t('dashboard.streak_days')}>
             <Flame size={14} className="fill-current" />
-            <span>{streak} ngày</span>
+            <span>{streak} {t('common.days')}</span>
           </div>
           <div className="h-3 w-px bg-white/15" />
-          <div className="flex items-center gap-1 text-xs font-semibold text-blue-400" title="Điểm kinh nghiệm tích lũy">
+          <div className="flex items-center gap-1 text-xs font-semibold text-blue-400" title={t('dashboard.xp_points')}>
             <TrendingUp size={14} />
             <span>{xp.toLocaleString()} XP</span>
           </div>
           <div className="h-3 w-px bg-white/15" />
-          <div className="flex items-center gap-1 text-xs font-semibold text-yellow-400" title="ChongZi Coins">
+          <div className="flex items-center gap-1 text-xs font-semibold text-yellow-400" title={t('dashboard.coins')}>
             <Award size={14} />
-            <span>{coins} Xu</span>
+            <span>{coins} {t('dashboard.coins')}</span>
           </div>
           <div className="h-3 w-px bg-white/15" />
           
@@ -712,10 +680,10 @@ export default function DashboardScreen() {
           <button
             onClick={toggleViewMode}
             className="text-[10px] font-bold text-white/70 hover:text-primary flex items-center gap-1 transition-colors cursor-pointer"
-            title="Quay lại giao diện truyền thống"
+            title={t('settings.appearance')}
           >
             <RefreshCw size={11} />
-            <span>Giao diện cũ</span>
+            <span>{t('settings.appearance')}</span>
           </button>
         </div>
       </div>
@@ -929,126 +897,27 @@ export default function DashboardScreen() {
             <div className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-blue-500/5 blur-2xl pointer-events-none" />
             
             <div className="flex flex-col h-full justify-between">
-            {/* Tab Header Selectors */}
-            <div className="flex bg-white/5 border border-white/10 rounded-xl p-1 mb-3 shrink-0">
-              <button
-                onClick={() => setRightPanelTab('quests')}
-                className={`flex-1 text-center py-1.5 rounded-lg text-[10px] font-black tracking-wider uppercase transition-all cursor-pointer ${
-                  rightPanelTab === 'quests'
-                    ? 'bg-primary text-slate-950 font-bold'
-                    : 'text-white/60 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                Nhiệm vụ
-              </button>
-              <button
-                onClick={() => setRightPanelTab('quiz')}
-                className={`flex-1 text-center py-1.5 rounded-lg text-[10px] font-black tracking-wider uppercase transition-all cursor-pointer ${
-                  rightPanelTab === 'quiz'
-                    ? 'bg-primary text-slate-950 font-bold'
-                    : 'text-white/60 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                Thử thách
-              </button>
-            </div>
-
-            {/* Tab Content Area */}
-            <div className="flex-1 flex flex-col justify-between min-h-0">
-              {rightPanelTab === 'quests' ? (
-                // TAB 1: QUESTS & WEEK PROGRESS
-                <div className="flex flex-col justify-between h-full flex-1">
-                  <div className="space-y-2 max-h-[170px] overflow-y-auto pr-1">
-                    {questsLoading ? (
-                      <div className="py-8 flex justify-center items-center">
-                        <Loader2 size={18} className="animate-spin text-white/40" />
-                      </div>
-                    ) : (
-                      quests.map((q) => {
-                        const percent = Math.min(100, Math.round((q.progress / q.target) * 100));
-                        return (
-                          <div
-                            key={q.id}
-                            className={`p-2 rounded-xl border transition-all ${
-                              q.completed
-                                ? 'bg-green-500/10 border-green-500/20 text-white/80'
-                                : 'bg-white/5 border-white/5 hover:bg-white/10 text-white'
-                            }`}
-                          >
-                            <div className="flex items-start justify-between gap-1">
-                              <div className="flex items-start gap-1.5 min-w-0 flex-1">
-                                <div className={`p-1 rounded-md shrink-0 ${q.completed ? 'bg-green-500/15' : 'bg-white/5'}`}>
-                                  {getQuestIcon(q.questType)}
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                  <h4 className={`text-[10px] font-bold truncate ${q.completed ? 'text-green-400 line-through' : 'text-white'}`}>
-                                    {q.title}
-                                  </h4>
-                                </div>
-                              </div>
-                              <div className="text-right shrink-0">
-                                <span className="text-[9px] font-mono font-bold block">
-                                  {q.progress}/{q.target}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden mt-1.5 border border-white/5">
-                              <div
-                                className={`h-full rounded-full transition-all duration-500 ${
-                                  q.completed ? 'bg-green-500' : 'bg-sky-400'
-                                }`}
-                                style={{ width: `${percent}%` }}
-                              />
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
-
-                  {/* Weekly Progress bar */}
-                  <div className="border-t border-white/10 pt-3 mt-3 flex items-center justify-between gap-3 shrink-0">
-                    <div className="relative flex items-center justify-center shrink-0">
-                      <svg width="60" height="60" className="transform -rotate-90">
-                        <circle cx="30" cy="30" r="24" stroke="rgba(255,255,255,0.06)" strokeWidth="4" fill="transparent" />
-                        <circle
-                          cx="30"
-                          cy="30"
-                          r="24"
-                          stroke="#ea2804"
-                          strokeWidth="4"
-                          fill="transparent"
-                          strokeDasharray={2 * Math.PI * 24}
-                          strokeDashoffset={2 * Math.PI * 24 * (1 - Math.min(1, studiedCards / dailyTarget))}
-                          strokeLinecap="round"
-                          className="transition-all duration-500"
-                        />
-                      </svg>
-                      <div className="absolute flex flex-col items-center justify-center">
-                        <span className="text-[10px] font-black tracking-tighter text-white">
-                          {Math.round(Math.min(100, (studiedCards / dailyTarget) * 100))}%
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-[8px] font-sans font-bold text-white/50 uppercase tracking-widest block">MỤC TIÊU TUẦN</span>
-                      <span className="text-[11px] text-white font-bold block mt-0.5">Đã ôn {studiedCards}/{dailyTarget} thẻ</span>
-                    </div>
-                  </div>
+              {/* Card Header */}
+              <div className="flex items-center justify-between mb-3 shrink-0">
+                <div className="flex items-center gap-1.5">
+                  <Sparkles size={14} className="text-primary animate-pulse" />
+                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">{t('dashboard.hsk_challenge')}</h3>
                 </div>
-              ) : (
-                // TAB 2: DYNAMIC DAILY HSK QUIZ
+              </div>
+
+              {/* Tab Content Area */}
+              <div className="flex-1 flex flex-col justify-between min-h-0">
                 <div className="flex flex-col justify-between h-full flex-1">
                   {quizLoading ? (
                     <div className="py-12 flex flex-col justify-center items-center gap-2">
                       <Loader2 size={20} className="animate-spin text-white/40" />
-                      <span className="text-[10px] text-white/40">Đang chuẩn bị câu hỏi...</span>
+                      <span className="text-[10px] text-white/40">{t('dashboard.preparing_quiz')}</span>
                     </div>
                   ) : dailyQuiz ? (
                     <div className="flex-1 flex flex-col justify-between">
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-widest">TRẮC NGHIỆM ĐỘNG</span>
+                          <span className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-widest">{t('dashboard.dynamic_quiz')}</span>
                           <span className="text-[8px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">+20 XP</span>
                         </div>
                         <h3 className="text-[11px] font-bold text-white leading-relaxed mb-3">
@@ -1069,7 +938,7 @@ export default function DashboardScreen() {
                             >
                               <span className="truncate pr-2">{opt.text}</span>
                               {hasCompletedTodayQuiz && opt.isCorrect && (
-                                <span className="text-[8px] font-black uppercase text-green-400 bg-green-500/10 px-1.5 py-0.2 rounded border border-green-500/20">ĐÚNG</span>
+                                <span className="text-[8px] font-black uppercase text-green-400 bg-green-500/10 px-1.5 py-0.2 rounded border border-green-500/20">{t('common.correct', 'ĐÚNG')}</span>
                               )}
                             </button>
                           ))}
@@ -1078,7 +947,7 @@ export default function DashboardScreen() {
 
                       <div className="border-t border-white/5 pt-2.5 mt-3 flex items-center justify-between gap-2 shrink-0">
                         <span className="text-[9px] text-white/40 leading-snug truncate max-w-[120px]">
-                          {quizStatus === 'idle' ? 'Trả lời để nhận thưởng' : quizFeedback}
+                          {quizStatus === 'idle' ? t('dashboard.quiz_desc') : quizFeedback}
                         </span>
                         {!hasCompletedTodayQuiz ? (
                           <button
@@ -1090,40 +959,69 @@ export default function DashboardScreen() {
                                 : 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed'
                             }`}
                           >
-                            Gửi đi
+                            {t('dashboard.submit')}
                           </button>
                         ) : (
-                          <span className="text-[10px] font-bold text-green-400">✓ Đã hoàn thành</span>
+                          <span className="text-[10px] font-bold text-green-400">{t('dashboard.completed')}</span>
                         )}
                       </div>
                     </div>
                   ) : (
                     <div className="py-12 text-center text-[10px] text-white/40">
-                      Không có câu hỏi hôm nay.
+                      {t('dashboard.no_quiz')}
                     </div>
                   )}
                 </div>
-              )}
-            </div>
+              </div>
 
-            {/* AI Mentor glowing holographic orb */}
-            <div className="border-t border-white/10 pt-3 mt-3 flex items-center gap-3 shrink-0">
-              <div className="relative shrink-0">
-                <div
-                  onClick={() => setShowAiMentor(true)}
-                  className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-500 via-cyan-400 to-indigo-300 shadow-[0_0_12px_rgba(59,130,246,0.6)] animate-pulse cursor-pointer hover:scale-105 transition-transform flex items-center justify-center"
-                  title="Mở gợi ý từ AI Mentor"
-                >
-                  <Sparkles size={14} className="text-white" />
+              {/* Weekly/Daily Progress bar at the bottom */}
+              <div className="border-t border-white/10 pt-3 mt-3 flex items-center justify-between gap-3 shrink-0">
+                <div className="relative flex items-center justify-center shrink-0">
+                  <svg width="50" height="50" className="transform -rotate-90">
+                    <circle cx="25" cy="25" r="20" stroke="rgba(255,255,255,0.06)" strokeWidth="3" fill="transparent" />
+                    <circle
+                      cx="25"
+                      cy="25"
+                      r="20"
+                      stroke="#ea2804"
+                      strokeWidth="3"
+                      fill="transparent"
+                      strokeDasharray={2 * Math.PI * 20}
+                      strokeDashoffset={2 * Math.PI * 20 * (1 - Math.min(1, studiedCards / dailyTarget))}
+                      strokeLinecap="round"
+                      className="transition-all duration-500"
+                    />
+                  </svg>
+                  <div className="absolute flex flex-col items-center justify-center">
+                    <span className="text-[9px] font-black tracking-tighter text-white">
+                      {Math.round(Math.min(100, (studiedCards / dailyTarget) * 100))}%
+                    </span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-[7px] font-sans font-bold text-white/50 uppercase tracking-widest block">{t('dashboard.daily_target')}</span>
+                  <span className="text-[10px] text-white font-bold block mt-0.5">{t('dashboard.reviewed_cards', { studied: studiedCards, target: dailyTarget })}</span>
                 </div>
               </div>
-              <div className="min-w-0">
-                <h4 className="text-[10px] font-black text-white leading-none">AI Mentor gợi ý</h4>
-                <span className="text-[8px] text-white/40 block mt-1">Khuyên dùng học tập hôm nay.</span>
+
+              {/* AI Mentor glowing holographic orb */}
+              <div className="border-t border-white/10 pt-3 mt-3 flex items-center gap-3 shrink-0">
+                <div className="relative shrink-0">
+                  <div
+                    onClick={() => setShowAiMentor(true)}
+                    className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 via-cyan-400 to-indigo-300 shadow-[0_0_10px_rgba(59,130,246,0.6)] animate-pulse cursor-pointer hover:scale-105 transition-transform flex items-center justify-center"
+                    title={t('dashboard.ai_mentor_title_short')}
+                  >
+                    <Sparkles size={12} className="text-white" />
+                  </div>
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-[9px] font-black text-white leading-none">{t('dashboard.ai_mentor')}</h4>
+                  <span className="text-[7px] text-white/40 block mt-1">{t('dashboard.ai_mentor_desc')}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
         {/* Card 2: Inventory */}
         <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 shadow-lg relative overflow-hidden shrink-0">
@@ -1131,34 +1029,17 @@ export default function DashboardScreen() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-1.5">
               <ShoppingBag size={14} className="text-primary" />
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider">Túi Đồ Vật Phẩm</h3>
+              <h3 className="text-xs font-bold text-white uppercase tracking-wider">{t('dashboard.inventory')}</h3>
             </div>
             <button
               onClick={() => setShowShop(true)}
               className="text-[9px] font-black uppercase text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full hover:bg-primary hover:text-slate-950 transition-all cursor-pointer"
             >
-              Cửa hàng
+              {t('dashboard.shop')}
             </button>
           </div>
 
           <div className="space-y-2.5">
-            {/* Item 1: Streak Freeze */}
-            <div className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all">
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-500 shrink-0">
-                  <Flame size={14} className="fill-current" />
-                </div>
-                <div className="min-w-0">
-                  <h4 className="text-[10px] font-bold text-white truncate">Bảo Mệnh Đan</h4>
-                  <p className="text-[8px] text-white/50 truncate">Tự động giữ chuỗi khi nghỉ học</p>
-                </div>
-              </div>
-              <div className="text-right shrink-0">
-                <span className="text-[10px] font-mono font-bold text-white bg-white/5 border border-white/5 px-2 py-1 rounded-md">
-                  x{summary?.streakFreezeCount ?? 0}
-                </span>
-              </div>
-            </div>
 
             {/* Item 2: XP Boost */}
             <div className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all">
@@ -1167,8 +1048,8 @@ export default function DashboardScreen() {
                   <Sparkles size={14} />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-[10px] font-bold text-white truncate">Thần Dược Nhân Đôi</h4>
-                  <p className="text-[8px] text-white/50 truncate">Nhân đôi XP học tập trong 1 giờ</p>
+                  <h4 className="text-[10px] font-bold text-white truncate">{t('dashboard.booster_potion')}</h4>
+                  <p className="text-[8px] text-white/50 truncate">{t('dashboard.booster_desc')}</p>
                 </div>
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
@@ -1192,7 +1073,7 @@ export default function DashboardScreen() {
                         : 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed'
                     }`}
                   >
-                    Kích hoạt
+                    {t('dashboard.activate')}
                   </button>
                 )}
               </div>
@@ -1280,7 +1161,7 @@ export default function DashboardScreen() {
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2 text-yellow-400">
                 <ShoppingCart size={20} />
-                <h3 className="font-bold text-white text-base">Cửa hàng ChongZi</h3>
+                <h3 className="font-bold text-white text-base">{t('dashboard.shop_title')}</h3>
               </div>
               <button
                 onClick={() => { setShowShop(false); setShopFeedback(''); }}
@@ -1292,10 +1173,10 @@ export default function DashboardScreen() {
 
             {/* Current Balance */}
             <div className="flex justify-between items-center bg-white/5 p-3 rounded-xl border border-white/5">
-              <span className="text-xs text-white/60">Số dư hiện tại:</span>
+              <span className="text-xs text-white/60">{t('dashboard.balance')}</span>
               <div className="flex items-center gap-1 text-sm font-bold text-yellow-400">
                 <Award size={16} />
-                <span>{coins} Xu</span>
+                <span>{coins} {t('dashboard.coins')}</span>
               </div>
             </div>
 
@@ -1307,35 +1188,19 @@ export default function DashboardScreen() {
 
             {/* Item List */}
             <div className="space-y-3">
-              {/* Item 1: Streak Freeze */}
-              <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-white/5">
-                <div className="space-y-1">
-                  <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                    💊 Bảo Mệnh Đan <span className="text-[9px] text-white/50 normal-case font-normal">(Streak Freeze)</span>
-                  </h4>
-                  <p className="text-[10px] text-white/60 pr-4">Đóng băng chuỗi ngày học nếu bạn bận đột xuất. Hiện có: {summary?.streakFreezeCount ?? 0}</p>
-                </div>
-                <button
-                  onClick={() => handleBuyItem('freeze', 50)}
-                  className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-deep text-slate-950 text-[10px] font-bold shadow-xs cursor-pointer shrink-0"
-                >
-                  50 Xu
-                </button>
-              </div>
-
               {/* Item 2: Double XP Potion */}
               <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-white/5">
                 <div className="space-y-1">
                   <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                    🧪 Thần Dược Nhân Đôi <span className="text-[9px] text-white/50 normal-case font-normal">(Double XP)</span>
+                    🧪 {t('dashboard.xp_potion')} <span className="text-[9px] text-white/50 normal-case font-normal">(Double XP)</span>
                   </h4>
-                  <p className="text-[10px] text-white/60 pr-4">Nhân đôi điểm kinh nghiệm trong 1 giờ để leo rank. Hiện có: {summary?.xpBoostCount ?? 0}</p>
+                  <p className="text-[10px] text-white/60 pr-4">{t('dashboard.xp_potion_desc')} {t('common.owned')}: {summary?.xpBoostCount ?? 0}</p>
                 </div>
                 <button
                   onClick={() => handleBuyItem('booster', 100)}
                   className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-deep text-slate-950 text-[10px] font-bold shadow-xs cursor-pointer shrink-0"
                 >
-                  100 Xu
+                  100 {t('dashboard.coins')}
                 </button>
               </div>
 
@@ -1343,15 +1208,15 @@ export default function DashboardScreen() {
               <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-white/5">
                 <div className="space-y-1">
                   <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                    💧 Thùng Nước Sạch <span className="text-[9px] text-white/50 normal-case font-normal">(+10 Nước)</span>
+                    💧 {t('dashboard.water_bucket')} <span className="text-[9px] text-white/50 normal-case font-normal">(+10)</span>
                   </h4>
-                  <p className="text-[10px] text-white/60 pr-4">Bổ sung thêm 10 nước sạch để tưới cây. Hiện có: {summary?.water ?? 35} Nước</p>
+                  <p className="text-[10px] text-white/60 pr-4">{t('dashboard.water_bucket_desc')} {t('common.owned')}: {summary?.water ?? 35}</p>
                 </div>
                 <button
                   onClick={() => handleBuyItem('water', 10)}
                   className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-deep text-slate-950 text-[10px] font-bold shadow-xs cursor-pointer shrink-0"
                 >
-                  10 Xu
+                  10 {t('dashboard.coins')}
                 </button>
               </div>
 
@@ -1359,21 +1224,21 @@ export default function DashboardScreen() {
               <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-white/5">
                 <div className="space-y-1">
                   <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                    🌱 Phân Bón Sinh Trưởng <span className="text-[9px] text-white/50 normal-case font-normal">(+5 Phân bón)</span>
+                    🌱 {t('dashboard.fertilizer_bag')} <span className="text-[9px] text-white/50 normal-case font-normal">(+5)</span>
                   </h4>
-                  <p className="text-[10px] text-white/60 pr-4">Bổ sung thêm 5 phân bón thúc đẩy sinh cảnh. Hiện có: {summary?.fertilizer ?? 55} Phân bón</p>
+                  <p className="text-[10px] text-white/60 pr-4">{t('dashboard.fertilizer_bag_desc')} {t('common.owned')}: {summary?.fertilizer ?? 55}</p>
                 </div>
                 <button
                   onClick={() => handleBuyItem('fertilizer', 15)}
                   className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-deep text-slate-950 text-[10px] font-bold shadow-xs cursor-pointer shrink-0"
                 >
-                  15 Xu
+                  15 {t('dashboard.coins')}
                 </button>
               </div>
             </div>
 
             <div className="pt-2 text-center">
-              <p className="text-[9px] text-white/40">Ghi chú: Lượng Xu được tích lũy khi bạn học thẻ SRS và chơi game.</p>
+              <p className="text-[9px] text-white/40">{t('dashboard.shop_note')}</p>
             </div>
           </div>
         </div>
@@ -1388,7 +1253,7 @@ export default function DashboardScreen() {
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-1.5 text-blue-400">
                 <Sparkles size={18} />
-                <h3 className="font-bold text-white text-base">Khuyên dùng từ AI Mentor</h3>
+                <h3 className="font-bold text-white text-base">{t('dashboard.ai_mentor_title')}</h3>
               </div>
               <button
                 onClick={() => setShowAiMentor(false)}

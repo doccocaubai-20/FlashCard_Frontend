@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Eye, EyeOff } from 'lucide-react';
 import HoverableText from '../common/HoverableText';
 
@@ -52,6 +53,7 @@ export default function Flashcard({
   showPinyinOnFront = false,
   onTogglePinyinOnFront
 }) {
+  const { t } = useTranslation();
   const { character: frontChar, pinyin: frontPinyin, meaning: frontMeaning } = cardData || {};
   const { pos: frontPos, meaning: cleanFrontMeaning } = parsePosAndMeaning(frontMeaning);
   const [backCardData, setBackCardData] = React.useState(cardData);
@@ -101,10 +103,10 @@ export default function Flashcard({
               onTogglePinyinOnFront?.();
             }}
             className="absolute top-5 right-5 z-30 inline-flex items-center gap-2 rounded-full border border-hairline dark:border-divider-dark bg-surface-card/85 dark:bg-surface-dark/85 hover:bg-surface-bone dark:hover:bg-black px-4 py-2 text-xs font-semibold text-ink dark:text-on-dark shadow-sm backdrop-blur transition-all duration-200 cursor-pointer"
-            title="Ẩn/Hiện phiên âm Pinyin ở mặt trước"
+            title={t('study.toggle_pinyin_tooltip', 'Ẩn/Hiện phiên âm Pinyin ở mặt trước')}
           >
             {showPinyinOnFront ? <EyeOff size={14} className="text-primary" /> : <Eye size={14} className="text-primary" />}
-            <span className="font-mono">{showPinyinOnFront ? 'Ẩn Pinyin' : 'Hiện Pinyin'}</span>
+            <span className="font-mono">{showPinyinOnFront ? t('study.hide_pinyin') : t('study.show_pinyin')}</span>
           </button>
         )}
 
@@ -138,7 +140,7 @@ export default function Flashcard({
             ) : (
               <div className="flex flex-col items-center gap-2">
                 <div className="text-3xl font-display font-extrabold tracking-tight max-w-md px-4 leading-normal text-primary">
-                  {cleanFrontMeaning || 'Nghĩa tiếng Việt...'}
+                  {cleanFrontMeaning || t('study.meaning_placeholder')}
                 </div>
                 {frontPos && (
                   <span className="text-xs font-mono font-bold px-2.5 py-0.5 bg-primary/10 text-primary rounded-full mt-2 tracking-wider">
@@ -151,7 +153,7 @@ export default function Flashcard({
 
           {/* Luxury glassmorphic indicator at bottom */}
           <div className="self-center bg-surface-bone/80 dark:bg-black/30 border border-hairline dark:border-divider-dark px-6 py-2 rounded-full text-[10px] font-mono font-bold tracking-widest text-mute dark:text-on-dark-mute uppercase">
-            Chạm vào thẻ để lật
+            {t('study.flip_hint_short')}
           </div>
         </div>
 
@@ -162,7 +164,7 @@ export default function Flashcard({
         >
           <div>
             <div className="text-[10px] font-mono font-black uppercase tracking-[0.25em] text-primary/30 mb-4">
-              {showHanziOnFront ? 'Giải nghĩa chi tiết' : 'Từ vựng tiếng Trung'}
+              {showHanziOnFront ? t('study.detail_meaning') : t('study.chinese_vocab')}
             </div>
             
             <div className="rounded-md bg-surface-card dark:bg-surface-dark p-6 border border-hairline dark:border-divider-dark">
@@ -173,7 +175,7 @@ export default function Flashcard({
                 {backPinyin || 'hàn'}
               </div>
               <div className="mt-4 text-lg font-medium text-body dark:text-on-dark-mute border-l-4 border-primary pl-3 leading-relaxed flex flex-col items-start gap-1">
-                <div>{cleanBackMeaning || 'nghĩa tiếng Việt...'}</div>
+                <div>{cleanBackMeaning || t('study.meaning_placeholder')}</div>
                 {backPos && (
                   <span className="text-[11px] font-mono font-bold px-2 py-0.5 bg-primary/10 text-primary rounded-full mt-1.5 tracking-wider">
                     {backPos}
@@ -184,7 +186,7 @@ export default function Flashcard({
           </div>
 
           <div className="self-center bg-surface-card/80 dark:bg-surface-dark/30 border border-hairline dark:border-divider-dark px-5 py-2 rounded-full text-[10px] font-mono font-bold tracking-widest text-mute dark:text-on-dark-mute uppercase">
-            Chạm vào thẻ để quay lại
+            {t('study.flip_back_hint')}
           </div>
         </div>
 

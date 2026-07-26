@@ -8,13 +8,10 @@ import {
   Volume2, 
   Play, 
   Pause, 
-  AlertCircle,
-  HelpCircle,
   ChevronLeft,
   ChevronRight,
   Send,
-  Award,
-  RefreshCw
+  Award
 } from 'lucide-react';
 import mockExamsData from '../data/hskMockExams.json';
 import { hskExamApi } from '../services/hskExamApi';
@@ -97,6 +94,59 @@ export default function HskExamPlayerScreen() {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
   const timerIntervalRef = useRef(null);
+
+  function handleAutoSubmit() {
+    showToast('Hết thời gian làm bài! Hệ thống tự động nộp bài.', 'info');
+    submitExam();
+  }
+
+  const submitExam = async () => {
+    clearInterval(timerIntervalRef.current);
+    if (audioRef.current) audioRef.current.pause();
+
+    // Grade the exam
+    let correct = 0;
+    questions.forEach(q => {
+      const ans = userAnswers[q.id] || '';
+      
+      if (q.type === 'arrange') {
+        const sortedUser = ans.trim();
+        const cleanUser = sortedUser.replace(/\s+/g, '');
+        const cleanCorrect = q.correctAnswer.replace(/\s+/g, '');
+        if (cleanUser === cleanCorrect) {
+          correct++;
+        }
+      } else {
+        if (ans === q.correctAnswer) {
+          correct++;
+        }
+      }
+    });
+
+    const score = Math.round((correct / questions.length) * exam.maxScore);
+    
+    const resultPayload = {
+      hskLevel: exam.hskLevel,
+      examTitle: exam.title,
+      score: score,
+      maxScore: exam.maxScore,
+      correctAnswers: correct,
+      totalQuestions: questions.length,
+      duration: elapsedTime
+    };
+
+    try {
+      await hskExamApi.submitResult(resultPayload);
+      setScoreResult(resultPayload);
+      setIsSubmitted(true);
+      showToast('Nộp bài thi thành công!', 'success');
+    } catch (err) {
+      console.error('Failed to submit exam result:', err);
+      showToast('Lỗi khi nộp bài thi lên hệ thống.', 'error');
+      setScoreResult(resultPayload);
+      setIsSubmitted(true);
+    }
+  };
 
   // Initialize Exam dynamically
   useEffect(() => {
@@ -224,58 +274,6 @@ export default function HskExamPlayerScreen() {
     }));
   };
 
-  const handleAutoSubmit = () => {
-    showToast('Hết thời gian làm bài! Hệ thống tự động nộp bài.', 'info');
-    submitExam();
-  };
-
-  const submitExam = async () => {
-    clearInterval(timerIntervalRef.current);
-    if (audioRef.current) audioRef.current.pause();
-
-    // Grade the exam
-    let correct = 0;
-    questions.forEach(q => {
-      const ans = userAnswers[q.id] || '';
-      
-      if (q.type === 'arrange') {
-        const sortedUser = ans.trim();
-        const cleanUser = sortedUser.replace(/\s+/g, '');
-        const cleanCorrect = q.correctAnswer.replace(/\s+/g, '');
-        if (cleanUser === cleanCorrect) {
-          correct++;
-        }
-      } else {
-        if (ans === q.correctAnswer) {
-          correct++;
-        }
-      }
-    });
-
-    const score = Math.round((correct / questions.length) * exam.maxScore);
-    
-    const resultPayload = {
-      hskLevel: exam.hskLevel,
-      examTitle: exam.title,
-      score: score,
-      maxScore: exam.maxScore,
-      correctAnswers: correct,
-      totalQuestions: questions.length,
-      duration: elapsedTime
-    };
-
-    try {
-      await hskExamApi.submitResult(resultPayload);
-      setScoreResult(resultPayload);
-      setIsSubmitted(true);
-      showToast('Nộp bài thi thành công!', 'success');
-    } catch (err) {
-      console.error('Failed to submit exam result:', err);
-      showToast('Lỗi khi nộp bài thi lên hệ thống.', 'error');
-      setScoreResult(resultPayload);
-      setIsSubmitted(true);
-    }
-  };
 
   const formatTimer = (totalSeconds) => {
     const mins = Math.floor(totalSeconds / 60);
@@ -334,13 +332,10 @@ export default function HskExamPlayerScreen() {
                   btnClass = 'border-primary ring-2 ring-primary/20 text-primary font-bold';
                 } else if (isAnswered) {
                   if (isSubmitted) {
-                    let isCorrect = false;
                     const ans = userAnswers[q.id];
-                    if (q.type === 'arrange') {
-                      isCorrect = ans.replace(/\s+/g, '') === q.correctAnswer.replace(/\s+/g, '');
-                    } else {
-                      isCorrect = ans === q.correctAnswer;
-                    }
+                    const isCorrect = q.type === 'arrange'
+                      ? ans.replace(/\s+/g, '') === q.correctAnswer.replace(/\s+/g, '')
+                      : ans === q.correctAnswer;
                     btnClass = isCorrect 
                       ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400 font-bold' 
                       : 'bg-red-500/15 border-red-500/40 text-red-400 font-bold';

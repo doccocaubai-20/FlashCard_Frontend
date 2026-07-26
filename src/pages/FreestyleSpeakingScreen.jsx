@@ -87,7 +87,7 @@ export default function FreestyleSpeakingScreen() {
   // Split and resolve dictionary words from the transcribed Chinese text
   useEffect(() => {
     const resolveWords = async () => {
-      const text = spokenText.replace(/[。？！，、；：.,\/#!$%\^&\*;:{}=\-_`~()?]/g, '').replace(/\s+/g, '').trim();
+      const text = spokenText.replace(/[。？！，、；：.,/#!$%^&*;:{}=_`~()?-]/g, '').replace(/\s+/g, '').trim();
       if (!text) {
         setDetectedWords([]);
         return;

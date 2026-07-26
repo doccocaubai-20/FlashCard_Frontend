@@ -50,6 +50,11 @@ const studySlice = createSlice({
     clearStudyError(state) {
       state.error = null;
     },
+    setTodayCards(state, action) {
+      state.todayCards = action.payload || [];
+      state.currentIndex = 0;
+      state.isFinished = Array.isArray(action.payload) && action.payload.length === 0;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -86,5 +91,5 @@ const studySlice = createSlice({
   },
 });
 
-export const { nextCard, resetStudyState, clearStudyError } = studySlice.actions;
+export const { nextCard, resetStudyState, clearStudyError, setTodayCards } = studySlice.actions;
 export default studySlice.reducer;

@@ -44,7 +44,7 @@ export const speakChinese = (text) => {
     clearTimeout(timeoutId);
   };
 
-  audio.play().catch((err) => {
+  audio.play().catch((_err) => {
     clearTimeout(timeoutId);
     triggerFallback();
   });

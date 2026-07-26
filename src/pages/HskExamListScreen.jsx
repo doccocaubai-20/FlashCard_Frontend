@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Trophy, 
-  Timer, 
   ChevronRight, 
-  CheckCircle, 
   Sparkles, 
   BarChart2, 
   Award,
-  Play,
-  RotateCcw,
   BookOpen
 } from 'lucide-react';
 import { hskExamApi } from '../services/hskExamApi';

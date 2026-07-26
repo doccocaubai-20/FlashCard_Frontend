@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { statsApi } from '../../services/statsApi';
-import { Sparkles, Flame, Droplet, Trash2, Coins, HelpCircle, Loader2 } from 'lucide-react';
+import { Droplet, Trash2, Coins, Loader2 } from 'lucide-react';
 
 export default function ZenGarden({ summary, onHarvestSuccess }) {
   const navigate = useNavigate();
@@ -45,10 +45,10 @@ export default function ZenGarden({ summary, onHarvestSuccess }) {
     fetchGarden();
   }, [summary]); // Refresh garden when stats update
 
-  const showMsg = (text, type = 'info') => {
+  function showMsg(text, type = 'info') {
     setMessage({ text, type });
     setTimeout(() => setMessage({ text: '', type: '' }), 4000);
-  };
+  }
 
   // Harvest Coins Action
   const handleHarvest = async () => {

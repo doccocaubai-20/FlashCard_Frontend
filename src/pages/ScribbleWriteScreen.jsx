@@ -36,6 +36,77 @@ export default function ScribbleWriteScreen() {
   const [notepadText, setNotepadText] = useState('');
   const [dictCards, setDictCards] = useState([]);
 
+  // Redraw the entire canvas: grid + strokes
+  const redrawCanvas = (allStrokes = strokes) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw calligraphic Tian Zi Ge cells row
+    if (showGrid) {
+      const isDark = document.documentElement.classList.contains('dark');
+      ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(32, 32, 32, 0.1)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+
+      ctx.beginPath();
+      
+      const boxSize = canvas.height;
+      const numBoxes = Math.ceil(canvas.width / boxSize);
+      for (let b = 0; b < numBoxes; b++) {
+        const startX = b * boxSize;
+        const endX = Math.min(startX + boxSize, canvas.width);
+        
+        // Draw vertical solid separator between squares
+        if (b > 0) {
+          ctx.setLineDash([]);
+          ctx.moveTo(startX, 0);
+          ctx.lineTo(startX, canvas.height);
+          ctx.setLineDash([4, 4]);
+        }
+        
+        // Horizontal center line
+        ctx.moveTo(startX, canvas.height / 2);
+        ctx.lineTo(endX, canvas.height / 2);
+        
+        // Vertical center line
+        const centerX = startX + boxSize / 2;
+        if (centerX < canvas.width) {
+          ctx.moveTo(centerX, 0);
+          ctx.lineTo(centerX, canvas.height);
+        }
+        
+        // Diagonals
+        ctx.moveTo(startX, 0);
+        ctx.lineTo(endX, canvas.height);
+        ctx.moveTo(endX, 0);
+        ctx.lineTo(startX, canvas.height);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]); // reset
+    }
+
+    // Draw all strokes
+    allStrokes.forEach((stroke) => {
+      ctx.beginPath();
+      ctx.strokeStyle = brushColor;
+      ctx.lineWidth = brushWidth;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      
+      ctx.moveTo(stroke.x[0], stroke.y[0]);
+      for (let i = 1; i < stroke.x.length; i++) {
+        ctx.lineTo(stroke.x[i], stroke.y[i]);
+      }
+      ctx.stroke();
+    });
+  };
+
+  const drawGridBackground = () => {
+    redrawCanvas(strokes);
+  };
+
   // Dictionary lookup for characters in notepad
   useEffect(() => {
     const lookupNotepadWords = async () => {
@@ -155,77 +226,6 @@ export default function ScribbleWriteScreen() {
       recognizeStrokes(newStrokes);
     }
     setCurrentStroke({ x: [], y: [], t: [] });
-  };
-
-  // Redraw the entire canvas: grid + strokes
-  const redrawCanvas = (allStrokes = strokes) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw calligraphic Tian Zi Ge cells row
-    if (showGrid) {
-      const isDark = document.documentElement.classList.contains('dark');
-      ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(32, 32, 32, 0.1)';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([4, 4]);
-
-      ctx.beginPath();
-      
-      const boxSize = canvas.height;
-      const numBoxes = Math.ceil(canvas.width / boxSize);
-      for (let b = 0; b < numBoxes; b++) {
-        const startX = b * boxSize;
-        const endX = Math.min(startX + boxSize, canvas.width);
-        
-        // Draw vertical solid separator between squares
-        if (b > 0) {
-          ctx.setLineDash([]);
-          ctx.moveTo(startX, 0);
-          ctx.lineTo(startX, canvas.height);
-          ctx.setLineDash([4, 4]);
-        }
-        
-        // Horizontal center line
-        ctx.moveTo(startX, canvas.height / 2);
-        ctx.lineTo(endX, canvas.height / 2);
-        
-        // Vertical center line
-        const centerX = startX + boxSize / 2;
-        if (centerX < canvas.width) {
-          ctx.moveTo(centerX, 0);
-          ctx.lineTo(centerX, canvas.height);
-        }
-        
-        // Diagonals
-        ctx.moveTo(startX, 0);
-        ctx.lineTo(endX, canvas.height);
-        ctx.moveTo(endX, 0);
-        ctx.lineTo(startX, canvas.height);
-      }
-      ctx.stroke();
-      ctx.setLineDash([]); // reset
-    }
-
-    // Draw all strokes
-    allStrokes.forEach((stroke) => {
-      ctx.beginPath();
-      ctx.strokeStyle = brushColor;
-      ctx.lineWidth = brushWidth;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      
-      ctx.moveTo(stroke.x[0], stroke.y[0]);
-      for (let i = 1; i < stroke.x.length; i++) {
-        ctx.lineTo(stroke.x[i], stroke.y[i]);
-      }
-      ctx.stroke();
-    });
-  };
-
-  const drawGridBackground = () => {
-    redrawCanvas(strokes);
   };
 
   const undo = () => {

@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { fetchTodayStudy, submitReview } from '../features/study/studySlice';
+import { useTranslation } from 'react-i18next';
+import { fetchTodayStudy, submitReview, setTodayCards } from '../features/study/studySlice';
 import { fetchAllDecks } from '../features/deck/deckSlice';
 import { useToast } from '../context/ToastContext';
 import { studyApi } from '../services/studyApi';
+import { getItem, setItem } from '../utils/indexedDB';
 import Flashcard from '../components/flashcard/Flashcard';
 import HoverableText from '../components/common/HoverableText';
 import SRSButtons from '../components/study/SRSButtons';
@@ -19,7 +21,6 @@ import {
   Star
 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
-import { useDictionary } from '../hooks/useDictionary';
 import { speakChinese } from '../utils/tts';
 
 // SVG blossom logo
@@ -176,7 +177,7 @@ function WritingPractice({ character }) {
 }
 
 // Speaking Practice sub-component using native Web Speech API and MediaRecorder
-function SpeakingPractice({ character, pinyin }) {
+function SpeakingPractice({ character, _pinyin }) {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [result, setResult] = useState(null); // 'success', 'fail', null
@@ -433,6 +434,7 @@ export default function StudyScreen() {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const deckIdParam = searchParams.get('deckId');
   
   // Redux study state
@@ -442,7 +444,6 @@ export default function StudyScreen() {
   // Redux decks list
   const decks = useSelector((state) => state.deck.decks);
 
-  const { lookupMultiple } = useDictionary();
   const [favorites, setFavorites] = useState([]);
 
   const loadFavorites = async () => {
@@ -460,32 +461,6 @@ export default function StudyScreen() {
     return favorites.some((f) => f.hanzi === cleanHanzi);
   };
 
-  const getCompoundHanViet = async (word) => {
-    if (!word) return '';
-    const chars = Array.from(word);
-
-    if (chars.length === 1) {
-      const matches = await lookupMultiple('hanzi', word);
-      const match = matches.find((m) => m.s === word || m.t === word);
-      return match?.sv || '';
-    }
-
-    const _matches = await lookupMultiple('hanzi', word);
-    const exact = _matches.find((m) => m.s === word || m.t === word);
-    if (exact && exact.sv) return exact.sv;
-
-    const parts = [];
-    for (const char of chars) {
-      const matches = await lookupMultiple('hanzi', char);
-      const match = matches.find((m) => m.s === char || m.t === char);
-      if (match && match.sv) {
-        parts.push(match.sv);
-      } else {
-        parts.push(`[${char}]`);
-      }
-    }
-    return parts.join(' ').replace(/\s+/g, ' ').trim();
-  };
 
   const handleToggleFavorite = async (hanzi, pinyin, meaning, exampleHanzi = '', examplePinyin = '', exampleMeaning = '') => {
     if (!hanzi) return;
@@ -619,7 +594,7 @@ export default function StudyScreen() {
       } else {
         setPendingSyncCount(0);
       }
-    } catch (e) {
+    } catch {
       setPendingSyncCount(0);
     }
   };
@@ -667,9 +642,21 @@ export default function StudyScreen() {
         setIsAllCardsLoading(true);
         const deckIdParam = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
         const res = await studyApi.getAllCards(deckIdParam);
-        setAllCards(res.data || []);
+        const cards = res.data || [];
+        setAllCards(cards);
+        // Cache asynchronously in IndexedDB
+        setItem('chongzi_offline_all_cards', cards).catch(e => console.warn(e));
       } catch (e) {
         console.error('Failed to load all cards:', e);
+        // Fallback to IndexedDB
+        try {
+          const cached = await getItem('chongzi_offline_all_cards');
+          if (cached) {
+            setAllCards(cached);
+          }
+        } catch (dbErr) {
+          console.error('Failed to load all cards from IndexedDB:', dbErr);
+        }
       } finally {
         setIsAllCardsLoading(false);
       }
@@ -677,25 +664,12 @@ export default function StudyScreen() {
     loadAllCards();
   }, [selectedDeckId]);
 
-  // Cache allCards in localStorage
-  useEffect(() => {
-    if (allCards && allCards.length > 0) {
-      try {
-        localStorage.setItem('chongzi_offline_all_cards', JSON.stringify(allCards));
-      } catch (e) {
-        console.warn('Failed to cache all cards in localStorage (quota exceeded):', e);
-      }
-    }
-  }, [allCards]);
-
-  // Cache todayCards in localStorage
+  // Cache todayCards in IndexedDB asynchronously
   useEffect(() => {
     if (todayCards && todayCards.length > 0) {
-      try {
-        localStorage.setItem('chongzi_offline_cards', JSON.stringify(todayCards));
-      } catch (e) {
-        console.warn('Failed to cache today cards in localStorage (quota exceeded):', e);
-      }
+      setItem('chongzi_offline_cards', todayCards).catch(e => {
+        console.warn('Failed to cache today cards in IndexedDB:', e);
+      });
     }
   }, [todayCards]);
 
@@ -708,7 +682,24 @@ export default function StudyScreen() {
   // Load today study cards depending on selectedDeckId
   useEffect(() => {
     if (selectedDeckId !== 'favorites') {
-      dispatch(fetchTodayStudy({ deckId: selectedDeckId === 'all' ? undefined : Number(selectedDeckId) }));
+      const loadToday = async () => {
+        try {
+          const deckIdParam = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
+          await dispatch(fetchTodayStudy({ deckId: deckIdParam })).unwrap();
+        } catch (err) {
+          console.error('Failed to load today cards:', err);
+          // Fallback to IndexedDB
+          try {
+            const cached = await getItem('chongzi_offline_cards');
+            if (cached) {
+              dispatch(setTodayCards(cached));
+            }
+          } catch (dbErr) {
+            console.error('Failed to load today cards from IndexedDB:', dbErr);
+          }
+        }
+      };
+      loadToday();
     }
   }, [dispatch, selectedDeckId]);
 
@@ -731,25 +722,6 @@ export default function StudyScreen() {
     }
     
     let list = studyMode === 'srs' ? todayCards : allCards;
-    
-    // Offline fallback
-    if (!navigator.onLine) {
-      if (studyMode === 'srs') {
-        const cached = localStorage.getItem('chongzi_offline_cards');
-        if (cached) {
-          try {
-            list = JSON.parse(cached);
-          } catch (e) {}
-        }
-      } else {
-        const cached = localStorage.getItem('chongzi_offline_all_cards');
-        if (cached) {
-          try {
-            list = JSON.parse(cached);
-          } catch (e) {}
-        }
-      }
-    }
     
     if (selectedDeckId !== 'all') {
       list = list.filter((c) => c.deckId === Number(selectedDeckId));
@@ -989,7 +961,7 @@ export default function StudyScreen() {
           let pending = [];
           try {
             pending = JSON.parse(pendingStr);
-          } catch (e) {
+          } catch {
             pending = [];
           }
           pending.push({ cardId: currentCard.id, rating, timestamp: Date.now() });
@@ -1475,18 +1447,18 @@ export default function StudyScreen() {
 
       {/* Row: Bộ bài Selector */}
       <div className="space-y-3">
-        <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Chọn bộ bài để học</h3>
+        <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">{t('study.select_deck')}</h3>
         <div className="relative max-w-md">
           <select
             value={selectedDeckId}
             onChange={(e) => setSelectedDeckId(e.target.value)}
             className="w-full px-5 py-3 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full shadow-sm text-sm text-ink dark:text-on-dark font-semibold outline-none cursor-pointer hover:bg-surface-bone dark:hover:bg-black transition-all"
           >
-            <option value="all">Tất cả các bộ bài</option>
-            <option value="favorites">⭐ Từ vựng yêu thích ({favorites.length})</option>
+            <option value="all">{t('study.all_decks')}</option>
+            <option value="favorites">⭐ {t('study.favorites_deck')} ({favorites.length})</option>
             {decks?.map((deck) => (
               <option key={deck.id} value={deck.id}>
-                {deck.title || deck.name} {deck.isSystem ? '(Hệ thống)' : '(Tự tạo)'}
+                {deck.title || deck.name} {deck.isSystem ? `(${t('common.system', 'Hệ thống')})` : `(${t('common.custom', 'Tự tạo')})`}
               </option>
             ))}
           </select>
@@ -1495,7 +1467,7 @@ export default function StudyScreen() {
 
       {/* Row: STUDY MODE selector */}
       <div className="space-y-3">
-        <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Chế độ học</h3>
+        <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">{t('study.study_mode')}</h3>
         <div className="grid gap-4 sm:grid-cols-2">
           {/* Backed Repetition Block */}
           <button
@@ -1520,9 +1492,9 @@ export default function StudyScreen() {
               <Clock size={24} />
             </div>
             <div>
-              <div className="font-display font-extrabold text-base">Spaced Repetition</div>
+              <div className="font-display font-extrabold text-base">{t('study.srs_mode')}</div>
               <p className={`text-xs mt-1 leading-5 ${studyMode === 'srs' ? 'text-white/80' : 'text-mute dark:text-on-dark-mute'}`}>
-                Ôn tập thông minh. Thẻ tự động nhắc lại dựa theo thuật toán ghi nhớ SM-2.
+                {t('study.srs_desc')}
               </p>
               <div className="flex flex-wrap items-center gap-2 mt-3">
                 <div className={`inline-flex items-center px-2.5 py-1 text-[10px] font-mono font-bold rounded-full uppercase ${
@@ -1530,7 +1502,7 @@ export default function StudyScreen() {
                     ? 'bg-white/20 text-white'
                     : 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary'
                 }`}>
-                  {todayCards.length} thẻ đến hạn hôm nay
+                  {t('study.due_today', { count: todayCards.length })}
                 </div>
 
                 {todayCards.length === 0 && selectedDeckId !== 'favorites' && (
@@ -1546,9 +1518,9 @@ export default function StudyScreen() {
                           ? 'bg-white/10 hover:bg-white/25 border-white/25 text-white'
                           : 'bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-semibold'
                       }`}
-                      title="Nạp thêm 10 từ mới để học"
+                      title={t('study.load_extra_title_10', 'Nạp thêm 10 từ mới để học')}
                     >
-                      +10 từ mới
+                      {t('study.extra_words', { count: 10 })}
                     </button>
                     <button
                       type="button"
@@ -1561,9 +1533,9 @@ export default function StudyScreen() {
                           ? 'bg-white/10 hover:bg-white/25 border-white/25 text-white'
                           : 'bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-semibold'
                       }`}
-                      title="Nạp thêm 20 từ mới để học"
+                      title={t('study.load_extra_title_20', 'Nạp thêm 20 từ mới để học')}
                     >
-                      +20 từ mới
+                      {t('study.extra_words', { count: 20 })}
                     </button>
                   </div>
                 )}
@@ -1588,16 +1560,16 @@ export default function StudyScreen() {
               <Layers size={24} />
             </div>
             <div>
-              <div className="font-display font-extrabold text-base">Classic Mode</div>
+              <div className="font-display font-extrabold text-base">{t('study.classic_mode')}</div>
               <p className={`text-xs mt-1 leading-5 ${studyMode === 'classic' ? 'text-white/80' : 'text-mute dark:text-on-dark-mute'}`}>
-                Học tự do toàn bộ thẻ. Lướt qua và học theo thứ tự tăng dần mà không chấm điểm.
+                {t('study.classic_desc')}
               </p>
               <div className={`mt-3 inline-flex items-center px-2.5 py-1 text-[10px] font-mono font-bold rounded-full uppercase ${
                 studyMode === 'classic'
                   ? 'bg-white/20 text-white'
                   : 'bg-surface-bone text-mute dark:bg-black/30 dark:text-on-dark-mute'
               }`}>
-                Học theo thứ tự tự do
+                {t('study.free_order')}
               </div>
             </div>
           </button>
@@ -1606,7 +1578,7 @@ export default function StudyScreen() {
 
       {/* Row: MẶT TRƯỚC THẺ */}
       <div className="space-y-3">
-        <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Mặt trước thẻ</h3>
+        <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">{t('study.front_face')}</h3>
         <div className="flex flex-wrap gap-4">
           <button
             onClick={() => setFrontFaceMode('hanzi')}
@@ -1616,7 +1588,7 @@ export default function StudyScreen() {
                 : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
             }`}
           >
-            Hiện Hán tự (Hanzi First)
+            {t('study.show_hanzi_first')}
           </button>
           <button
             onClick={() => setFrontFaceMode('meaning')}
@@ -1626,7 +1598,7 @@ export default function StudyScreen() {
                 : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
             }`}
           >
-            Hiện nghĩa (Meaning First)
+            {t('study.show_meaning_first')}
           </button>
         </div>
       </div>

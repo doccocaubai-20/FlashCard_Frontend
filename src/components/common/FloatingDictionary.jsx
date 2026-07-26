@@ -79,7 +79,9 @@ export default function FloatingDictionary() {
       }
       try {
         localStorage.setItem('chongzi_float_dict_query', trimmed);
-      } catch {}
+      } catch {
+        /* ignore */
+      }
 
       const matches = await lookupMultiple('all', trimmed);
       
@@ -101,14 +103,18 @@ export default function FloatingDictionary() {
   useEffect(() => {
     try {
       localStorage.setItem('chongzi_float_dict_open', isOpen);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   }, [isOpen]);
 
   // Persist history
   useEffect(() => {
     try {
       localStorage.setItem('chongzi_float_dict_history', JSON.stringify(history));
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   }, [history]);
 
   const isFavorite = (hanzi) => {
@@ -221,7 +227,9 @@ export default function FloatingDictionary() {
   const endDrag = () => {
     try {
       localStorage.setItem('chongzi_float_dict_pos', JSON.stringify(position));
-    } catch {}
+    } catch {
+      /* ignore */
+    }
 
     // Clean listeners
     document.removeEventListener('mousemove', handleMouseMove);

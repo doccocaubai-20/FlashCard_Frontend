@@ -257,7 +257,7 @@ export default function DictionaryScreen() {
             videoRef.current.setAttribute('muted', '');
             videoRef.current.play().catch(e => console.log('Autoplay play failed:', e));
           }
-        }).catch((e) => {
+        }).catch(() => {
           setOcrError('Không thể truy cập camera. Vui lòng cấp quyền camera cho ứng dụng!');
         });
       });

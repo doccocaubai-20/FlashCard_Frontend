@@ -6,6 +6,10 @@ const ToastContext = createContext(null);
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
+  const removeToast = useCallback((id) => {
+    setToasts((prevToasts) => prevToasts.filter((t) => t.id !== id));
+  }, []);
+
   const addToast = useCallback((message, type = 'info', duration = 4000) => {
     const id = Date.now() + Math.random().toString(36).substring(2, 9);
     setToasts((prevToasts) => [...prevToasts, { id, message, type, duration }]);
@@ -13,11 +17,7 @@ export function ToastProvider({ children }) {
     setTimeout(() => {
       removeToast(id);
     }, duration);
-  }, []);
-
-  const removeToast = useCallback((id) => {
-    setToasts((prevToasts) => prevToasts.filter((t) => t.id !== id));
-  }, []);
+  }, [removeToast]);
 
   const getIcon = (type) => {
     switch (type) {

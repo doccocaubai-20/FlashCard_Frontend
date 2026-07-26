@@ -5,7 +5,7 @@ import { useDictionary } from '../../hooks/useDictionary';
 const cleanDefinition = (vi) => {
   if (!vi) return '';
   const trimmed = vi.trim();
-  const parts = trimmed.split(/[\/;]/).map(p => p.trim()).filter(Boolean);
+  const parts = trimmed.split(/[/;]/).map(p => p.trim()).filter(Boolean);
   if (parts.length > 0) {
     if (parts.length > 1) {
       const combined = parts.slice(0, 2).join('; ');
@@ -25,7 +25,6 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
   const triggerRef = useRef(null);
   const leaveTimeoutRef = useRef(null);
   const [coords, setCoords] = useState(null);
-  const [alignClass, setAlignClass] = useState('left-1/2 -translate-x-1/2'); // for legacy backup if needed, but not strictly needed now
 
   // Reset states when character changes to prevent state leakage from React component reuse
   useEffect(() => {

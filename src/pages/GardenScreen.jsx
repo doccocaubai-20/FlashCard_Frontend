@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { statsApi } from '../services/statsApi';
 import { fetchSummary } from '../features/stats/statsSlice';
 import { 
-  ArrowLeft, Coins, Flame, Droplet, Trash2, Volume2, PenTool,
+  ArrowLeft, Coins, Droplet, Trash2, Volume2, PenTool,
   Award, Calendar, Gift, BookOpen, AlertCircle, Loader2
 } from 'lucide-react';
 import { speakChinese } from '../utils/tts';
@@ -129,7 +129,6 @@ export default function GardenScreen() {
   const [quests, setQuests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [harvesting, setHarvesting] = useState(false);
-  const [hoveredPlant, setHoveredPlant] = useState(null);
   const [selectedPlant, setSelectedPlant] = useState(null);
   const [floatingCoins, setFloatingCoins] = useState([]);
   const [message, setMessage] = useState({ text: '', type: '' });
@@ -157,10 +156,10 @@ export default function GardenScreen() {
     fetchGardenAndQuests();
   }, [summary]);
 
-  const showMsg = (text, type = 'info') => {
+  function showMsg(text, type = 'info') {
     setMessage({ text, type });
     setTimeout(() => setMessage({ text: '', type: '' }), 4000);
-  };
+  }
 
   const handleHarvest = async () => {
     if (!garden?.canHarvest || harvesting) return;
@@ -204,10 +203,6 @@ export default function GardenScreen() {
   }
 
   const {
-    seedsCount = 0,
-    sproutsCount = 0,
-    saplingsCount = 0,
-    goldenTreesCount = 0,
     overdueCount = 0,
     plants = [],
     canHarvest = false,
@@ -238,7 +233,7 @@ export default function GardenScreen() {
 
   // Plant stage icon definitions
   const getPlantGraphic = (plant, index, large = false) => {
-    const { stage, isOverdue, id } = plant;
+    const { stage, isOverdue } = plant;
     const sizeClass = large ? "w-28 h-28" : "w-16 h-16";
     const leafColorMain = isOverdue ? '#854d0e' : '#166534';
     const leafColorLight = isOverdue ? '#b45309' : '#22c55e';
