@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchAllDecks, createDeck, updateDeck, deleteDeck } from '../features/deck/deckSlice';
-import { Plus, Edit3, Trash2, Folder, X, Star, Share2, Globe, Copy, Check, Download, Users, BookOpen } from 'lucide-react';
+import { Plus, Edit3, Trash2, Folder, X, Star, Share2, Globe, Copy, Check, Download, Users, BookOpen, Sparkles, Loader2 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { socialApi } from '../services/socialApi';
 import api from '../services/api';
@@ -37,6 +37,16 @@ export default function DeckListScreen() {
   const [importError, setImportError] = useState('');
   const [shareCodeResult, setShareCodeResult] = useState('');
   const [shareDeckTitle, setShareDeckTitle] = useState('');
+
+  // AI Generator States
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const [aiText, setAiText] = useState('');
+  const [aiDeckTitle, setAiDeckTitle] = useState('Từ vựng trích xuất AI');
+  const [generating, setGenerating] = useState(false);
+  const [ocrLoading, setOcrLoading] = useState(false);
+  const [ocrProgress, setOcrProgress] = useState('');
+  const [ocrError, setOcrError] = useState('');
+  const [aiTab, setAiTab] = useState('text'); // 'text' | 'image'
 
   // ── Explore tab state ──
   const [publicDecks, setPublicDecks] = useState([]);
@@ -177,6 +187,77 @@ export default function DeckListScreen() {
     }
   };
 
+  const handleOcrUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!window.Tesseract) {
+      setOcrError('Không tìm thấy thư viện OCR. Vui lòng kiểm tra lại kết nối mạng!');
+      return;
+    }
+    setOcrLoading(true);
+    setOcrError('');
+    setOcrProgress('Đang tải hình ảnh...');
+    try {
+      const { data: { text } } = await window.Tesseract.recognize(
+        file,
+        'chi_sim',
+        {
+          langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0',
+          logger: m => {
+            const pct = Math.round(m.progress * 100);
+            if (m.status === 'loading tesseract core') {
+              setOcrProgress(`Đang nạp lõi OCR: ${pct}%`);
+            } else if (m.status === 'loading language traineddata') {
+              setOcrProgress(`Đang tải dữ liệu tiếng Trung: ${pct}%`);
+            } else if (m.status === 'recognizing text') {
+              setOcrProgress(`Đang nhận diện chữ Hán: ${pct}%`);
+            } else {
+              setOcrProgress(`${m.status}: ${pct}%`);
+            }
+          }
+        }
+      );
+      if (text && text.trim()) {
+        setAiText((prev) => (prev ? prev + '\n' + text : text));
+        showToast('Nhận diện chữ Hán thành công!', 'success');
+        setAiTab('text');
+      } else {
+        setOcrError('Không phát hiện được chữ Hán nào trong ảnh.');
+      }
+    } catch (err) {
+      console.error('OCR error:', err);
+      setOcrError('Lỗi nhận diện. Hãy thử lại với ảnh rõ hơn.');
+    } finally {
+      setOcrLoading(false);
+      setOcrProgress('');
+    }
+  };
+
+  const handleAiGenerate = async (e) => {
+    e.preventDefault();
+    if (!aiText.trim()) return;
+    setGenerating(true);
+    try {
+      const res = await api.post('/api/decks/generate-from-text', {
+        text: aiText,
+        deckTitle: aiDeckTitle || 'Từ vựng trích xuất AI'
+      });
+      showToast(`Đã trích xuất và tạo thành công bộ thẻ với ${res.data.cardsCount} từ vựng!`, 'success');
+      setIsAiModalOpen(false);
+      setAiText('');
+      setAiDeckTitle('Từ vựng trích xuất AI');
+      dispatch(fetchAllDecks());
+      if (res.data.deckId) {
+        navigate(`/decks/${res.data.deckId}`);
+      }
+    } catch (err) {
+      console.error('Failed to generate deck:', err);
+      showToast(err.response?.data?.message || 'Không thể tạo bộ từ bằng AI.', 'error');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
 
@@ -195,6 +276,13 @@ export default function DeckListScreen() {
           >
             <Globe size={16} />
             <span>Nhập bộ từ</span>
+          </button>
+          <button
+            onClick={() => setIsAiModalOpen(true)}
+            className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold px-5 py-3 rounded-full transition-all shadow-sm hover:shadow-md cursor-pointer active:scale-[0.98]"
+          >
+            <Sparkles size={16} />
+            <span>Tạo bằng AI</span>
           </button>
           <button
             onClick={handleOpenCreate}
@@ -667,6 +755,150 @@ export default function DeckListScreen() {
                 Gửi mã này cho bạn bè để họ có thể nhập vào và tự động tải toàn bộ thẻ flashcard của bạn để cùng ôn luyện.
               </p>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* AI Flashcard Generator Modal */}
+      {isAiModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-surface-card dark:bg-surface-dark rounded-md shadow-sm max-w-lg w-full border border-hairline dark:border-divider-dark overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            
+            <div className="flex items-center justify-between px-6 py-4 border-b border-hairline dark:border-divider-dark">
+              <h3 className="text-base font-bold text-ink dark:text-on-dark font-display tracking-tight flex items-center gap-2">
+                <Sparkles size={18} className="text-purple-500" />
+                Tạo bộ thẻ tự động bằng AI
+              </h3>
+              <button
+                onClick={() => {
+                  if (generating || ocrLoading) return;
+                  setIsAiModalOpen(false);
+                }}
+                className="text-mute hover:text-ink dark:text-on-dark-mute dark:hover:text-on-dark p-1.5 rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4 text-left">
+              {/* Modal Tabs */}
+              <div className="flex gap-2 p-1 bg-surface-bone dark:bg-black/20 rounded-lg w-fit border border-hairline dark:border-divider-dark">
+                <button
+                  type="button"
+                  onClick={() => setAiTab('text')}
+                  className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                    aiTab === 'text'
+                      ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
+                      : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
+                  }`}
+                >
+                  Nhập văn bản
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAiTab('image')}
+                  className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                    aiTab === 'image'
+                      ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
+                      : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
+                  }`}
+                >
+                  Tải ảnh (OCR)
+                </button>
+              </div>
+
+              {/* Title input */}
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Tên bộ bài mới</label>
+                <input
+                  type="text"
+                  placeholder="Ví dụ: Từ vựng bài khóa số 1, Từ vựng đọc báo..."
+                  value={aiDeckTitle}
+                  onChange={(e) => setAiDeckTitle(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-xs text-ink dark:text-on-dark font-semibold"
+                />
+              </div>
+
+              {aiTab === 'text' ? (
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Đoạn văn tiếng Trung</label>
+                  <textarea
+                    rows={6}
+                    placeholder="Hãy dán hoặc nhập đoạn văn tiếng Trung của bạn tại đây..."
+                    value={aiText}
+                    onChange={(e) => setAiText(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-xs text-ink dark:text-on-dark leading-relaxed"
+                  />
+                  <p className="text-[10px] text-mute dark:text-on-dark-mute">Hệ thống AI sẽ phân tích và trích xuất tối đa 15 từ vựng hữu ích nhất kèm dịch nghĩa, phiên âm và ví dụ.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="border-2 border-dashed border-hairline dark:border-divider-dark rounded-xl p-6 text-center bg-surface-bone/30 dark:bg-white/2">
+                    <input
+                      type="file"
+                      id="ocr-file-upload"
+                      accept="image/*"
+                      onChange={handleOcrUpload}
+                      className="hidden"
+                      disabled={ocrLoading}
+                    />
+                    <label
+                      htmlFor="ocr-file-upload"
+                      className="cursor-pointer flex flex-col items-center gap-2"
+                    >
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                        <Plus size={24} />
+                      </div>
+                      <span className="text-xs font-bold text-ink dark:text-on-dark">Chọn ảnh từ thiết bị</span>
+                      <span className="text-[10px] text-mute dark:text-on-dark-mute">Hỗ trợ các định dạng PNG, JPG, JPEG chứa chữ Hán</span>
+                    </label>
+                  </div>
+
+                  {ocrLoading && (
+                    <div className="flex items-center gap-2 p-3 bg-purple-500/10 rounded-xl text-purple-700 dark:text-purple-300">
+                      <Loader2 size={16} className="animate-spin shrink-0" />
+                      <span className="text-xs font-semibold">{ocrProgress}</span>
+                    </div>
+                  )}
+
+                  {ocrError && (
+                    <div className="p-3 bg-red-500/10 rounded-xl text-red-500 text-xs font-semibold">
+                      {ocrError}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-hairline dark:border-divider-dark">
+                <button
+                  type="button"
+                  disabled={generating || ocrLoading}
+                  onClick={() => setIsAiModalOpen(false)}
+                  className="px-4 py-2.5 rounded-full border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark text-xs font-bold transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="button"
+                  disabled={generating || ocrLoading || !aiText.trim()}
+                  onClick={handleAiGenerate}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-xs font-bold shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                >
+                  {generating ? (
+                    <>
+                      <Loader2 size={14} className="animate-spin" />
+                      <span>Đang trích xuất...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={14} />
+                      <span>Trích xuất với AI</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
       )}
