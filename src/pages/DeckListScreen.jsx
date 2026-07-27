@@ -200,7 +200,7 @@ export default function DeckListScreen() {
     try {
       const { data: { text } } = await window.Tesseract.recognize(
         file,
-        'chi_sim',
+        'chi_sim+eng+vie',
         {
           langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0',
           logger: m => {
