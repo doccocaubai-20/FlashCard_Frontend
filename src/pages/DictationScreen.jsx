@@ -321,7 +321,7 @@ export default function DictationScreen() {
               <div className="flex-1 text-left">
                 <h4 className="text-sm font-bold">{isCorrect ? 'Chúc mừng! Bạn đã gõ đúng!' : 'Chưa chính xác!'}</h4>
                 <div className="mt-2 text-ink dark:text-on-dark space-y-1">
-                  <div>Chữ Hán: <strong className="text-lg font-display">{activeCard.hanzi}</strong></div>
+                  <div>Chữ Hán: <strong className="text-lg font-display"><span className="hanzi-char">{activeCard.hanzi}</span></strong></div>
                   <div>Phiên âm: <strong className="font-mono font-bold text-primary">{activeCard.pinyin}</strong></div>
                   <div className="text-xs text-mute dark:text-on-dark-mute mt-1">Ý nghĩa: {activeCard.meaning}</div>
                 </div>
@@ -377,7 +377,7 @@ export default function DictationScreen() {
               {incorrectWords.map((word, idx) => (
                 <div key={idx} className="bg-surface-bone/35 dark:bg-black/10 p-3 rounded-md border border-hairline dark:border-divider-dark flex justify-between items-center text-xs">
                   <div>
-                    <span className="text-base font-extrabold text-ink dark:text-on-dark font-display">{word.hanzi}</span>
+                    <span className="text-base font-extrabold text-ink dark:text-on-dark font-display"><span className="hanzi-char">{word.hanzi}</span></span>
                     <span className="font-mono font-bold text-primary ml-2">{word.pinyin}</span>
                     <p className="text-mute dark:text-on-dark-mute mt-1 font-medium leading-relaxed">{word.meaning}</p>
                   </div>

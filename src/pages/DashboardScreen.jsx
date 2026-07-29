@@ -10,13 +10,14 @@ import {
   BookOpen, Gamepad2, Search, PlusCircle,
   ArrowRight, ChevronRight, Flame, GraduationCap,
   Trophy, ShoppingBag, LayoutGrid,
-  TrendingUp, Award, RefreshCw, X, ShoppingCart, CheckCircle2,
-  Loader2, Trash2
+  TrendingUp, Award, RefreshCw, X, ShoppingCart,
+  Loader2
 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { dictionaryApi } from '../services/dictionaryApi';
 import { speakChinese } from '../utils/tts';
 import { useTheme } from '../context/ThemeContext';
+import HoverableText from '../components/common/HoverableText';
 
 
 
@@ -101,13 +102,21 @@ function HeroWord() {
 
       <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8">
         <div className="flex flex-col items-center gap-3">
-          <div className="relative">
-            <span
-              className="text-7xl sm:text-8xl font-display font-bold text-ink dark:text-on-dark leading-none select-none"
-              style={{ fontFamily: "'Noto Serif SC', 'Lora', serif" }}
-            >
-              {wotd.s}
-            </span>
+          <div className="flex gap-2 flex-wrap justify-center">
+            {Array.from(wotd.s || '').map((char, index) => (
+              <div key={index} className="relative w-16 h-16 sm:w-20 sm:h-20 border border-red-500/20 bg-red-50/5 dark:bg-red-950/5 flex items-center justify-center rounded-lg shadow-xs overflow-hidden select-none">
+                {/* Calligraphy Grid (Mễ tự ô) SVG */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100">
+                  <line x1="0" y1="50" x2="100" y2="50" stroke="rgba(239, 68, 68, 0.15)" strokeWidth="0.75" strokeDasharray="3 3" />
+                  <line x1="50" y1="0" x2="50" y2="100" stroke="rgba(239, 68, 68, 0.15)" strokeWidth="0.75" strokeDasharray="3 3" />
+                  <line x1="0" y1="0" x2="100" y2="100" stroke="rgba(239, 68, 68, 0.1)" strokeWidth="0.5" strokeDasharray="3 3" />
+                  <line x1="100" y1="0" x2="0" y2="100" stroke="rgba(239, 68, 68, 0.1)" strokeWidth="0.5" strokeDasharray="3 3" />
+                </svg>
+                <span className="text-3xl sm:text-4xl z-10 selection:bg-transparent">
+                  <HoverableText text={char} hideMeaning={true} />
+                </span>
+              </div>
+            ))}
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -120,11 +129,10 @@ function HeroWord() {
             <button
               onClick={handleToggleFavorite}
               disabled={favLoading}
-              className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all cursor-pointer ${
-                isFavorite
+              className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all cursor-pointer ${isFavorite
                   ? 'bg-amber-500/15 text-amber-500 hover:bg-amber-500/25'
                   : 'bg-surface-bone dark:bg-white/5 text-mute hover:text-amber-500'
-              }`}
+                }`}
               title={isFavorite ? 'Bỏ yêu thích' : 'Yêu thích'}
             >
               <Star size={14} fill={isFavorite ? 'currentColor' : 'none'} />
@@ -218,9 +226,8 @@ function MiniWeekStrip({ data = [], _streak = 0 }) {
           <div key={i} className="flex flex-col items-center gap-1">
             <span className="text-[9px] font-bold text-mute uppercase">{d.day}</span>
             <div
-              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-xs font-bold transition-colors ${getCellIntensity(d.count)} ${
-                d.isToday ? 'ring-2 ring-primary/30 ring-offset-1 ring-offset-surface-card dark:ring-offset-surface-dark' : ''
-              }`}
+              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-xs font-bold transition-colors ${getCellIntensity(d.count)} ${d.isToday ? 'ring-2 ring-primary/30 ring-offset-1 ring-offset-surface-card dark:ring-offset-surface-dark' : ''
+                }`}
               title={`${d.count} lần học`}
             >
               {d.date}
@@ -232,6 +239,24 @@ function MiniWeekStrip({ data = [], _streak = 0 }) {
   );
 }
 
+
+const getDeckColor = (name) => {
+  const colors = [
+    'bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400',
+    'bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400',
+    'bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400',
+    'bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400',
+    'bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400',
+    'bg-purple-500/10 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400',
+    'bg-teal-500/10 dark:bg-teal-500/20 text-teal-600 dark:text-teal-400',
+  ];
+  if (!name) return colors[0];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+};
 
 // ─────────────────────────────────────────────────────────────
 // MAIN COMPONENT
@@ -269,20 +294,6 @@ export default function DashboardScreen() {
   const [dailyQuiz, setDailyQuiz] = useState(null);
   const [quizLoading, setQuizLoading] = useState(true);
 
-  const [gardenSummary, setGardenSummary] = useState(null);
-
-  const loadGardenSummary = async () => {
-    try {
-      const res = await statsApi.getGardenState();
-      setGardenSummary(res.data);
-    } catch (err) {
-      console.error('Failed to load garden summary:', err);
-    }
-  };
-
-  useEffect(() => {
-    loadGardenSummary();
-  }, [summary]);
 
   const loadDailyQuiz = async () => {
     try {
@@ -310,12 +321,12 @@ export default function DashboardScreen() {
   const studiedCards = summary?.completedCards ?? 0;
   const totalCards = decks?.reduce((sum, d) => sum + (d.cardCount || 0), 0) || 0;
 
-  const firstName = user?.name?.split(' ').pop() || 'học viên';
+  const firstName = user?.name || 'học viên';
 
   // Level & Title Calculation based on XP
   const userLevel = Math.floor(xp / 1000) + 1;
   const xpProgress = xp % 1000; // xp progress in current level (0 to 1000)
-  
+
   const getScholarTitle = (lvl) => {
     if (lvl >= 50) return t('dashboard.title_trang_nguyen');
     if (lvl >= 35) return t('dashboard.title_tham_hoa');
@@ -419,7 +430,7 @@ export default function DashboardScreen() {
     const r = 60; // Max radius
     const cx = 90; // Center X
     const cy = 90; // Center Y
-    
+
     // Angles for 5 vertices in radians
     const angles = [
       -Math.PI / 2,                // Viết (Trực diện trên)
@@ -506,11 +517,8 @@ export default function DashboardScreen() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="font-display text-2xl font-semibold text-ink dark:text-on-dark tracking-tight">
-              Xin chào, {firstName} 👋
+              Xin chào, {firstName}
             </h1>
-            <p className="text-xs text-mute mt-0.5">
-              Tiếp tục hành trình chinh phục tiếng Trung của bạn.
-            </p>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -599,7 +607,7 @@ export default function DashboardScreen() {
                     className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg hover:bg-surface-bone/60 dark:hover:bg-white/5 transition-colors group"
                   >
                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/8 dark:bg-primary/15 text-primary text-xs font-bold">
+                      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${getDeckColor(deck.title || deck.name)}`}>
                         {(deck.title || deck.name || '?').charAt(0).toUpperCase()}
                       </div>
                       <div className="min-w-0">
@@ -638,7 +646,7 @@ export default function DashboardScreen() {
         backgroundImage: "linear-gradient(to bottom, rgba(16, 16, 24, 0.80), rgba(10, 10, 16, 0.92)), url('https://images.unsplash.com/photo-1538370965046-79c0d6907d47?q=80&w=1920&auto=format&fit=crop')"
       }}
     >
-      
+
       {/* 1. Header Bar: Greeting & Stats capsule */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
         <div>
@@ -675,7 +683,7 @@ export default function DashboardScreen() {
             <span>{coins} {t('dashboard.coins')}</span>
           </div>
           <div className="h-3 w-px bg-white/15" />
-          
+
           {/* Change View Mode Button */}
           <button
             onClick={toggleViewMode}
@@ -690,7 +698,7 @@ export default function DashboardScreen() {
 
       {/* 2. Main floating panels (Left, Center, Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 my-6 items-stretch flex-1">
-        
+
         {/* PANEL TRÁI: Skill Radar (3 cols) */}
         <div className="lg:col-span-3 bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-5 flex flex-col justify-between shadow-lg relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 rounded-full bg-primary/5 blur-xl pointer-events-none" />
@@ -764,122 +772,39 @@ export default function DashboardScreen() {
           {/* 1. Word of the Day */}
           <HeroWord />
 
-          {/* 2. Zen Garden Preview Card */}
-          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-5 flex flex-col justify-between shadow-lg relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-green-500/5 blur-2xl pointer-events-none" />
-            
-            <div>
-              <div className="flex justify-between items-center border-b border-white/5 pb-2.5 mb-3.5">
-                <div>
-                  <span className="text-[9px] font-sans font-bold text-white/50 uppercase tracking-widest block">
-                    NÔNG TRẠI HỌC TẬP
-                  </span>
-                  <h3 className="text-sm font-bold text-white mt-0.5">Khu vườn Zen Từ vựng</h3>
-                </div>
-                <Link 
-                  to="/garden"
-                  className="text-xs bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-xl font-bold hover:bg-primary/20 transition-all flex items-center gap-1 cursor-pointer"
-                >
-                  Vào vườn 🌳
-                </Link>
-              </div>
 
-              {/* Garden status summary */}
-              <div className="grid grid-cols-4 gap-2 mb-3.5">
-                <div className="bg-yellow-500/10 border border-yellow-500/20 p-2 rounded-xl text-center">
-                  <span className="text-xl block">🌳</span>
-                  <span className="text-[10px] text-white/50 block mt-1">Cổ thụ</span>
-                  <span className="text-xs font-mono font-bold text-yellow-400">{gardenSummary?.goldenTreesCount || 0}</span>
-                </div>
-                <div className="bg-emerald-500/10 border border-emerald-500/20 p-2 rounded-xl text-center">
-                  <span className="text-xl block">🌿</span>
-                  <span className="text-[10px] text-white/50 block mt-1">Cây con</span>
-                  <span className="text-xs font-mono font-bold text-emerald-400">{gardenSummary?.saplingsCount || 0}</span>
-                </div>
-                <div className="bg-green-500/10 border border-green-500/20 p-2 rounded-xl text-center">
-                  <span className="text-xl block">🌱</span>
-                  <span className="text-[10px] text-white/50 block mt-1">Mầm non</span>
-                  <span className="text-xs font-mono font-bold text-green-400">{gardenSummary?.sproutsCount || 0}</span>
-                </div>
-                <div className="bg-amber-500/10 border border-amber-500/20 p-2 rounded-xl text-center">
-                  <span className="text-xl block">🟤</span>
-                  <span className="text-[10px] text-white/50 block mt-1">Hạt giống</span>
-                  <span className="text-xs font-mono font-bold text-amber-500">{gardenSummary?.seedsCount || 0}</span>
-                </div>
-              </div>
-
-              {/* Grass Mini representation preview */}
-              <div className="h-10 w-full rounded-lg bg-[#143217]/50 border border-[#2e6d30]/25 flex items-center justify-center gap-1.5 px-3 mb-3.5">
-                {gardenSummary?.plants?.length > 0 ? (
-                  gardenSummary.plants.slice(0, 8).map((plant, idx) => (
-                    <span 
-                      key={idx} 
-                      className="text-lg animate-sway"
-                      style={{ animationDelay: `${idx * 0.3}s`, transformOrigin: 'bottom center' }}
-                      title={plant.hanzi}
-                    >
-                      {plant.stage === 'seed' ? '🟤' : plant.stage === 'sprout' ? '🌱' : plant.stage === 'sapling' ? '🌿' : '🌳'}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-[10px] text-white/40">Chưa có cây nào được trồng. Hãy học từ vựng để gieo hạt!</span>
-                )}
-              </div>
-
-              {/* Weed status alert */}
-              {gardenSummary?.overdueCount > 0 ? (
-                <div className="flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 px-3 py-2 rounded-xl text-xs text-rose-300">
-                  <Trash2 size={14} className="text-rose-400 animate-bounce" />
-                  <span>Vườn đang có <strong>{gardenSummary.overdueCount} cỏ dại</strong>! Hãy ôn tập thẻ học ngay để dọn dẹp.</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 px-3 py-2 rounded-xl text-xs text-green-300">
-                  <CheckCircle2 size={14} className="text-green-400" />
-                  <span>Bãi cỏ sạch đẹp và tươi tốt! Không có cỏ dại.</span>
-                </div>
-              )}
-            </div>
-
-            {/* Quick enter garden button */}
-            <Link 
-              to="/garden"
-              className="mt-3.5 w-full py-2.5 rounded-xl bg-gradient-to-r from-green-600 to-emerald-500 text-white font-bold text-xs hover:brightness-110 transition-all flex items-center justify-center gap-1.5 shadow-md cursor-pointer border border-green-500/30"
-            >
-              VÀO BÃI CỎ CHI TIẾT (PvZ STYLE) 🌿
-            </Link>
-          </div>
 
           {/* 3. Quick Actions Arena */}
           <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-5 shadow-lg relative overflow-hidden">
             <div className="absolute -bottom-10 -left-10 w-24 h-24 rounded-full bg-blue-500/5 blur-xl pointer-events-none" />
-            
+
             <span className="text-[9px] font-sans font-bold text-white/50 uppercase tracking-widest block mb-2.5">
               ĐẤU TRƯỜNG CHINH PHỤC
             </span>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-              <Link 
+              <Link
                 to="/study-hub"
                 className="bg-white/5 hover:bg-white/10 border border-white/5 hover:border-primary/20 p-3 rounded-xl flex flex-col items-center text-center transition-all group"
               >
                 <span className="text-2xl group-hover:scale-110 transition-transform duration-300">🎓</span>
                 <span className="text-[10px] font-bold text-white mt-1.5 block">Khu học tập</span>
               </Link>
-              <Link 
+              <Link
                 to="/game-arcade"
                 className="bg-white/5 hover:bg-white/10 border border-white/5 hover:border-primary/20 p-3 rounded-xl flex flex-col items-center text-center transition-all group"
               >
                 <span className="text-2xl group-hover:scale-110 transition-transform duration-300">🎮</span>
                 <span className="text-[10px] font-bold text-white mt-1.5 block">Đấu trường game</span>
               </Link>
-              <Link 
+              <Link
                 to="/hsk-exams"
                 className="bg-white/5 hover:bg-white/10 border border-white/5 hover:border-primary/20 p-3 rounded-xl flex flex-col items-center text-center transition-all group"
               >
                 <span className="text-2xl group-hover:scale-110 transition-transform duration-300">🏆</span>
                 <span className="text-[10px] font-bold text-white mt-1.5 block">Luyện thi HSK</span>
               </Link>
-              <Link 
+              <Link
                 to="/chat"
                 className="bg-white/5 hover:bg-white/10 border border-white/5 hover:border-primary/20 p-3 rounded-xl flex flex-col items-center text-center transition-all group"
               >
@@ -895,7 +820,7 @@ export default function DashboardScreen() {
           {/* Card 1: Tabbed Quests & Quiz */}
           <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 flex flex-col justify-between shadow-lg relative overflow-hidden flex-1">
             <div className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-blue-500/5 blur-2xl pointer-events-none" />
-            
+
             <div className="flex flex-col h-full justify-between">
               {/* Card Header */}
               <div className="flex items-center justify-between mb-3 shrink-0">
@@ -923,18 +848,17 @@ export default function DashboardScreen() {
                         <h3 className="text-[11px] font-bold text-white leading-relaxed mb-3">
                           {dailyQuiz.question}
                         </h3>
-                        
+
                         <div className="space-y-1.5">
                           {dailyQuiz.options.map((opt, index) => (
                             <button
                               key={index}
                               onClick={() => !hasCompletedTodayQuiz && setSelectedQuizOption(index)}
                               disabled={hasCompletedTodayQuiz}
-                              className={`w-full text-left px-3 py-2.5 rounded-xl text-[10px] font-semibold transition-all flex items-center justify-between cursor-pointer border ${
-                                selectedQuizOption === index
+                              className={`w-full text-left px-3 py-2.5 rounded-xl text-[10px] font-semibold transition-all flex items-center justify-between cursor-pointer border ${selectedQuizOption === index
                                   ? 'bg-primary/25 border-primary text-white'
                                   : 'bg-white/5 hover:bg-white/10 border-white/5 text-white/80'
-                              } ${hasCompletedTodayQuiz ? 'cursor-not-allowed opacity-80' : ''}`}
+                                } ${hasCompletedTodayQuiz ? 'cursor-not-allowed opacity-80' : ''}`}
                             >
                               <span className="truncate pr-2">{opt.text}</span>
                               {hasCompletedTodayQuiz && opt.isCorrect && (
@@ -953,11 +877,10 @@ export default function DashboardScreen() {
                           <button
                             onClick={handleAnswerQuiz}
                             disabled={selectedQuizOption === null}
-                            className={`px-3.5 py-1.5 rounded-full text-[10px] font-black transition-all shadow-xs cursor-pointer ${
-                              selectedQuizOption !== null
+                            className={`px-3.5 py-1.5 rounded-full text-[10px] font-black transition-all shadow-xs cursor-pointer ${selectedQuizOption !== null
                                 ? 'bg-primary hover:bg-primary-deep text-slate-950 font-bold'
                                 : 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed'
-                            }`}
+                              }`}
                           >
                             {t('dashboard.submit')}
                           </button>
@@ -1023,70 +946,69 @@ export default function DashboardScreen() {
             </div>
           </div>
 
-        {/* Card 2: Inventory */}
-        <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 shadow-lg relative overflow-hidden shrink-0">
-          <div className="absolute top-0 right-0 w-16 h-16 rounded-full bg-primary/5 blur-xl pointer-events-none" />
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-1.5">
-              <ShoppingBag size={14} className="text-primary" />
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider">{t('dashboard.inventory')}</h3>
-            </div>
-            <button
-              onClick={() => setShowShop(true)}
-              className="text-[9px] font-black uppercase text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full hover:bg-primary hover:text-slate-950 transition-all cursor-pointer"
-            >
-              {t('dashboard.shop')}
-            </button>
-          </div>
-
-          <div className="space-y-2.5">
-
-            {/* Item 2: XP Boost */}
-            <div className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all">
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400 shrink-0">
-                  <Sparkles size={14} />
-                </div>
-                <div className="min-w-0">
-                  <h4 className="text-[10px] font-bold text-white truncate">{t('dashboard.booster_potion')}</h4>
-                  <p className="text-[8px] text-white/50 truncate">{t('dashboard.booster_desc')}</p>
-                </div>
+          {/* Card 2: Inventory */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 shadow-lg relative overflow-hidden shrink-0">
+            <div className="absolute top-0 right-0 w-16 h-16 rounded-full bg-primary/5 blur-xl pointer-events-none" />
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-1.5">
+                <ShoppingBag size={14} className="text-primary" />
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider">{t('dashboard.inventory')}</h3>
               </div>
-              <div className="flex items-center gap-1.5 shrink-0">
-                <span className="text-[10px] font-mono font-bold text-white bg-white/5 border border-white/5 px-2 py-1 rounded-md mr-1">
-                  x{summary?.xpBoostCount ?? 0}
-                </span>
-                {xpBoostTimeLeft ? (
-                  <button
-                    disabled
-                    className="px-2 py-1 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30 text-[9px] font-bold animate-pulse cursor-not-allowed shrink-0"
-                  >
-                    {xpBoostTimeLeft}
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleUseXpBoost}
-                    disabled={!(summary?.xpBoostCount > 0)}
-                    className={`px-2.5 py-1 rounded-full text-[9px] font-bold transition-all shrink-0 ${
-                      summary?.xpBoostCount > 0
-                        ? 'bg-primary hover:bg-primary-deep text-slate-950 font-black cursor-pointer'
-                        : 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed'
-                    }`}
-                  >
-                    {t('dashboard.activate')}
-                  </button>
-                )}
+              <button
+                onClick={() => setShowShop(true)}
+                className="text-[9px] font-black uppercase text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full hover:bg-primary hover:text-slate-950 transition-all cursor-pointer"
+              >
+                {t('dashboard.shop')}
+              </button>
+            </div>
+
+            <div className="space-y-2.5">
+
+              {/* Item 2: XP Boost */}
+              <div className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400 shrink-0">
+                    <Sparkles size={14} />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-[10px] font-bold text-white truncate">{t('dashboard.booster_potion')}</h4>
+                    <p className="text-[8px] text-white/50 truncate">{t('dashboard.booster_desc')}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="text-[10px] font-mono font-bold text-white bg-white/5 border border-white/5 px-2 py-1 rounded-md mr-1">
+                    x{summary?.xpBoostCount ?? 0}
+                  </span>
+                  {xpBoostTimeLeft ? (
+                    <button
+                      disabled
+                      className="px-2 py-1 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30 text-[9px] font-bold animate-pulse cursor-not-allowed shrink-0"
+                    >
+                      {xpBoostTimeLeft}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleUseXpBoost}
+                      disabled={!(summary?.xpBoostCount > 0)}
+                      className={`px-2.5 py-1 rounded-full text-[9px] font-bold transition-all shrink-0 ${summary?.xpBoostCount > 0
+                          ? 'bg-primary hover:bg-primary-deep text-slate-950 font-black cursor-pointer'
+                          : 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed'
+                        }`}
+                    >
+                      {t('dashboard.activate')}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
       {/* 3. Bottom macOS-style Interactive Dock */}
       <div className="flex justify-center w-full mt-4 pb-2">
         <div className="bg-black/30 border border-white/10 backdrop-blur-md px-6 py-2.5 rounded-full flex gap-6 items-center shadow-2xl relative">
-          
+
           <button
             onClick={() => navigate('/flashcards/new')}
             className="text-white/70 hover:text-primary transition-all hover:scale-125 duration-200 cursor-pointer flex flex-col items-center gap-0.5"
@@ -1095,7 +1017,7 @@ export default function DashboardScreen() {
             <PlusCircle size={18} />
             <span className="text-[8px] font-bold uppercase tracking-wider block scale-75 opacity-0 hover:opacity-100 transition-opacity">Thêm</span>
           </button>
-          
+
           <button
             onClick={() => navigate('/study-hub')}
             className="text-white/70 hover:text-primary transition-all hover:scale-125 duration-200 cursor-pointer flex flex-col items-center gap-0.5"

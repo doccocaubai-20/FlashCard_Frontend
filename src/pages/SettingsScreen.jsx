@@ -58,9 +58,21 @@ export default function SettingsScreen() {
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarMsg, setAvatarMsg] = useState('');
 
-  const handleLanguageSelect = (code) => {
+  const handleLanguageSelect = async (code) => {
     setProfileData((prev) => ({ ...prev, nativeLanguage: code }));
     i18n.changeLanguage(code);
+    try {
+      await dispatch(
+        updateProfile({
+          id: user.id,
+          data: {
+            nativeLanguage: code,
+          },
+        })
+      ).unwrap();
+    } catch (err) {
+      console.error('Failed to auto-save native language:', err);
+    }
   };
 
   // Handle file upload via API → Supabase Storage

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Play, Square, Volume2, ArrowRight, ExternalLink } from 'lucide-react';
 import { dialoguesData } from '../data/dialoguesData';
@@ -6,12 +6,18 @@ import HoverableText from '../components/common/HoverableText';
 
 export default function DialogueScreen() {
   const navigate = useNavigate();
+  const [filterLevel, setFilterLevel] = useState('all');
   const [selectedDialogue, setSelectedDialogue] = useState(dialoguesData[0]);
   const [activeTab, setActiveTab] = useState('chat'); // chat, vocab
   const [playingIndex, setPlayingIndex] = useState(-1);
   const [isPlayingAuto, setIsPlayingAuto] = useState(false);
   const [speechRate, setSpeechRate] = useState(0.8);
   const [showMobileList, setShowMobileList] = useState(false);
+
+  const filteredDialogues = useMemo(() => {
+    if (filterLevel === 'all') return dialoguesData;
+    return dialoguesData.filter((d) => d.level === filterLevel);
+  }, [filterLevel]);
   
   const timerRef = useRef(null);
   const speechRef = useRef(null);
@@ -121,8 +127,25 @@ export default function DialogueScreen() {
               </button>
             )}
           </div>
+          {/* HSK Level Filter */}
+          <div className="flex gap-1.5 flex-wrap">
+            {['all', 'HSK 1', 'HSK 2', 'HSK 3', 'HSK 4', 'HSK 5', 'HSK 6', 'HSK 7-9'].map((lvl) => (
+              <button
+                key={lvl}
+                type="button"
+                onClick={() => setFilterLevel(lvl)}
+                className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all border cursor-pointer ${
+                  filterLevel === lvl
+                    ? 'bg-primary border-transparent text-white shadow-sm'
+                    : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
+                }`}
+              >
+                {lvl === 'all' ? 'Tất cả' : lvl}
+              </button>
+            ))}
+          </div>
           <div className="space-y-3 flex-1 overflow-y-auto max-h-[600px] pr-1">
-            {dialoguesData.map((d) => (
+            {filteredDialogues.map((d) => (
               <button
                 key={d.id}
                 onClick={() => {

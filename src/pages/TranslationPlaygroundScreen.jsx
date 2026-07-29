@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { translationData } from '../data/translationData';
 import { 
@@ -11,7 +11,10 @@ import {
   Volume2, 
   BookOpen, 
   Eye, 
-  EyeOff
+  EyeOff,
+  Shuffle,
+  ListOrdered,
+  Dices
 } from 'lucide-react';
 
 export default function TranslationPlaygroundScreen() {
@@ -23,6 +26,9 @@ export default function TranslationPlaygroundScreen() {
   const [userTranslation, setUserTranslation] = useState('');
   const [showPinyin, setShowPinyin] = useState(true);
   const [checked, setChecked] = useState(false);
+  const [playMode, setPlayMode] = useState('sequential'); // 'sequential' | 'random'
+  const [hoveredTokenIndex, setHoveredTokenIndex] = useState(null);
+  const writersRef = useRef({}); // Store active HanziWriter instances for cleanup
 
   // Filter sentences by level
   const filteredSentences = useMemo(() => {
@@ -32,7 +38,9 @@ export default function TranslationPlaygroundScreen() {
   const currentSentence = filteredSentences[currentIndex] || filteredSentences[0];
 
   const handleNext = () => {
-    if (currentIndex < filteredSentences.length - 1) {
+    if (playMode === 'random') {
+      handleRandom();
+    } else if (currentIndex < filteredSentences.length - 1) {
       setCurrentIndex((prev) => prev + 1);
       resetQuestion();
     }
@@ -43,6 +51,16 @@ export default function TranslationPlaygroundScreen() {
       setCurrentIndex((prev) => prev - 1);
       resetQuestion();
     }
+  };
+
+  const handleRandom = () => {
+    if (filteredSentences.length <= 1) return;
+    let newIdx;
+    do {
+      newIdx = Math.floor(Math.random() * filteredSentences.length);
+    } while (newIdx === currentIndex);
+    setCurrentIndex(newIdx);
+    resetQuestion();
   };
 
   const resetQuestion = () => {
@@ -69,6 +87,65 @@ export default function TranslationPlaygroundScreen() {
     window.speechSynthesis.speak(utterance);
   };
 
+  // Initialize HanziWriter animation when a token is hovered
+  useEffect(() => {
+    if (hoveredTokenIndex === null) {
+      // Clean up previous writers
+      Object.values(writersRef.current).forEach(w => {
+        try { w.destroy(); } catch (e) {}
+      });
+      writersRef.current = {};
+      return;
+    }
+
+    const token = filteredSentences[currentIndex]?.tokens[hoveredTokenIndex];
+    if (!token || !window.HanziWriter) return;
+
+    // Filter out punctuation and spaces
+    const cleanWord = token.word.replace(/[。？！，、；：?]/g, '').trim();
+    const chars = Array.from(cleanWord);
+
+    const isDark = document.documentElement.classList.contains('dark');
+    const outlineColor = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(32, 32, 32, 0.08)';
+    const strokeColor = '#0d9488'; // primary teal
+
+    // Small delay to ensure React renders the DOM container divs
+    const timer = setTimeout(() => {
+      chars.forEach((char, charIdx) => {
+        const containerId = `hover-writer-${hoveredTokenIndex}-${charIdx}`;
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        container.innerHTML = '';
+        try {
+          const writer = window.HanziWriter.create(container, char, {
+            width: 54,
+            height: 54,
+            padding: 2,
+            showOutline: true,
+            strokeColor,
+            outlineColor,
+            showCharacter: true,
+            strokeAnimationSpeed: 1.5,
+            delayBetweenStrokes: 150
+          });
+          writersRef.current[containerId] = writer;
+          writer.animateCharacter(); // Start drawing animation immediately
+        } catch (e) {
+          console.error("Failed to load HanziWriter for tooltip character", char, e);
+        }
+      });
+    }, 60);
+
+    return () => {
+      clearTimeout(timer);
+      Object.values(writersRef.current).forEach(w => {
+        try { w.destroy(); } catch (e) {}
+      });
+      writersRef.current = {};
+    };
+  }, [hoveredTokenIndex, currentIndex, filteredSentences]);
+
   // Grade translation based on matching keywords
   const gradingResult = useMemo(() => {
     if (!checked || !currentSentence) return null;
@@ -94,7 +171,7 @@ export default function TranslationPlaygroundScreen() {
       <div className="flex items-center justify-between border-b border-hairline dark:border-divider-dark pb-5">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate(-1)}
             className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-surface-bone dark:hover:bg-black text-mute cursor-pointer"
           >
             <ArrowLeft size={16} />
@@ -111,29 +188,59 @@ export default function TranslationPlaygroundScreen() {
 
       {/* Level Filters */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-hairline dark:border-divider-dark pb-4">
-        <div className="flex items-center gap-2 text-mute dark:text-on-dark-mute text-xs font-semibold uppercase tracking-wider">
-          Cấp độ câu dịch:
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 text-mute dark:text-on-dark-mute text-xs font-semibold uppercase tracking-wider">
+            Cấp độ câu dịch:
+          </div>
+          <div className="flex gap-1.5 flex-wrap">
+            {['HSK 1', 'HSK 2', 'HSK 3', 'HSK 4', 'HSK 5', 'HSK 6', 'HSK 7-9'].map((lvl) => (
+              <button
+                key={lvl}
+                type="button"
+                onClick={() => {
+                  setFilterLevel(lvl);
+                  setCurrentIndex(0);
+                  resetQuestion();
+                }}
+                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+                  filterLevel === lvl
+                    ? 'bg-primary border-transparent text-white shadow-sm'
+                    : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
+                }`}
+              >
+                {lvl}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="flex gap-2">
-          {['HSK 1', 'HSK 2', 'HSK 3'].map((lvl) => (
-            <button
-              key={lvl}
-              type="button"
-              onClick={() => {
-                setFilterLevel(lvl);
-                setCurrentIndex(0);
-                resetQuestion();
-              }}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${
-                filterLevel === lvl
-                  ? 'bg-primary border-transparent text-white shadow-sm'
-                  : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-              }`}
-            >
-              {lvl}
-            </button>
-          ))}
-        </div>
+      </div>
+
+      {/* Mode Toggle */}
+      <div className="flex items-center gap-1 bg-surface-bone dark:bg-black rounded-full p-0.5 border border-hairline dark:border-divider-dark w-fit">
+        <button
+          type="button"
+          onClick={() => setPlayMode('sequential')}
+          className={`flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
+            playMode === 'sequential'
+              ? 'bg-white dark:bg-surface-dark text-primary shadow-sm'
+              : 'text-mute hover:text-ink'
+          }`}
+        >
+          <ListOrdered size={12} />
+          Lần lượt
+        </button>
+        <button
+          type="button"
+          onClick={() => { setPlayMode('random'); handleRandom(); }}
+          className={`flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
+            playMode === 'random'
+              ? 'bg-white dark:bg-surface-dark text-primary shadow-sm'
+              : 'text-mute hover:text-ink'
+          }`}
+        >
+          <Shuffle size={12} />
+          Ngẫu nhiên
+        </button>
       </div>
 
       {currentSentence && (
@@ -174,6 +281,8 @@ export default function TranslationPlaygroundScreen() {
                   {currentSentence.tokens.map((token, idx) => (
                     <div 
                       key={idx} 
+                      onMouseEnter={() => setHoveredTokenIndex(idx)}
+                      onMouseLeave={() => setHoveredTokenIndex(null)}
                       className="group relative cursor-help border-b-2 border-dashed border-mute/30 hover:border-primary pb-0.5 transition-colors shrink-0"
                     >
                       <span 
@@ -183,12 +292,26 @@ export default function TranslationPlaygroundScreen() {
                         {token.word}
                       </span>
                       
-                      {/* Interactive popup tooltip */}
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3.5 w-36 p-2 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-10 text-center space-y-0.5">
-                        <div className="text-xs font-mono font-bold text-primary">{token.pinyin}</div>
-                        <div className="text-[10px] text-body dark:text-on-dark-mute leading-normal">{token.meaning}</div>
-                        <div className="text-[8px] text-mute pt-0.5">Click để nghe phát âm</div>
-                      </div>
+                      {/* Interactive popup tooltip with Stroke Order Animation */}
+                      {hoveredTokenIndex === idx && (
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3.5 w-52 p-3 bg-white dark:bg-zinc-950 border border-hairline dark:border-zinc-800 rounded-2xl shadow-xl z-50 text-center space-y-2 pointer-events-none animate-fade-in">
+                          <div className="text-xs font-mono font-bold text-primary">{token.pinyin}</div>
+                          <div className="text-[10px] text-body dark:text-on-dark-mute leading-normal font-semibold">{token.meaning}</div>
+                          
+                          {/* Stroke Order Drawing Grid */}
+                          <div className="flex justify-center gap-1.5 py-2 bg-surface-bone dark:bg-zinc-900/50 rounded-xl border border-hairline dark:border-zinc-800">
+                            {Array.from(token.word.replace(/[。？！，、；：?]/g, '').trim()).map((char, charIdx) => (
+                              <div 
+                                key={charIdx} 
+                                id={`hover-writer-${idx}-${charIdx}`} 
+                                className="w-[54px] h-[54px] bg-white dark:bg-zinc-900 rounded-lg border border-hairline dark:border-zinc-800 flex items-center justify-center overflow-hidden shadow-xs shrink-0"
+                              />
+                            ))}
+                          </div>
+
+                          <div className="text-[8px] text-mute dark:text-on-dark-mute pt-0.5">Click để nghe phát âm</div>
+                        </div>
+                      )}
                     </div>
                   ))}
                   
@@ -242,23 +365,35 @@ export default function TranslationPlaygroundScreen() {
 
             {/* Navigation Buttons */}
             <div className="flex items-center justify-between">
-              <button
-                onClick={handlePrev}
-                disabled={currentIndex === 0}
-                className="flex items-center gap-1 px-4 py-2 border border-hairline dark:border-divider-dark rounded-full text-xs font-semibold text-mute hover:text-ink hover:bg-surface-bone dark:hover:bg-black cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
-              >
-                <ChevronLeft size={14} />
-                Câu trước
-              </button>
+              {playMode === 'random' ? (
+                <button
+                  onClick={handleRandom}
+                  className="flex items-center gap-1.5 px-5 py-2 bg-primary hover:bg-primary-deep text-white rounded-full text-xs font-bold cursor-pointer transition-all shadow-sm active:scale-95 mx-auto"
+                >
+                  <Dices size={14} />
+                  Câu ngẫu nhiên khác
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={handlePrev}
+                    disabled={currentIndex === 0}
+                    className="flex items-center gap-1 px-4 py-2 border border-hairline dark:border-divider-dark rounded-full text-xs font-semibold text-mute hover:text-ink hover:bg-surface-bone dark:hover:bg-black cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
+                  >
+                    <ChevronLeft size={14} />
+                    Câu trước
+                  </button>
 
-              <button
-                onClick={handleNext}
-                disabled={currentIndex === filteredSentences.length - 1}
-                className="flex items-center gap-1 px-4 py-2 bg-surface-card border border-hairline dark:bg-surface-dark dark:border-divider-dark rounded-full text-xs font-semibold text-ink dark:text-on-dark hover:bg-surface-bone dark:hover:bg-black cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
-              >
-                Câu tiếp theo
-                <ChevronRight size={14} />
-              </button>
+                  <button
+                    onClick={handleNext}
+                    disabled={currentIndex === filteredSentences.length - 1}
+                    className="flex items-center gap-1 px-4 py-2 bg-surface-card border border-hairline dark:bg-surface-dark dark:border-divider-dark rounded-full text-xs font-semibold text-ink dark:text-on-dark hover:bg-surface-bone dark:hover:bg-black cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
+                  >
+                    Câu tiếp theo
+                    <ChevronRight size={14} />
+                  </button>
+                </>
+              )}
             </div>
           </div>
 

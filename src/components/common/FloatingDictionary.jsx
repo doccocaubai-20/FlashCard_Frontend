@@ -52,6 +52,12 @@ export default function FloatingDictionary() {
 
   const bubbleRef = useRef(null);
   const dragStartRef = useRef({ x: 0, y: 0, posX: 0, posY: 0, moved: false });
+  const positionRef = useRef(position);
+
+  // Sync positionRef with state changes
+  useEffect(() => {
+    positionRef.current = position;
+  }, [position]);
 
   // Load favorites list for star toggling
   const loadFavorites = async () => {
@@ -176,6 +182,9 @@ export default function FloatingDictionary() {
   };
 
   const handleTouchStart = (e) => {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
     const touch = e.touches[0];
     startDrag(touch.clientX, touch.clientY);
     
@@ -226,7 +235,7 @@ export default function FloatingDictionary() {
 
   const endDrag = () => {
     try {
-      localStorage.setItem('chongzi_float_dict_pos', JSON.stringify(position));
+      localStorage.setItem('chongzi_float_dict_pos', JSON.stringify(positionRef.current));
     } catch {
       /* ignore */
     }

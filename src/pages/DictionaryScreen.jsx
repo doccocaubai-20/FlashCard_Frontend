@@ -12,6 +12,63 @@ import api from '../services/api';
 import { speakChinese } from '../utils/tts';
 import HoverableText from '../components/common/HoverableText';
 
+// Helper to convert numbered pinyin like "bai2 bai2" to tone marks like "bái bái"
+const convertNumberedPinyin = (pinyinStr) => {
+  if (!pinyinStr) return '';
+  const tones = {
+    a: ['ā', 'á', 'ǎ', 'à', 'a'],
+    e: ['ē', 'é', 'ě', 'è', 'e'],
+    o: ['ō', 'ó', 'ǒ', 'ò', 'o'],
+    i: ['ī', 'í', 'ǐ', 'ì', 'i'],
+    u: ['ū', 'ú', 'ǔ', 'ù', 'u'],
+    v: ['ǖ', 'ǘ', 'ǚ', 'ǜ', 'ü'],
+    ü: ['ǖ', 'ǘ', 'ǚ', 'ǜ', 'ü']
+  };
+
+  return pinyinStr.split(/\s+/).map(word => {
+    const match = word.match(/^([a-zA-ZüÜ]+)([1-5])$/);
+    if (!match) return word;
+
+    const base = match[1];
+    const toneNum = parseInt(match[2]) - 1;
+
+    let targetChar = '';
+    if (base.includes('a')) targetChar = 'a';
+    else if (base.includes('e')) targetChar = 'e';
+    else if (base.includes('ou')) targetChar = 'o';
+    else {
+      // Find last vowel
+      for (let i = base.length - 1; i >= 0; i--) {
+        const c = base[i].toLowerCase();
+        if (tones[c]) {
+          targetChar = c;
+          break;
+        }
+      }
+    }
+
+    if (targetChar && tones[targetChar]) {
+      const idx = base.toLowerCase().lastIndexOf(targetChar);
+      const isUpper = base[idx] === base[idx].toUpperCase();
+      const toned = tones[targetChar][toneNum] || targetChar;
+      return base.substring(0, idx) + (isUpper ? toned.toUpperCase() : toned) + base.substring(idx + 1);
+    }
+
+    return word;
+  }).join(' ');
+};
+
+// Strips bracketed Hanzi+Pinyin to keep summaries clean in list views
+const stripBrackets = (text) => {
+  if (!text) return '';
+  const regex = /([\u4e00-\u9fa5]+(?:[|｜][\u4e00-\u9fa5]+)*)\[([a-zA-Z0-9\s]+)\]/g;
+  return text.replace(regex, (match, rawWord) => {
+    if (rawWord.includes('|')) return rawWord.split('|')[1];
+    if (rawWord.includes('｜')) return rawWord.split('｜')[1];
+    return rawWord;
+  });
+};
+
 // External sentences loaded dynamically in the background
 let _externalSentences = [];
 
@@ -184,9 +241,63 @@ export default function DictionaryScreen() {
   const [activeTab, setActiveTab] = useState('');
   const [tabDetails, setTabDetails] = useState(null);
   const [aiExplanation, setAiExplanation] = useState('');
+  const [aiLimit, setAiLimit] = useState({ count: 0, limit: 10 });
+
+  // Render formatted Vietnamese definitions with clickable links and toned pinyin
+  const renderFormattedVi = (text) => {
+    if (!text) return null;
+
+    const regex = /([\u4e00-\u9fa5]+(?:[|｜][\u4e00-\u9fa5]+)*)\[([a-zA-Z0-9\s]+)\]/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+      const matchIndex = match.index;
+      
+      if (matchIndex > lastIndex) {
+        parts.push(text.substring(lastIndex, matchIndex));
+      }
+
+      const rawWord = match[1];
+      const pinyinRaw = match[2];
+
+      const searchWord = rawWord.includes('|') 
+        ? rawWord.split('|')[1] 
+        : rawWord.includes('｜') 
+          ? rawWord.split('｜')[1] 
+          : rawWord;
+
+      const formattedPinyin = convertNumberedPinyin(pinyinRaw);
+
+      parts.push(
+        <span key={matchIndex} className="inline-flex flex-wrap items-center gap-0.5 mx-0.5">
+          <button
+            type="button"
+            onClick={async (e) => {
+              e.stopPropagation();
+              setQuery(searchWord);
+              await handleSearch(searchWord);
+            }}
+            className="text-primary dark:text-link hover:underline font-bold focus:outline-none cursor-pointer"
+          >
+            {rawWord}
+          </button>
+          <span className="text-[11px] text-mute dark:text-on-dark-mute font-mono">({formattedPinyin})</span>
+        </span>
+      );
+
+      lastIndex = regex.lastIndex;
+    }
+
+    if (lastIndex < text.length) {
+      parts.push(text.substring(lastIndex));
+    }
+
+    return parts.length > 0 ? parts : text;
+  };
   const [aiLoading, setAiLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [aiLimit, setAiLimit] = useState({ count: 0, limit: 10 });
 
   // Camera OCR states
   const [showOcrScanner, setShowOcrScanner] = useState(false);
@@ -1158,7 +1269,8 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                     )}
                   </div>
                 </div>
-              </div>-c              {/* AI Explanation Area */}
+              </div>
+              {/* AI Explanation Area */}
               <div className="border border-hairline dark:border-divider-dark rounded-md p-5 flex flex-col gap-4 text-left">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider flex items-center gap-1.5">
@@ -1207,7 +1319,8 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                     Bấm nút "Giải thích" để phân tích cấu trúc Hán-Việt chi tiết từng ký tự cấu thành từ ghép này.
                   </p>
                 )}
-              </div>e=              {/* Translation meanings */}
+              </div>
+              {/* Translation meanings */}
               <div className="space-y-3 text-left">
                 <div className="flex items-center gap-2">
                   <h4 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider">Ý nghĩa</h4>
@@ -1225,7 +1338,7 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                         VN
                       </span>
                       <p className="text-sm text-ink dark:text-on-dark font-semibold leading-relaxed">
-                        {tabDetails.vi}
+                        {renderFormattedVi(tabDetails.vi)}
                       </p>
                     </div>
                   )}
@@ -1413,7 +1526,7 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                               </div>
                               {item.vi && (
                                 <p className="text-xs text-body dark:text-on-dark-mute line-clamp-1">
-                                  {item.vi}
+                                  {stripBrackets(item.vi)}
                                 </p>
                               )}
                             </div>

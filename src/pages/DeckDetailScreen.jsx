@@ -77,8 +77,8 @@ export default function DeckDetailScreen() {
           deckId: id,
           hanzi: item["Tiếng Trung"] || item.hanzi || item.front || '',
           pinyin: item["Pinyin"] || item.pinyin || '',
-          meaning: item["Từ loại"] 
-            ? `(${item["Từ loại"]}) ${item["Dịch nghĩa"] || item.meaning || ''}` 
+          meaning: item["Từ loại"]
+            ? `(${item["Từ loại"]}) ${item["Dịch nghĩa"] || item.meaning || ''}`
             : (item["Dịch nghĩa"] || item.meaning || item.back || ''),
           exampleHanzi: item.exampleHanzi || null,
           examplePinyin: item.examplePinyin || null,
@@ -183,7 +183,7 @@ export default function DeckDetailScreen() {
                 onClick={() => navigate(`/decks/${id}/game`)}
                 className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
               >
-                🎮 Chơi Game
+                Chơi Game
               </button>
             )}
             <button
@@ -191,14 +191,14 @@ export default function DeckDetailScreen() {
               onClick={() => navigate(`/decks/${id}/quiz`)}
               className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
             >
-              📝 Trắc nghiệm
+              Trắc nghiệm
             </button>
             <button
               type="button"
               onClick={() => navigate(`/decks/${id}/dictation`)}
               className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
             >
-              🎧 Nghe viết
+              Nghe viết
             </button>
             {!isVirtual && (
               <button
@@ -206,7 +206,7 @@ export default function DeckDetailScreen() {
                 onClick={() => setIsAiParagraphModalOpen(true)}
                 className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
               >
-                🤖 Đoạn văn AI
+                Đoạn văn AI
               </button>
             )}
             <button
@@ -231,10 +231,10 @@ export default function DeckDetailScreen() {
               </div>
             </div>
           </div>
-          
+
           <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/30 p-5">
             <h2 className="text-base font-bold text-ink dark:text-on-dark font-display tracking-tight">Danh sách thẻ bài</h2>
-            <div className="mt-4 space-y-3 pr-1">
+            <div className="mt-4 space-y-3 pr-2 max-h-[550px] overflow-y-auto">
               {displayCards?.length > 0 ? (
                 displayCards.map((card) => (
                   <div key={card.id || card.front} className="rounded-md border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-surface-dark/20 p-4 transition-colors relative group">
@@ -308,7 +308,7 @@ function JsonFormatHelpModal({ onClose }) {
       <div className="bg-surface-card dark:bg-surface-dark rounded-xl shadow-xl max-w-lg w-full border border-hairline dark:border-divider-dark overflow-hidden animate-in fade-in zoom-in-95 duration-200 text-left">
         <div className="flex items-center justify-between px-6 py-4 border-b border-hairline dark:border-divider-dark">
           <h3 className="text-base font-bold text-ink dark:text-on-dark font-display flex items-center gap-2">
-            <span>ℹ️</span> Hướng dẫn định dạng file JSON
+            Hướng dẫn định dạng file JSON
           </h3>
           <button onClick={onClose} className="text-mute hover:text-ink dark:text-on-dark-mute dark:hover:text-on-dark p-1.5 rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors cursor-pointer">
             <X size={18} />
@@ -322,7 +322,7 @@ function JsonFormatHelpModal({ onClose }) {
           <div className="space-y-2">
             <div className="font-bold text-ink dark:text-on-dark">Định dạng 1 (Cơ bản - Tiếng Anh):</div>
             <pre className="bg-surface-bone dark:bg-black/30 p-3 rounded-lg overflow-x-auto font-mono text-[11px] text-primary">
-{`[
+              {`[
   {
     "hanzi": "你",
     "pinyin": "nǐ",
@@ -338,7 +338,7 @@ function JsonFormatHelpModal({ onClose }) {
           <div className="space-y-2">
             <div className="font-bold text-ink dark:text-on-dark">Định dạng 2 (Nâng cao - Tiếng Việt):</div>
             <pre className="bg-surface-bone dark:bg-black/30 p-3 rounded-lg overflow-x-auto font-mono text-[11px] text-primary">
-{`[
+              {`[
   {
     "Tiếng Trung": "你",
     "Pinyin": "nǐ",
@@ -457,7 +457,7 @@ function SavedParagraphCard({ paragraph, onDelete }) {
                 {paragraph.meaning}
               </p>
             </div>
-            
+
             {paragraph.wordUsage && (
               <div className="md:col-span-2 mt-2 space-y-2">
                 <div className="text-[10px] font-bold text-ink dark:text-on-dark uppercase tracking-wider">

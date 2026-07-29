@@ -225,7 +225,7 @@ export default function MatchingGameScreen() {
       <div className="flex items-center justify-between border-b border-hairline dark:border-divider-dark pb-5">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate(-1)}
             className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-surface-bone dark:hover:bg-black text-mute cursor-pointer"
           >
             <ArrowLeft size={16} />

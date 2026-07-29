@@ -212,7 +212,7 @@ export default function UnscrambleGameScreen() {
       <div className="flex items-center justify-between border-b border-hairline dark:border-divider-dark pb-5">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate(-1)}
             className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-surface-bone dark:hover:bg-black text-mute cursor-pointer"
           >
             <ArrowLeft size={16} />
@@ -426,7 +426,7 @@ export default function UnscrambleGameScreen() {
                       
                       <div className="bg-surface-bone/50 dark:bg-black/25 p-3.5 rounded border border-hairline dark:border-divider-dark space-y-2 relative">
                         <p className="text-lg font-bold font-display text-ink dark:text-on-dark select-all pr-8">
-                          {currentSentence.hanzi}
+                          <span className="hanzi-char">{currentSentence.hanzi}</span>
                         </p>
                         <p className="text-xs font-mono font-bold text-primary/80">
                           {currentSentence.pinyin}
@@ -551,7 +551,7 @@ export default function UnscrambleGameScreen() {
                           )}
                         </td>
                         <td className="p-2.5 font-bold font-display text-ink dark:text-on-dark">
-                          {hist.sentence.hanzi}
+                          <span className="hanzi-char">{hist.sentence.hanzi}</span>
                           <span className="block text-[9px] font-mono font-normal text-mute mt-0.5">{hist.sentence.pinyin}</span>
                         </td>
                         <td className="p-2.5 text-mute italic">"{hist.sentence.meaning}"</td>

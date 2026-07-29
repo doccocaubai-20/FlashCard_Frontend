@@ -346,3 +346,10 @@
 .gamified-active ::-webkit-scrollbar-thumb:hover {
   background: rgba(56, 189, 248, 0.45) !important;
 }
+
+/* Chinese character font rendering style to match normal stroke representation and avoid faux-bolding distortions */
+.hanzi-char {
+  font-family: "STKaiti", "Kaiti", "楷体", "BiauKai", "SimSun", "Songti SC", serif !important;
+  font-weight: 400 !important;
+  display: inline-block;
+}

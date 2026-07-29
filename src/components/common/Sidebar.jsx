@@ -16,8 +16,7 @@ import {
   Trophy,
   Shield,
   MessageSquare,
-  ClipboardList,
-  Sprout
+  ClipboardList
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -40,7 +39,7 @@ export default function Sidebar() {
       items: [
         { to: '/', label: t('nav.dashboard'), icon: LayoutDashboard },
         { to: '/decks', label: t('nav.decks'), icon: BookOpen },
-        { to: '/garden', label: t('nav.garden'), icon: Sprout },
+
         { to: '/leaderboard', label: t('nav.leaderboard'), icon: Trophy },
       ]
     },

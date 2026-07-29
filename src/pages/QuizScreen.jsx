@@ -341,7 +341,7 @@ export default function QuizScreen() {
         </button>
         
         <h2 className="text-7xl font-display font-extrabold text-ink dark:text-on-dark py-6 leading-none">
-          {currentQuestion?.card.hanzi}
+          <span className="hanzi-char">{currentQuestion?.card.hanzi}</span>
         </h2>
         
         <div 

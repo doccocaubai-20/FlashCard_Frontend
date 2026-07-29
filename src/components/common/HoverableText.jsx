@@ -175,7 +175,7 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
               <span className="flex-1 min-w-0 flex flex-col justify-between">
                 <span>
                   <span className="flex items-baseline gap-1.5 mb-1.5 flex-wrap">
-                    <span className="text-xl font-bold font-display text-primary">{char}</span>
+                    <span className="text-xl font-bold font-display text-primary"><span className="hanzi-char">{char}</span></span>
                     {data?.p && <span className="text-xs font-mono font-bold text-ink dark:text-on-dark">{data.p}</span>}
                     {data?.sv && <span className="text-[10px] font-mono font-bold text-amber-500 uppercase">{data.sv}</span>}
                   </span>
@@ -224,7 +224,7 @@ export default function HoverableText({ text, hideMeaning = false, className = "
         if (isChinese) {
           return (
             <HanziTooltip key={`${char}_${index}`} char={char} hideMeaning={hideMeaning} className={className}>
-              {char}
+              <span className="hanzi-char">{char}</span>
             </HanziTooltip>
           );
         }

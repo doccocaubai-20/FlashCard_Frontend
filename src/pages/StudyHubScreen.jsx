@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  GraduationCap, 
-  Mic, 
-  PenTool, 
-  MessageSquare, 
-  Languages, 
+import {
+  GraduationCap,
+  Mic,
+  PenTool,
+  MessageSquare,
+  Languages,
   ArrowRight
 } from 'lucide-react';
 
@@ -73,7 +73,7 @@ export default function StudyHubScreen() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-10">
-      
+
       {/* Header section */}
       <div className="text-left space-y-2 border-b border-hairline dark:border-divider-dark pb-6">
         <h1 className="font-display text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight flex items-center gap-2">
@@ -81,7 +81,7 @@ export default function StudyHubScreen() {
           Khu vực Học tập HSK
         </h1>
         <p className="text-sm text-mute">
-          Tổng hợp các công cụ luyện tập chuyên sâu 4 kỹ năng Nghe - Nói - Đọc - Viết dành cho người học tiếng Trung HSK 1-3.
+          Tổng hợp các công cụ luyện tập chuyên sâu 4 kỹ năng Nghe - Nói - Đọc - Viết dành cho người học tiếng Trung.
         </p>
       </div>
 

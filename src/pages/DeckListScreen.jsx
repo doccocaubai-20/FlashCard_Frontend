@@ -11,8 +11,8 @@ import { useToast } from '../context/ToastContext';
 // ─── Tab toggle ───────────────────────────────────────────────────────────────
 const TABS = [
   { id: 'personal', label: 'Bộ thẻ cá nhân' },
-  { id: 'system',   label: 'Bộ thẻ hệ thống' },
-  { id: 'explore',  label: '🌐 Khám phá cộng đồng' },
+  { id: 'system', label: 'Bộ thẻ hệ thống' },
+  { id: 'explore', label: '🌐 Khám phá cộng đồng' },
 ];
 
 export default function DeckListScreen() {
@@ -275,7 +275,7 @@ export default function DeckListScreen() {
             className="flex items-center gap-2 border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark font-bold px-4 py-3 rounded-full transition-all shadow-xs cursor-pointer bg-surface-card dark:bg-surface-dark"
           >
             <Globe size={16} />
-            <span>Nhập bộ từ</span>
+            <span>Bộ từ chia sẻ</span>
           </button>
           <button
             onClick={() => setIsAiModalOpen(true)}
@@ -300,11 +300,10 @@ export default function DeckListScreen() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-5 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer ${
-              activeTab === tab.id
+            className={`px-5 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer ${activeTab === tab.id
                 ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
                 : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
-            }`}
+              }`}
           >
             {tab.label}
           </button>
@@ -563,11 +562,10 @@ export default function DeckListScreen() {
                       <button
                         onClick={() => handleImportPublic(shareCode)}
                         disabled={isImportingThis || alreadyImported || !shareCode}
-                        className={`w-full flex items-center justify-center gap-2 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                          alreadyImported
+                        className={`w-full flex items-center justify-center gap-2 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${alreadyImported
                             ? 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/30 cursor-default'
                             : 'bg-primary hover:bg-primary-deep text-white shadow-xs disabled:opacity-60 disabled:cursor-not-allowed'
-                        }`}
+                          }`}
                       >
                         {alreadyImported ? (
                           <>
@@ -763,7 +761,7 @@ export default function DeckListScreen() {
       {isAiModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <div className="bg-surface-card dark:bg-surface-dark rounded-md shadow-sm max-w-lg w-full border border-hairline dark:border-divider-dark overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            
+
             <div className="flex items-center justify-between px-6 py-4 border-b border-hairline dark:border-divider-dark">
               <h3 className="text-base font-bold text-ink dark:text-on-dark font-display tracking-tight flex items-center gap-2">
                 <Sparkles size={18} className="text-purple-500" />
@@ -786,22 +784,20 @@ export default function DeckListScreen() {
                 <button
                   type="button"
                   onClick={() => setAiTab('text')}
-                  className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${
-                    aiTab === 'text'
+                  className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${aiTab === 'text'
                       ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
                       : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
-                  }`}
+                    }`}
                 >
                   Nhập văn bản
                 </button>
                 <button
                   type="button"
                   onClick={() => setAiTab('image')}
-                  className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${
-                    aiTab === 'image'
+                  className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${aiTab === 'image'
                       ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
                       : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
-                  }`}
+                    }`}
                 >
                   Tải ảnh (OCR)
                 </button>
