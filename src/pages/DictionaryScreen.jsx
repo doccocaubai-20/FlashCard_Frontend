@@ -219,6 +219,133 @@ const searchRelatedSentences = (q) => {
   return matched.slice(0, 10);
 };
 
+// Stroke order guide and writing practice component for the dictionary
+function DictionaryWritingPractice({ word }) {
+  const containerRef = useRef(null);
+  const writerRef = useRef(null);
+  const [activeCharIndex, setActiveCharIndex] = useState(0);
+  const [mode, setMode] = useState('idle'); // 'idle' | 'quiz'
+  const [showOutline, setShowOutline] = useState(true);
+
+  const cleanWord = (word || '').replace(/[。？！，、；：?]/g, '').trim();
+  const chars = Array.from(cleanWord).filter(c => /[\u4e00-\u9fa5]/.test(c));
+  const targetChar = chars[activeCharIndex] || chars[0] || '';
+
+  useEffect(() => {
+    // Reset active character index and state when the word changes
+    setActiveCharIndex(0);
+    setMode('idle');
+  }, [word]);
+
+  useEffect(() => {
+    if (!containerRef.current || !window.HanziWriter || !targetChar) return;
+
+    containerRef.current.innerHTML = '';
+
+    const isDark = document.documentElement.classList.contains('dark');
+    const outlineColor = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(32, 32, 32, 0.08)';
+    const strokeColor = '#0d9488'; // primary teal
+    const drawingColor = isDark ? '#2dd4bf' : '#0d9488';
+    const radicalColor = '#10b981';
+
+    const writer = window.HanziWriter.create(containerRef.current, targetChar, {
+      width: 140,
+      height: 140,
+      padding: 5,
+      showOutline: showOutline,
+      strokeColor,
+      outlineColor,
+      drawingColor,
+      radicalColor,
+      highlightColor: '#f97316',
+      showCharacter: true
+    });
+
+    writerRef.current = writer;
+    writer.animateCharacter(); // Animate strokes automatically when loaded
+  }, [targetChar, showOutline]);
+
+  const handleAnimate = () => {
+    if (!writerRef.current) return;
+    writerRef.current.cancelQuiz();
+    setMode('idle');
+    writerRef.current.animateCharacter();
+  };
+
+  const handleQuiz = () => {
+    if (!writerRef.current) return;
+    writerRef.current.cancelQuiz();
+    setMode('quiz');
+    writerRef.current.quiz({
+      onComplete: () => {
+        setMode('idle');
+      }
+    });
+  };
+
+  if (chars.length === 0) return null;
+
+  return (
+    <div className="bg-surface-card dark:bg-zinc-900/20 border border-hairline dark:border-divider-dark rounded-md p-5 flex flex-col items-center justify-center gap-4 text-center animate-fade-in">
+      <div className="flex items-center justify-between w-full border-b border-hairline dark:border-divider-dark pb-2">
+        <h4 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider flex items-center gap-1.5">
+          <BookOpen size={14} className="text-primary" />
+          Hướng dẫn nét vẽ &amp; tập viết
+        </h4>
+        <span className="text-[10px] text-mute dark:text-on-dark-mute font-mono">
+          Nét {activeCharIndex + 1}/{chars.length}
+        </span>
+      </div>
+
+      {chars.length > 1 && (
+        <div className="flex flex-wrap gap-1.5 select-none justify-center">
+          {chars.map((c, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => {
+                setActiveCharIndex(i);
+                setMode('idle');
+              }}
+              className={`px-3 py-1 rounded-full text-xs font-bold font-mono transition-all cursor-pointer ${
+                activeCharIndex === i
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-zinc-800 text-ink dark:text-on-dark'
+              }`}
+            >
+              Chữ {i + 1}: {c}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Target Canvas Container */}
+      <div className="relative bg-white dark:bg-zinc-900/60 border border-hairline dark:border-zinc-800 rounded-xl p-3 flex items-center justify-center shadow-xs">
+        <div ref={containerRef} className="w-[140px] h-[140px]" />
+      </div>
+
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={handleAnimate}
+          className="px-4 py-1.5 bg-surface-bone dark:bg-zinc-800 hover:bg-surface-card dark:hover:bg-black border border-hairline dark:border-zinc-700 text-ink dark:text-on-dark text-xs font-bold rounded-full transition-all cursor-pointer active:scale-95"
+        >
+          Xem nét
+        </button>
+        <button
+          type="button"
+          onClick={handleQuiz}
+          className={`px-4 py-1.5 text-white text-xs font-bold rounded-full shadow transition-all cursor-pointer active:scale-95 ${
+            mode === 'quiz' ? 'bg-primary/50' : 'bg-primary hover:bg-primary-deep'
+          }`}
+        >
+          {mode === 'quiz' ? 'Đang viết...' : 'Tập viết'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function DictionaryScreen() {
   const { lookupMultiple } = useDictionary();
   const [isSearching, setIsSearching] = useState(false);
@@ -991,15 +1118,20 @@ export default function DictionaryScreen() {
     }
   };
 
-  const handleTabClick = (tabText) => {
+  const handleTabClick = async (tabText) => {
     setActiveTab(tabText);
     if (tabText === selectedWord.s) {
       setTabDetails(selectedWord);
     } else {
-      // Find matching entry for individual character
-      const matches = lookupMultiple('hanzi', tabText);
-      const exactMatch = matches.find((m) => m.s === tabText || m.t === tabText);
-      setTabDetails(exactMatch || { s: tabText, p: '', vi: 'Không có dữ liệu chi tiết cho từ này.' });
+      try {
+        // Find matching entry for individual character
+        const matches = await lookupMultiple('hanzi', tabText);
+        const exactMatch = matches ? matches.find((m) => m.s === tabText || m.t === tabText) : null;
+        setTabDetails(exactMatch || { s: tabText, p: '', vi: 'Không có dữ liệu chi tiết cho từ này.' });
+      } catch (err) {
+        console.error('Failed to load tab details:', err);
+        setTabDetails({ s: tabText, p: '', vi: 'Không có dữ liệu chi tiết cho từ này.' });
+      }
     }
   };
 
@@ -1010,25 +1142,31 @@ export default function DictionaryScreen() {
     setAiExplanation('');
 
     // Generate local offline breakdown in case of errors/fallback
-    const runOfflineBreakdown = () => {
+    const runOfflineBreakdown = async () => {
       const chars = Array.from(selectedWord.s);
       const breakdown = [];
       let hasMissingSv = false;
 
-      chars.forEach((char) => {
-        if (!char.trim()) return;
-        const matches = lookupMultiple('hanzi', char);
-        const match = matches.find((m) => m.s === char || m.t === char);
-        if (match && match.sv) {
-          breakdown.push(`- **${char}** (${match.sv.toUpperCase()}): ${match.vi}`);
-        } else if (match) {
-          hasMissingSv = true;
-          breakdown.push(`- **${char}** <span class="text-amber-600 font-semibold">[Chữ này chưa có âm Hán Việt]</span>: ${match.vi}`);
-        } else {
+      for (const char of chars) {
+        if (!char.trim()) continue;
+        try {
+          const matches = await lookupMultiple('hanzi', char);
+          const match = matches ? matches.find((m) => m.s === char || m.t === char) : null;
+          if (match && match.sv) {
+            breakdown.push(`- **${char}** (${match.sv.toUpperCase()}): ${match.vi}`);
+          } else if (match) {
+            hasMissingSv = true;
+            breakdown.push(`- **${char}** <span class="text-amber-600 font-semibold">[Chữ này chưa có âm Hán Việt]</span>: ${match.vi}`);
+          } else {
+            hasMissingSv = true;
+            breakdown.push(`- **${char}** <span class="text-red-500 font-semibold">[Không tìm thấy dữ liệu]</span>`);
+          }
+        } catch (err) {
+          console.error("Offline lookup failed for char:", char, err);
           hasMissingSv = true;
           breakdown.push(`- **${char}** <span class="text-red-500 font-semibold">[Không tìm thấy dữ liệu]</span>`);
         }
-      });
+      }
 
       const footnote = hasMissingSv
         ? `<div class="mt-3 text-[11px] text-amber-600 dark:text-amber-500 font-medium border-t border-hairline dark:border-divider-dark pt-2 flex items-start gap-1">
@@ -1075,7 +1213,7 @@ export default function DictionaryScreen() {
         }
         loadHistory();
       } else {
-        runOfflineBreakdown();
+        await runOfflineBreakdown();
       }
     } catch (err) {
       console.error('Failed to generate AI explanation:', err);
@@ -1100,7 +1238,7 @@ export default function DictionaryScreen() {
         setAiExplanation(errorHtml);
       } else {
         // General fallback to offline breakdown
-        runOfflineBreakdown();
+        await runOfflineBreakdown();
       }
     } finally {
       setAiLoading(false);
@@ -1253,8 +1391,15 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                   </div>
                 )}
 
-                <h2 className="text-6xl md:text-7xl font-bold text-ink dark:text-on-dark tracking-wide font-display py-4">
-                  {tabDetails?.s}
+                <h2 className="text-6xl md:text-7xl font-display font-extrabold tracking-tight text-ink dark:text-on-dark py-4 select-all">
+                  {tabDetails?.s && Array.from(tabDetails.s).map((char, idx) => {
+                    const isChinese = /[\u4e00-\u9fa5]/.test(char);
+                    return isChinese ? (
+                      <span key={idx} className="hanzi-char">{char}</span>
+                    ) : (
+                      <span key={idx}>{char}</span>
+                    );
+                  })}
                 </h2>
 
                 <div className="flex flex-col items-center gap-1">
@@ -1270,6 +1415,11 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                   </div>
                 </div>
               </div>
+
+              {/* Stroke Order writing guide and practice card */}
+              {tabDetails?.s && (
+                <DictionaryWritingPractice word={tabDetails.s} />
+              )}
               {/* AI Explanation Area */}
               <div className="border border-hairline dark:border-divider-dark rounded-md p-5 flex flex-col gap-4 text-left">
                 <div className="flex items-center justify-between">

@@ -275,7 +275,7 @@ export default function DeckListScreen() {
             className="flex items-center gap-2 border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark font-bold px-4 py-3 rounded-full transition-all shadow-xs cursor-pointer bg-surface-card dark:bg-surface-dark"
           >
             <Globe size={16} />
-            <span>Bộ từ chia sẻ</span>
+            <span>Bộ bài chia sẻ</span>
           </button>
           <button
             onClick={() => setIsAiModalOpen(true)}
@@ -301,8 +301,8 @@ export default function DeckListScreen() {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-5 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer ${activeTab === tab.id
-                ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
-                : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
+              ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
+              : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
               }`}
           >
             {tab.label}
@@ -563,8 +563,8 @@ export default function DeckListScreen() {
                         onClick={() => handleImportPublic(shareCode)}
                         disabled={isImportingThis || alreadyImported || !shareCode}
                         className={`w-full flex items-center justify-center gap-2 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${alreadyImported
-                            ? 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/30 cursor-default'
-                            : 'bg-primary hover:bg-primary-deep text-white shadow-xs disabled:opacity-60 disabled:cursor-not-allowed'
+                          ? 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/30 cursor-default'
+                          : 'bg-primary hover:bg-primary-deep text-white shadow-xs disabled:opacity-60 disabled:cursor-not-allowed'
                           }`}
                       >
                         {alreadyImported ? (
@@ -785,8 +785,8 @@ export default function DeckListScreen() {
                   type="button"
                   onClick={() => setAiTab('text')}
                   className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${aiTab === 'text'
-                      ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
-                      : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
+                    ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
+                    : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
                     }`}
                 >
                   Nhập văn bản
@@ -795,8 +795,8 @@ export default function DeckListScreen() {
                   type="button"
                   onClick={() => setAiTab('image')}
                   className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${aiTab === 'image'
-                      ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
-                      : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
+                    ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
+                    : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
                     }`}
                 >
                   Tải ảnh (OCR)
