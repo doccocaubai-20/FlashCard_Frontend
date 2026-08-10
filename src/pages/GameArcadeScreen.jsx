@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Gamepad2, 
-  Puzzle, 
-  Zap, 
+import {
+  Gamepad2,
+  Puzzle,
+  Zap,
   ArrowRight,
   Trophy
 } from 'lucide-react';
@@ -28,7 +28,7 @@ export default function GameArcadeScreen() {
       path: '/games/unscramble',
       color: 'from-blue-500/10 to-indigo-500/10 border-blue-500/30 text-blue-500',
       badge: 'Cú pháp & Ngữ pháp',
-      level: 'HSK 1 - 3'
+      level: 'Mọi cấp độ'
     },
     {
       title: 'Gõ từ vựng rơi',
@@ -43,7 +43,7 @@ export default function GameArcadeScreen() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-10">
-      
+
       {/* Header section */}
       <div className="text-left space-y-2 border-b border-hairline dark:border-divider-dark pb-6">
         <h1 className="font-display text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight flex items-center gap-2">

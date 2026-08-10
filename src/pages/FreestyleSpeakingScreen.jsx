@@ -10,7 +10,8 @@ import {
   Info, 
   AlertCircle,
   BookOpen,
-  HelpCircle
+  HelpCircle,
+  Play
 } from 'lucide-react';
 import { useDictionary } from '../hooks/useDictionary';
 import { useToast } from '../context/ToastContext';
@@ -26,7 +27,12 @@ export default function FreestyleSpeakingScreen() {
   const [speechError, setSpeechError] = useState(null);
   const [spokenText, setSpokenText] = useState('');
   const [browserSupported, setBrowserSupported] = useState(true);
+  const [audioUrl, setAudioUrl] = useState(null);
+  
   const recognitionRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const streamRef = useRef(null);
 
   // Dictionary lookup states
   const [detectedWords, setDetectedWords] = useState([]);
@@ -40,6 +46,51 @@ export default function FreestyleSpeakingScreen() {
       return;
     }
 
+    const startRecordingMedia = async () => {
+      if (!window.MediaRecorder) return;
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        streamRef.current = stream;
+        
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+        audioChunksRef.current = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data && event.data.size > 0) {
+            audioChunksRef.current.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+          setAudioUrl((prev) => {
+            if (prev) URL.revokeObjectURL(prev);
+            return URL.createObjectURL(audioBlob);
+          });
+          
+          if (streamRef.current) {
+            streamRef.current.getTracks().forEach(track => track.stop());
+            streamRef.current = null;
+          }
+        };
+
+        mediaRecorder.start();
+      } catch (err) {
+        console.error('Failed to start media recorder:', err);
+      }
+    };
+
+    const stopRecordingMedia = () => {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        try {
+          mediaRecorderRef.current.stop();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+
     const rec = new SpeechRecognition();
     rec.lang = 'zh-CN'; // Recognize Chinese Mandarin
     rec.interimResults = false;
@@ -48,6 +99,8 @@ export default function FreestyleSpeakingScreen() {
     rec.onstart = () => {
       setIsListening(true);
       setSpeechError(null);
+      setAudioUrl(null); // Clear previous voice recording url
+      startRecordingMedia();
     };
 
     rec.onresult = (event) => {
@@ -69,10 +122,12 @@ export default function FreestyleSpeakingScreen() {
         setSpeechError(`Lỗi ghi âm: ${event.error}. Vui lòng thử lại.`);
       }
       setIsListening(false);
+      stopRecordingMedia();
     };
 
     rec.onend = () => {
       setIsListening(false);
+      stopRecordingMedia();
     };
 
     recognitionRef.current = rec;
@@ -83,6 +138,15 @@ export default function FreestyleSpeakingScreen() {
       }
     };
   }, []);
+
+  // Revoke object URL on unmount to prevent leaks
+  useEffect(() => {
+    return () => {
+      if (audioUrl) {
+        URL.revokeObjectURL(audioUrl);
+      }
+    };
+  }, [audioUrl]);
 
   // Split and resolve dictionary words from the transcribed Chinese text
   useEffect(() => {
@@ -180,10 +244,20 @@ export default function FreestyleSpeakingScreen() {
     window.speechSynthesis.speak(utterance);
   };
 
+  const playRecordedAudio = () => {
+    if (!audioUrl) return;
+    const audio = new Audio(audioUrl);
+    audio.play().catch(e => console.error("Failed to play recorded voice:", e));
+  };
+
   const clearAll = () => {
     setSpokenText('');
     setDetectedWords([]);
     setSpeechError(null);
+    if (audioUrl) {
+      URL.revokeObjectURL(audioUrl);
+      setAudioUrl(null);
+    }
     if (isListening && recognitionRef.current) {
       recognitionRef.current.stop();
     }
@@ -266,16 +340,28 @@ export default function FreestyleSpeakingScreen() {
                     )}
 
                     {/* Sentence Hanzi */}
-                    <div className="flex items-center justify-center gap-3 py-2 text-2xl md:text-3xl font-display font-extrabold select-all leading-normal text-ink dark:text-on-dark">
+                    <div className="flex items-center justify-center gap-3 py-2 text-2xl md:text-3xl font-display font-extrabold select-all leading-normal text-ink dark:text-on-dark flex-wrap">
                       <span>{spokenText}</span>
                       
-                      <button
-                        onClick={handleSpeakSample}
-                        className="h-8 w-8 rounded-full bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-primary shadow-sm flex items-center justify-center cursor-pointer active:scale-95 shrink-0"
-                        title="Nghe lại phát âm"
-                      >
-                        <Volume2 size={14} />
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={handleSpeakSample}
+                          className="h-8 w-8 rounded-full bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-primary shadow-sm flex items-center justify-center cursor-pointer active:scale-95 shrink-0"
+                          title="Nghe phát âm chuẩn (TTS)"
+                        >
+                          <Volume2 size={14} />
+                        </button>
+
+                        {audioUrl && (
+                          <button
+                            onClick={playRecordedAudio}
+                            className="h-8 w-8 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-500 shadow-sm flex items-center justify-center cursor-pointer active:scale-95 shrink-0"
+                            title="Nghe lại giọng nói của tôi"
+                          >
+                            <Play size={14} fill="currentColor" />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ) : (
