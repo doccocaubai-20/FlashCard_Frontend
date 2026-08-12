@@ -142,7 +142,8 @@ export default function CreateFlashcardScreen() {
     return score;
   };
 
-  // Handle dictionary search
+  // Handle dictionary search — only fills in fields that are CURRENTLY EMPTY
+  // so it never overwrites data the user has already typed manually.
   const handleLookup = async (field, value) => {
     if (!value) return;
     const candidates = await lookupMultiple(field, value);
@@ -151,23 +152,27 @@ export default function CreateFlashcardScreen() {
       const result = sorted[0];
       setFormData((prev) => {
         const updated = { ...prev };
-        if (field !== 'hanzi') {
-          updated.hanzi = result.s || updated.hanzi;
+        // Only auto-fill a field if it is currently empty (don't overwrite manual input)
+        if (field !== 'hanzi' && !prev.hanzi.trim()) {
+          updated.hanzi = result.s || '';
         }
-        if (field !== 'pinyin') {
-          updated.pinyin = result.p || updated.pinyin;
+        if (field !== 'pinyin' && !prev.pinyin.trim()) {
+          updated.pinyin = result.p || '';
         }
-        if (field !== 'meaning') {
-          updated.meaning = result.vi || updated.meaning;
+        if (field !== 'meaning' && !prev.meaning.trim()) {
+          updated.meaning = result.vi || '';
         }
         return updated;
       });
     }
   };
 
-  // Immediate lookup and clean suggestions on blur
+  // Trigger lookup on blur only when the blurred field has a value.
+  // Clean up the suggestion dropdown after a short delay.
   const handleBlur = (field) => {
-    handleLookup(field, formData[field]);
+    if (formData[field]?.trim()) {
+      handleLookup(field, formData[field]);
+    }
     setTimeout(() => {
       setSuggestions((prev) => {
         if (prev.field === field) {
@@ -190,18 +195,18 @@ export default function CreateFlashcardScreen() {
     setLastEditedField(null);
   };
 
-  // Query autocomplete suggestions as user types
+  // Query autocomplete suggestions as user types.
+  // We intentionally only depend on the current field's value (via lastEditedField),
+  // not ALL form fields — to avoid re-triggering when other fields are auto-filled.
+  const lastEditedValue = lastEditedField ? formData[lastEditedField] : null;
   useEffect(() => {
-    if (!lastEditedField) return;
-
-    const valueToSearch = formData[lastEditedField];
-    if (!valueToSearch || valueToSearch.trim().length < 1) {
+    if (!lastEditedField || !lastEditedValue || lastEditedValue.trim().length < 1) {
       setSuggestions({ field: null, list: [] });
       return;
     }
 
     const handler = setTimeout(async () => {
-      const candidates = await lookupMultiple(lastEditedField, valueToSearch);
+      const candidates = await lookupMultiple(lastEditedField, lastEditedValue);
       const sorted = [...candidates].sort((a, b) => getSortScore(b) - getSortScore(a));
       setSuggestions({
         field: lastEditedField,
@@ -210,7 +215,7 @@ export default function CreateFlashcardScreen() {
     }, 300);
 
     return () => clearTimeout(handler);
-  }, [formData.hanzi, formData.pinyin, formData.meaning, lastEditedField, lookupMultiple]);
+  }, [lastEditedValue, lastEditedField, lookupMultiple]);
 
   useEffect(() => {
     dispatch(fetchAllDecks());

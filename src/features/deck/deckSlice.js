@@ -98,6 +98,12 @@ const deckSlice = createSlice({
     clearDeckError(state) {
       state.error = null;
     },
+    clearCurrentDeck(state) {
+      state.currentDeck = null;
+      state.flashcards = [];
+      state.error = null;
+      state.isLoading = true; // Set isLoading to true immediately when starting to fetch a new deck details
+    },
     resetDeckState(state) {
       state.decks = [];
       state.currentDeck = null;
@@ -227,5 +233,5 @@ const deckSlice = createSlice({
   },
 });
 
-export const { clearDeckError, resetDeckState } = deckSlice.actions;
+export const { clearDeckError, clearCurrentDeck, resetDeckState } = deckSlice.actions;
 export default deckSlice.reducer;

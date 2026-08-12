@@ -3,7 +3,7 @@
  * Uses Google Translate TTS as the primary high-quality option,
  * with a fallback to the native browser SpeechSynthesis API.
  */
-export const speakChinese = (text) => {
+export const speakChinese = (text, lang = 'zh-CN') => {
   if (!text) return;
 
   // 1. Cancel any active native speech synthesis to avoid overlay
@@ -12,7 +12,7 @@ export const speakChinese = (text) => {
   }
 
   // 2. Build Google Translate TTS audio request
-  const googleTtsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=zh-CN&client=tw-ob`;
+  const googleTtsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${lang}&client=tw-ob`;
   const audio = new Audio(googleTtsUrl);
 
   let fallbackTriggered = false;
@@ -23,8 +23,8 @@ export const speakChinese = (text) => {
     
     if (window.speechSynthesis) {
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.85;
+      utterance.lang = lang;
+      utterance.rate = lang.startsWith('en') ? 0.9 : 0.85;
       window.speechSynthesis.speak(utterance);
     }
   };

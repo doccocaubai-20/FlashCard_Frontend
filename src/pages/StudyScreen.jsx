@@ -177,7 +177,7 @@ function WritingPractice({ character }) {
 }
 
 // Speaking Practice sub-component using native Web Speech API and MediaRecorder
-function SpeakingPractice({ character, _pinyin }) {
+function SpeakingPractice({ character, pinyin, lang = 'zh-CN' }) {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [result, setResult] = useState(null); // 'success', 'fail', null
@@ -189,7 +189,7 @@ function SpeakingPractice({ character, _pinyin }) {
   const { showToast } = useToast();
 
   const handleSpeakGuide = () => {
-    speakChinese(character);
+    speakChinese(character, lang);
   };
 
   const handlePlayRecording = () => {
@@ -247,7 +247,7 @@ function SpeakingPractice({ character, _pinyin }) {
 
     // 2. Start Speech Recognition
     const recognition = new SpeechRecognition();
-    recognition.lang = 'zh-CN';
+    recognition.lang = lang;
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
     recognitionRef.current = recognition;
@@ -363,12 +363,13 @@ function SpeakingPractice({ character, _pinyin }) {
 }
 
 // AI Example Box dynamic generator & database persistence
-function AIExampleBox({ card }) {
-  const hasExample = card.exampleHanzi && card.examplePinyin && card.exampleMeaning;
+function AIExampleBox({ card, lang = 'zh-CN' }) {
+  const isEnglish = lang === 'en-US';
+  const hasExample = card.exampleHanzi && (isEnglish || card.examplePinyin) && card.exampleMeaning;
 
   const handleSpeakExample = (e) => {
     e.stopPropagation();
-    speakChinese(card.exampleHanzi);
+    speakChinese(card.exampleHanzi, lang);
   };
 
   return (
@@ -391,11 +392,13 @@ function AIExampleBox({ card }) {
           </button>
           
           <p className="text-2xl font-display font-bold text-ink dark:text-on-dark leading-relaxed">
-            <HoverableText text={card.exampleHanzi} />
+            {isEnglish ? <span>{card.exampleHanzi}</span> : <HoverableText text={card.exampleHanzi} />}
           </p>
-          <p className="text-sm font-mono font-semibold text-primary dark:text-primary">
-            {card.examplePinyin}
-          </p>
+          {!isEnglish && card.examplePinyin && (
+            <p className="text-sm font-mono font-semibold text-primary dark:text-primary">
+              {card.examplePinyin}
+            </p>
+          )}
           <p className="text-xs font-medium text-body dark:text-on-dark-mute italic">
             {card.exampleMeaning}
           </p>
@@ -828,7 +831,9 @@ export default function StudyScreen() {
       // Step 1: Speak Hanzi
       if (!checkState()) return;
       setPassiveStatus('speaking_hanzi');
-      await speakUtterance(card.hanzi, 'zh-CN', passiveRateRef.current);
+      const cardDeck = decks.find(d => d.id === card.deckId);
+      const cardLang = cardDeck?.language === 'EN' ? 'en-US' : 'zh-CN';
+      await speakUtterance(card.hanzi, cardLang, passiveRateRef.current);
       
       // Step 2: Pause 1.5 seconds
       if (!checkState()) return;
@@ -1217,17 +1222,19 @@ export default function StudyScreen() {
                 
                 {/* Practice Mode Toggle Buttons */}
                 <div className="flex gap-4 w-full">
-                  <button
-                    type="button"
-                    onClick={() => setShowWriting((prev) => !prev)}
-                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 border rounded-full transition-all cursor-pointer text-xs font-mono font-bold shadow-sm ${
-                      showWriting
-                        ? 'bg-primary text-white border-transparent'
-                        : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-                    }`}
-                  >
-                    ✍️ {showWriting ? 'Ẩn luyện viết' : 'Luyện viết'}
-                  </button>
+                  {!isEnglish && (
+                    <button
+                      type="button"
+                      onClick={() => setShowWriting((prev) => !prev)}
+                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 border rounded-full transition-all cursor-pointer text-xs font-mono font-bold shadow-sm ${
+                        showWriting
+                          ? 'bg-primary text-white border-transparent'
+                          : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
+                      }`}
+                    >
+                      ✍️ {showWriting ? 'Ẩn luyện viết' : 'Luyện viết'}
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={() => setShowSpeaking((prev) => !prev)}
@@ -1242,7 +1249,7 @@ export default function StudyScreen() {
                 </div>
 
                 {/* Conditional Sub-panels */}
-                {showWriting && (
+                {showWriting && !isEnglish && (
                   <div className="w-full transition-all duration-300">
                     <WritingPractice character={currentCard.hanzi} />
                   </div>
@@ -1250,13 +1257,13 @@ export default function StudyScreen() {
 
                 {showSpeaking && (
                   <div className="w-full transition-all duration-300">
-                    <SpeakingPractice character={currentCard.hanzi} pinyin={currentCard.pinyin} />
+                    <SpeakingPractice character={currentCard.hanzi} pinyin={currentCard.pinyin} lang={isEnglish ? 'en-US' : 'zh-CN'} />
                   </div>
                 )}
 
                 {/* AI Example Sentence Generator & Reader */}
                 <div className="w-full">
-                  <AIExampleBox card={currentCard} onExampleUpdated={handleExampleUpdated} />
+                  <AIExampleBox card={currentCard} onExampleUpdated={handleExampleUpdated} lang={isEnglish ? 'en-US' : 'zh-CN'} />
                 </div>
               </div>
             ) : (
@@ -1317,7 +1324,7 @@ export default function StudyScreen() {
 
             {/* Hanzi Display */}
             <h2 className={`font-display text-6xl font-extrabold text-primary transition-all duration-300 ${passiveStatus === 'speaking_hanzi' ? 'scale-105' : ''}`}>
-              <HoverableText text={currentCard.hanzi} />
+              {decks.find(d => d.id === currentCard.deckId)?.language === 'EN' ? <span>{currentCard.hanzi}</span> : <HoverableText text={currentCard.hanzi} />}
             </h2>
 
             {/* Pinyin */}

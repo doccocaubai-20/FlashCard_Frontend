@@ -38,6 +38,8 @@ const SpeakingScreen = React.lazy(() => import('./pages/SpeakingScreen'));
 const FreestyleSpeakingScreen = React.lazy(() => import('./pages/FreestyleSpeakingScreen'));
 const DictionaryScreen = React.lazy(() => import('./pages/DictionaryScreen'));
 const UnscrambleGameScreen = React.lazy(() => import('./pages/UnscrambleGameScreen'));
+const EnglishHubScreen = React.lazy(() => import('./pages/EnglishHubScreen'));
+const WritingNotebookScreen = React.lazy(() => import('./pages/WritingNotebookScreen'));
 
 // Loading spinner for lazy pages
 function LazyFallback() {
@@ -118,6 +120,8 @@ function App() {
         <Route path="/speaking-sandbox" element={<Suspense fallback={<LazyFallback />}><FreestyleSpeakingScreen /></Suspense>} />
         <Route path="/translation" element={<Suspense fallback={<LazyFallback />}><TranslationPlaygroundScreen /></Suspense>} />
         <Route path="/games/unscramble" element={<Suspense fallback={<LazyFallback />}><UnscrambleGameScreen /></Suspense>} />
+        <Route path="/english-hub" element={<Suspense fallback={<LazyFallback />}><EnglishHubScreen /></Suspense>} />
+        <Route path="/writing-notebook" element={<Suspense fallback={<LazyFallback />}><WritingNotebookScreen /></Suspense>} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

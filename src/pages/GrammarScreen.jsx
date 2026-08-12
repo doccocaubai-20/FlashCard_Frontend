@@ -364,6 +364,32 @@ export default function GrammarScreen() {
 
                     </div>
 
+                    {/* Tips & Attentions (if exist) */}
+                    {(activeItem.tips || activeItem.attentions) && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {activeItem.tips && (
+                          <div className="bg-amber-50/30 dark:bg-amber-950/10 border border-amber-200/50 dark:border-amber-900/30 rounded-md p-4 space-y-1">
+                            <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1.5 select-none">
+                              💡 Mẹo học
+                            </span>
+                            <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed font-medium">
+                              {activeItem.tips}
+                            </p>
+                          </div>
+                        )}
+                        {activeItem.attentions && (
+                          <div className="bg-rose-50/30 dark:bg-rose-950/10 border border-rose-200/50 dark:border-rose-900/30 rounded-md p-4 space-y-1">
+                            <span className="text-[10px] font-bold text-rose-700 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1.5 select-none">
+                              ⚠️ Lưu ý quan trọng
+                            </span>
+                            <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed font-medium">
+                              {activeItem.attentions}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     {/* Example Sentences */}
                     <div className="space-y-2.5">
                       <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">

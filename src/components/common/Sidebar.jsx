@@ -16,7 +16,8 @@ import {
   Trophy,
   Shield,
   MessageSquare,
-  ClipboardList
+  ClipboardList,
+  Languages
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -49,13 +50,15 @@ export default function Sidebar() {
         { to: '/study-hub', label: t('nav.study_hub'), icon: GraduationCap },
         { to: '/game-arcade', label: t('nav.game_arcade'), icon: Gamepad2 },
         { to: '/hsk-exams', label: t('nav.hsk_exams'), icon: ClipboardList },
-        { to: '/chat', label: t('nav.ai_chatbot'), icon: MessageSquare },
+        { to: '/chat', label: 'AI Chatbot', icon: MessageSquare },
+        { to: '/writing-notebook', label: 'Vở tập viết', icon: BookOpen },
       ]
     },
     {
       title: t('nav.search_tools'),
       items: [
         { to: '/reference-hub', label: t('nav.reference_hub'), icon: Library },
+        { to: '/english-hub', label: 'Góc Tiếng Anh', icon: Languages },
       ]
     },
     {

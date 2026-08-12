@@ -45,6 +45,11 @@ function parsePosAndMeaning(meaning) {
   return { pos: '', meaning: meaning };
 }
 
+const isEnglishWord = (text) => {
+  if (!text) return false;
+  return !/[\u4e00-\u9fa5]/.test(text);
+};
+
 export default function Flashcard({ 
   cardData, 
   isFlipped, 
@@ -82,6 +87,7 @@ export default function Flashcard({
   };
 
   const showHanziOnFront = frontFaceMode === 'hanzi';
+  const isEnglish = isEnglishWord(frontChar || backChar);
 
   return (
     <div 
@@ -95,7 +101,7 @@ export default function Flashcard({
       >
         
         {/* Toggle Pinyin Button (Front Face only) */}
-        {!isFlipped && showHanziOnFront && (
+        {!isFlipped && showHanziOnFront && !isEnglish && (
           <button
             type="button"
             onClick={(e) => {
@@ -120,18 +126,18 @@ export default function Flashcard({
             ChongZi Flashcard
           </div>
 
-          <div className="flex flex-col items-center justify-center text-center my-auto">
+          <div className="flex flex-col items-center justify-center text-center my-auto w-full">
             {showHanziOnFront ? (
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center w-full">
                 {/* Clean Ink or Accent Orange Text */}
-                <div className="text-9xl font-display font-extrabold tracking-tight text-ink dark:text-on-dark">
-                  <HoverableText text={frontChar || '漢'} hideMeaning={true} />
+                <div className={`${isEnglish ? 'text-5xl px-4 word-break break-all' : 'text-9xl'} font-display font-extrabold tracking-tight text-ink dark:text-on-dark`}>
+                  {isEnglish ? <span>{frontChar}</span> : <HoverableText text={frontChar || '漢'} hideMeaning={true} />}
                 </div>
                 
-                {/* Pinyin element (space reserved to prevent shifting) */}
+                {/* Pinyin or IPA element (space reserved to prevent shifting) */}
                 <div 
                   className={`text-2xl font-mono font-bold tracking-wide text-primary transition-all duration-300 mt-4 h-8 flex items-center justify-center ${
-                    showPinyinOnFront ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+                    showPinyinOnFront || isEnglish ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
                   }`}
                 >
                   {frontPinyin || ''}
@@ -164,15 +170,15 @@ export default function Flashcard({
         >
           <div>
             <div className="text-[10px] font-mono font-black uppercase tracking-[0.25em] text-primary/30 mb-4">
-              {showHanziOnFront ? t('study.detail_meaning') : t('study.chinese_vocab')}
+              {showHanziOnFront ? t('study.detail_meaning') : (isEnglish ? 'Từ vựng Tiếng Anh' : t('study.chinese_vocab'))}
             </div>
             
             <div className="rounded-md bg-surface-card dark:bg-surface-dark p-6 border border-hairline dark:border-divider-dark">
-              <div className="text-7xl font-display font-extrabold text-primary tracking-tight">
-                <HoverableText text={backChar || '漢'} hideMeaning={true} />
+              <div className={`${isEnglish ? 'text-4xl word-break break-all' : 'text-7xl'} font-display font-extrabold text-primary tracking-tight`}>
+                {isEnglish ? <span>{backChar}</span> : <HoverableText text={backChar || '漢'} hideMeaning={true} />}
               </div>
               <div className="mt-2 text-2xl font-mono font-bold text-ink dark:text-on-dark">
-                {backPinyin || 'hàn'}
+                {backPinyin || ''}
               </div>
               <div className="mt-4 text-lg font-medium text-body dark:text-on-dark-mute border-l-4 border-primary pl-3 leading-relaxed flex flex-col items-start gap-1">
                 <div>{cleanBackMeaning || t('study.meaning_placeholder')}</div>

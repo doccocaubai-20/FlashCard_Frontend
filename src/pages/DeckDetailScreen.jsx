@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchDeckDetails, fetchFlashcardsByDeck, importFlashcards, deleteFlashcard } from '../features/deck/deckSlice';
+import { fetchDeckDetails, fetchFlashcardsByDeck, importFlashcards, deleteFlashcard, clearCurrentDeck } from '../features/deck/deckSlice';
 import { Upload, Star, X, Trash2, Volume2, Copy, Check } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { deckApi } from '../services/deckApi';
@@ -19,6 +19,7 @@ export default function DeckDetailScreen() {
   const flashcards = useSelector((state) => state.deck.flashcards);
   const fileInputRef = useRef(null);
 
+  const [loading, setLoading] = useState(true);
   const [virtualDeck, setVirtualDeck] = useState(null);
   const [virtualCards, setVirtualCards] = useState([]);
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
@@ -37,6 +38,9 @@ export default function DeckDetailScreen() {
   };
 
   useEffect(() => {
+    setLoading(true);
+    setSavedParagraphs([]);
+
     if (isVirtual) {
       setVirtualDeck({
         title: 'Từ vựng yêu thích',
@@ -51,12 +55,31 @@ export default function DeckDetailScreen() {
             back: f.pinyin && f.vi ? `${f.pinyin} | ${f.vi}` : (f.vi || f.pinyin || ''),
           }));
           setVirtualCards(cards);
+          setLoading(false);
         })
-        .catch((err) => console.error('Failed to load virtual favorites deck:', err));
+        .catch((err) => {
+          console.error('Failed to load virtual favorites deck:', err);
+          setLoading(false);
+        });
     } else if (id) {
-      dispatch(fetchDeckDetails(id));
-      dispatch(fetchFlashcardsByDeck(id));
-      fetchParagraphs();
+      dispatch(clearCurrentDeck());
+      
+      const fetchDeckPromise = dispatch(fetchDeckDetails(id)).unwrap();
+      const fetchCardsPromise = dispatch(fetchFlashcardsByDeck(id)).unwrap();
+      const fetchParagraphsPromise = deckApi.getSavedParagraphs(id)
+        .then((res) => {
+          setSavedParagraphs(res.data || []);
+        })
+        .catch((err) => console.error('Failed to fetch saved paragraphs:', err));
+
+      Promise.all([fetchDeckPromise, fetchCardsPromise, fetchParagraphsPromise])
+        .then(() => {
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error('Failed to load deck data:', err);
+          setLoading(false);
+        });
     }
   }, [dispatch, id, isVirtual]);
 
@@ -137,6 +160,41 @@ export default function DeckDetailScreen() {
       showToast('Có lỗi xảy ra khi xóa đoạn văn.', 'error');
     }
   };
+
+  if (loading) {
+    return (
+      <div className="space-y-6 animate-pulse text-left">
+        <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/50 p-6 shadow-sm">
+          <div className="h-7 bg-surface-bone dark:bg-surface-dark/70 rounded w-1/3 mb-3"></div>
+          <div className="h-4 bg-surface-bone dark:bg-surface-dark/70 rounded w-2/3 mb-6"></div>
+          <div className="flex gap-3">
+            <div className="h-10 bg-surface-bone dark:bg-surface-dark/70 rounded-full w-28"></div>
+            <div className="h-10 bg-surface-bone dark:bg-surface-dark/70 rounded-full w-28"></div>
+            <div className="h-10 bg-surface-bone dark:bg-surface-dark/70 rounded-full w-28"></div>
+          </div>
+        </div>
+        
+        <div className="grid gap-6 lg:grid-cols-[1fr_1.5fr]">
+          <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-bone dark:bg-surface-dark/40 p-5 space-y-4">
+            <div className="h-4 bg-surface-card dark:bg-surface-dark/70 rounded w-1/2"></div>
+            <div className="h-4 bg-surface-card dark:bg-surface-dark/70 rounded w-3/4"></div>
+          </div>
+          
+          <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/30 p-5 space-y-3">
+            <div className="h-5 bg-surface-bone dark:bg-surface-dark/70 rounded w-1/3 mb-4"></div>
+            <div className="space-y-3">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="rounded-md border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-surface-dark/20 p-4 space-y-2">
+                  <div className="h-5 bg-surface-card dark:bg-surface-dark/70 rounded w-1/4"></div>
+                  <div className="h-4 bg-surface-card dark:bg-surface-dark/70 rounded w-3/4"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
