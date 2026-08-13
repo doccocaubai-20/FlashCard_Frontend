@@ -145,7 +145,7 @@ export default function CreateFlashcardScreen() {
   // Handle dictionary search — only fills in fields that are CURRENTLY EMPTY
   // so it never overwrites data the user has already typed manually.
   const handleLookup = async (field, value) => {
-    if (!value) return;
+    if (!value || field === 'meaning') return; // Skip lookup for the meaning field
     const candidates = await lookupMultiple(field, value);
     if (candidates && candidates.length > 0) {
       const sorted = [...candidates].sort((a, b) => getSortScore(b) - getSortScore(a));
@@ -170,7 +170,7 @@ export default function CreateFlashcardScreen() {
   // Trigger lookup on blur only when the blurred field has a value.
   // Clean up the suggestion dropdown after a short delay.
   const handleBlur = (field) => {
-    if (formData[field]?.trim()) {
+    if (field !== 'meaning' && formData[field]?.trim()) {
       handleLookup(field, formData[field]);
     }
     setTimeout(() => {
@@ -198,9 +198,10 @@ export default function CreateFlashcardScreen() {
   // Query autocomplete suggestions as user types.
   // We intentionally only depend on the current field's value (via lastEditedField),
   // not ALL form fields — to avoid re-triggering when other fields are auto-filled.
+  // We also skip dictionary suggestion logic for the 'meaning' field to prevent unwanted dropdowns.
   const lastEditedValue = lastEditedField ? formData[lastEditedField] : null;
   useEffect(() => {
-    if (!lastEditedField || !lastEditedValue || lastEditedValue.trim().length < 1) {
+    if (!lastEditedField || lastEditedField === 'meaning' || !lastEditedValue || lastEditedValue.trim().length < 1) {
       setSuggestions({ field: null, list: [] });
       return;
     }
