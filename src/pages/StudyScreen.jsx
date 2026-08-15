@@ -1096,6 +1096,7 @@ export default function StudyScreen() {
   // Active study page
   if (isStudyStarted) {
     const currentCard = activeQueue[currentIndex];
+    const isEnglish = currentCard ? (decks.find(d => d.id === currentCard.deckId)?.language === 'EN') : false;
     return (
       <div className="max-w-6xl mx-auto space-y-6 pb-12">
         {/* Navigation Top Bar */}
