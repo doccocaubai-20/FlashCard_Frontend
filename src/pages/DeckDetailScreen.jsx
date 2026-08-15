@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchDeckDetails, fetchFlashcardsByDeck, importFlashcards, deleteFlashcard, clearCurrentDeck } from '../features/deck/deckSlice';
-import { Upload, Star, X, Trash2, Volume2, Copy, Check } from 'lucide-react';
+import { fetchDeckDetails, fetchFlashcardsByDeck, importFlashcards, deleteFlashcard, clearCurrentDeck, updateFlashcard } from '../features/deck/deckSlice';
+import { Upload, Star, X, Trash2, Volume2, Copy, Check, Pencil } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { deckApi } from '../services/deckApi';
 import { speakChinese } from '../utils/tts';
@@ -25,6 +25,15 @@ export default function DeckDetailScreen() {
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const [isAiParagraphModalOpen, setIsAiParagraphModalOpen] = useState(false);
   const [savedParagraphs, setSavedParagraphs] = useState([]);
+  const [editingCard, setEditingCard] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    hanzi: '',
+    pinyin: '',
+    meaning: '',
+    exampleHanzi: '',
+    examplePinyin: '',
+    exampleMeaning: '',
+  });
   const isVirtual = id === 'favorites';
 
   const fetchParagraphs = () => {
@@ -143,6 +152,46 @@ export default function DeckDetailScreen() {
     } catch (err) {
       console.error(err);
       showToast('Có lỗi xảy ra khi xóa thẻ bài.', 'error');
+    }
+  };
+
+  const canEdit = !isVirtual && (displayDeck && (!displayDeck.isSystem || user?.role === 'ADMIN'));
+
+  const handleStartEdit = (card) => {
+    setEditingCard(card);
+    setEditFormData({
+      hanzi: card.hanzi || card.front || '',
+      pinyin: card.pinyin || '',
+      meaning: card.meaning || '',
+      exampleHanzi: card.exampleHanzi || '',
+      examplePinyin: card.examplePinyin || '',
+      exampleMeaning: card.exampleMeaning || '',
+    });
+  };
+
+  const handleSaveEdit = async (e) => {
+    e.preventDefault();
+    if (!editFormData.hanzi.trim()) {
+      showToast('Hán tự không được để trống.', 'error');
+      return;
+    }
+    try {
+      await dispatch(updateFlashcard({
+        id: editingCard.id,
+        data: {
+          hanzi: editFormData.hanzi.trim(),
+          pinyin: editFormData.pinyin.trim(),
+          meaning: editFormData.meaning.trim(),
+          exampleHanzi: editFormData.exampleHanzi.trim() || null,
+          examplePinyin: editFormData.examplePinyin.trim() || null,
+          exampleMeaning: editFormData.exampleMeaning.trim() || null,
+        }
+      })).unwrap();
+      showToast('Cập nhật thẻ bài thành công!', 'success');
+      setEditingCard(null);
+    } catch (err) {
+      console.error(err);
+      showToast('Có lỗi xảy ra khi cập nhật thẻ bài.', 'error');
     }
   };
 
@@ -300,16 +349,28 @@ export default function DeckDetailScreen() {
                       <HoverableText text={card.front} />
                     </div>
                     <p className="mt-2 text-sm text-body dark:text-on-dark-mute font-medium leading-relaxed pr-8">{card.back}</p>
-                    {canDelete && (
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteCard(card.id, card.front)}
-                        className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-950/30 text-mute hover:text-red-500 transition-colors opacity-60 hover:opacity-100 cursor-pointer"
-                        title="Xóa thẻ này"
-                      >
-                        <Trash2 size={15} />
-                      </button>
-                    )}
+                    <div className="absolute top-4 right-4 flex items-center gap-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
+                      {canEdit && (
+                        <button
+                          type="button"
+                          onClick={() => handleStartEdit(card)}
+                          className="p-1.5 rounded-full hover:bg-primary/10 text-mute hover:text-primary transition-colors cursor-pointer"
+                          title="Sửa thẻ này"
+                        >
+                          <Pencil size={15} />
+                        </button>
+                      )}
+                      {canDelete && (
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteCard(card.id, card.front)}
+                          className="p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-950/30 text-mute hover:text-red-500 transition-colors cursor-pointer"
+                          title="Xóa thẻ này"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 ))
               ) : (
@@ -355,6 +416,142 @@ export default function DeckDetailScreen() {
           onSaveSuccess={fetchParagraphs}
         />
       )}
+      {editingCard && (
+        <EditFlashcardModal
+          card={editingCard}
+          formData={editFormData}
+          setFormData={setEditFormData}
+          onClose={() => setEditingCard(null)}
+          onSave={handleSaveEdit}
+        />
+      )}
+    </div>
+  );
+}
+
+// ─── Edit Flashcard Modal ───────────────────────────────────────────────────
+function EditFlashcardModal({ card, formData, setFormData, onClose, onSave }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <div className="bg-surface-card dark:bg-surface-dark rounded-xl shadow-xl max-w-xl w-full border border-hairline dark:border-divider-dark overflow-hidden animate-in fade-in zoom-in-95 duration-200 text-left">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-hairline dark:border-divider-dark">
+          <h3 className="text-base font-bold text-ink dark:text-on-dark font-display">
+            Chỉnh sửa thẻ bài
+          </h3>
+          <button onClick={onClose} className="text-mute hover:text-ink dark:text-on-dark-mute dark:hover:text-on-dark p-1.5 rounded-full hover:bg-surface-bone dark:hover:bg-black transition-colors cursor-pointer bg-transparent border-none">
+            <X size={18} />
+          </button>
+        </div>
+        
+        <form onSubmit={onSave}>
+          <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto text-sm text-body dark:text-on-dark-mute leading-relaxed font-sans">
+            
+            {/* Row 1: Hanzi & Pinyin */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1">
+                  Hán tự (Hanzi) <span className="text-primary">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.hanzi}
+                  onChange={(e) => setFormData({ ...formData, hanzi: e.target.value })}
+                  className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none text-sm text-ink dark:text-on-dark"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1">
+                  Phiên âm (Pinyin)
+                </label>
+                <input
+                  type="text"
+                  value={formData.pinyin}
+                  onChange={(e) => setFormData({ ...formData, pinyin: e.target.value })}
+                  className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none text-sm text-ink dark:text-on-dark"
+                />
+              </div>
+            </div>
+
+            {/* Meaning */}
+            <div>
+              <label className="block text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider mb-1">
+                Ý nghĩa <span className="text-primary">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.meaning}
+                onChange={(e) => setFormData({ ...formData, meaning: e.target.value })}
+                className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none text-sm text-ink dark:text-on-dark"
+              />
+            </div>
+
+            <hr className="border-hairline dark:border-divider-dark" />
+
+            {/* Example Section */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider">
+                Ví dụ minh họa (Tùy chọn)
+              </h4>
+              
+              <div>
+                <label className="block text-xs font-semibold text-mute mb-1">
+                  Hán tự ví dụ
+                </label>
+                <input
+                  type="text"
+                  value={formData.exampleHanzi}
+                  onChange={(e) => setFormData({ ...formData, exampleHanzi: e.target.value })}
+                  className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none text-sm text-ink dark:text-on-dark"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-mute mb-1">
+                    Phiên âm ví dụ
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.examplePinyin}
+                    onChange={(e) => setFormData({ ...formData, examplePinyin: e.target.value })}
+                    className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none text-sm text-ink dark:text-on-dark"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-mute mb-1">
+                    Nghĩa ví dụ
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.exampleMeaning}
+                    onChange={(e) => setFormData({ ...formData, exampleMeaning: e.target.value })}
+                    className="w-full px-4 py-2.5 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full focus:ring-2 focus:ring-primary focus:border-primary outline-none text-sm text-ink dark:text-on-dark"
+                  />
+                </div>
+              </div>
+            </div>
+
+          </div>
+          
+          <div className="px-6 py-4 border-t border-hairline dark:border-divider-dark flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-5 py-2 border border-hairline dark:border-divider-dark text-ink dark:text-on-dark hover:bg-surface-bone dark:hover:bg-black rounded-full font-bold text-xs cursor-pointer transition-colors bg-transparent"
+            >
+              Hủy
+            </button>
+            <button
+              type="submit"
+              className="px-5 py-2 bg-primary hover:bg-primary-deep text-white font-bold text-xs rounded-full cursor-pointer transition-colors shadow-xs"
+            >
+              Lưu thay đổi
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

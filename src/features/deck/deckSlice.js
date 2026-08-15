@@ -91,6 +91,15 @@ export const createFlashcard = createAsyncThunk('deck/createFlashcard', async (c
   }
 });
 
+export const updateFlashcard = createAsyncThunk('deck/updateFlashcard', async ({ id, data }, { rejectWithValue }) => {
+  try {
+    const response = await flashcardApi.update(id, data);
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+});
+
 const deckSlice = createSlice({
   name: 'deck',
   initialState,
@@ -224,9 +233,36 @@ const deckSlice = createSlice({
       })
       .addCase(createFlashcard.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.flashcards.push(action.payload);
+        state.flashcards.push({
+          ...action.payload,
+          front: action.payload.hanzi,
+          back: action.payload.pinyin && action.payload.meaning
+            ? `${action.payload.pinyin} | ${action.payload.meaning}`
+            : (action.payload.meaning || action.payload.pinyin || '')
+        });
       })
       .addCase(createFlashcard.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(updateFlashcard.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateFlashcard.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const index = state.flashcards.findIndex((c) => c.id === action.payload.id);
+        if (index !== -1) {
+          state.flashcards[index] = {
+            ...action.payload,
+            front: action.payload.hanzi,
+            back: action.payload.pinyin && action.payload.meaning
+              ? `${action.payload.pinyin} | ${action.payload.meaning}`
+              : (action.payload.meaning || action.payload.pinyin || '')
+          };
+        }
+      })
+      .addCase(updateFlashcard.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       });

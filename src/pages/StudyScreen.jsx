@@ -447,6 +447,25 @@ export default function StudyScreen() {
   // Redux decks list
   const decks = useSelector((state) => state.deck.decks);
 
+  const sortedDecks = useMemo(() => {
+    if (!decks) return [];
+    return [...decks].sort((a, b) => {
+      if (a.isSystem && !b.isSystem) return 1; // Put custom decks first, then system decks
+      if (!a.isSystem && b.isSystem) return -1;
+      
+      if (a.isSystem && b.isSystem) {
+        const getHskLevel = (name) => {
+          const match = (name || '').match(/HSK\s*(\d+)/i);
+          if (match) return parseInt(match[1], 10);
+          if ((name || '').includes('7-9')) return 7;
+          return 99;
+        };
+        return getHskLevel(a.title || a.name) - getHskLevel(b.title || b.name);
+      }
+      return (a.title || a.name || '').localeCompare(b.title || b.name || '');
+    });
+  }, [decks]);
+
   const [favorites, setFavorites] = useState([]);
 
   const loadFavorites = async () => {
@@ -1464,7 +1483,7 @@ export default function StudyScreen() {
           >
             <option value="all">{t('study.all_decks')}</option>
             <option value="favorites">⭐ {t('study.favorites_deck')} ({favorites.length})</option>
-            {decks?.map((deck) => (
+            {sortedDecks?.map((deck) => (
               <option key={deck.id} value={deck.id}>
                 {deck.title || deck.name} {deck.isSystem ? `(${t('common.system', 'Hệ thống')})` : `(${t('common.custom', 'Tự tạo')})`}
               </option>
@@ -1484,31 +1503,36 @@ export default function StudyScreen() {
               setStudyMode('srs');
             }}
             disabled={selectedDeckId === 'favorites'}
-            className={`p-6 rounded-md border transition-all text-left flex items-start gap-4 hover:shadow-sm ${
+            className={`p-6 rounded-xl border-2 transition-all text-left flex items-start gap-4 hover:shadow-md relative ${
               selectedDeckId === 'favorites'
                 ? 'opacity-40 cursor-not-allowed bg-surface-card border-hairline dark:bg-surface-dark text-ink dark:text-on-dark'
                 : studyMode === 'srs'
-                  ? 'bg-primary border-transparent text-white'
+                  ? 'bg-surface-card dark:bg-surface-dark border-primary shadow-lg shadow-primary/15 scale-[1.01]'
                   : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
             }`}
           >
+            {studyMode === 'srs' && selectedDeckId !== 'favorites' && (
+              <div className="absolute top-4 right-4 text-primary animate-in fade-in zoom-in-75 duration-200">
+                <CheckCircle size={20} className="fill-primary/10" />
+              </div>
+            )}
             <div className={`p-3 rounded-full ${
               studyMode === 'srs' 
-                ? 'bg-white/20 text-white' 
-                : 'bg-surface-bone dark:bg-black/35 text-primary'
+                ? 'bg-primary/10 text-primary' 
+                : 'bg-surface-bone dark:bg-black/35 text-mute dark:text-on-dark-mute'
             }`}>
               <Clock size={24} />
             </div>
             <div>
-              <div className="font-display font-extrabold text-base">{t('study.srs_mode')}</div>
-              <p className={`text-xs mt-1 leading-5 ${studyMode === 'srs' ? 'text-white/80' : 'text-mute dark:text-on-dark-mute'}`}>
+              <div className="font-display font-extrabold text-base text-ink dark:text-on-dark">{t('study.srs_mode')}</div>
+              <p className="text-xs mt-1 leading-5 text-mute dark:text-on-dark-mute">
                 {t('study.srs_desc')}
               </p>
               <div className="flex flex-wrap items-center gap-2 mt-3">
                 <div className={`inline-flex items-center px-2.5 py-1 text-[10px] font-mono font-bold rounded-full uppercase ${
                   studyMode === 'srs'
-                    ? 'bg-white/20 text-white'
-                    : 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary'
+                    ? 'bg-primary/15 text-primary'
+                    : 'bg-surface-bone text-mute dark:bg-black/30 dark:text-on-dark-mute'
                 }`}>
                   {t('study.due_today', { count: todayCards.length })}
                 </div>
@@ -1523,7 +1547,7 @@ export default function StudyScreen() {
                       }}
                       className={`px-2 py-0.5 text-[9px] font-mono font-bold rounded shadow-sm border transition-all cursor-pointer ${
                         studyMode === 'srs'
-                          ? 'bg-white/10 hover:bg-white/25 border-white/25 text-white'
+                          ? 'bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-semibold'
                           : 'bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-semibold'
                       }`}
                       title={t('study.load_extra_title_10', 'Nạp thêm 10 từ mới để học')}
@@ -1538,7 +1562,7 @@ export default function StudyScreen() {
                       }}
                       className={`px-2 py-0.5 text-[9px] font-mono font-bold rounded shadow-sm border transition-all cursor-pointer ${
                         studyMode === 'srs'
-                          ? 'bg-white/10 hover:bg-white/25 border-white/25 text-white'
+                          ? 'bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-semibold'
                           : 'bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-semibold'
                       }`}
                       title={t('study.load_extra_title_20', 'Nạp thêm 20 từ mới để học')}
@@ -1554,27 +1578,32 @@ export default function StudyScreen() {
           {/* Classic Mode Block */}
           <button
             onClick={() => setStudyMode('classic')}
-            className={`p-6 rounded-md border transition-all text-left flex items-start gap-4 cursor-pointer hover:shadow-sm ${
+            className={`p-6 rounded-xl border-2 transition-all text-left flex items-start gap-4 cursor-pointer hover:shadow-md relative ${
               studyMode === 'classic'
-                ? 'bg-primary border-transparent text-white'
+                ? 'bg-surface-card dark:bg-surface-dark border-primary shadow-lg shadow-primary/15 scale-[1.01]'
                 : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
             }`}
           >
+            {studyMode === 'classic' && (
+              <div className="absolute top-4 right-4 text-primary animate-in fade-in zoom-in-75 duration-200">
+                <CheckCircle size={20} className="fill-primary/10" />
+              </div>
+            )}
             <div className={`p-3 rounded-full ${
               studyMode === 'classic' 
-                ? 'bg-white/20 text-white' 
-                : 'bg-surface-bone dark:bg-black/35 text-primary'
+                ? 'bg-primary/10 text-primary' 
+                : 'bg-surface-bone dark:bg-black/35 text-mute dark:text-on-dark-mute'
             }`}>
               <Layers size={24} />
             </div>
             <div>
-              <div className="font-display font-extrabold text-base">{t('study.classic_mode')}</div>
-              <p className={`text-xs mt-1 leading-5 ${studyMode === 'classic' ? 'text-white/80' : 'text-mute dark:text-on-dark-mute'}`}>
+              <div className="font-display font-extrabold text-base text-ink dark:text-on-dark">{t('study.classic_mode')}</div>
+              <p className="text-xs mt-1 leading-5 text-mute dark:text-on-dark-mute">
                 {t('study.classic_desc')}
               </p>
               <div className={`mt-3 inline-flex items-center px-2.5 py-1 text-[10px] font-mono font-bold rounded-full uppercase ${
                 studyMode === 'classic'
-                  ? 'bg-white/20 text-white'
+                  ? 'bg-primary/15 text-primary'
                   : 'bg-surface-bone text-mute dark:bg-black/30 dark:text-on-dark-mute'
               }`}>
                 {t('study.free_order')}

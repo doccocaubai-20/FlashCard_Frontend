@@ -65,6 +65,15 @@ export default function DeckListScreen() {
     dispatch(fetchAllDecks());
   }, [dispatch]);
 
+  const personalDecks = decks.filter(d => !d.isSystem);
+
+  // Automatically switch to 'system' tab for new users who have no custom decks
+  useEffect(() => {
+    if (!isLoading && decks.length > 0 && personalDecks.length === 0 && activeTab === 'personal') {
+      setActiveTab('system');
+    }
+  }, [decks, isLoading, personalDecks.length, activeTab]);
+
   // ─── Fetch public decks ───────────────────────────────────────────────────
   const fetchPublicDecks = useCallback(async () => {
     try {
@@ -347,81 +356,91 @@ export default function DeckListScreen() {
               </div>
 
               {/* User's regular decks (non-system) */}
-              {decks.filter(d => !d.isSystem).map((deck) => (
-                <div
-                  key={deck.id}
-                  onClick={() => navigate(`/decks/${deck.id}`)}
-                  className="group relative flex flex-col justify-between p-6 bg-surface-card dark:bg-surface-dark/60 rounded-xl border border-hairline dark:border-white/5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-bone dark:bg-surface-dark text-ink dark:text-on-dark group-hover:bg-primary group-hover:text-white dark:group-hover:bg-primary dark:group-hover:text-white transition-colors duration-300">
-                        <Folder size={20} />
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        {deck.isPublic && (
-                          <span className="text-[10px] font-bold text-green-600 bg-green-500/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                            Đã chia sẻ
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <h3 className="text-lg font-bold text-ink dark:text-on-dark group-hover:text-primary dark:group-hover:text-primary transition-colors font-display tracking-tight">
-                      {deck.title || deck.name || 'Bộ bài chưa đặt tên'}
-                    </h3>
-                    <p className="text-sm text-body dark:text-on-dark-mute mt-2 line-clamp-2 leading-relaxed">
-                      {deck.description || 'Không có mô tả cho bộ bài này.'}
-                    </p>
-
-                    {/* studied progress bar */}
-                    {deck.cardCount > 0 && (
-                      <div className="mt-4">
-                        <div className="flex justify-between text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute mb-1">
-                          <span>Đã thuộc: {deck.studiedCount ?? 0}/{deck.cardCount} từ</span>
-                          <span>{Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%</span>
-                        </div>
-                        <div className="h-1.5 w-full bg-surface-bone dark:bg-black/30 rounded-full overflow-hidden border border-hairline dark:border-divider-dark">
-                          <div
-                            className="h-full bg-primary rounded-full transition-all duration-300"
-                            style={{ width: `${Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%` }}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex items-center justify-between border-t border-hairline dark:border-divider-dark mt-6 pt-4">
-                    <span className="text-xs font-semibold text-mute dark:text-on-dark-mute">
-                      {deck.cardCount ?? 0} thẻ
-                    </span>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={(e) => handleShare(e, deck.id)}
-                        className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
-                        title="Chia sẻ bộ bài"
-                      >
-                        <Share2 size={16} />
-                      </button>
-                      <button
-                        onClick={(e) => handleOpenEdit(e, deck)}
-                        className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
-                        title="Sửa tên bộ bài"
-                      >
-                        <Edit3 size={16} />
-                      </button>
-                      <button
-                        onClick={(e) => handleDelete(e, deck.id, deck.title || deck.name)}
-                        className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
-                        title="Xóa bộ bài"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </div>
+              {personalDecks.length === 0 ? (
+                <div className="col-span-full rounded-xl border border-dashed border-hairline dark:border-divider-dark bg-surface-bone/30 dark:bg-surface-dark/10 p-8 text-center flex flex-col items-center justify-center min-h-[220px] space-y-3">
+                  <div className="text-3xl animate-bounce">🗂️</div>
+                  <h4 className="font-display font-extrabold text-sm text-ink dark:text-on-dark">Bạn chưa có bộ bài cá nhân nào</h4>
+                  <p className="text-xs text-mute dark:text-on-dark-mute max-w-sm leading-relaxed font-sans">
+                    Hãy bấm nút "Tạo bộ bài mới" hoặc "Tạo bằng AI" ở góc trên để tạo bộ từ vựng học tập của riêng mình nhé!
+                  </p>
                 </div>
-              ))}
+              ) : (
+                personalDecks.map((deck) => (
+                  <div
+                    key={deck.id}
+                    onClick={() => navigate(`/decks/${deck.id}`)}
+                    className="group relative flex flex-col justify-between p-6 bg-surface-card dark:bg-surface-dark/60 rounded-xl border border-hairline dark:border-white/5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-bone dark:bg-surface-dark text-ink dark:text-on-dark group-hover:bg-primary group-hover:text-white dark:group-hover:bg-primary dark:group-hover:text-white transition-colors duration-300">
+                          <Folder size={20} />
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          {deck.isPublic && (
+                            <span className="text-[10px] font-bold text-green-600 bg-green-500/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                              Đã chia sẻ
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <h3 className="text-lg font-bold text-ink dark:text-on-dark group-hover:text-primary dark:group-hover:text-primary transition-colors font-display tracking-tight">
+                        {deck.title || deck.name || 'Bộ bài chưa đặt tên'}
+                      </h3>
+                      <p className="text-sm text-body dark:text-on-dark-mute mt-2 line-clamp-2 leading-relaxed">
+                        {deck.description || 'Không có mô tả cho bộ bài này.'}
+                      </p>
+
+                      {/* studied progress bar */}
+                      {deck.cardCount > 0 && (
+                        <div className="mt-4">
+                          <div className="flex justify-between text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute mb-1">
+                            <span>Đã thuộc: {deck.studiedCount ?? 0}/{deck.cardCount} từ</span>
+                            <span>{Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%</span>
+                          </div>
+                          <div className="h-1.5 w-full bg-surface-bone dark:bg-black/30 rounded-full overflow-hidden border border-hairline dark:border-divider-dark">
+                            <div
+                              className="h-full bg-primary rounded-full transition-all duration-300"
+                              style={{ width: `${Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%` }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between border-t border-hairline dark:border-divider-dark mt-6 pt-4">
+                      <span className="text-xs font-semibold text-mute dark:text-on-dark-mute">
+                        {deck.cardCount ?? 0} thẻ
+                      </span>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={(e) => handleShare(e, deck.id)}
+                          className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
+                          title="Chia sẻ bộ bài"
+                        >
+                          <Share2 size={16} />
+                        </button>
+                        <button
+                          onClick={(e) => handleOpenEdit(e, deck)}
+                          className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
+                          title="Sửa tên bộ bài"
+                        >
+                          <Edit3 size={16} />
+                        </button>
+                        <button
+                          onClick={(e) => handleDelete(e, deck.id, deck.title || deck.name)}
+                          className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
+                          title="Xóa bộ bài"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           )}
         </>

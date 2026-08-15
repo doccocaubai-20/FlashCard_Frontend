@@ -193,6 +193,27 @@ export default function SpeakingScreen() {
     }
   };
 
+  // Keyboard navigation for sentences
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (playMode === 'random') {
+          handleRandom();
+        } else if (currentIndex < filteredSentences.length - 1) {
+          setCurrentIndex((prev) => prev + 1);
+          resetPractice();
+        }
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        handlePrev();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentIndex, filteredSentences.length, playMode]);
+
   const handleRandom = () => {
     if (filteredSentences.length <= 1) return;
     let newIdx;
@@ -573,20 +594,31 @@ export default function SpeakingScreen() {
                       {/* Transcribed spoken speech */}
                       <div className="space-y-1">
                         <span className="text-[9px] font-mono font-bold text-mute uppercase tracking-widest block">Kết quả ghi âm:</span>
-                        <p className="text-xs font-bold text-primary bg-primary/5 border border-primary/10 p-3.5 rounded-xl leading-relaxed select-all">
+                        <p className="text-lg font-display font-extrabold text-primary bg-primary/5 border border-primary/10 p-3.5 rounded-xl leading-relaxed select-all">
                           {spokenText || 'Trình duyệt không nghe rõ...'}
                         </p>
                       </div>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={toggleListening}
-                      className="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 bg-primary hover:bg-primary-deep text-white text-xs font-bold rounded-xl transition-all cursor-pointer active:scale-95 shadow-sm mt-4"
-                    >
-                      <Mic size={14} />
-                      Nói lại câu này
-                    </button>
+                    <div className="flex gap-2.5 mt-4">
+                      <button
+                        type="button"
+                        onClick={handleSpeakSample}
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 border border-hairline dark:border-zinc-800 hover:bg-surface-bone dark:hover:bg-zinc-900 text-ink dark:text-on-dark text-xs font-bold rounded-xl transition-all cursor-pointer active:scale-95 shadow-sm"
+                        title="Nghe lại phát âm mẫu của hệ thống"
+                      >
+                        <Volume2 size={14} />
+                        Nghe lại mẫu
+                      </button>
+                      <button
+                        type="button"
+                        onClick={toggleListening}
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 bg-primary hover:bg-primary-deep text-white text-xs font-bold rounded-xl transition-all cursor-pointer active:scale-95 shadow-sm"
+                      >
+                        <Mic size={14} />
+                        Nói lại câu này
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <div className="flex-1 flex flex-col items-center justify-center py-10 text-center gap-3">

@@ -310,13 +310,17 @@ export default function DictationScreen() {
 
           {/* Result Feedback Banner */}
           {isAnswered && (
-            <div className={`w-full border rounded-md p-4 flex gap-3.5 items-start mt-2 animate-fade-in ${
-              isCorrect
-                ? 'bg-green-500/10 border-green-500/20 text-green-700 dark:text-green-400'
-                : 'bg-red-500/10 border-red-500/20 text-red-700 dark:text-red-400'
-            }`}>
+            <div 
+              style={{ 
+                backgroundColor: isCorrect ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)', 
+                borderColor: isCorrect ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)' 
+              }}
+              className={`w-full border-2 rounded-xl p-4 flex gap-3.5 items-start mt-2 animate-fade-in ${
+                isCorrect ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+              }`}
+            >
               <div className="shrink-0 mt-0.5">
-                {isCorrect ? <CheckCircle2 size={20} /> : <XCircle size={20} />}
+                {isCorrect ? <CheckCircle2 size={20} className="text-green-500" /> : <XCircle size={20} className="text-red-500" />}
               </div>
               <div className="flex-1 text-left">
                 <h4 className="text-sm font-bold">{isCorrect ? 'Chúc mừng! Bạn đã gõ đúng!' : 'Chưa chính xác!'}</h4>
