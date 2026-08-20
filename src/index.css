@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lora:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lora:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap');
 
 @import "tailwindcss";
 @import "./styles/common.css";
@@ -47,9 +47,9 @@
   --color-link: #0F5257;
   --color-ring-focus: rgba(15, 82, 87, 0.25);
 
-  /* Fonts — Be Vietnam Pro (sans) + Lora (display/serif tiêu đề) */
-  --font-display: 'Lora', 'Be Vietnam Pro', serif;
-  --font-sans: 'Be Vietnam Pro', sans-serif;
+  /* Fonts — Be Vietnam Pro (sans) + Lora (display/serif tiêu đề) + Noto SC (hán tự) */
+  --font-display: 'Lora', 'Noto Serif SC', 'Be Vietnam Pro', serif;
+  --font-sans: 'Be Vietnam Pro', 'Noto Sans SC', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Border Radii — vừa phải, không quá tròn */
@@ -69,13 +69,13 @@
   body {
     background-color: var(--color-canvas);
     color: var(--color-body);
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Be Vietnam Pro', 'Noto Sans SC', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3 {
-    font-family: 'Lora', 'Be Vietnam Pro', serif;
+    font-family: 'Lora', 'Noto Serif SC', 'Be Vietnam Pro', serif;
     color: var(--color-ink);
   }
 }
@@ -349,7 +349,7 @@
 
 /* Chinese character font rendering style to match normal stroke representation and avoid faux-bolding distortions */
 .hanzi-char {
-  font-family: "STKaiti", "Kaiti", "楷体", "BiauKai", "SimSun", "Songti SC", serif !important;
+  font-family: "Noto Serif SC", "STKaiti", "Kaiti", "楷体", "BiauKai", "SimSun", "Songti SC", serif !important;
   font-weight: 400 !important;
   display: inline-block;
 }
