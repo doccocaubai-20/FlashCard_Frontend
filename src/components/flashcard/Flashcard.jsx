@@ -181,7 +181,11 @@ export default function Flashcard({
                 {backPinyin || ''}
               </div>
               <div className="mt-4 text-lg font-medium text-body dark:text-on-dark-mute border-l-4 border-primary pl-3 leading-relaxed flex flex-col items-start gap-1">
-                <div>{cleanBackMeaning || t('study.meaning_placeholder')}</div>
+                <div title={cleanBackMeaning} className="text-left">
+                  {cleanBackMeaning && cleanBackMeaning.length > 90 
+                    ? cleanBackMeaning.substring(0, 90).trim() + '...' 
+                    : cleanBackMeaning || t('study.meaning_placeholder')}
+                </div>
                 {backPos && (
                   <span className="text-[11px] font-mono font-bold px-2 py-0.5 bg-primary/10 text-primary rounded-full mt-1.5 tracking-wider">
                     {backPos}

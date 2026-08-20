@@ -350,9 +350,36 @@
 /* Chinese character font rendering style to match normal stroke representation and avoid faux-bolding distortions */
 .hanzi-char {
   font-family: "Noto Serif SC", "STKaiti", "Kaiti", "楷体", "BiauKai", "SimSun", "Songti SC", serif !important;
+  font-weight: 500 !important; /* Crisp medium weight by default so it's not too thin */
   display: inline-block;
+}
+
+/* Cap bold weight to 500 (Medium) to prevent bloated stroke bleeding/faux-bolding distortions */
+.font-bold .hanzi-char,
+.font-semibold .hanzi-char,
+.font-extrabold .hanzi-char,
+.font-black .hanzi-char,
+h1 .hanzi-char,
+h2 .hanzi-char,
+h3 .hanzi-char,
+strong .hanzi-char,
+b .hanzi-char {
+  font-weight: 500 !important;
 }
 
 .hanzi-text {
   font-family: "Noto Serif SC", "STKaiti", "Kaiti", "楷体", "BiauKai", "SimSun", "Songti SC", serif !important;
+  font-weight: 500 !important;
+}
+
+.font-bold .hanzi-text,
+.font-semibold .hanzi-text,
+.font-extrabold .hanzi-text,
+.font-black .hanzi-text,
+h1 .hanzi-text,
+h2 .hanzi-text,
+h3 .hanzi-text,
+strong .hanzi-text,
+b .hanzi-text {
+  font-weight: 500 !important;
 }

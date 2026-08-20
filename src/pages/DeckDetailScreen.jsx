@@ -355,7 +355,7 @@ export default function DeckDetailScreen() {
               {displayCards?.length > 0 ? (
                 displayCards.map((card) => (
                   <div key={card.id || card.front} className="rounded-md border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-surface-dark/20 p-4 transition-colors relative group">
-                    <div className="text-lg font-extrabold text-ink dark:text-on-dark font-display">
+                    <div className="text-2xl font-extrabold text-ink dark:text-on-dark font-display">
                       <HoverableText text={card.front} />
                     </div>
                     <p className="mt-2 text-sm text-body dark:text-on-dark-mute font-medium leading-relaxed pr-8">{card.back}</p>

@@ -1439,8 +1439,10 @@ export default function StudyScreen() {
             </p>
 
             {/* Meaning */}
-            <p className="text-base text-body dark:text-on-dark-mute max-w-sm">
-              {currentCard.meaning}
+            <p className="text-base text-body dark:text-on-dark-mute max-w-sm" title={currentCard.meaning}>
+              {currentCard.meaning && currentCard.meaning.length > 90
+                ? currentCard.meaning.substring(0, 90).trim() + '...'
+                : currentCard.meaning}
             </p>
           </div>
         ) : (
