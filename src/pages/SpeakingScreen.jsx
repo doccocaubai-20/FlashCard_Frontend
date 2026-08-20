@@ -49,6 +49,13 @@ export default function SpeakingScreen() {
 
   const recognitionRef = useRef(null);
 
+  // Audio recording states and refs for self playback
+  const [audioUrl, setAudioUrl] = useState(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const audioRef = useRef(null);
+  const streamRef = useRef(null);
+
   // Grade spoken Hanzi character by character, matching pinyin syllables
   const gradePronunciation = (spokenStr) => {
     if (!currentSentence) return;
@@ -92,6 +99,24 @@ export default function SpeakingScreen() {
     statsApi.incrementQuestProgress('SPEAK_PRACTICE', 1).catch(err => console.error(err));
   };
 
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      try {
+        mediaRecorderRef.current.stop();
+      } catch (err) {
+        console.error('Failed to stop MediaRecorder:', err);
+      }
+    }
+    if (streamRef.current) {
+      try {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      } catch (err) {
+        console.error('Failed to stop stream tracks:', err);
+      }
+      streamRef.current = null;
+    }
+  };
+
   // Initialize Web Speech Recognition
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -111,6 +136,33 @@ export default function SpeakingScreen() {
       setSpokenText('');
       setScore(null);
       setChecked(false);
+      setAudioUrl(null); // Clear previous recording
+
+      // Start recording user audio
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+          streamRef.current = stream;
+          const mediaRecorder = new MediaRecorder(stream);
+          mediaRecorderRef.current = mediaRecorder;
+          audioChunksRef.current = [];
+          
+          mediaRecorder.ondataavailable = (event) => {
+            if (event.data && event.data.size > 0) {
+              audioChunksRef.current.push(event.data);
+            }
+          };
+          
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+            const url = URL.createObjectURL(blob);
+            setAudioUrl(url);
+          };
+          
+          mediaRecorder.start();
+        })
+        .catch(err => {
+          console.error('Failed to get MediaStream for recording:', err);
+        });
     };
 
     rec.onresult = (event) => {
@@ -121,6 +173,7 @@ export default function SpeakingScreen() {
 
     rec.onerror = (event) => {
       console.error('Speech Recognition Error:', event.error);
+      stopRecording();
       if (event.error === 'not-allowed') {
         setSpeechError('Quyền sử dụng Microphone bị từ chối. Vui lòng bật quyền ghi âm trong cài đặt trình duyệt.');
       } else if (event.error === 'no-speech') {
@@ -133,6 +186,7 @@ export default function SpeakingScreen() {
 
     rec.onend = () => {
       setIsListening(false);
+      stopRecording();
     };
 
     recognitionRef.current = rec;
@@ -168,6 +222,31 @@ export default function SpeakingScreen() {
     window.speechSynthesis.speak(utterance);
   };
 
+  const handlePlaySelfAudio = () => {
+    if (!audioUrl) return;
+    if (audioRef.current) {
+      try {
+        audioRef.current.pause();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    const audio = new Audio(audioUrl);
+    audioRef.current = audio;
+    audio.play().catch(err => console.error("Self audio playback failed:", err));
+  };
+
+  const renderHanziText = (text) => {
+    if (!text) return null;
+    return Array.from(text).map((char, index) => {
+      const isChinese = /[\u4e00-\u9fa5]/.test(char);
+      if (isChinese) {
+        return <span key={index} className="hanzi-char">{char}</span>;
+      }
+      return <span key={index}>{char}</span>;
+    });
+  };
+
   const resetPractice = () => {
     setSpokenText('');
     setScore(null);
@@ -175,6 +254,13 @@ export default function SpeakingScreen() {
     setChecked(false);
     setSpeechError(null);
     setShowMeaning(true); // Reset translation box to visible for new practicing round
+    setAudioUrl(null); // Clear recorded user voice
+    if (audioRef.current) {
+      try {
+        audioRef.current.pause();
+      } catch (e) {}
+      audioRef.current = null;
+    }
   };
 
   const handleNext = () => {
@@ -371,7 +457,7 @@ export default function SpeakingScreen() {
                       {gradedChars.map((item, idx) => (
                         <span
                           key={idx}
-                          className={`text-4xl sm:text-5xl font-display font-extrabold px-1.5 py-0.5 rounded-xl transition-all duration-300 ${item.correct
+                          className={`text-4xl sm:text-5xl hanzi-char px-1.5 py-0.5 rounded-xl transition-all duration-300 ${item.correct
                             ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/10 shadow-xs border border-emerald-500/20'
                             : 'text-red-500 dark:text-red-400 bg-red-500/10 dark:bg-red-500/10 border border-red-500/20'
                             }`}
@@ -577,7 +663,7 @@ export default function SpeakingScreen() {
                                   : 'bg-red-500/5 border-red-500/20 dark:border-red-500/10'
                               }`}
                             >
-                              <span className={`text-xl font-display font-extrabold ${item.correct ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'}`}>
+                              <span className={`text-xl hanzi-char ${item.correct ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'}`}>
                                 {item.char}
                               </span>
                               <span className="text-[9px] font-mono text-mute leading-none">{item.pinyin}</span>
@@ -594,8 +680,8 @@ export default function SpeakingScreen() {
                       {/* Transcribed spoken speech */}
                       <div className="space-y-1">
                         <span className="text-[9px] font-mono font-bold text-mute uppercase tracking-widest block">Kết quả ghi âm:</span>
-                        <p className="text-lg font-display font-extrabold text-primary bg-primary/5 border border-primary/10 p-3.5 rounded-xl leading-relaxed select-all">
-                          {spokenText || 'Trình duyệt không nghe rõ...'}
+                        <p className="text-lg text-primary bg-primary/5 border border-primary/10 p-3.5 rounded-xl leading-relaxed select-all font-sans font-semibold">
+                          {spokenText ? renderHanziText(spokenText) : 'Trình duyệt không nghe rõ...'}
                         </p>
                       </div>
                     </div>
@@ -603,12 +689,15 @@ export default function SpeakingScreen() {
                     <div className="flex gap-2.5 mt-4">
                       <button
                         type="button"
-                        onClick={handleSpeakSample}
-                        className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 border border-hairline dark:border-zinc-800 hover:bg-surface-bone dark:hover:bg-zinc-900 text-ink dark:text-on-dark text-xs font-bold rounded-xl transition-all cursor-pointer active:scale-95 shadow-sm"
-                        title="Nghe lại phát âm mẫu của hệ thống"
+                        onClick={handlePlaySelfAudio}
+                        disabled={!audioUrl}
+                        className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 border border-hairline dark:border-zinc-800 hover:bg-surface-bone dark:hover:bg-zinc-900 text-ink dark:text-on-dark text-xs font-bold rounded-xl transition-all cursor-pointer active:scale-95 shadow-sm ${
+                          !audioUrl ? 'opacity-40 cursor-not-allowed' : ''
+                        }`}
+                        title="Phát lại giọng nói vừa ghi âm của bạn"
                       >
                         <Volume2 size={14} />
-                        Nghe lại mẫu
+                        Nghe lại giọng tôi
                       </button>
                       <button
                         type="button"

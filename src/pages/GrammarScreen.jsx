@@ -1,7 +1,23 @@
 import React, { useState, useMemo } from 'react';
 import { grammarData } from '../data/grammarData';
-import { BookOpenText, Volume2, Sparkles, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import { 
+  BookOpenText, 
+  Volume2, 
+  Sparkles, 
+  Filter, 
+  ChevronDown, 
+  ChevronUp,
+  CheckCircle2,
+  XCircle,
+  Trophy,
+  ArrowLeft,
+  ArrowRight,
+  Play,
+  Check,
+  Award
+} from 'lucide-react';
 import HoverableText from '../components/common/HoverableText';
+import grammarQuestionBank from '../data/grammarQuestionBank.json';
 
 // Glossary mapping for grammar terminology to help beginners analyze structures
 const GRAMMAR_GLOSSARY = {
@@ -142,6 +158,72 @@ export default function GrammarScreen() {
   const [activeTabs, setActiveTabs] = useState({}); // Tracking active sub-structure tab index per group ID
   const [showLegend, setShowLegend] = useState(false); // Collapsible glossary guide for beginners
 
+  // Grammar practice states
+  const [practiceId, setPracticeId] = useState(null);
+  const [quizIndex, setQuizIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [translationInput, setTranslationInput] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [isQuizFinished, setIsQuizFinished] = useState(false);
+
+  const currentQuizQuestions = useMemo(() => {
+    return grammarQuestionBank[practiceId] || [];
+  }, [practiceId]);
+
+  const currentQuestion = currentQuizQuestions[quizIndex];
+
+  const startPractice = (grammarId) => {
+    setPracticeId(grammarId);
+    setQuizIndex(0);
+    setSelectedOption(null);
+    setTranslationInput('');
+    setIsChecked(false);
+    setIsCorrect(false);
+    setCorrectCount(0);
+    setIsQuizFinished(false);
+  };
+
+  const handleCheckQuestion = () => {
+    if (!currentQuestion) return;
+    setIsChecked(true);
+    if (currentQuestion.type === 'mcq') {
+      const correct = selectedOption === currentQuestion.answer;
+      setIsCorrect(correct);
+      if (correct) {
+        setCorrectCount(prev => prev + 1);
+      }
+    }
+  };
+
+  const handleNextQuestion = () => {
+    setSelectedOption(null);
+    setTranslationInput('');
+    setIsChecked(false);
+    setIsCorrect(false);
+    if (quizIndex + 1 < currentQuizQuestions.length) {
+      setQuizIndex(prev => prev + 1);
+    } else {
+      setIsQuizFinished(true);
+    }
+  };
+
+  const handleSelfGrade = (correct) => {
+    if (correct) {
+      setCorrectCount(prev => prev + 1);
+    }
+    setSelectedOption(null);
+    setTranslationInput('');
+    setIsChecked(false);
+    setIsCorrect(false);
+    if (quizIndex + 1 < currentQuizQuestions.length) {
+      setQuizIndex(prev => prev + 1);
+    } else {
+      setIsQuizFinished(true);
+    }
+  };
+
   const handleSpeakExample = (e, text) => {
     e.stopPropagation();
     if (!window.speechSynthesis) return;
@@ -160,6 +242,285 @@ export default function GrammarScreen() {
   const setActiveTab = (groupId, index) => {
     setActiveTabs((prev) => ({ ...prev, [groupId]: index }));
   };
+
+  if (practiceId && currentQuizQuestions.length > 0) {
+    const currentGrammar = grammarData.find(g => g.id === practiceId);
+    
+    return (
+      <div className="max-w-2xl mx-auto space-y-6 text-left pb-12 select-none">
+        {/* Progress header & exit */}
+        <div className="flex justify-between items-center border-b border-hairline dark:border-divider-dark pb-4">
+          <button
+            onClick={() => setPracticeId(null)}
+            className="flex items-center gap-1.5 text-mute hover:text-ink dark:hover:text-on-dark font-mono font-bold text-xs cursor-pointer"
+          >
+            <ArrowLeft size={14} />
+            Thoát luyện tập
+          </button>
+          
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] font-mono font-extrabold uppercase bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 rounded flex-shrink-0">
+              {currentGrammar?.level || 'Ngữ pháp'}
+            </span>
+            <span className="text-mute">•</span>
+            <div className="text-xs font-mono font-bold text-primary">
+              Câu {quizIndex + 1} / {currentQuizQuestions.length}
+            </div>
+          </div>
+        </div>
+
+        {/* Victory Screen */}
+        {isQuizFinished ? (
+          <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl p-8 text-center shadow-lg space-y-6 animate-in fade-in zoom-in-95 duration-300">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500 animate-bounce">
+              <Trophy size={36} />
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="font-display text-2xl font-extrabold text-ink dark:text-on-dark tracking-tight">Hoàn thành luyện tập!</h2>
+              <p className="text-xs text-mute dark:text-on-dark-mute">Bạn vừa hoàn thành 20 câu hỏi luyện tập cho cấu trúc ngữ pháp này.</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+              <div className="bg-surface-bone/35 dark:bg-black/25 border border-hairline dark:border-zinc-800 rounded-xl p-4 text-center">
+                <span className="text-[10px] font-mono font-bold text-mute uppercase block">Độ chính xác</span>
+                <span className="text-2xl font-black text-emerald-500 block mt-1">
+                  {Math.round((correctCount / currentQuizQuestions.length) * 100)}%
+                </span>
+              </div>
+              <div className="bg-surface-bone/35 dark:bg-black/25 border border-hairline dark:border-zinc-800 rounded-xl p-4 text-center">
+                <span className="text-[10px] font-mono font-bold text-mute uppercase block">Số câu đúng</span>
+                <span className="text-2xl font-black text-primary block mt-1">
+                  {correctCount} / {currentQuizQuestions.length}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex gap-3 max-w-md mx-auto pt-4">
+              <button
+                onClick={() => startPractice(practiceId)}
+                className="flex-1 py-3 bg-primary hover:bg-primary-deep text-white font-mono font-bold text-xs rounded-full transition-all cursor-pointer shadow-sm"
+              >
+                🔄 Luyện tập lại
+              </button>
+              <button
+                onClick={() => setPracticeId(null)}
+                className="flex-1 py-3 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-ink dark:text-on-dark font-mono font-bold text-xs rounded-full transition-all cursor-pointer"
+              >
+                Quay lại danh sách
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* Active Question Board */
+          <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl p-6 sm:p-8 shadow-sm space-y-6 relative overflow-hidden text-left">
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-widest block">
+                {currentQuestion.type === 'mcq' ? 'TRẮC NGHIỆM - CHỌN ĐÁP ÁN ĐÚNG' : 'DỊCH CÂU - TỰ LUYỆN TẬP'}
+              </span>
+              <h2 className="text-lg font-bold text-ink dark:text-on-dark leading-relaxed font-display">
+                {currentGrammar?.title}
+              </h2>
+            </div>
+
+            {/* Prompt */}
+            <div className="bg-surface-bone/35 dark:bg-black/25 border border-hairline dark:border-zinc-800/80 rounded-xl p-5 sm:p-6 text-center space-y-2">
+              <p className="text-2xl font-display font-extrabold text-ink dark:text-on-dark tracking-wide leading-relaxed">
+                {currentQuestion.type === 'translate_zh_vi' ? (
+                  <HoverableText text={currentQuestion.prompt} />
+                ) : (
+                  currentQuestion.prompt
+                )}
+              </p>
+              {currentQuestion.pinyin && (
+                <p className="text-sm font-mono font-semibold text-primary/80">
+                  {currentQuestion.pinyin}
+                </p>
+              )}
+            </div>
+
+            {/* MCQ Option Choices */}
+            {currentQuestion.type === 'mcq' ? (
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                {currentQuestion.options.map((option) => {
+                  const isSelected = selectedOption === option.id;
+                  const isCorrectAnswer = option.id === currentQuestion.answer;
+                  
+                  let cardStyle = 'bg-surface-card border-hairline hover:bg-surface-bone dark:hover:bg-black/30 text-ink dark:text-on-dark';
+                  if (isChecked) {
+                    if (isCorrectAnswer) {
+                      cardStyle = 'bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-extrabold shadow-sm';
+                    } else if (isSelected) {
+                      cardStyle = 'bg-red-500/10 border-red-500 text-red-600 dark:text-red-400 font-extrabold shadow-sm';
+                    } else {
+                      cardStyle = 'bg-surface-card border-hairline opacity-60 text-ink dark:text-on-dark';
+                    }
+                  } else if (isSelected) {
+                    cardStyle = 'border-primary ring-2 ring-primary bg-primary/5 text-primary font-bold';
+                  }
+
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      disabled={isChecked}
+                      onClick={() => setSelectedOption(option.id)}
+                      className={`p-4 rounded-xl border-2 text-left text-base transition-all flex items-center gap-3 cursor-pointer ${cardStyle}`}
+                    >
+                      <span className={`h-6 w-6 shrink-0 rounded-full flex items-center justify-center text-xs font-mono font-bold ${
+                        isSelected 
+                          ? 'bg-primary text-white' 
+                          : isChecked && isCorrectAnswer 
+                            ? 'bg-emerald-500 text-white'
+                            : 'bg-surface-bone dark:bg-black/40 text-mute'
+                      }`}>
+                        {option.id}
+                      </span>
+                      <span className="font-display font-bold leading-normal">{option.text}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              /* Translation Text Input */
+              <div className="space-y-3 pt-2">
+                <span className="text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-widest block">
+                  Nhập bản dịch của bạn:
+                </span>
+                <textarea
+                  disabled={isChecked}
+                  placeholder={
+                    currentQuestion.type === 'translate_zh_vi' 
+                      ? 'Nhập bản dịch tiếng Việt...' 
+                      : 'Nhập câu tiếng Trung (Pinyin hoặc Chữ Hán)...'
+                  }
+                  value={translationInput}
+                  onChange={(e) => setTranslationInput(e.target.value)}
+                  rows={3}
+                  className="w-full p-4 bg-surface-card dark:bg-surface-dark border-2 border-hairline dark:border-divider-dark rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-semibold text-ink dark:text-on-dark placeholder:opacity-40 leading-relaxed"
+                />
+              </div>
+            )}
+
+            {/* Answer check explanation / Reference translation */}
+            {isChecked && (
+              <div 
+                style={{ 
+                  backgroundColor: currentQuestion.type === 'mcq' 
+                    ? (isCorrect ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)')
+                    : 'rgba(84, 203, 212, 0.12)',
+                  borderColor: currentQuestion.type === 'mcq'
+                    ? (isCorrect ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)')
+                    : 'rgba(84, 203, 212, 0.3)'
+                }}
+                className={`w-full border-2 rounded-xl p-4 flex gap-3.5 items-start mt-4 animate-fade-in text-left`}
+              >
+                <div className="shrink-0 mt-0.5">
+                  {currentQuestion.type === 'mcq' ? (
+                    isCorrect 
+                      ? <CheckCircle2 size={20} className="text-emerald-500" /> 
+                      : <XCircle size={20} className="text-red-500" />
+                  ) : (
+                    <Award size={20} className="text-primary" />
+                  )}
+                </div>
+                <div className="flex-1 text-left space-y-1">
+                  <h4 className={`text-sm font-bold ${
+                    currentQuestion.type === 'mcq'
+                      ? (isCorrect ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400')
+                      : 'text-primary'
+                  }`}>
+                    {currentQuestion.type === 'mcq' 
+                      ? (isCorrect ? 'Tuyệt vời! Bạn trả lời chính xác.' : 'Chưa chính xác!') 
+                      : 'So sánh với đáp án mẫu:'
+                    }
+                  </h4>
+                  
+                  {currentQuestion.type === 'mcq' ? (
+                    <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed pt-1 font-medium">
+                      {currentQuestion.explanation}
+                    </p>
+                  ) : (
+                    <div className="pt-1.5 space-y-2">
+                      <div className="bg-surface-card p-3 rounded-lg border border-hairline dark:border-zinc-800 space-y-1">
+                        <span className="text-[9px] font-mono text-mute uppercase block">Đáp án hệ thống:</span>
+                        <p className="text-sm font-bold text-ink dark:text-on-dark font-display leading-relaxed">
+                          {currentQuestion.referenceAnswer}
+                        </p>
+                        {currentQuestion.pinyin && (
+                          <p className="text-xs font-mono font-semibold text-primary">
+                            {currentQuestion.pinyin}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="bg-surface-bone/50 dark:bg-black/20 p-3 rounded-lg border border-hairline dark:border-zinc-850 space-y-1">
+                        <span className="text-[9px] font-mono text-mute uppercase block">Đáp án của bạn:</span>
+                        <p className="text-sm font-semibold text-body dark:text-on-dark-mute leading-relaxed italic">
+                          {translationInput.trim() || '(Bạn không nhập nội dung)'}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Action buttons footer */}
+            <div className="pt-4 flex justify-end">
+              {!isChecked ? (
+                <button
+                  type="button"
+                  disabled={currentQuestion.type === 'mcq' ? !selectedOption : !translationInput.trim()}
+                  onClick={handleCheckQuestion}
+                  className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer shadow-sm ${
+                    (currentQuestion.type === 'mcq' ? selectedOption : translationInput.trim())
+                      ? 'bg-primary hover:bg-primary-deep text-white hover:scale-[1.02] active:scale-98'
+                      : 'bg-primary/30 text-white/60 cursor-not-allowed'
+                  }`}
+                >
+                  Kiểm tra kết quả
+                </button>
+              ) : currentQuestion.type === 'mcq' ? (
+                <button
+                  type="button"
+                  onClick={handleNextQuestion}
+                  className="px-6 py-2.5 bg-ink hover:bg-black dark:bg-primary dark:hover:bg-primary-deep text-white font-mono font-bold text-xs rounded-full transition-all cursor-pointer shadow-sm active:scale-95 flex items-center gap-1.5"
+                >
+                  Tiếp tục
+                  <ArrowRight size={14} />
+                </button>
+              ) : (
+                /* Self grading buttons for translation */
+                <div className="w-full flex items-center justify-between gap-3 border-t border-hairline dark:border-divider-dark pt-4 mt-2">
+                  <span className="text-[10px] font-mono font-bold text-mute">Bạn trả lời có đúng không?</span>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleSelfGrade(false)}
+                      className="px-4 py-2 bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-500 text-xs font-bold rounded-full transition-all cursor-pointer active:scale-95 flex items-center gap-1"
+                    >
+                      <XCircle size={13} />
+                      Sai rồi
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelfGrade(true)}
+                      className="px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 text-emerald-500 text-xs font-bold rounded-full transition-all cursor-pointer active:scale-95 flex items-center gap-1"
+                    >
+                      <CheckCircle2 size={13} />
+                      Đúng rồi
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -362,6 +723,18 @@ export default function GrammarScreen() {
                         </p>
                       </div>
 
+                    </div>
+
+                    {/* Practice Grammar Trigger Button */}
+                    <div className="pt-1">
+                      <button
+                        type="button"
+                        onClick={() => startPractice(activeItem.id)}
+                        className="w-full flex items-center justify-center gap-2 py-3 bg-primary hover:bg-primary-deep text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-sm active:scale-[0.99] hover:shadow-md"
+                      >
+                        <Play size={14} className="fill-white text-white stroke-[3]" />
+                        <span>Luyện tập cấu trúc ngữ pháp này (20 câu trắc nghiệm & dịch)</span>
+                      </button>
                     </div>
 
                     {/* Tips & Attentions (if exist) */}

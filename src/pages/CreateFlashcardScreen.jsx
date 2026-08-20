@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { fetchAllDecks, createFlashcard, createDeck, importFlashcards, fetchFlashcardsByDeck } from '../features/deck/deckSlice';
 import { PlusCircle, ArrowLeft, Sparkles, CheckSquare, Square, Save, Loader2 } from 'lucide-react';
 import { useDictionary } from '../hooks/useDictionary';
@@ -31,6 +31,8 @@ export default function CreateFlashcardScreen() {
   const { showToast } = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const queryDeckId = searchParams.get('deckId') || '';
 
   const decks = useSelector((state) => state.deck.decks);
   const isLoading = useSelector((state) => state.deck.isLoading);
@@ -41,7 +43,7 @@ export default function CreateFlashcardScreen() {
 
   // ── Manual tab state ──
   const [formData, setFormData] = useState({
-    deckId: '',
+    deckId: queryDeckId,
     hanzi: '',
     pinyin: '',
     meaning: '',
@@ -69,7 +71,7 @@ export default function CreateFlashcardScreen() {
   const [aiError, setAiError] = useState('');
   const [aiCards, setAiCards] = useState([]); // generated cards
   const [selectedCards, setSelectedCards] = useState(new Set()); // indices
-  const [aiSaveDeckId, setAiSaveDeckId] = useState('');
+  const [aiSaveDeckId, setAiSaveDeckId] = useState(queryDeckId);
   const [aiSaving, setAiSaving] = useState(false);
   const [aiSaveMsg, setAiSaveMsg] = useState({ type: '', text: '' });
 

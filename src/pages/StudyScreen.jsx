@@ -22,6 +22,8 @@ import {
 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { speakChinese } from '../utils/tts';
+import { flashcardApi } from '../services/flashcardApi';
+import { dictionaryHistoryApi } from '../services/dictionaryHistoryApi';
 
 // SVG blossom logo
 function BlossomIcon({ className }) {
@@ -363,13 +365,35 @@ function SpeakingPractice({ character, pinyin, lang = 'zh-CN' }) {
 }
 
 // AI Example Box dynamic generator & database persistence
-function AIExampleBox({ card, lang = 'zh-CN' }) {
+function AIExampleBox({ card, onExampleUpdated, lang = 'zh-CN', aiLimit, loadAiLimit }) {
   const isEnglish = lang === 'en-US';
   const hasExample = card.exampleHanzi && (isEnglish || card.examplePinyin) && card.exampleMeaning;
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { showToast } = useToast();
 
   const handleSpeakExample = (e) => {
     e.stopPropagation();
     speakChinese(card.exampleHanzi, lang);
+  };
+
+  const handleGenerateExample = async (e) => {
+    e.stopPropagation();
+    if (isGenerating) return;
+    setIsGenerating(true);
+    try {
+      const res = await flashcardApi.generateAIExample(card.id);
+      if (res.data) {
+        onExampleUpdated?.(card.id, res.data);
+        showToast('Đoạn câu ví dụ đã được tạo bằng AI thành công!', 'success');
+        loadAiLimit?.();
+      }
+    } catch (err) {
+      console.error(err);
+      const errMsg = err.response?.data?.message || 'Có lỗi xảy ra khi gọi AI tạo ví dụ.';
+      showToast(errMsg, 'error');
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -378,10 +402,15 @@ function AIExampleBox({ card, lang = 'zh-CN' }) {
         <h4 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider flex items-center gap-1.5">
           ✨ Câu ví dụ minh họa
         </h4>
+        {aiLimit && (
+          <span className="text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute">
+            Còn lại: <strong className="text-primary">{Math.max(0, aiLimit.limit - aiLimit.count)}/{aiLimit.limit}</strong> lượt AI
+          </span>
+        )}
       </div>
 
       {hasExample ? (
-        <div className="space-y-2 relative pr-12 group">
+        <div className="space-y-4 relative pr-12 group">
           <button
             type="button; button-icon"
             onClick={handleSpeakExample}
@@ -391,22 +420,45 @@ function AIExampleBox({ card, lang = 'zh-CN' }) {
             🔊
           </button>
           
-          <p className="text-2xl font-display font-bold text-ink dark:text-on-dark leading-relaxed">
-            {isEnglish ? <span>{card.exampleHanzi}</span> : <HoverableText text={card.exampleHanzi} />}
-          </p>
-          {!isEnglish && card.examplePinyin && (
-            <p className="text-sm font-mono font-semibold text-primary dark:text-primary">
-              {card.examplePinyin}
+          <div className="space-y-2">
+            <p className="text-2xl font-display font-bold text-ink dark:text-on-dark leading-relaxed">
+              {isEnglish ? <span>{card.exampleHanzi}</span> : <HoverableText text={card.exampleHanzi} />}
             </p>
-          )}
-          <p className="text-xs font-medium text-body dark:text-on-dark-mute italic">
-            {card.exampleMeaning}
-          </p>
+            {!isEnglish && card.examplePinyin && (
+              <p className="text-sm font-mono font-semibold text-primary dark:text-primary">
+                {card.examplePinyin}
+              </p>
+            )}
+            <p className="text-xs font-medium text-body dark:text-on-dark-mute italic">
+              {card.exampleMeaning}
+            </p>
+          </div>
+
+          <div className="flex justify-end pt-2">
+            <button
+              type="button"
+              onClick={handleGenerateExample}
+              disabled={isGenerating}
+              className="inline-flex items-center gap-1 px-3 py-1 bg-surface-bone dark:bg-black/35 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20 text-mute dark:text-on-dark-mute text-[10px] font-mono font-semibold rounded-full transition-all cursor-pointer border border-hairline dark:border-divider-dark disabled:opacity-50 active:scale-98"
+            >
+              {isGenerating ? '⏳ Đang tạo lại...' : '🔄 Tạo lại bằng AI'}
+            </button>
+          </div>
         </div>
       ) : (
-        <p className="text-xs text-mute dark:text-on-dark-mute italic leading-relaxed">
-          Hiện tại từ vựng này chưa có câu ví dụ trong bộ thẻ.
-        </p>
+        <div className="text-center py-4 space-y-4">
+          <p className="text-xs text-mute dark:text-on-dark-mute italic leading-relaxed">
+            Hiện tại từ vựng này chưa có câu ví dụ trong bộ thẻ.
+          </p>
+          <button
+            type="button"
+            onClick={handleGenerateExample}
+            disabled={isGenerating}
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-deep text-white text-xs font-mono font-bold rounded-full shadow-sm hover:shadow transition-all cursor-pointer disabled:opacity-50 active:scale-95"
+          >
+            {isGenerating ? '⏳ Đang tạo...' : '✨ Tạo câu ví dụ bằng AI'}
+          </button>
+        </div>
       )}
     </div>
   );
@@ -537,6 +589,15 @@ export default function StudyScreen() {
   };
 
   // Client local states
+  const [aiLimit, setAiLimit] = useState({ count: 0, limit: 10 });
+  const loadAiLimit = async () => {
+    try {
+      const res = await dictionaryHistoryApi.getTodayCount();
+      setAiLimit({ count: res.data.count, limit: res.data.limit });
+    } catch (err) {
+      console.warn('Failed to load AI limit:', err);
+    }
+  };
   const [allCards, setAllCards] = useState([]);
   const [_isAllCardsLoading, setIsAllCardsLoading] = useState(false);
   const [isStudyStarted, setIsStudyStarted] = useState(false);
@@ -651,6 +712,7 @@ export default function StudyScreen() {
   useEffect(() => {
     dispatch(fetchAllDecks());
     loadFavorites();
+    loadAiLimit();
   }, [dispatch]);
 
   // Load backend cards for the selected deck dynamically
@@ -725,6 +787,16 @@ export default function StudyScreen() {
     }
   }, [dispatch, selectedDeckId]);
 
+  // Compute due cards for the currently selected deck under SRS mode
+  const srsDueCount = useMemo(() => {
+    if (selectedDeckId === 'favorites') return 0;
+    if (selectedDeckId === 'all') {
+      return todayCards ? todayCards.length : 0;
+    }
+    if (!todayCards) return 0;
+    return todayCards.filter(c => c.deckId === Number(selectedDeckId)).length;
+  }, [todayCards, selectedDeckId]);
+
   // Compute filtered queue dynamically based on selected deck and study mode
   const filteredQueue = useMemo(() => {
     if (selectedDeckId === 'favorites') {
@@ -788,10 +860,18 @@ export default function StudyScreen() {
     };
   }, []);
 
-  const handleLoadExtraCards = (count) => {
+  const handleLoadExtraCards = async (count) => {
     const deckId = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
-    dispatch(fetchTodayStudy({ deckId, extra: count }));
-    showToast(`Đã nạp thêm ${count} từ mới vào hàng đợi ôn tập!`, 'success');
+    try {
+      const result = await dispatch(fetchTodayStudy({ deckId, extra: count })).unwrap();
+      if (result && result.length > 0) {
+        showToast(`Đã nạp thêm ${result.length} từ mới vào hàng đợi ôn tập!`, 'success');
+      } else {
+        showToast('Bộ bài này đã hết từ mới để nạp thêm!', 'warning');
+      }
+    } catch (err) {
+      showToast('Có lỗi xảy ra khi nạp thêm từ mới.', 'error');
+    }
   };
 
   // Start study session
@@ -1283,7 +1363,13 @@ export default function StudyScreen() {
 
                 {/* AI Example Sentence Generator & Reader */}
                 <div className="w-full">
-                  <AIExampleBox card={currentCard} onExampleUpdated={handleExampleUpdated} lang={isEnglish ? 'en-US' : 'zh-CN'} />
+                  <AIExampleBox 
+                    card={currentCard} 
+                    onExampleUpdated={handleExampleUpdated} 
+                    lang={isEnglish ? 'en-US' : 'zh-CN'} 
+                    aiLimit={aiLimit}
+                    loadAiLimit={loadAiLimit}
+                  />
                 </div>
               </div>
             ) : (
@@ -1534,10 +1620,10 @@ export default function StudyScreen() {
                     ? 'bg-primary/15 text-primary'
                     : 'bg-surface-bone text-mute dark:bg-black/30 dark:text-on-dark-mute'
                 }`}>
-                  {t('study.due_today', { count: todayCards.length })}
+                  {t('study.due_today', { count: srsDueCount })}
                 </div>
 
-                {todayCards.length === 0 && selectedDeckId !== 'favorites' && (
+                {srsDueCount === 0 && selectedDeckId !== 'favorites' && (
                   <div className="flex gap-1.5 z-40">
                     <button
                       type="button"

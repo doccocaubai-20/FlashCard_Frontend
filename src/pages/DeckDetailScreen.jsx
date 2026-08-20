@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchDeckDetails, fetchFlashcardsByDeck, importFlashcards, deleteFlashcard, clearCurrentDeck, updateFlashcard } from '../features/deck/deckSlice';
-import { Upload, Star, X, Trash2, Volume2, Copy, Check, Pencil } from 'lucide-react';
+import { Upload, Star, X, Trash2, Volume2, Copy, Check, Pencil, Plus } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { deckApi } from '../services/deckApi';
 import { speakChinese } from '../utils/tts';
@@ -314,6 +314,16 @@ export default function DeckDetailScreen() {
                 className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
               >
                 Đoạn văn AI
+              </button>
+            )}
+            {!isVirtual && (
+              <button
+                type="button"
+                onClick={() => navigate(`/flashcards/new?deckId=${id}`)}
+                className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
+              >
+                <Plus className="w-4 h-4 text-primary" />
+                Thêm thẻ
               </button>
             )}
             <button
