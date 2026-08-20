@@ -17,7 +17,8 @@ import {
   Shield,
   MessageSquare,
   ClipboardList,
-  Languages
+  Languages,
+  Printer
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -59,6 +60,7 @@ export default function Sidebar() {
       items: [
         { to: '/reference-hub', label: t('nav.reference_hub'), icon: Library },
         { to: '/english-hub', label: 'Góc Tiếng Anh', icon: Languages },
+        { to: '/print-cards', label: 'In thẻ Flashcard', icon: Printer },
       ]
     },
     {
