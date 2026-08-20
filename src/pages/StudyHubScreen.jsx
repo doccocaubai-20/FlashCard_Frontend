@@ -6,7 +6,8 @@ import {
   PenTool,
   MessageSquare,
   Languages,
-  ArrowRight
+  ArrowRight,
+  BookOpenText
 } from 'lucide-react';
 
 export default function StudyHubScreen() {
@@ -20,6 +21,14 @@ export default function StudyHubScreen() {
       path: '/study',
       color: 'from-blue-500/10 to-indigo-500/10 border-blue-500/30 text-blue-500',
       badge: 'Cơ bản & Từ vựng'
+    },
+    {
+      title: 'Luyện tập Ngữ pháp HSK',
+      description: 'Học các cấu trúc ngữ pháp trọng điểm HSK 1 - 3, kết hợp làm bài tập trắc nghiệm và dịch thuật tự đánh giá.',
+      icon: BookOpenText,
+      path: '/grammar',
+      color: 'from-purple-500/10 to-pink-500/10 border-purple-500/30 text-purple-500',
+      badge: 'Luyện cấu trúc'
     },
     {
       title: 'Luyện nói phát âm HSK',

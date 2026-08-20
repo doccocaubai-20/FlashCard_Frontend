@@ -1647,11 +1647,9 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                             className="flex gap-5 py-3.5 items-center hover:bg-surface-bone/50 dark:hover:bg-surface-dark/30 px-4 rounded-md transition-all border border-transparent hover:border-hairline dark:hover:border-divider-dark cursor-pointer group bg-transparent"
                           >
                             {/* Calligraphy square */}
-                            <div className="flex-shrink-0 w-12 min-h-12 h-auto py-1.5 bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md flex flex-col items-center justify-center shadow-sm font-display group-hover:bg-surface-card dark:group-hover:bg-black group-hover:border-primary/50 group-hover:text-primary dark:group-hover:text-primary transition-all">
-                              <div className={`flex flex-col items-center justify-center gap-0.5 leading-none font-semibold text-ink dark:text-on-dark ${item.hanzi.length > 3 ? 'text-xs' : item.hanzi.length > 1 ? 'text-sm' : 'text-xl'}`}>
-                                {Array.from(item.hanzi).map((char, index) => (
-                                  <span key={index}>{char}</span>
-                                ))}
+                            <div className="flex-shrink-0 min-w-[3.5rem] h-12 px-3 bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md flex items-center justify-center shadow-sm font-display group-hover:bg-surface-card dark:group-hover:bg-black group-hover:border-primary/50 group-hover:text-primary dark:group-hover:text-primary transition-all">
+                              <div className="text-xl font-bold text-ink dark:text-on-dark tracking-wide leading-none hanzi-text">
+                                {item.hanzi}
                               </div>
                             </div>
 
@@ -1716,11 +1714,9 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                               className="flex gap-5 py-4 items-center hover:bg-surface-bone/50 dark:hover:bg-surface-dark/30 px-4 rounded-md transition-all border border-transparent hover:border-hairline dark:hover:border-divider-dark cursor-pointer group bg-transparent"
                             >
                               {/* Character Column */}
-                              <div className="flex-shrink-0 w-16 min-h-16 h-auto py-2.5 bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md flex flex-col items-center justify-center shadow-sm font-display group-hover:bg-surface-card dark:group-hover:bg-black group-hover:border-primary/50 group-hover:text-primary dark:group-hover:text-primary transition-all">
-                                <div className={`flex flex-col items-center justify-center gap-0.5 leading-none font-semibold text-ink dark:text-on-dark ${item.s.length > 3 ? 'text-xl' : item.s.length > 1 ? 'text-2xl' : 'text-3xl'}`}>
-                                  {Array.from(item.s).map((char, index) => (
-                                    <span key={index}>{char}</span>
-                                  ))}
+                              <div className="flex-shrink-0 min-w-[4.5rem] h-16 px-4 bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md flex items-center justify-center shadow-sm font-display group-hover:bg-surface-card dark:group-hover:bg-black group-hover:border-primary/50 group-hover:text-primary dark:group-hover:text-primary transition-all">
+                                <div className="text-2xl font-bold text-ink dark:text-on-dark tracking-wide leading-none hanzi-text">
+                                  {item.s}
                                 </div>
                               </div>
 

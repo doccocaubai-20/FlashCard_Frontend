@@ -315,7 +315,7 @@ export default function UnscrambleGameScreen() {
                     key={token.id}
                     onClick={() => handleTokenReturn(token)}
                     disabled={checked}
-                    className={`px-4 py-2 bg-surface-card dark:bg-surface-dark border rounded-md shadow-xs text-base font-bold font-display cursor-pointer transition-all active:scale-95 ${
+                    className={`px-4 py-2 bg-surface-card dark:bg-surface-dark border rounded-md shadow-xs text-base font-bold font-display hanzi-text cursor-pointer transition-all active:scale-95 ${
                       checked
                         ? isCorrect
                           ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-emerald-50/25'
@@ -339,7 +339,7 @@ export default function UnscrambleGameScreen() {
                     key={token.id}
                     onClick={() => handleTokenSelect(token)}
                     disabled={checked}
-                    className="px-4 py-2.5 bg-surface-bone/50 hover:bg-surface-bone dark:bg-black/25 dark:hover:bg-black/50 border border-hairline dark:border-divider-dark rounded-md text-base font-bold font-display cursor-pointer transition-all active:scale-95 text-ink dark:text-on-dark hover:border-primary/50"
+                    className="px-4 py-2.5 bg-surface-bone/50 hover:bg-surface-bone dark:bg-black/25 dark:hover:bg-black/50 border border-hairline dark:border-divider-dark rounded-md text-base font-bold font-display hanzi-text cursor-pointer transition-all active:scale-95 text-ink dark:text-on-dark hover:border-primary/50"
                   >
                     {token.word}
                     {token.pinyin && (

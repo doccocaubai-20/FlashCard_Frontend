@@ -25,12 +25,12 @@ function TianzigeBackground() {
   return (
     <>
       {/* Dashed guidelines */}
-      <line x1="0" y1="512" x2="1024" y2="512" stroke="#fca5a5" strokeWidth="6" strokeDasharray="16,16" />
-      <line x1="512" y1="0" x2="512" y2="1024" stroke="#fca5a5" strokeWidth="6" strokeDasharray="16,16" />
-      <line x1="0" y1="0" x2="1024" y2="1024" stroke="#fee2e2" strokeWidth="6" strokeDasharray="10,10" />
-      <line x1="1024" y1="0" x2="0" y2="1024" stroke="#fee2e2" strokeWidth="6" strokeDasharray="10,10" />
+      <line x1="0" y1="512" x2="1024" y2="512" stroke="currentColor" strokeWidth="6" strokeDasharray="16,16" className="text-zinc-300 dark:text-zinc-700" />
+      <line x1="512" y1="0" x2="512" y2="1024" stroke="currentColor" strokeWidth="6" strokeDasharray="16,16" className="text-zinc-300 dark:text-zinc-700" />
+      <line x1="0" y1="0" x2="1024" y2="1024" stroke="currentColor" strokeWidth="6" strokeDasharray="10,10" className="text-zinc-200 dark:text-zinc-800" />
+      <line x1="1024" y1="0" x2="0" y2="1024" stroke="currentColor" strokeWidth="6" strokeDasharray="10,10" className="text-zinc-200 dark:text-zinc-800" />
       {/* Outer border */}
-      <rect x="0" y="0" width="1024" height="1024" fill="none" stroke="#f87171" strokeWidth="16" />
+      <rect x="0" y="0" width="1024" height="1024" fill="none" stroke="currentColor" strokeWidth="16" className="text-zinc-400 dark:text-zinc-600" />
     </>
   );
 }

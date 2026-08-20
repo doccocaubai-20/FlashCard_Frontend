@@ -277,7 +277,7 @@ export default function TranslationPlaygroundScreen() {
                 )}
 
                 {/* Interactive character blocks (hover tooltip) */}
-                <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-3 py-3 text-3xl font-display font-extrabold select-none leading-normal">
+                <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-3 py-3 text-3xl font-display font-extrabold select-none leading-normal hanzi-text">
                   {currentSentence.tokens.map((token, idx) => (
                     <div 
                       key={idx} 
@@ -287,7 +287,7 @@ export default function TranslationPlaygroundScreen() {
                     >
                       <span 
                         onClick={(e) => speakWord(e, token.word)} 
-                        className="hover:text-primary transition-colors text-ink dark:text-on-dark font-display font-extrabold"
+                        className="hover:text-primary transition-colors text-ink dark:text-on-dark font-display font-bold hanzi-text"
                       >
                         {token.word}
                       </span>

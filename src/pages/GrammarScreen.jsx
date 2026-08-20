@@ -329,7 +329,7 @@ export default function GrammarScreen() {
                 {currentQuestion.type === 'translate_zh_vi' ? (
                   <HoverableText text={currentQuestion.prompt} />
                 ) : (
-                  currentQuestion.prompt
+                  <span className="hanzi-text font-bold">{currentQuestion.prompt}</span>
                 )}
               </p>
               {currentQuestion.pinyin && (
@@ -376,7 +376,7 @@ export default function GrammarScreen() {
                       }`}>
                         {option.id}
                       </span>
-                      <span className="font-display font-bold leading-normal">{option.text}</span>
+                      <span className="font-display font-bold leading-normal hanzi-text">{option.text}</span>
                     </button>
                   );
                 })}

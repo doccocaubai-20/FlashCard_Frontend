@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Search, 
   Star, 
-  BookOpenText, 
   Library, 
   Grid, 
   ArrowRight,
@@ -38,14 +37,7 @@ export default function ReferenceHubScreen() {
       color: 'from-amber-500/10 to-yellow-500/10 border-amber-500/30 text-amber-500',
       badge: 'Bộ nhớ cá nhân'
     },
-    {
-      title: 'Ngữ pháp HSK trọng điểm',
-      description: 'Hệ thống các cấu trúc ngữ pháp quan trọng nhất trong cấp độ HSK 1 - 3, đi kèm giải thích và ví dụ cụ thể.',
-      icon: BookOpenText,
-      path: '/grammar',
-      color: 'from-purple-500/10 to-pink-500/10 border-purple-500/30 text-purple-500',
-      badge: 'Lý thuyết ngữ pháp'
-    },
+
     {
       title: 'Thư viện Bộ thủ chữ Hán',
       description: 'Tìm hiểu danh sách 214 bộ thủ tiếng Trung chuẩn xác, hiểu bản chất cấu tạo hình ảnh và ý nghĩa chữ Hán.',
