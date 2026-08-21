@@ -1,0 +1,1906 @@
+[
+  {
+    "Tiếng Anh": "lucrative",
+    "Pinyin": "/ˈluː.krə.tɪv/",
+    "Dịch nghĩa": "sinh lợi, béo bở",
+    "exampleHanzi": "A lucrative business deal.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "monopoly",
+    "Pinyin": "/məˈnɒp.əl.i/",
+    "Dịch nghĩa": "sự độc quyền",
+    "exampleHanzi": "They have a monopoly on the market.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "subsidiary",
+    "Pinyin": "/səbˈsɪd.i.ə.ri/",
+    "Dịch nghĩa": "công ty con",
+    "exampleHanzi": "A subsidiary of a US company.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "entrepreneur",
+    "Pinyin": "/ˌɒn.trə.prəˈnɜːr/",
+    "Dịch nghĩa": "doanh nhân (khởi nghiệp)",
+    "exampleHanzi": "Successful entrepreneur.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "infrastructure",
+    "Pinyin": "/ˈɪn.frəˌstrʌk.tʃər/",
+    "Dịch nghĩa": "cơ sở hạ tầng",
+    "exampleHanzi": "Improve the transport infrastructure.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "innovation",
+    "Pinyin": "/ˌɪn.əˈveɪ.ʃən/",
+    "Dịch nghĩa": "sự đổi mới",
+    "exampleHanzi": "Technological innovation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "patent",
+    "Pinyin": "/ˈpeɪ.tənt/",
+    "Dịch nghĩa": "bằng sáng chế",
+    "exampleHanzi": "File a patent.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "trademark",
+    "Pinyin": "/ˈtreɪd.mɑːk/",
+    "Dịch nghĩa": "thương hiệu (đã đăng ký)",
+    "exampleHanzi": "Registered trademark.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "reputation",
+    "Pinyin": "/ˌrep.jəˈteɪ.ʃən/",
+    "Dịch nghĩa": "danh tiếng",
+    "exampleHanzi": "A company with a good reputation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "prestigious",
+    "Pinyin": "/presˈtɪdʒ.əs/",
+    "Dịch nghĩa": "uy tín, danh giá",
+    "exampleHanzi": "A prestigious award.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "incentive",
+    "Pinyin": "/ɪnˈsen.tɪv/",
+    "Dịch nghĩa": "sự khích lệ, ưu đãi",
+    "exampleHanzi": "Tax incentives for new businesses.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "compensation",
+    "Pinyin": "/ˌkɒm.penˈseɪ.ʃən/",
+    "Dịch nghĩa": "tiền đền bù, thù lao",
+    "exampleHanzi": "Workers compensation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "reimburse",
+    "Pinyin": "/ˌriː.ɪmˈbɜːs/",
+    "Dịch nghĩa": "hoàn trả (chi phí)",
+    "exampleHanzi": "We will reimburse your travel expenses.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "deduct",
+    "Pinyin": "/dɪˈdʌkt/",
+    "Dịch nghĩa": "khấu trừ",
+    "exampleHanzi": "Tax is deducted from your salary.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "exempt",
+    "Pinyin": "/ɪɡˈzempt/",
+    "Dịch nghĩa": "được miễn",
+    "exampleHanzi": "Exempt from tax.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "mandatory",
+    "Pinyin": "/ˈmæn.də.tər.i/",
+    "Dịch nghĩa": "bắt buộc",
+    "exampleHanzi": "Attendance is mandatory.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "obligation",
+    "Pinyin": "/ˌɒb.lɪˈɡeɪ.ʃən/",
+    "Dịch nghĩa": "nghĩa vụ",
+    "exampleHanzi": "Legal obligation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "unanimous",
+    "Pinyin": "/juːˈnæn.ɪ.məs/",
+    "Dịch nghĩa": "nhất trí (100%)",
+    "exampleHanzi": "A unanimous vote.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "tentative",
+    "Pinyin": "/ˈten.tə.tɪv/",
+    "Dịch nghĩa": "dự kiến, chưa chắc chắn",
+    "exampleHanzi": "A tentative schedule.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "discrepancy",
+    "Pinyin": "/dɪˈskrep.ən.si/",
+    "Dịch nghĩa": "sự sai lệch, không nhất quán",
+    "exampleHanzi": "There is a discrepancy between the two reports.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "fluctuation",
+    "Pinyin": "/ˌflʌk.tʃuˈeɪ.ʃən/",
+    "Dịch nghĩa": "sự biến động",
+    "exampleHanzi": "Market fluctuations.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "stipulate",
+    "Pinyin": "/ˈstɪp.jə.leɪt/",
+    "Dịch nghĩa": "quy định (trong hợp đồng)",
+    "exampleHanzi": "The contract stipulates that payment must be made within 30 days.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "terminate",
+    "Pinyin": "/ˈtɜː.mɪ.neɪt/",
+    "Dịch nghĩa": "chấm dứt",
+    "exampleHanzi": "Either party can terminate the agreement.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "commence",
+    "Pinyin": "/kəˈmens/",
+    "Dịch nghĩa": "bắt đầu (trang trọng)",
+    "exampleHanzi": "The ceremony will commence shortly.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "facilitate",
+    "Pinyin": "/fəˈsɪl.ɪ.teɪt/",
+    "Dịch nghĩa": "tạo điều kiện, làm cho dễ dàng",
+    "exampleHanzi": "The new airport will facilitate tourism.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "implement",
+    "Pinyin": "/ˈɪm.plɪ.ment/",
+    "Dịch nghĩa": "thi, thực hiện",
+    "exampleHanzi": "Implement a new plan.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "comply",
+    "Pinyin": "/kəmˈplaɪ/",
+    "Dịch nghĩa": "tuân thủ",
+    "exampleHanzi": "Comply with regulations.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "conform",
+    "Pinyin": "/kənˈfɔːm/",
+    "Dịch nghĩa": "tuân theo",
+    "exampleHanzi": "Conform to safety standards.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "adhere",
+    "Pinyin": "/ədˈhɪər/",
+    "Dịch nghĩa": "tuân thủ, bám chặt",
+    "exampleHanzi": "Adhere to the policy.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "violate",
+    "Pinyin": "/ˈvaɪ.ə.leɪt/",
+    "Dịch nghĩa": "vi phạm",
+    "exampleHanzi": "Violate the law.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "accumulate",
+    "Pinyin": "/əˈkjuː.mjə.leɪt/",
+    "Dịch nghĩa": "tích lũy",
+    "exampleHanzi": "Accumulate wealth.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "allocate",
+    "Pinyin": "/ˈæl.ə.keɪt/",
+    "Dịch nghĩa": "phân bổ",
+    "exampleHanzi": "Allocate resources.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "anticipate",
+    "Pinyin": "/ænˈtɪs.ɪ.peɪt/",
+    "Dịch nghĩa": "dự đoán",
+    "exampleHanzi": "Anticipate problems.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "appraise",
+    "Pinyin": "/əˈpreɪz/",
+    "Dịch nghĩa": "đánh giá",
+    "exampleHanzi": "Appraise performance.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "ascertain",
+    "Pinyin": "/ˌæs.əˈteɪn/",
+    "Dịch nghĩa": "xác minh",
+    "exampleHanzi": "Ascertain the truth.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "attribute",
+    "Pinyin": "/ˈæt.rɪ.bjuːt/",
+    "Dịch nghĩa": "quy cho",
+    "exampleHanzi": "Attribute success to hard work.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "benchmark",
+    "Pinyin": "/ˈbentʃ.mɑːk/",
+    "Dịch nghĩa": "tiêu chuẩn",
+    "exampleHanzi": "Industry benchmark.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "breach",
+    "Pinyin": "/briːtʃ/",
+    "Dịch nghĩa": "vi phạm",
+    "exampleHanzi": "Breach of contract.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cease",
+    "Pinyin": "/siːs/",
+    "Dịch nghĩa": "ngừng",
+    "exampleHanzi": "Cease operations.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cite",
+    "Pinyin": "/saɪt/",
+    "Dịch nghĩa": "trích dẫn",
+    "exampleHanzi": "Cite a source.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "clarify",
+    "Pinyin": "/ˈklær.ɪ.faɪ/",
+    "Dịch nghĩa": "làm rõ",
+    "exampleHanzi": "Clarify a point.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "coincide",
+    "Pinyin": "/ˌkəʊ.ɪnˈsaɪd/",
+    "Dịch nghĩa": "trùng hợp",
+    "exampleHanzi": "Dates coincide.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "collapse",
+    "Pinyin": "/kəˈlæps/",
+    "Dịch nghĩa": "sụp đổ",
+    "exampleHanzi": "Market collapse.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "collide",
+    "Pinyin": "/kəˈlaɪd/",
+    "Dịch nghĩa": "va chạm",
+    "exampleHanzi": "Ideas collide.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "compile",
+    "Pinyin": "/kəmˈpaɪl/",
+    "Dịch nghĩa": "biên soạn",
+    "exampleHanzi": "Compile a report.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "comprise",
+    "Pinyin": "/kəmˈpraɪz/",
+    "Dịch nghĩa": "bao gồm",
+    "exampleHanzi": "The team comprises 5 members.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "concede",
+    "Pinyin": "/kənˈsiːd/",
+    "Dịch nghĩa": "thừa nhận",
+    "exampleHanzi": "Concede defeat.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "conceive",
+    "Pinyin": "/kənˈsiːv/",
+    "Dịch nghĩa": "nhận thức, tưởng tượng",
+    "exampleHanzi": "Conceive an idea.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "conclude",
+    "Pinyin": "/kənˈkluːd/",
+    "Dịch nghĩa": "kết luận",
+    "exampleHanzi": "Conclude the meeting.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "confine",
+    "Pinyin": "/kənˈfaɪn/",
+    "Dịch nghĩa": "hạn chế",
+    "exampleHanzi": "Confine the discussion.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "confiscate",
+    "Pinyin": "/ˈkɒn.fɪ.skeɪt/",
+    "Dịch nghĩa": "tịch thu",
+    "exampleHanzi": "Confiscate property.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "constitute",
+    "Pinyin": "/ˈkɒn.stɪ.tjuːt/",
+    "Dịch nghĩa": "cấu thành",
+    "exampleHanzi": "Constitute a threat.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "constrain",
+    "Pinyin": "/kənˈstreɪn/",
+    "Dịch nghĩa": "ép buộc, hạn chế",
+    "exampleHanzi": "Constrained by budget.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "consult",
+    "Pinyin": "/kənˈsʌlt/",
+    "Dịch nghĩa": "tham khảo",
+    "exampleHanzi": "Consult an expert.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "contradict",
+    "Pinyin": "/ˌkɒn.trəˈdɪkt/",
+    "Dịch nghĩa": "mâu thuẫn",
+    "exampleHanzi": "Contradict a statement.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "convene",
+    "Pinyin": "/kənˈviːn/",
+    "Dịch nghĩa": "triệu tập",
+    "exampleHanzi": "Convene a meeting.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "convey",
+    "Pinyin": "/kənˈveɪ/",
+    "Dịch nghĩa": "truyền đạt",
+    "exampleHanzi": "Convey a message.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "correlate",
+    "Pinyin": "/ˈkɒr.ə.leɪt/",
+    "Dịch nghĩa": "tương quan",
+    "exampleHanzi": "Correlate with results.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cultivate",
+    "Pinyin": "/ˈkʌl.tɪ.veɪt/",
+    "Dịch nghĩa": "nuôi dưỡng",
+    "exampleHanzi": "Cultivate a relationship.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "curtail",
+    "Pinyin": "/kɜːˈteɪl/",
+    "Dịch nghĩa": "cắt giảm",
+    "exampleHanzi": "Curtail spending.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "debate",
+    "Pinyin": "/dɪˈbeɪt/",
+    "Dịch nghĩa": "tranh luận",
+    "exampleHanzi": "Debate an issue.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "decline",
+    "Pinyin": "/dɪˈklaɪn/",
+    "Dịch nghĩa": "từ chối, giảm",
+    "exampleHanzi": "Decline an offer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "deduce",
+    "Pinyin": "/dɪˈdjuːs/",
+    "Dịch nghĩa": "suy luận",
+    "exampleHanzi": "Deduce from facts.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "defer",
+    "Pinyin": "/dɪˈfɜːr/",
+    "Dịch nghĩa": "hoãn",
+    "exampleHanzi": "Defer payment.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "defy",
+    "Pinyin": "/dɪˈfaɪ/",
+    "Dịch nghĩa": "thách thức",
+    "exampleHanzi": "Defy authority.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "delegates",
+    "Pinyin": "/ˈdel.ɪ.ɡəts/",
+    "Dịch nghĩa": "đại biểu",
+    "exampleHanzi": "Conference delegates.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "delegate",
+    "Pinyin": "/ˈdel.ɪ.ɡeɪt/",
+    "Dịch nghĩa": "ủy quyền",
+    "exampleHanzi": "Delegate tasks.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "deliberate",
+    "Pinyin": "/dɪˈlɪb.ər.ət/",
+    "Dịch nghĩa": "cân nhắc",
+    "exampleHanzi": "Deliberate on a decision.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "demonstrate",
+    "Pinyin": "/ˈdem.ən.streɪt/",
+    "Dịch nghĩa": "chứng minh",
+    "exampleHanzi": "Demonstrate a product.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "denote",
+    "Pinyin": "/dɪˈnəʊt/",
+    "Dịch nghĩa": "biểu thị",
+    "exampleHanzi": "Denote a meaning.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "depict",
+    "Pinyin": "/dɪˈpɪkt/",
+    "Dịch nghĩa": "mô tả",
+    "exampleHanzi": "Depict a scene.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "deplete",
+    "Pinyin": "/dɪˈpliːt/",
+    "Dịch nghĩa": "làm cạn kiệt",
+    "exampleHanzi": "Deplete resources.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "derive",
+    "Pinyin": "/dɪˈraɪv/",
+    "Dịch nghĩa": "bắt nguồn",
+    "exampleHanzi": "Derive from Latin.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "designate",
+    "Pinyin": "/ˈdez.ɪɡ.neɪt/",
+    "Dịch nghĩa": "chỉ định",
+    "exampleHanzi": "Designate a leader.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "detain",
+    "Pinyin": "/dɪˈteɪn/",
+    "Dịch nghĩa": "giam giữ",
+    "exampleHanzi": "Detain a suspect.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "deter",
+    "Pinyin": "/dɪˈtɜːr/",
+    "Dịch nghĩa": "ngăn chặn",
+    "exampleHanzi": "Deter crime.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "deteriorate",
+    "Pinyin": "/dɪˈtɪə.ri.ə.reɪt/",
+    "Dịch nghĩa": "xấu đi",
+    "exampleHanzi": "Conditions deteriorate.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "devise",
+    "Pinyin": "/dɪˈvaɪz/",
+    "Dịch nghĩa": "nghĩ ra",
+    "exampleHanzi": "Devise a plan.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "differentiate",
+    "Pinyin": "/ˌdɪf.əˈren.ʃi.eɪt/",
+    "Dịch nghĩa": "phân biệt",
+    "exampleHanzi": "Differentiate between products.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "diminish",
+    "Pinyin": "/dɪˈmɪn.ɪʃ/",
+    "Dịch nghĩa": "giảm bớt",
+    "exampleHanzi": "Diminish impact.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "discard",
+    "Pinyin": "/dɪˈskɑːd/",
+    "Dịch nghĩa": "vứt bỏ",
+    "exampleHanzi": "Discard old files.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "disclose",
+    "Pinyin": "/dɪˈskləʊz/",
+    "Dịch nghĩa": "tiết lộ",
+    "exampleHanzi": "Disclose information.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "dispatch",
+    "Pinyin": "/dɪˈspætʃ/",
+    "Dịch nghĩa": "gửi đi",
+    "exampleHanzi": "Dispatch a courier.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "dispel",
+    "Pinyin": "/dɪˈspel/",
+    "Dịch nghĩa": "xua tan",
+    "exampleHanzi": "Dispel rumors.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "disrupt",
+    "Pinyin": "/dɪsˈrʌpt/",
+    "Dịch nghĩa": "làm gián đoạn",
+    "exampleHanzi": "Disrupt service.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "dissolve",
+    "Pinyin": "/dɪˈzɒlv/",
+    "Dịch nghĩa": "giải thể",
+    "exampleHanzi": "Dissolve a partnership.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "distinguish",
+    "Pinyin": "/dɪˈstɪŋ.ɡwɪʃ/",
+    "Dịch nghĩa": "phân biệt",
+    "exampleHanzi": "Distinguish fact from fiction.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "divert",
+    "Pinyin": "/daɪˈvɜːt/",
+    "Dịch nghĩa": "chuyển hướng",
+    "exampleHanzi": "Divert traffic.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "divulge",
+    "Pinyin": "/daɪˈvʌldʒ/",
+    "Dịch nghĩa": "tiết lộ",
+    "exampleHanzi": "Divulge secrets.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "dominate",
+    "Pinyin": "/ˈdɒm.ɪ.neɪt/",
+    "Dịch nghĩa": "thống trị",
+    "exampleHanzi": "Dominate the market.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "draft",
+    "Pinyin": "/drɑːft/",
+    "Dịch nghĩa": "soạn thảo",
+    "exampleHanzi": "Draft a contract.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "eliminate",
+    "Pinyin": "/iˈlɪm.ɪ.neɪt/",
+    "Dịch nghĩa": "loại bỏ",
+    "exampleHanzi": "Eliminate waste.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "embark",
+    "Pinyin": "/ɪmˈbɑːk/",
+    "Dịch nghĩa": "bắt đầu",
+    "exampleHanzi": "Embark on a project.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "embody",
+    "Pinyin": "/ɪmˈbɒd.i/",
+    "Dịch nghĩa": "hiện thân",
+    "exampleHanzi": "Embody values.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "emerge",
+    "Pinyin": "/iˈmɜːdʒ/",
+    "Dịch nghĩa": "nổi lên",
+    "exampleHanzi": "Emerge as a leader.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "emphasize",
+    "Pinyin": "/ˈem.fə.saɪz/",
+    "Dịch nghĩa": "nhấn mạnh",
+    "exampleHanzi": "Emphasize importance.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "empower",
+    "Pinyin": "/ɪmˈpaʊ.ər/",
+    "Dịch nghĩa": "trao quyền",
+    "exampleHanzi": "Empower employees.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "enact",
+    "Pinyin": "/ɪˈnækt/",
+    "Dịch nghĩa": "ban hành",
+    "exampleHanzi": "Enact a law.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "encompass",
+    "Pinyin": "/ɪnˈkʌm.pəs/",
+    "Dịch nghĩa": "bao gồm",
+    "exampleHanzi": "Encompass all aspects.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "encounter",
+    "Pinyin": "/ɪnˈkaʊn.tər/",
+    "Dịch nghĩa": "gặp phải",
+    "exampleHanzi": "Encounter difficulties.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "endorse",
+    "Pinyin": "/ɪnˈdɔːs/",
+    "Dịch nghĩa": "tán thành",
+    "exampleHanzi": "Endorse a candidate.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "endure",
+    "Pinyin": "/ɪnˈdʒʊər/",
+    "Dịch nghĩa": "chịu đựng",
+    "exampleHanzi": "Endure hardship.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "enforce",
+    "Pinyin": "/ɪnˈfɔːs/",
+    "Dịch nghĩa": "thi hành",
+    "exampleHanzi": "Enforce rules.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "engender",
+    "Pinyin": "/ɪnˈdʒen.dər/",
+    "Dịch nghĩa": "sinh ra",
+    "exampleHanzi": "Engender trust.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "enhance",
+    "Pinyin": "/ɪnˈhɑːns/",
+    "Dịch nghĩa": "nâng cao",
+    "exampleHanzi": "Enhance quality.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "enlighten",
+    "Pinyin": "/ɪnˈlaɪ.tən/",
+    "Dịch nghĩa": "khai sáng",
+    "exampleHanzi": "Enlighten me.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "entail",
+    "Pinyin": "/ɪnˈteɪl/",
+    "Dịch nghĩa": "đòi hỏi",
+    "exampleHanzi": "Entail risks.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "entitle",
+    "Pinyin": "/ɪnˈtaɪ.təl/",
+    "Dịch nghĩa": "cho quyền",
+    "exampleHanzi": "Entitle to benefits.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "envision",
+    "Pinyin": "/ɪnˈvɪʒ.ən/",
+    "Dịch nghĩa": "mường tượng",
+    "exampleHanzi": "Envision the future.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "eradicate",
+    "Pinyin": "/ɪˈræd.ɪ.keɪt/",
+    "Dịch nghĩa": "diệt trừ",
+    "exampleHanzi": "Eradicate poverty.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "erode",
+    "Pinyin": "/ɪˈrəʊd/",
+    "Dịch nghĩa": "xói mòn",
+    "exampleHanzi": "Erode confidence.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "escalate",
+    "Pinyin": "/ˈes.kə.leɪt/",
+    "Dịch nghĩa": "leo thang",
+    "exampleHanzi": "Escalate a conflict.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "evade",
+    "Pinyin": "/ɪˈveɪd/",
+    "Dịch nghĩa": "trốn tránh",
+    "exampleHanzi": "Evade taxes.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "evoke",
+    "Pinyin": "/ɪˈvəʊk/",
+    "Dịch nghĩa": "gợi lên",
+    "exampleHanzi": "Evoke memories.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "exceed",
+    "Pinyin": "/ɪkˈsiːd/",
+    "Dịch nghĩa": "vượt quá",
+    "exampleHanzi": "Exceed expectations.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "excel",
+    "Pinyin": "/ɪkˈsel/",
+    "Dịch nghĩa": "xuất sắc",
+    "exampleHanzi": "Excel in math.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "exemplify",
+    "Pinyin": "/ɪɡˈzem.plɪ.faɪ/",
+    "Dịch nghĩa": "minh họa",
+    "exampleHanzi": "Exemplify a trend.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "exert",
+    "Pinyin": "/ɪɡˈzɜːt/",
+    "Dịch nghĩa": "sử dụng",
+    "exampleHanzi": "Exert influence.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "exhaust",
+    "Pinyin": "/ɪɡˈzɔːst/",
+    "Dịch nghĩa": "làm kiệt sức",
+    "exampleHanzi": "Exhaust resources.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "exhibit",
+    "Pinyin": "/ɪɡˈzɪb.ɪt/",
+    "Dịch nghĩa": "trưng bày",
+    "exampleHanzi": "Exhibit artwork.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "expedite",
+    "Pinyin": "/ˈek.spə.daɪt/",
+    "Dịch nghĩa": "xúc tiến",
+    "exampleHanzi": "Expedite delivery.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "expel",
+    "Pinyin": "/ɪkˈspel/",
+    "Dịch nghĩa": "trục xuất",
+    "exampleHanzi": "Expel a student.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "expire",
+    "Pinyin": "/ɪkˈspaɪər/",
+    "Dịch nghĩa": "hết hạn",
+    "exampleHanzi": "Contract expires.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "exploit",
+    "Pinyin": "/ɪkˈsplɔɪt/",
+    "Dịch nghĩa": "khai thác",
+    "exampleHanzi": "Exploit opportunities.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "extract",
+    "Pinyin": "/ɪkˈstrækt/",
+    "Dịch nghĩa": "trích xuất",
+    "exampleHanzi": "Extract data.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "facilitate",
+    "Pinyin": "/fəˈsɪl.ɪ.teɪt/",
+    "Dịch nghĩa": "tạo điều kiện",
+    "exampleHanzi": "Facilitate learning.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "fluctuate",
+    "Pinyin": "/ˈflʌk.tʃu.eɪt/",
+    "Dịch nghĩa": "dao động",
+    "exampleHanzi": "Prices fluctuate.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "forbid",
+    "Pinyin": "/fəˈbɪd/",
+    "Dịch nghĩa": "cấm",
+    "exampleHanzi": "Forbid smoking.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "forfeit",
+    "Pinyin": "/ˈfɔː.fɪt/",
+    "Dịch nghĩa": "tịch thu",
+    "exampleHanzi": "Forfeit rights.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "formulate",
+    "Pinyin": "/ˈfɔː.mjə.leɪt/",
+    "Dịch nghĩa": "đề ra",
+    "exampleHanzi": "Formulate a strategy.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "foster",
+    "Pinyin": "/ˈfɒs.tər/",
+    "Dịch nghĩa": "nuôi dưỡng",
+    "exampleHanzi": "Foster innovation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "gauge",
+    "Pinyin": "/ɡeɪdʒ/",
+    "Dịch nghĩa": "đo lường",
+    "exampleHanzi": "Gauge reaction.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "generalize",
+    "Pinyin": "/ˈdʒen.ər.əl.aɪz/",
+    "Dịch nghĩa": "khái quát hóa",
+    "exampleHanzi": "Generalize results.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "generate",
+    "Pinyin": "/ˈdʒen.ə.reɪt/",
+    "Dịch nghĩa": "tạo ra",
+    "exampleHanzi": "Generate revenue.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "grant",
+    "Pinyin": "/ɡrɑːnt/",
+    "Dịch nghĩa": "cấp",
+    "exampleHanzi": "Grant permission.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "hamper",
+    "Pinyin": "/ˈhæm.pər/",
+    "Dịch nghĩa": "cản trở",
+    "exampleHanzi": "Hamper progress.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "harbor",
+    "Pinyin": "/ˈhɑː.bər/",
+    "Dịch nghĩa": "chứa chấp",
+    "exampleHanzi": "Harbor resentment.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "harness",
+    "Pinyin": "/ˈhɑː.nəs/",
+    "Dịch nghĩa": "khai thác",
+    "exampleHanzi": "Harness energy.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "hinder",
+    "Pinyin": "/ˈhɪn.dər/",
+    "Dịch nghĩa": "cản trở",
+    "exampleHanzi": "Hinder growth.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "hypothesize",
+    "Pinyin": "/haɪˈpɒθ.ə.saɪz/",
+    "Dịch nghĩa": "giả thuyết",
+    "exampleHanzi": "Hypothesize a cause.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "illustrate",
+    "Pinyin": "/ˈɪl.ə.streɪt/",
+    "Dịch nghĩa": "minh họa",
+    "exampleHanzi": "Illustrate a point.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "impair",
+    "Pinyin": "/ɪmˈpeər/",
+    "Dịch nghĩa": "làm suy yếu",
+    "exampleHanzi": "Impair judgment.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "impede",
+    "Pinyin": "/ɪmˈpiːd/",
+    "Dịch nghĩa": "cản trở",
+    "exampleHanzi": "Impede development.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "imply",
+    "Pinyin": "/ɪmˈplaɪ/",
+    "Dịch nghĩa": "ngụ ý",
+    "exampleHanzi": "Imply consent.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "impose",
+    "Pinyin": "/ɪmˈpəʊz/",
+    "Dịch nghĩa": "áp đặt",
+    "exampleHanzi": "Impose sanctions.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "impoverish",
+    "Pinyin": "/ɪmˈpɒv.ər.ɪʃ/",
+    "Dịch nghĩa": "làm nghèo đi",
+    "exampleHanzi": "Impoverish a nation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "incur",
+    "Pinyin": "/ɪnˈkɜːr/",
+    "Dịch nghĩa": "gánh chịu",
+    "exampleHanzi": "Incur costs.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "induce",
+    "Pinyin": "/ɪnˈdjuːs/",
+    "Dịch nghĩa": "gây ra",
+    "exampleHanzi": "Induce sleep.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "infer",
+    "Pinyin": "/ɪnˈfɜːr/",
+    "Dịch nghĩa": "suy luận",
+    "exampleHanzi": "Infer meaning.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "inflict",
+    "Pinyin": "/ɪnˈflɪkt/",
+    "Dịch nghĩa": "gây ra",
+    "exampleHanzi": "Inflict pain.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "innovate",
+    "Pinyin": "/ˈɪn.ə.veɪt/",
+    "Dịch nghĩa": "đổi mới",
+    "exampleHanzi": "Innovate constantly.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "inspect",
+    "Pinyin": "/ɪnˈspekt/",
+    "Dịch nghĩa": "thanh tra",
+    "exampleHanzi": "Inspect premises.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "inspire",
+    "Pinyin": "/ɪnˈspaɪər/",
+    "Dịch nghĩa": "truyền cảm hứng",
+    "exampleHanzi": "Inspire others.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "integrate",
+    "Pinyin": "/ˈɪn.tɪ.ɡreɪt/",
+    "Dịch nghĩa": "tích hợp",
+    "exampleHanzi": "Integrate systems.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "interfere",
+    "Pinyin": "/ˌɪn.təˈfɪər/",
+    "Dịch nghĩa": "can thiệp",
+    "exampleHanzi": "Interfere with work.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "interpret",
+    "Pinyin": "/ɪnˈtɜː.prɪt/",
+    "Dịch nghĩa": "diễn giải",
+    "exampleHanzi": "Interpret data.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "intervene",
+    "Pinyin": "/ˌɪn.təˈviːn/",
+    "Dịch nghĩa": "can thiệp",
+    "exampleHanzi": "Intervene in a dispute.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "intimidate",
+    "Pinyin": "/ɪnˈtɪm.ɪ.deɪt/",
+    "Dịch nghĩa": "đe dọa",
+    "exampleHanzi": "Intimidate witnesses.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "invoke",
+    "Pinyin": "/ɪnˈvəʊk/",
+    "Dịch nghĩa": "gợi lên",
+    "exampleHanzi": "Invoke a law.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "jeopardize",
+    "Pinyin": "/ˈdʒep.ə.daɪz/",
+    "Dịch nghĩa": "gây nguy hiểm",
+    "exampleHanzi": "Jeopardize a deal.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "justify",
+    "Pinyin": "/ˈdʒʌs.tɪ.faɪ/",
+    "Dịch nghĩa": "biện minh",
+    "exampleHanzi": "Justify the cost.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "launch",
+    "Pinyin": "/lɔːntʃ/",
+    "Dịch nghĩa": "ra mắt",
+    "exampleHanzi": "Launch a campaign.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "legislate",
+    "Pinyin": "/ˈledʒ.ɪ.sleɪt/",
+    "Dịch nghĩa": "lập pháp",
+    "exampleHanzi": "Legislate against crime.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "leverage",
+    "Pinyin": "/ˈliː.vər.ɪdʒ/",
+    "Dịch nghĩa": "tận dụng",
+    "exampleHanzi": "Leverage assets.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "liquidate",
+    "Pinyin": "/ˈlɪk.wɪ.deɪt/",
+    "Dịch nghĩa": "thanh lý",
+    "exampleHanzi": "Liquidate stock.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "magnify",
+    "Pinyin": "/ˈmæɡ.nɪ.faɪ/",
+    "Dịch nghĩa": "phóng đại",
+    "exampleHanzi": "Magnify a problem.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "maintain",
+    "Pinyin": "/meɪnˈteɪn/",
+    "Dịch nghĩa": "duy trì",
+    "exampleHanzi": "Maintain standards.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "manipulate",
+    "Pinyin": "/məˈnɪp.jə.leɪt/",
+    "Dịch nghĩa": "thao túng",
+    "exampleHanzi": "Manipulate market.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "mediate",
+    "Pinyin": "/ˈmiː.di.eɪt/",
+    "Dịch nghĩa": "hòa giải",
+    "exampleHanzi": "Mediate a conflict.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "merge",
+    "Pinyin": "/mɜːdʒ/",
+    "Dịch nghĩa": "sáp nhập",
+    "exampleHanzi": "Merge companies.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "migrate",
+    "Pinyin": "/maɪˈɡreɪt/",
+    "Dịch nghĩa": "di cư",
+    "exampleHanzi": "Migrate to cloud.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "minimize",
+    "Pinyin": "/ˈmɪn.ɪ.maɪz/",
+    "Dịch nghĩa": "tối thiểu hóa",
+    "exampleHanzi": "Minimize risk.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "mitigate",
+    "Pinyin": "/ˈmɪt.ɪ.ɡeɪt/",
+    "Dịch nghĩa": "giảm nhẹ",
+    "exampleHanzi": "Mitigate damage.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "mobilize",
+    "Pinyin": "/ˈməʊ.bɪ.laɪz/",
+    "Dịch nghĩa": "huy động",
+    "exampleHanzi": "Mobilize resources.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "modify",
+    "Pinyin": "/ˈmɒd.ɪ.faɪ/",
+    "Dịch nghĩa": "sửa đổi",
+    "exampleHanzi": "Modify a design.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "motivate",
+    "Pinyin": "/ˈməʊ.tɪ.veɪt/",
+    "Dịch nghĩa": "động viên",
+    "exampleHanzi": "Motivate staff.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "navigate",
+    "Pinyin": "/ˈnæv.ɪ.ɡeɪt/",
+    "Dịch nghĩa": "điều hướng",
+    "exampleHanzi": "Navigate the web.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "neglect",
+    "Pinyin": "/nɪˈɡlekt/",
+    "Dịch nghĩa": "bỏ bê",
+    "exampleHanzi": "Neglect duties.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "notify",
+    "Pinyin": "/ˈnəʊ.tɪ.faɪ/",
+    "Dịch nghĩa": "thông báo",
+    "exampleHanzi": "Notify authorities.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "nullify",
+    "Pinyin": "/ˈnʌl.ɪ.faɪ/",
+    "Dịch nghĩa": "hủy bỏ",
+    "exampleHanzi": "Nullify a contract.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "oblige",
+    "Pinyin": "/əˈblaɪdʒ/",
+    "Dịch nghĩa": "bắt buộc",
+    "exampleHanzi": "Oblige to pay.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "observe",
+    "Pinyin": "/əbˈzɜːv/",
+    "Dịch nghĩa": "quan sát",
+    "exampleHanzi": "Observe rules.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "obtain",
+    "Pinyin": "/əbˈteɪn/",
+    "Dịch nghĩa": "đạt được",
+    "exampleHanzi": "Obtain permission.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "occupy",
+    "Pinyin": "/ˈɒk.jə.paɪ/",
+    "Dịch nghĩa": "chiếm giữ",
+    "exampleHanzi": "Occupy a seat.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "offend",
+    "Pinyin": "/əˈfend/",
+    "Dịch nghĩa": "xúc phạm",
+    "exampleHanzi": "Offend a client.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "offset",
+    "Pinyin": "/ˈɒf.set/",
+    "Dịch nghĩa": "bù đắp",
+    "exampleHanzi": "Offset costs.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "omit",
+    "Pinyin": "/əˈmɪt/",
+    "Dịch nghĩa": "bỏ sót",
+    "exampleHanzi": "Omit details.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "optimize",
+    "Pinyin": "/ˈɒp.tɪ.maɪz/",
+    "Dịch nghĩa": "tối ưu hóa",
+    "exampleHanzi": "Optimize performance.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "orchestrate",
+    "Pinyin": "/ˈɔː.kɪ.streɪt/",
+    "Dịch nghĩa": "tổ chức",
+    "exampleHanzi": "Orchestrate a campaign.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "originate",
+    "Pinyin": "/əˈrɪdʒ.ɪ.neɪt/",
+    "Dịch nghĩa": "bắt nguồn",
+    "exampleHanzi": "Originate from idea.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "outline",
+    "Pinyin": "/ˈaʊt.laɪn/",
+    "Dịch nghĩa": "phác thảo",
+    "exampleHanzi": "Outline a plan.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "overcome",
+    "Pinyin": "/ˌəʊ.vəˈkʌm/",
+    "Dịch nghĩa": "vượt qua",
+    "exampleHanzi": "Overcome obstacles.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "overhaul",
+    "Pinyin": "/ˈəʊ.və.hɔːl/",
+    "Dịch nghĩa": "đại tu",
+    "exampleHanzi": "Overhaul system.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "overlook",
+    "Pinyin": "/ˌəʊ.vəˈlʊk/",
+    "Dịch nghĩa": "bỏ qua",
+    "exampleHanzi": "Overlook a mistake.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "override",
+    "Pinyin": "/ˌəʊ.vəˈraɪd/",
+    "Dịch nghĩa": "ghi đè",
+    "exampleHanzi": "Override a command.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "oversee",
+    "Pinyin": "/ˌəʊ.vəˈsiː/",
+    "Dịch nghĩa": "giám sát",
+    "exampleHanzi": "Oversee a project.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "participate",
+    "Pinyin": "/pɑːˈtɪs.ɪ.peɪt/",
+    "Dịch nghĩa": "tham gia",
+    "exampleHanzi": "Participate in meeting.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "perceive",
+    "Pinyin": "/pəˈsiːv/",
+    "Dịch nghĩa": "nhận thức",
+    "exampleHanzi": "Perceive a threat.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "persist",
+    "Pinyin": "/pəˈsɪst/",
+    "Dịch nghĩa": "kiên trì",
+    "exampleHanzi": "Persist in effort.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "persuade",
+    "Pinyin": "/pəˈsweɪd/",
+    "Dịch nghĩa": "thuyết phục",
+    "exampleHanzi": "Persuade a buyer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "pertain",
+    "Pinyin": "/pəˈteɪn/",
+    "Dịch nghĩa": "liên quan",
+    "exampleHanzi": "Pertain to details.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "pinpoint",
+    "Pinyin": "/ˈpɪn.pɔɪnt/",
+    "Dịch nghĩa": "xác định",
+    "exampleHanzi": "Pinpoint a cause.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "pioneer",
+    "Pinyin": "/ˌpaɪ.əˈnɪər/",
+    "Dịch nghĩa": "tiên phong",
+    "exampleHanzi": "Pioneer a technology.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "plunge",
+    "Pinyin": "/plʌndʒ/",
+    "Dịch nghĩa": "lao dốc",
+    "exampleHanzi": "Prices plunge.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "ponder",
+    "Pinyin": "/ˈpɒn.dər/",
+    "Dịch nghĩa": "suy ngẫm",
+    "exampleHanzi": "Ponder a question.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "pose",
+    "Pinyin": "/pəʊz/",
+    "Dịch nghĩa": "đặt ra",
+    "exampleHanzi": "Pose a risk.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "postpone",
+    "Pinyin": "/pəʊstˈpəʊn/",
+    "Dịch nghĩa": "hoãn",
+    "exampleHanzi": "Postpone a meeting.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "precede",
+    "Pinyin": "/prɪˈsiːd/",
+    "Dịch nghĩa": "đi trước",
+    "exampleHanzi": "Precede an event.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "predict",
+    "Pinyin": "/prɪˈdɪkt/",
+    "Dịch nghĩa": "dự đoán",
+    "exampleHanzi": "Predict trends.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "prescribe",
+    "Pinyin": "/prɪˈskraɪb/",
+    "Dịch nghĩa": "kê đơn, quy định",
+    "exampleHanzi": "Prescribe rules.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "preserve",
+    "Pinyin": "/prɪˈzɜːv/",
+    "Dịch nghĩa": "bảo tồn",
+    "exampleHanzi": "Preserve heritage.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "preside",
+    "Pinyin": "/prɪˈzaɪd/",
+    "Dịch nghĩa": "chủ trì",
+    "exampleHanzi": "Preside over meeting.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "prevail",
+    "Pinyin": "/prɪˈveɪl/",
+    "Dịch nghĩa": "chiếm ưu thế",
+    "exampleHanzi": "Justice prevails.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "prevent",
+    "Pinyin": "/prɪˈvent/",
+    "Dịch nghĩa": "ngăn chặn",
+    "exampleHanzi": "Prevent accidents.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "probe",
+    "Pinyin": "/prəʊb/",
+    "Dịch nghĩa": "thăm dò",
+    "exampleHanzi": "Probe a matter.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "proceed",
+    "Pinyin": "/prəˈsiːd/",
+    "Dịch nghĩa": "tiến hành",
+    "exampleHanzi": "Proceed with plan.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "proclaim",
+    "Pinyin": "/prəˈkleɪm/",
+    "Dịch nghĩa": "tuyên bố",
+    "exampleHanzi": "Proclaim victory.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "procure",
+    "Pinyin": "/prəˈkjʊər/",
+    "Dịch nghĩa": "mua sắm",
+    "exampleHanzi": "Procure supplies.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "prohibit",
+    "Pinyin": "/prəˈhɪb.ɪt/",
+    "Dịch nghĩa": "cấm",
+    "exampleHanzi": "Prohibit entry.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "project",
+    "Pinyin": "/prəˈdʒekt/",
+    "Dịch nghĩa": "dự kiến",
+    "exampleHanzi": "Project sales.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "promote",
+    "Pinyin": "/prəˈməʊt/",
+    "Dịch nghĩa": "thúc đẩy",
+    "exampleHanzi": "Promote growth.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "prompt",
+    "Pinyin": "/prɒmpt/",
+    "Dịch nghĩa": "nhắc nhở",
+    "exampleHanzi": "Prompt a response.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "propel",
+    "Pinyin": "/prəˈpel/",
+    "Dịch nghĩa": "đẩy",
+    "exampleHanzi": "Propel forward.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "propose",
+    "Pinyin": "/prəˈpəʊz/",
+    "Dịch nghĩa": "đề xuất",
+    "exampleHanzi": "Propose a change.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "prosecute",
+    "Pinyin": "/ˈprɒs.ɪ.kjuːt/",
+    "Dịch nghĩa": "truy tố",
+    "exampleHanzi": "Prosecute a crime.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "prosper",
+    "Pinyin": "/ˈprɒs.pər/",
+    "Dịch nghĩa": "thịnh vượng",
+    "exampleHanzi": "Business prospers.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "provoke",
+    "Pinyin": "/prəˈvəʊk/",
+    "Dịch nghĩa": "khiêu khích",
+    "exampleHanzi": "Provoke a reaction.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "publish",
+    "Pinyin": "/ˈpʌb.lɪʃ/",
+    "Dịch nghĩa": "xuất bản",
+    "exampleHanzi": "Publish a report.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "pursue",
+    "Pinyin": "/pəˈsjuː/",
+    "Dịch nghĩa": "theo đuổi",
+    "exampleHanzi": "Pursue a goal.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "quantify",
+    "Pinyin": "/ˈkwɒn.tɪ.faɪ/",
+    "Dịch nghĩa": "định lượng",
+    "exampleHanzi": "Quantify results.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "question",
+    "Pinyin": "/ˈkwes.tʃən/",
+    "Dịch nghĩa": "nghi vấn",
+    "exampleHanzi": "Question authority.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "quote",
+    "Pinyin": "/kwəʊt/",
+    "Dịch nghĩa": "báo giá",
+    "exampleHanzi": "Quote a price.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "ratify",
+    "Pinyin": "/ˈræt.ɪ.faɪ/",
+    "Dịch nghĩa": "phê chuẩn",
+    "exampleHanzi": "Ratify a treaty.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "reap",
+    "Pinyin": "/riːp/",
+    "Dịch nghĩa": "gặt hái",
+    "exampleHanzi": "Reap rewards.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "reassure",
+    "Pinyin": "/ˌriː.əˈʃɔːr/",
+    "Dịch nghĩa": "trấn an",
+    "exampleHanzi": "Reassure clients.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "rebate",
+    "Pinyin": "/ˈriː.beɪt/",
+    "Dịch nghĩa": "giảm giá",
+    "exampleHanzi": "Tax rebate.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "recall",
+    "Pinyin": "/rɪˈkɔːl/",
+    "Dịch nghĩa": "thu hồi",
+    "exampleHanzi": "Recall products.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "recede",
+    "Pinyin": "/rɪˈsiːd/",
+    "Dịch nghĩa": "rút lui",
+    "exampleHanzi": "Economy recedes.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  }
+]

@@ -1,0 +1,1666 @@
+[
+  {
+    "Tiếng Anh": "negotiate",
+    "Pinyin": "/nəˈɡəʊ.ʃi.eɪt/",
+    "Dịch nghĩa": "đàm phán, thương lượng",
+    "exampleHanzi": "Negotiate a better price.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "compromise",
+    "Pinyin": "/ˈkɒm.prə.maɪz/",
+    "Dịch nghĩa": "thỏa hiệp",
+    "exampleHanzi": "We need to reach a compromise.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "consensus",
+    "Pinyin": "/kənˈsen.səs/",
+    "Dịch nghĩa": "sự đồng thuận",
+    "exampleHanzi": "The board reached a consensus.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "contract",
+    "Pinyin": "/ˈkɒn.trækt/",
+    "Dịch nghĩa": "hợp đồng",
+    "exampleHanzi": "Sign a long-term contract.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "proposal",
+    "Pinyin": "/prəˈpəʊ.zəl/",
+    "Dịch nghĩa": "bản đề xuất",
+    "exampleHanzi": "Submit a budget proposal.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "agreement",
+    "Pinyin": "/əˈɡriː.mənt/",
+    "Dịch nghĩa": "thỏa thuận",
+    "exampleHanzi": "Trade agreement.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "term",
+    "Pinyin": "/tɜːm/",
+    "Dịch nghĩa": "điều khoản",
+    "exampleHanzi": "Terms and conditions.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "clause",
+    "Pinyin": "/klɔːz/",
+    "Dịch nghĩa": "điều khoản (cụ thể trong hợp đồng)",
+    "exampleHanzi": "Penalty clause.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "expire",
+    "Pinyin": "/ɪkˈspaɪər/",
+    "Dịch nghĩa": "hết hạn",
+    "exampleHanzi": "My passport expires next month.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "renew",
+    "Pinyin": "/rɪˈnjuː/",
+    "Dịch nghĩa": "gia hạn",
+    "exampleHanzi": "Renew the subscription.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "terminate",
+    "Pinyin": "/ˈtɜː.mɪ.neɪt/",
+    "Dịch nghĩa": "chấm dứt",
+    "exampleHanzi": "Terminate the contract.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "collaborate",
+    "Pinyin": "/kəˈlæb.ə.reɪt/",
+    "Dịch nghĩa": "hợp tác",
+    "exampleHanzi": "Collaborate with another company.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "partner",
+    "Pinyin": "/ˈpɑːt.nər/",
+    "Dịch nghĩa": "đối tác",
+    "exampleHanzi": "Business partner.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "merge",
+    "Pinyin": "/mɜːdʒ/",
+    "Dịch nghĩa": "sáp nhập",
+    "exampleHanzi": "The two banks merged last year.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "acquire",
+    "Pinyin": "/əˈkwaɪər/",
+    "Dịch nghĩa": "thâu tóm, đạt được",
+    "exampleHanzi": "The company acquired a smaller rival.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "expand",
+    "Pinyin": "/ɪkˈspænd/",
+    "Dịch nghĩa": "mở rộng",
+    "exampleHanzi": "Expand the market share.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "establish",
+    "Pinyin": "/ɪˈstæb.lɪʃ/",
+    "Dịch nghĩa": "thành lập, thiết lập",
+    "exampleHanzi": "Establish a branch office.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "branch",
+    "Pinyin": "/brɑːntʃ/",
+    "Dịch nghĩa": "chi nhánh",
+    "exampleHanzi": "We have branches all over the world.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "headquarters",
+    "Pinyin": "/ˌhedˈkwɔː.təz/",
+    "Dịch nghĩa": "trụ sở chính",
+    "exampleHanzi": "The headquarters is in London.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "strategy",
+    "Pinyin": "/ˈstræt.ə.dʒi/",
+    "Dịch nghĩa": "chiến lược",
+    "exampleHanzi": "Marketing strategy.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "revenue",
+    "Pinyin": "/ˈrev.ən.juː/",
+    "Dịch nghĩa": "doanh thu",
+    "exampleHanzi": "Annual revenue.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "profit",
+    "Pinyin": "/ˈprɒf.ɪt/",
+    "Dịch nghĩa": "lợi nhuận",
+    "exampleHanzi": "Net profit.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "budget",
+    "Pinyin": "/ˈbʌdʒ.ɪt/",
+    "Dịch nghĩa": "ngân sách",
+    "exampleHanzi": "Cut the advertising budget.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "invest",
+    "Pinyin": "/ɪnˈvest/",
+    "Dịch nghĩa": "đầu tư",
+    "exampleHanzi": "Invest in stocks.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "finance",
+    "Pinyin": "/ˈfaɪ.næns/",
+    "Dịch nghĩa": "tài chính",
+    "exampleHanzi": "Finance department.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "audit",
+    "Pinyin": "/ˈɔː.dɪt/",
+    "Dịch nghĩa": "kiểm toán",
+    "exampleHanzi": "Annual audit.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "currency",
+    "Pinyin": "/ˈkʌr.ən.si/",
+    "Dịch nghĩa": "tiền tệ",
+    "exampleHanzi": "Foreign currency.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "fluctuate",
+    "Pinyin": "/ˈflʌk.tʃu.eɪt/",
+    "Dịch nghĩa": "dao động",
+    "exampleHanzi": "Prices fluctuate wildly.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "inflation",
+    "Pinyin": "/ɪnˈfleɪ.ʃən/",
+    "Dịch nghĩa": "lạm phát",
+    "exampleHanzi": "High inflation rate.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "economy",
+    "Pinyin": "/iˈkɒn.ə.mi/",
+    "Dịch nghĩa": "nền kinh tế",
+    "exampleHanzi": "Global economy.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "shareholder",
+    "Pinyin": "/ˈʃeəˌhəʊl.dər/",
+    "Dịch nghĩa": "cổ đông",
+    "exampleHanzi": "Meeting for shareholders.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "stakeholder",
+    "Pinyin": "/ˈsteɪkˌhəʊl.dər/",
+    "Dịch nghĩa": "bên liên quan",
+    "exampleHanzi": "Key stakeholders.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "investor",
+    "Pinyin": "/ɪnˈves.tər/",
+    "Dịch nghĩa": "nhà đầu tư",
+    "exampleHanzi": "Foreign investors.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "board",
+    "Pinyin": "/bɔːd/",
+    "Dịch nghĩa": "ban quản trị",
+    "exampleHanzi": "Board of directors.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "chairman",
+    "Pinyin": "/ˈtʃeə.mən/",
+    "Dịch nghĩa": "chủ tịch",
+    "exampleHanzi": "Chairman of the board.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "executive",
+    "Pinyin": "/ɪɡˈzek.jə.tɪv/",
+    "Dịch nghĩa": "ủy viên ban quản trị",
+    "exampleHanzi": "Chief Executive Officer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "administer",
+    "Pinyin": "/ədˈmɪn.ɪ.stər/",
+    "Dịch nghĩa": "quản trị, điều hành",
+    "exampleHanzi": "Administer a program.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "supervise",
+    "Pinyin": "/ˈsuː.pə.vaɪz/",
+    "Dịch nghĩa": "giám sát",
+    "exampleHanzi": "Supervise the team.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "oversee",
+    "Pinyin": "/ˌəʊ.vəˈsiː/",
+    "Dịch nghĩa": "quan sát, giám sát",
+    "exampleHanzi": "Oversee operations.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "direct",
+    "Pinyin": "/daɪˈrekt/",
+    "Dịch nghĩa": "chỉ đạo",
+    "exampleHanzi": "Direct the project.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "conduct",
+    "Pinyin": "/kənˈdʌkt/",
+    "Dịch nghĩa": "tiến hành",
+    "exampleHanzi": "Conduct a survey.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "implement",
+    "Pinyin": "/ˈɪm.plɪ.ment/",
+    "Dịch nghĩa": "thực hiện",
+    "exampleHanzi": "Implement changes.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "execute",
+    "Pinyin": "/ˈek.sɪ.kjuːt/",
+    "Dịch nghĩa": "thi hành",
+    "exampleHanzi": "Execute the plan.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "achieve",
+    "Pinyin": "/əˈtʃiːv/",
+    "Dịch nghĩa": "đạt được",
+    "exampleHanzi": "Achieve success.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "accomplish",
+    "Pinyin": "/əˈkʌm.plɪʃ/",
+    "Dịch nghĩa": "hoàn thành",
+    "exampleHanzi": "Accomplish a task.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "succeed",
+    "Pinyin": "/səkˈsiːd/",
+    "Dịch nghĩa": "thành công",
+    "exampleHanzi": "Succeed in business.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "fail",
+    "Pinyin": "/feɪl/",
+    "Dịch nghĩa": "thất bại",
+    "exampleHanzi": "Fail to meet deadline.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "attempt",
+    "Pinyin": "/əˈtempt/",
+    "Dịch nghĩa": "nỗ lực",
+    "exampleHanzi": "Attempt to improve.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "effort",
+    "Pinyin": "/ˈef.ət/",
+    "Dịch nghĩa": "nỗ lực",
+    "exampleHanzi": "Make an effort.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "challenge",
+    "Pinyin": "/ˈtʃæl.ɪndʒ/",
+    "Dịch nghĩa": "thử thách",
+    "exampleHanzi": "Face a challenge.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "opportunity",
+    "Pinyin": "/ˌɒp.əˈtjuː.nə.ti/",
+    "Dịch nghĩa": "cơ hội",
+    "exampleHanzi": "Business opportunity.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "advantage",
+    "Pinyin": "/ədˈvɑːn.tɪdʒ/",
+    "Dịch nghĩa": "lợi thế",
+    "exampleHanzi": "Competitive advantage.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "benefit",
+    "Pinyin": "/ˈben.ɪ.fɪt/",
+    "Dịch nghĩa": "lợi ích",
+    "exampleHanzi": "Mutual benefit.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "feature",
+    "Pinyin": "/ˈfiː.tʃər/",
+    "Dịch nghĩa": "tính năng",
+    "exampleHanzi": "Product features.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "characteristic",
+    "Pinyin": "/ˌkær.ək.təˈrɪs.tɪk/",
+    "Dịch nghĩa": "đặc điểm",
+    "exampleHanzi": "Key characteristic.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "aspect",
+    "Pinyin": "/ˈæs.pekt/",
+    "Dịch nghĩa": "khía cạnh",
+    "exampleHanzi": "Financial aspect.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "factor",
+    "Pinyin": "/ˈfæk.tər/",
+    "Dịch nghĩa": "yếu tố",
+    "exampleHanzi": "Risk factor.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "element",
+    "Pinyin": "/ˈel.ɪ.mənt/",
+    "Dịch nghĩa": "thành phần",
+    "exampleHanzi": "Essential element.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "component",
+    "Pinyin": "/kəmˈpəʊ.nənt/",
+    "Dịch nghĩa": "thành phần",
+    "exampleHanzi": "Key component.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "detail",
+    "Pinyin": "/ˈdiː.teɪl/",
+    "Dịch nghĩa": "chi tiết",
+    "exampleHanzi": "In detail.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "specific",
+    "Pinyin": "/spəˈsɪf.ɪk/",
+    "Dịch nghĩa": "cụ thể",
+    "exampleHanzi": "Specific instructions.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "particular",
+    "Pinyin": "/pəˈtɪk.jə.lər/",
+    "Dịch nghĩa": "đặc biệt, cụ thể",
+    "exampleHanzi": "In particular.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "general",
+    "Pinyin": "/ˈdʒen.ər.əl/",
+    "Dịch nghĩa": "chung",
+    "exampleHanzi": "General manager.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "common",
+    "Pinyin": "/ˈkɒm.ən/",
+    "Dịch nghĩa": "phổ biến",
+    "exampleHanzi": "Common practice.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "popular",
+    "Pinyin": "/ˈpɒp.jə.lər/",
+    "Dịch nghĩa": "nổi tiếng",
+    "exampleHanzi": "Popular product.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "famous",
+    "Pinyin": "/ˈfeɪ.məs/",
+    "Dịch nghĩa": "nổi tiếng",
+    "exampleHanzi": "Famous brand.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "brand",
+    "Pinyin": "/brænd/",
+    "Dịch nghĩa": "thương hiệu",
+    "exampleHanzi": "Brand name.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "logo",
+    "Pinyin": "/ˈləʊ.ɡəʊ/",
+    "Dịch nghĩa": "biểu trưng",
+    "exampleHanzi": "Company logo.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "image",
+    "Pinyin": "/ˈɪm.ɪdʒ/",
+    "Dịch nghĩa": "hình ảnh",
+    "exampleHanzi": "Public image.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "reputation",
+    "Pinyin": "/ˌrep.jəˈteɪ.ʃən/",
+    "Dịch nghĩa": "danh tiếng",
+    "exampleHanzi": "Good reputation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "quality",
+    "Pinyin": "/ˈkwɒl.ə.ti/",
+    "Dịch nghĩa": "chất lượng",
+    "exampleHanzi": "Top quality.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "quantity",
+    "Pinyin": "/ˈkwɒn.tə.ti/",
+    "Dịch nghĩa": "số lượng",
+    "exampleHanzi": "Large quantity.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "amount",
+    "Pinyin": "/əˈmaʊnt/",
+    "Dịch nghĩa": "lượng",
+    "exampleHanzi": "Small amount.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "volume",
+    "Pinyin": "/ˈvɒl.juːm/",
+    "Dịch nghĩa": "khối lượng",
+    "exampleHanzi": "Sales volume.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "capacity",
+    "Pinyin": "/kəˈpæs.ə.ti/",
+    "Dịch nghĩa": "sức chứa",
+    "exampleHanzi": "Full capacity.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "size",
+    "Pinyin": "/saɪz/",
+    "Dịch nghĩa": "kích thước",
+    "exampleHanzi": "Large size.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "weight",
+    "Pinyin": "/weɪt/",
+    "Dịch nghĩa": "cân nặng",
+    "exampleHanzi": "Net weight.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "height",
+    "Pinyin": "/haɪt/",
+    "Dịch nghĩa": "chiều cao",
+    "exampleHanzi": "Maximum height.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "width",
+    "Pinyin": "/wɪtθ/",
+    "Dịch nghĩa": "chiều rộng",
+    "exampleHanzi": "Standard width.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "length",
+    "Pinyin": "/leŋθ/",
+    "Dịch nghĩa": "chiều dài",
+    "exampleHanzi": "Full length.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "depth",
+    "Pinyin": "/depθ/",
+    "Dịch nghĩa": "độ sâu",
+    "exampleHanzi": "In depth.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "measure",
+    "Pinyin": "/ˈmeʒ.ər/",
+    "Dịch nghĩa": "đo lường",
+    "exampleHanzi": "Measure performance.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "calculate",
+    "Pinyin": "/ˈkæl.kjə.leɪt/",
+    "Dịch nghĩa": "tính toán",
+    "exampleHanzi": "Calculate profit.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "estimate",
+    "Pinyin": "/ˈes.tɪ.meɪt/",
+    "Dịch nghĩa": "ước tính",
+    "exampleHanzi": "Estimate cost.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "assess",
+    "Pinyin": "/əˈses/",
+    "Dịch nghĩa": "đánh giá",
+    "exampleHanzi": "Assess value.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "evaluate",
+    "Pinyin": "/ɪˈvæl.juː.eɪt/",
+    "Dịch nghĩa": "định giá",
+    "exampleHanzi": "Evaluate results.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "analyze",
+    "Pinyin": "/ˈæn.əl.aɪz/",
+    "Dịch nghĩa": "phân tích",
+    "exampleHanzi": "Analyze data.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "examine",
+    "Pinyin": "/ɪɡˈzæm.ɪn/",
+    "Dịch nghĩa": "kiểm tra",
+    "exampleHanzi": "Examine the evidence.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "investigate",
+    "Pinyin": "/ɪnˈves.tɪ.ɡeɪt/",
+    "Dịch nghĩa": "điều tra",
+    "exampleHanzi": "Investigate a complaint.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "research",
+    "Pinyin": "/rɪˈsɜːtʃ/",
+    "Dịch nghĩa": "nghiên cứu",
+    "exampleHanzi": "Conduct research.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "study",
+    "Pinyin": "/ˈstʌd.i/",
+    "Dịch nghĩa": "nghiên cứu",
+    "exampleHanzi": "Case study.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "survey",
+    "Pinyin": "/ˈsɜː.veɪ/",
+    "Dịch nghĩa": "khảo sát",
+    "exampleHanzi": "Customer survey.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "interview",
+    "Pinyin": "/ˈɪn.tə.vjuː/",
+    "Dịch nghĩa": "phỏng vấn",
+    "exampleHanzi": "Job interview.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "questionnaire",
+    "Pinyin": "/ˌkwes.tʃəˈneər/",
+    "Dịch nghĩa": "bảng câu hỏi",
+    "exampleHanzi": "Fill out a questionnaire.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "feedback",
+    "Pinyin": "/ˈfiːd.bæk/",
+    "Dịch nghĩa": "phản hồi",
+    "exampleHanzi": "Positive feedback.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "comment",
+    "Pinyin": "/ˈkɒm.ent/",
+    "Dịch nghĩa": "bình luận",
+    "exampleHanzi": "No comment.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "suggestion",
+    "Pinyin": "/səˈdʒes.tʃən/",
+    "Dịch nghĩa": "gợi ý",
+    "exampleHanzi": "Make a suggestion.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "recommendation",
+    "Pinyin": "/ˌrek.ə.menˈdeɪ.ʃən/",
+    "Dịch nghĩa": "khuyến nghị",
+    "exampleHanzi": "Strong recommendation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "advice",
+    "Pinyin": "/ədˈvaɪs/",
+    "Dịch nghĩa": "lời khuyên",
+    "exampleHanzi": "Legal advice.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "tip",
+    "Pinyin": "/tɪp/",
+    "Dịch nghĩa": "mẹo",
+    "exampleHanzi": "Helpful tip.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "hint",
+    "Pinyin": "/hɪnt/",
+    "Dịch nghĩa": "gợi ý",
+    "exampleHanzi": "Helpful hint.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "clue",
+    "Pinyin": "/kluː/",
+    "Dịch nghĩa": "manh mối",
+    "exampleHanzi": "Give a clue.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "solution",
+    "Pinyin": "/səˈluː.ʃən/",
+    "Dịch nghĩa": "giải pháp",
+    "exampleHanzi": "Effective solution.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "answer",
+    "Pinyin": "/ˈɑːn.sər/",
+    "Dịch nghĩa": "câu trả lời",
+    "exampleHanzi": "Correct answer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "result",
+    "Pinyin": "/rɪˈzʌlt/",
+    "Dịch nghĩa": "kết quả",
+    "exampleHanzi": "Test result.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "outcome",
+    "Pinyin": "/ˈaʊt.kʌm/",
+    "Dịch nghĩa": "kết quả",
+    "exampleHanzi": "Final outcome.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "consequence",
+    "Pinyin": "/ˈkɒn.sɪ.kwəns/",
+    "Dịch nghĩa": "hậu quả",
+    "exampleHanzi": "Serious consequence.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "effect",
+    "Pinyin": "/ɪˈfekt/",
+    "Dịch nghĩa": "tác động",
+    "exampleHanzi": "Side effect.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "impact",
+    "Pinyin": "/ˈɪm.pækt/",
+    "Dịch nghĩa": "ảnh hưởng",
+    "exampleHanzi": "Big impact.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "influence",
+    "Pinyin": "/ˈɪn.flu.əns/",
+    "Dịch nghĩa": "ảnh hưởng",
+    "exampleHanzi": "Bad influence.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "affect",
+    "Pinyin": "/əˈfekt/",
+    "Dịch nghĩa": "tác động",
+    "exampleHanzi": "Affect the market.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cause",
+    "Pinyin": "/kɔːz/",
+    "Dịch nghĩa": "nguyên nhân",
+    "exampleHanzi": "Cause of death.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "reason",
+    "Pinyin": "/ˈriː.zən/",
+    "Dịch nghĩa": "lý do",
+    "exampleHanzi": "Good reason.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "purpose",
+    "Pinyin": "/ˈpɜː.pəs/",
+    "Dịch nghĩa": "mục đích",
+    "exampleHanzi": "Main purpose.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "aim",
+    "Pinyin": "/eɪm/",
+    "Dịch nghĩa": "mục tiêu",
+    "exampleHanzi": "Aim high.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "intention",
+    "Pinyin": "/ɪnˈten.ʃən/",
+    "Dịch nghĩa": "ý định",
+    "exampleHanzi": "Good intention.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "plan",
+    "Pinyin": "/plæn/",
+    "Dịch nghĩa": "kế hoạch",
+    "exampleHanzi": "Action plan.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "project",
+    "Pinyin": "/ˈprɒdʒ.ekt/",
+    "Dịch nghĩa": "dự án",
+    "exampleHanzi": "Construction project.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "program",
+    "Pinyin": "/ˈprəʊ.ɡræm/",
+    "Dịch nghĩa": "chương trình",
+    "exampleHanzi": "Training program.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "schedule",
+    "Pinyin": "/ˈʃed.juːl/",
+    "Dịch nghĩa": "lịch trình",
+    "exampleHanzi": "Busy schedule.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "agenda",
+    "Pinyin": "/əˈdʒen.də/",
+    "Dịch nghĩa": "nghị sự",
+    "exampleHanzi": "Meeting agenda.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "timetable",
+    "Pinyin": "/ˈtaɪmˌteɪ.bəl/",
+    "Dịch nghĩa": "thời gian biểu",
+    "exampleHanzi": "Train timetable.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "calendar",
+    "Pinyin": "/ˈkæl.ɪn.dər/",
+    "Dịch nghĩa": "lịch",
+    "exampleHanzi": "Mark on calendar.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "deadline",
+    "Pinyin": "/ˈded.laɪn/",
+    "Dịch nghĩa": "hạn chót",
+    "exampleHanzi": "Meet the deadline.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "limit",
+    "Pinyin": "/ˈlɪm.ɪt/",
+    "Dịch nghĩa": "giới hạn",
+    "exampleHanzi": "Time limit.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "period",
+    "Pinyin": "/ˈpɪə.ri.əd/",
+    "Dịch nghĩa": "giai đoạn",
+    "exampleHanzi": "Trial period.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "term",
+    "Pinyin": "/tɜːm/",
+    "Dịch nghĩa": "kỳ hạn",
+    "exampleHanzi": "Long term.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "duration",
+    "Pinyin": "/djuˈreɪ.ʃən/",
+    "Dịch nghĩa": "khoảng thời gian",
+    "exampleHanzi": "Short duration.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "phase",
+    "Pinyin": "/feɪz/",
+    "Dịch nghĩa": "giai đoạn",
+    "exampleHanzi": "Initial phase.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "stage",
+    "Pinyin": "/steɪdʒ/",
+    "Dịch nghĩa": "giai đoạn",
+    "exampleHanzi": "Early stage.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "step",
+    "Pinyin": "/step/",
+    "Dịch nghĩa": "bước",
+    "exampleHanzi": "Next step.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "process",
+    "Pinyin": "/ˈprəʊ.ses/",
+    "Dịch nghĩa": "quá trình",
+    "exampleHanzi": "Production process.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "procedure",
+    "Pinyin": "/prəˈsiː.dʒər/",
+    "Dịch nghĩa": "thủ tục",
+    "exampleHanzi": "Standard procedure.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "method",
+    "Pinyin": "/ˈmeθ.əd/",
+    "Dịch nghĩa": "phương pháp",
+    "exampleHanzi": "New method.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "technique",
+    "Pinyin": "/tekˈniːk/",
+    "Dịch nghĩa": "kỹ thuật",
+    "exampleHanzi": "Sales technique.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "system",
+    "Pinyin": "/ˈsɪs.təm/",
+    "Dịch nghĩa": "hệ thống",
+    "exampleHanzi": "Computer system.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "network",
+    "Pinyin": "/ˈnet.wɜːk/",
+    "Dịch nghĩa": "mạng lưới",
+    "exampleHanzi": "Global network.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "structure",
+    "Pinyin": "/ˈstrʌk.tʃər/",
+    "Dịch nghĩa": "cấu trúc",
+    "exampleHanzi": "Organizational structure.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "organization",
+    "Pinyin": "/ˌɔː.ɡən.aɪˈzeɪ.ʃən/",
+    "Dịch nghĩa": "tổ chức",
+    "exampleHanzi": "Non-profit organization.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "institution",
+    "Pinyin": "/ˌɪn.stɪˈtjuː.ʃən/",
+    "Dịch nghĩa": "học viện",
+    "exampleHanzi": "Financial institution.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "institute",
+    "Pinyin": "/ˈɪn.stɪ.tjuːt/",
+    "Dịch nghĩa": "viện",
+    "exampleHanzi": "Research institute.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "association",
+    "Pinyin": "/əˌsəʊ.siˈeɪ.ʃən/",
+    "Dịch nghĩa": "hiệp hội",
+    "exampleHanzi": "Trade association.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "agency",
+    "Pinyin": "/ˈeɪ.dʒən.si/",
+    "Dịch nghĩa": "cơ quan",
+    "exampleHanzi": "Travel agency.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "firm",
+    "Pinyin": "/fɜːm/",
+    "Dịch nghĩa": "công ty",
+    "exampleHanzi": "Law firm.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "corporation",
+    "Pinyin": "/ˌkɔː.pərˈeɪ.ʃən/",
+    "Dịch nghĩa": "tập đoàn",
+    "exampleHanzi": "Multinational corporation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "enterprise",
+    "Pinyin": "/ˈen.tə.praɪz/",
+    "Dịch nghĩa": "doanh nghiệp",
+    "exampleHanzi": "Small enterprise.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "venture",
+    "Pinyin": "/ˈven.tʃər/",
+    "Dịch nghĩa": "liên doanh",
+    "exampleHanzi": "Joint venture.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "partner",
+    "Pinyin": "/ˈpɑːt.nər/",
+    "Dịch nghĩa": "đối tác",
+    "exampleHanzi": "Business partner.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "associate",
+    "Pinyin": "/əˈsəʊ.si.eɪt/",
+    "Dịch nghĩa": "cộng sự",
+    "exampleHanzi": "Sales associate.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "member",
+    "Pinyin": "/ˈmem.bər/",
+    "Dịch nghĩa": "thành viên",
+    "exampleHanzi": "Team member.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "representative",
+    "Pinyin": "/ˌrep.rɪˈzen.tə.tɪv/",
+    "Dịch nghĩa": "đại diện",
+    "exampleHanzi": "Sales representative.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "agent",
+    "Pinyin": "/ˈeɪ.dʒənt/",
+    "Dịch nghĩa": "đại lý",
+    "exampleHanzi": "Real estate agent.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "consultant",
+    "Pinyin": "/kənˈsʌl.tənt/",
+    "Dịch nghĩa": "tư vấn viên",
+    "exampleHanzi": "Financial consultant.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "specialist",
+    "Pinyin": "/ˈspeʃ.əl.ɪst/",
+    "Dịch nghĩa": "chuyên gia",
+    "exampleHanzi": "IT specialist.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "expert",
+    "Pinyin": "/ˈek.spɜːt/",
+    "Dịch nghĩa": "chuyên gia",
+    "exampleHanzi": "Marketing expert.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "professional",
+    "Pinyin": "/prəˈfeʃ.ən.əl/",
+    "Dịch nghĩa": "chuyên nghiệp",
+    "exampleHanzi": "Professional service.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "authority",
+    "Pinyin": "/ɔːˈθɒr.ə.ti/",
+    "Dịch nghĩa": "chính quyền",
+    "exampleHanzi": "Local authority.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "official",
+    "Pinyin": "/əˈfɪʃ.əl/",
+    "Dịch nghĩa": "quan chức",
+    "exampleHanzi": "Government official.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "candidate",
+    "Pinyin": "/ˈkæn.dɪ.dət/",
+    "Dịch nghĩa": "ứng viên",
+    "exampleHanzi": "Job candidate.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "applicant",
+    "Pinyin": "/ˈæp.lɪ.kənt/",
+    "Dịch nghĩa": "người nộp đơn",
+    "exampleHanzi": "Qualified applicant.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "recruit",
+    "Pinyin": "/rɪˈkruːt/",
+    "Dịch nghĩa": "tân binh",
+    "exampleHanzi": "New recruit.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "hire",
+    "Pinyin": "/haɪər/",
+    "Dịch nghĩa": "thuê",
+    "exampleHanzi": "New hire.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "employee",
+    "Pinyin": "/ɪmˈplɔɪ.iː/",
+    "Dịch nghĩa": "nhân viên",
+    "exampleHanzi": "Full-time employee.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "employer",
+    "Pinyin": "/ɪmˈplɔɪ.ər/",
+    "Dịch nghĩa": "người chủ",
+    "exampleHanzi": "Good employer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "worker",
+    "Pinyin": "/ˈwɜː.kər/",
+    "Dịch nghĩa": "công nhân",
+    "exampleHanzi": "Factory worker.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "labor",
+    "Pinyin": "/ˈleɪ.bər/",
+    "Dịch nghĩa": "lao động",
+    "exampleHanzi": "Manual labor.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "staff",
+    "Pinyin": "/stɑːf/",
+    "Dịch nghĩa": "nhân sự",
+    "exampleHanzi": "Medical staff.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "personnel",
+    "Pinyin": "/ˌpɜː.sənˈel/",
+    "Dịch nghĩa": "nhân sự",
+    "exampleHanzi": "Personnel department.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "workforce",
+    "Pinyin": "/ˈwɜːk.fɔːs/",
+    "Dịch nghĩa": "lực lượng lao động",
+    "exampleHanzi": "Skilled workforce.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "manpower",
+    "Pinyin": "/ˈmænˌpaʊ.ər/",
+    "Dịch nghĩa": "nhân lực",
+    "exampleHanzi": "Shortage of manpower.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "human",
+    "Pinyin": "/ˈhjuː.mən/",
+    "Dịch nghĩa": "con người",
+    "exampleHanzi": "Human resources.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "resource",
+    "Pinyin": "/rɪˈzɔːs/",
+    "Dịch nghĩa": "tài nguyên",
+    "exampleHanzi": "Natural resources.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "source",
+    "Pinyin": "/sɔːs/",
+    "Dịch nghĩa": "nguồn",
+    "exampleHanzi": "Source of income.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "material",
+    "Pinyin": "/məˈtɪə.ri.əl/",
+    "Dịch nghĩa": "vật liệu",
+    "exampleHanzi": "Raw material.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "equipment",
+    "Pinyin": "/ɪˈkwɪp.mənt/",
+    "Dịch nghĩa": "thiết bị",
+    "exampleHanzi": "Safety equipment.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "device",
+    "Pinyin": "/dɪˈvaɪs/",
+    "Dịch nghĩa": "thiết bị",
+    "exampleHanzi": "Electronic device.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "instrument",
+    "Pinyin": "/ˈɪn.strə.mənt/",
+    "Dịch nghĩa": "dụng cụ",
+    "exampleHanzi": "Musical instrument.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "tool",
+    "Pinyin": "/tuːl/",
+    "Dịch nghĩa": "công cụ",
+    "exampleHanzi": "Power tools.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "machine",
+    "Pinyin": "/məˈʃiːn/",
+    "Dịch nghĩa": "máy móc",
+    "exampleHanzi": "Washing machine.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "engine",
+    "Pinyin": "/ˈen.dʒɪn/",
+    "Dịch nghĩa": "động cơ",
+    "exampleHanzi": "Car engine.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "motor",
+    "Pinyin": "/ˈməʊ.tər/",
+    "Dịch nghĩa": "mô tơ",
+    "exampleHanzi": "Electric motor.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "vehicle",
+    "Pinyin": "/ˈviː.ə.kəl/",
+    "Dịch nghĩa": "phương tiện",
+    "exampleHanzi": "Motor vehicle.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "transport",
+    "Pinyin": "/trænˈspɔːt/",
+    "Dịch nghĩa": "vận tải",
+    "exampleHanzi": "Public transport.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "traffic",
+    "Pinyin": "/ˈtræf.ɪk/",
+    "Dịch nghĩa": "giao thông",
+    "exampleHanzi": "Traffic jam.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "route",
+    "Pinyin": "/ruːt/",
+    "Dịch nghĩa": "tuyến đường",
+    "exampleHanzi": "Bus route.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "path",
+    "Pinyin": "/pɑːθ/",
+    "Dịch nghĩa": "con đường",
+    "exampleHanzi": "Career path.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "direction",
+    "Pinyin": "/daɪˈrek.ʃən/",
+    "Dịch nghĩa": "phương hướng",
+    "exampleHanzi": "Right direction.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "location",
+    "Pinyin": "/ləʊˈkeɪ.ʃən/",
+    "Dịch nghĩa": "địa điểm",
+    "exampleHanzi": "Prime location.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "position",
+    "Pinyin": "/pəˈzɪʃ.ən/",
+    "Dịch nghĩa": "vị trí",
+    "exampleHanzi": "Current position.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "site",
+    "Pinyin": "/saɪt/",
+    "Dịch nghĩa": "khu vực",
+    "exampleHanzi": "Construction site.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "area",
+    "Pinyin": "/ˈeə.ri.ə/",
+    "Dịch nghĩa": "khu vực",
+    "exampleHanzi": "Restricted area.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "region",
+    "Pinyin": "/ˈriː.dʒən/",
+    "Dịch nghĩa": "vùng",
+    "exampleHanzi": "Asia region.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "zone",
+    "Pinyin": "/zəʊn/",
+    "Dịch nghĩa": "khu",
+    "exampleHanzi": "Time zone.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "district",
+    "Pinyin": "/ˈdɪs.trɪkt/",
+    "Dịch nghĩa": "quận",
+    "exampleHanzi": "Business district.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "community",
+    "Pinyin": "/kəˈmjuː.nə.ti/",
+    "Dịch nghĩa": "cộng đồng",
+    "exampleHanzi": "Local community.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "society",
+    "Pinyin": "/səˈsaɪ.ə.ti/",
+    "Dịch nghĩa": "xã hội",
+    "exampleHanzi": "Modern society.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "public",
+    "Pinyin": "/ˈpʌb.lɪk/",
+    "Dịch nghĩa": "công chúng",
+    "exampleHanzi": "General public.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "population",
+    "Pinyin": "/ˌpɒp.jəˈleɪ.ʃən/",
+    "Dịch nghĩa": "dân số",
+    "exampleHanzi": "Growing population.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "citizen",
+    "Pinyin": "/ˈsɪt.ɪ.zən/",
+    "Dịch nghĩa": "công dân",
+    "exampleHanzi": "Senior citizen.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "resident",
+    "Pinyin": "/ˈrez.ɪ.dənt/",
+    "Dịch nghĩa": "cư dân",
+    "exampleHanzi": "Local resident.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "neighbor",
+    "Pinyin": "/ˈneɪ.bər/",
+    "Dịch nghĩa": "hàng xóm",
+    "exampleHanzi": "Next-door neighbor.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "customer",
+    "Pinyin": "/ˈkʌs.tə.mər/",
+    "Dịch nghĩa": "khách",
+    "exampleHanzi": "Regular customer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "guest",
+    "Pinyin": "/ɡest/",
+    "Dịch nghĩa": "khách mời",
+    "exampleHanzi": "Special guest.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "visitor",
+    "Pinyin": "/ˈvɪz.ɪ.tər/",
+    "Dịch nghĩa": "khách tham quan",
+    "exampleHanzi": "Foreign visitor.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "tourist",
+    "Pinyin": "/ˈtʊə.rɪst/",
+    "Dịch nghĩa": "du khách",
+    "exampleHanzi": "Tourist attraction.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "passenger",
+    "Pinyin": "/ˈpæs.ən.dʒər/",
+    "Dịch nghĩa": "hành khách",
+    "exampleHanzi": "Train passenger.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "traveler",
+    "Pinyin": "/ˈtræv.əl.ər/",
+    "Dịch nghĩa": "người du lịch",
+    "exampleHanzi": "Business traveler.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "commuter",
+    "Pinyin": "/kəˈmjuː.tər/",
+    "Dịch nghĩa": "người đi làm",
+    "exampleHanzi": "Daily commuter.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  }
+]

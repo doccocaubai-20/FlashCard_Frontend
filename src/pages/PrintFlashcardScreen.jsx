@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { 
-  ArrowLeft, 
-  Printer, 
-  BookOpen, 
-  Star, 
-  CheckSquare, 
-  Square, 
-  Eye, 
-  Grid, 
-  Check, 
+import {
+  ArrowLeft,
+  Printer,
+  BookOpen,
+  Star,
+  CheckSquare,
+  Square,
+  Eye,
+  Grid,
+  Check,
   Settings,
   Sparkles,
   Info
@@ -23,17 +23,45 @@ import HoverableText from '../components/common/HoverableText';
 
 // SVG Mi-character grid for writing practice
 function PracticeGrid({ char }) {
+  if (!char) return null;
+  // Filter only Chinese characters to practice writing
+  const chars = Array.from(char).filter(c =>
+    /[\u4e00-\u9fa5]/.test(c)
+  );
+
+  if (chars.length === 0) return null;
+
+  // Determine size of each grid cell dynamically
+  const getGridSizeClass = () => {
+    if (chars.length === 1) return 'w-16 h-16';
+    if (chars.length === 2) return 'w-12 h-12';
+    if (chars.length === 3) return 'w-10 h-10';
+    return 'w-8 h-8';
+  };
+
+  // Font size for characters in the practice grids
+  const getFontSizeClass = () => {
+    if (chars.length === 1) return 'text-4xl';
+    if (chars.length === 2) return 'text-3xl';
+    if (chars.length === 3) return 'text-2xl';
+    return 'text-xl';
+  };
+
   return (
-    <div className="relative w-16 h-16 border border-dashed border-zinc-300 dark:border-zinc-600 flex items-center justify-center bg-white rounded-xs">
-      <svg className="absolute inset-0 w-full h-full text-zinc-200" viewBox="0 0 100 100">
-        <line x1="0" y1="50" x2="100" y2="50" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3,3" />
-        <line x1="50" y1="0" x2="50" y2="100" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3,3" />
-        <line x1="0" y1="0" x2="100" y2="100" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3,3" />
-        <line x1="100" y1="0" x2="0" y2="100" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3,3" />
-      </svg>
-      <span className="text-4xl font-normal text-zinc-200 select-none font-display hanzi-text">
-        {char}
-      </span>
+    <div className="flex flex-row items-center justify-center gap-1">
+      {chars.map((c, idx) => (
+        <div key={idx} className={`relative ${getGridSizeClass()} flex items-center justify-center bg-white rounded-xs`}>
+          <svg className="absolute inset-0 w-full h-full text-zinc-200" viewBox="0 0 100 100">
+            <line x1="0" y1="50" x2="100" y2="50" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3,3" />
+            <line x1="50" y1="0" x2="50" y2="100" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3,3" />
+            <line x1="0" y1="0" x2="100" y2="100" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3,3" />
+            <line x1="100" y1="0" x2="0" y2="100" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3,3" />
+          </svg>
+          <span className={`font-normal text-zinc-200 select-none font-display hanzi-text ${getFontSizeClass()}`}>
+            {c}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -45,18 +73,19 @@ export default function PrintFlashcardScreen() {
 
   const [loading, setLoading] = useState(false);
   const [decks, setDecks] = useState([]);
-  const [source, setSource] = useState('notebook'); // 'notebook' or 'deck'
+  const [source, setSource] = useState('deck'); // 'notebook' or 'deck'
   const [selectedDeckId, setSelectedDeckId] = useState('');
-  
+
   const [allCards, setAllCards] = useState([]);
   const [selectedCardIds, setSelectedCardIds] = useState(new Set());
-  
+
   const [layout, setLayout] = useState('a4-8'); // 'a4-8', 'a5-16', 'a6-2'
   const [backType, setBackType] = useState('meaning-pinyin'); // 'meaning-pinyin', 'writing-grid', 'split'
   const [showCardNumber, setShowCardNumber] = useState(true);
   const [showSinoVietnamese, setShowSinoVietnamese] = useState(true);
-  
+
   const [activePreviewTab, setActivePreviewTab] = useState('front'); // 'front' or 'back'
+  const [previewPage, setPreviewPage] = useState(0);
 
   // Fetch initial decks
   useEffect(() => {
@@ -172,7 +201,7 @@ export default function PrintFlashcardScreen() {
   const getMirroredPageCards = (pageCards) => {
     const cols = layout === 'a5-16' ? 4 : layout === 'a6-2' ? 1 : 2;
     const mirrored = [...pageCards];
-    
+
     // Fill the empty cells to make a full grid so mirror swaps match layout locations
     while (mirrored.length < cardsPerPage) {
       mirrored.push(null);
@@ -182,7 +211,7 @@ export default function PrintFlashcardScreen() {
     for (let row = 0; row < 4; row++) {
       const rowStartIndex = row * cols;
       const rowCards = mirrored.slice(rowStartIndex, rowStartIndex + cols);
-      
+
       if (cols === 2) {
         // Swap [A, B] -> [B, A]
         result.push(rowCards[1], rowCards[0]);
@@ -212,31 +241,43 @@ export default function PrintFlashcardScreen() {
       return 'text-5xl'; // standard 8 cards
     };
 
+    const isA5 = layout === 'a5-16';
+
     if (!isBackSide) {
       // Front face
+      const frontContent = (
+        <div className={`${getFrontFontSize()} font-display font-bold tracking-tight text-center leading-none text-zinc-900 dark:text-zinc-100 hanzi-text`}>
+          {hanzi}
+        </div>
+      );
+
       return (
-        <div className="relative border border-dashed border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 flex flex-col items-center justify-center p-4 h-full text-ink dark:text-on-dark transition-colors">
+        <div className="relative border border-dashed border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 flex flex-col items-center justify-center p-4 h-full text-ink dark:text-on-dark transition-colors overflow-hidden">
           {showCardNumber && (
             <div className="absolute top-2 left-2 text-[10px] font-mono font-bold text-zinc-400 dark:text-zinc-600">
               #{globalIndex + 1}
             </div>
           )}
-          
-          <div className={`${getFrontFontSize()} font-display font-bold tracking-tight text-center leading-none text-zinc-900 dark:text-zinc-100 hanzi-text`}>
-            {hanzi}
-          </div>
+
+          {isA5 ? (
+            <div
+              className="absolute left-1/2 top-1/2 flex items-center justify-center"
+              style={{
+                width: '69.25mm',
+                height: '47.5mm',
+                transform: 'translate(-50%, -50%) rotate(90deg)',
+                transformOrigin: 'center center'
+              }}
+            >
+              {frontContent}
+            </div>
+          ) : frontContent}
         </div>
       );
     } else {
       // Back face
-      return (
-        <div className="relative border border-dashed border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 flex flex-col items-center justify-center p-3 h-full text-zinc-800 dark:text-zinc-200 transition-colors text-center overflow-hidden">
-          {showCardNumber && (
-            <div className="absolute top-2 right-2 text-[10px] font-mono font-bold text-zinc-400 dark:text-zinc-600">
-              #{globalIndex + 1}
-            </div>
-          )}
-
+      const backContent = (
+        <>
           {backType === 'meaning-pinyin' && (
             <div className="flex flex-col items-center justify-center h-full w-full px-1">
               <div className="text-sm font-mono font-bold text-primary dark:text-primary-light uppercase tracking-wider mb-0.5 break-all">
@@ -260,7 +301,7 @@ export default function PrintFlashcardScreen() {
           )}
 
           {backType === 'split' && (
-            <div className={`flex items-center justify-between w-full h-full px-1 gap-2 ${layout === 'a5-16' ? 'flex-col justify-center' : 'flex-row'}`}>
+            <div className="flex items-center justify-between w-full h-full px-1 gap-2 flex-row">
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 <div className="text-xs font-mono font-bold text-primary dark:text-primary-light uppercase tracking-wider mb-0.5 break-all">
                   {pinyin}
@@ -279,6 +320,29 @@ export default function PrintFlashcardScreen() {
               </div>
             </div>
           )}
+        </>
+      );
+
+      return (
+        <div className="relative border border-dashed border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 flex flex-col items-center justify-center p-3 h-full text-zinc-800 dark:text-zinc-200 transition-colors text-center overflow-hidden">
+          {showCardNumber && (
+            <div className="absolute top-2 right-2 text-[10px] font-mono font-bold text-zinc-400 dark:text-zinc-600">
+              #{globalIndex + 1}
+            </div>
+          )}
+          {isA5 ? (
+            <div
+              className="absolute left-1/2 top-1/2 flex items-center justify-center"
+              style={{
+                width: '69.25mm',
+                height: '47.5mm',
+                transform: 'translate(-50%, -50%) rotate(90deg)',
+                transformOrigin: 'center center'
+              }}
+            >
+              {backContent}
+            </div>
+          ) : backContent}
         </div>
       );
     }
@@ -293,11 +357,11 @@ export default function PrintFlashcardScreen() {
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6 pb-20">
-      
+
       {/* Header (Hidden when printing) */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 no-print">
         <div className="flex items-center gap-3">
-          <button 
+          <button
             onClick={() => navigate(-1)}
             className="p-2 rounded-full hover:bg-surface-bone dark:hover:bg-black border border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark transition-all cursor-pointer"
           >
@@ -307,12 +371,9 @@ export default function PrintFlashcardScreen() {
             <h1 className="text-2xl font-extrabold text-ink dark:text-on-dark tracking-tight">
               In thẻ Flashcard PDF
             </h1>
-            <p className="text-xs text-mute dark:text-on-dark-mute font-medium mt-0.5">
-              Cấu hình lưới trang in A4 hai mặt chuẩn, cắt rời thành thẻ học tiện lợi
-            </p>
           </div>
         </div>
-        
+
         <button
           onClick={handlePrint}
           disabled={selectedCardIds.size === 0}
@@ -323,42 +384,41 @@ export default function PrintFlashcardScreen() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-span-1 lg:grid-cols-10 gap-6 items-start">
-        
+      <div className="flex flex-row gap-6 items-start">
+
         {/* Left Control Panel (Hidden when printing) */}
-        <div className="lg:col-span-3 space-y-6 no-print">
-          
+        <div className="w-[320px] min-w-[320px] max-w-[320px] shrink-0 space-y-6 no-print">
+
           {/* Data Source Configuration */}
-          <div className="rounded-xl border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark p-5 space-y-4">
+          <div className="mt-12 rounded-xl border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark p-5 space-y-4">
             <h3 className="text-sm font-extrabold text-ink dark:text-on-dark uppercase tracking-wider flex items-center gap-2">
               <BookOpen size={16} className="text-primary" />
               Nguồn từ vựng
             </h3>
-            
+
             <div className="flex gap-2">
               <button
-                onClick={() => setSource('notebook')}
-                className={`flex-1 py-2 px-3 rounded-md text-xs font-bold border transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                  source === 'notebook'
-                    ? 'bg-primary/10 border-primary text-primary'
-                    : 'border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark bg-transparent'
-                }`}
-              >
-                <Star size={14} fill={source === 'notebook' ? 'currentColor' : 'none'} />
-                Sổ tay lưu
-              </button>
-              
-              <button
                 onClick={() => setSource('deck')}
-                className={`flex-1 py-2 px-3 rounded-md text-xs font-bold border transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                  source === 'deck'
-                    ? 'bg-primary/10 border-primary text-primary'
-                    : 'border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark bg-transparent'
-                }`}
+                className={`flex-1 py-2 px-3 rounded-md text-xs font-bold border transition-all cursor-pointer flex items-center justify-center gap-1.5 ${source === 'deck'
+                  ? 'bg-primary/10 border-primary text-primary'
+                  : 'border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark bg-transparent'
+                  }`}
               >
                 <Grid size={14} />
                 Bộ bài học
               </button>
+
+              <button
+                onClick={() => setSource('notebook')}
+                className={`flex-1 py-2 px-3 rounded-md text-xs font-bold border transition-all cursor-pointer flex items-center justify-center gap-1.5 ${source === 'notebook'
+                  ? 'bg-primary/10 border-primary text-primary'
+                  : 'border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark bg-transparent'
+                  }`}
+              >
+                <Star size={14} fill={source === 'notebook' ? 'currentColor' : 'none'} />
+                Sổ tay lưu
+              </button>
+
             </div>
 
             {source === 'deck' && (
@@ -395,21 +455,20 @@ export default function PrintFlashcardScreen() {
                   { value: 'a5-16', label: 'Lưới A5 nhỏ gọn (16 thẻ/trang)', desc: 'Bố cục 4x4 thẻ, kích thước 52.5x74.25mm' },
                   { value: 'a6-2', label: 'Thẻ A6 kích thước lớn (2 thẻ/trang)', desc: 'Bố cục 1x2 thẻ lớn, kích thước 210x148.5mm' },
                 ].map((opt) => (
-                  <label 
-                    key={opt.value} 
-                    className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
-                      layout === opt.value
-                        ? 'bg-primary/5 border-primary/40 text-primary'
-                        : 'border-hairline dark:border-divider-dark hover:bg-surface-bone/30 dark:hover:bg-black/15'
-                    }`}
+                  <label
+                    key={opt.value}
+                    className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${layout === opt.value
+                      ? 'bg-primary/5 border-primary/40 text-primary'
+                      : 'border-hairline dark:border-divider-dark hover:bg-surface-bone/30 dark:hover:bg-black/15'
+                      }`}
                   >
-                    <input 
-                      type="radio" 
-                      name="layout" 
-                      value={opt.value} 
+                    <input
+                      type="radio"
+                      name="layout"
+                      value={opt.value}
                       checked={layout === opt.value}
                       onChange={() => setLayout(opt.value)}
-                      className="mt-0.5 accent-primary" 
+                      className="mt-0.5 accent-primary"
                     />
                     <div className="text-left">
                       <div className="text-xs font-bold text-ink dark:text-on-dark">{opt.label}</div>
@@ -437,21 +496,21 @@ export default function PrintFlashcardScreen() {
             {/* Sub options */}
             <div className="space-y-3 pt-2 border-t border-hairline dark:border-divider-dark">
               <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-body dark:text-on-dark-mute">
-                <input 
-                  type="checkbox" 
-                  checked={showCardNumber} 
-                  onChange={(e) => setShowCardNumber(e.target.checked)} 
+                <input
+                  type="checkbox"
+                  checked={showCardNumber}
+                  onChange={(e) => setShowCardNumber(e.target.checked)}
                   className="accent-primary"
                 />
                 In số thứ tự thẻ ở góc để đối chiếu
               </label>
 
               <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-body dark:text-on-dark-mute">
-                <input 
-                  type="checkbox" 
-                  checked={showSinoVietnamese} 
+                <input
+                  type="checkbox"
+                  checked={showSinoVietnamese}
                   disabled={backType === 'writing-grid'}
-                  onChange={(e) => setShowSinoVietnamese(e.target.checked)} 
+                  onChange={(e) => setShowSinoVietnamese(e.target.checked)}
                   className="accent-primary disabled:opacity-50"
                 />
                 In kèm âm Hán Việt (nếu có)
@@ -469,13 +528,13 @@ export default function PrintFlashcardScreen() {
             </div>
 
             <div className="flex gap-2">
-              <button 
+              <button
                 onClick={handleSelectAll}
                 className="flex-1 py-1 px-2 border border-hairline dark:border-divider-dark rounded-md text-[10px] font-bold text-body dark:text-on-dark-mute hover:bg-surface-bone dark:hover:bg-black transition-colors cursor-pointer"
               >
                 Chọn tất cả
               </button>
-              <button 
+              <button
                 onClick={handleDeselectAll}
                 className="flex-1 py-1 px-2 border border-hairline dark:border-divider-dark rounded-md text-[10px] font-bold text-body dark:text-on-dark-mute hover:bg-surface-bone dark:hover:bg-black transition-colors cursor-pointer"
               >
@@ -492,14 +551,13 @@ export default function PrintFlashcardScreen() {
                 {allCards.map((card) => {
                   const isSel = selectedCardIds.has(card.id);
                   return (
-                    <div 
+                    <div
                       key={card.id}
                       onClick={() => toggleSelectCard(card.id)}
-                      className={`flex items-center justify-between p-2 rounded-md transition-all cursor-pointer ${
-                        isSel 
-                          ? 'bg-primary/5 text-primary border border-primary/20' 
-                          : 'border border-transparent hover:bg-surface-bone dark:hover:bg-black text-body dark:text-on-dark-mute'
-                      }`}
+                      className={`flex items-center justify-between p-2 rounded-md transition-all cursor-pointer ${isSel
+                        ? 'bg-primary/5 text-primary border border-primary/20'
+                        : 'border border-transparent hover:bg-surface-bone dark:hover:bg-black text-body dark:text-on-dark-mute'
+                        }`}
                     >
                       <div className="flex items-center gap-2">
                         {isSel ? <CheckSquare size={14} className="text-primary" /> : <Square size={14} className="text-mute" />}
@@ -520,51 +578,37 @@ export default function PrintFlashcardScreen() {
         </div>
 
         {/* Right Preview Panel & Hidden PDF Sheet Renderer */}
-        <div className="lg:col-span-7 flex flex-col items-center">
-          
+        <div className="flex-1 min-w-0 flex flex-col items-center ">
+
           {/* Top Options & Help Guide (Hidden when printing) */}
-          <div className="w-full max-w-[210mm] mb-4 flex justify-between items-center no-print">
-            
+          <div className="w-full max-w-[210mm] mb-4 flex justify-end items-center no-print">
+
             {/* View Selection tab */}
             <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-lg p-1 flex gap-1 shadow-sm">
               <button
                 onClick={() => setActivePreviewTab('front')}
-                className={`py-1.5 px-4 rounded-md text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                  activePreviewTab === 'front'
-                    ? 'bg-primary text-white shadow-xs'
-                    : 'text-mute hover:text-ink dark:hover:text-on-dark'
-                }`}
+                className={`py-1.5 px-4 rounded-md text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${activePreviewTab === 'front'
+                  ? 'bg-primary text-white shadow-xs'
+                  : 'text-mute hover:text-ink dark:hover:text-on-dark'
+                  }`}
               >
-                <Eye size={14} />
-                Xem mặt trước (Chữ Hán)
+                Mặt trước
               </button>
-              
+
               <button
                 onClick={() => setActivePreviewTab('back')}
-                className={`py-1.5 px-4 rounded-md text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                  activePreviewTab === 'back'
-                    ? 'bg-primary text-white shadow-xs'
-                    : 'text-mute hover:text-ink dark:hover:text-on-dark'
-                }`}
+                className={`py-1.5 px-4 rounded-md text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${activePreviewTab === 'back'
+                  ? 'bg-primary text-white shadow-xs'
+                  : 'text-mute hover:text-ink dark:hover:text-on-dark'
+                  }`}
               >
-                <Eye size={14} />
-                Xem mặt sau (Dịch nghĩa)
+                Mặt sau
               </button>
             </div>
-            
-            <div className="flex items-center gap-1 text-[10px] text-mute font-semibold uppercase bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark px-3 py-1.5 rounded-lg shadow-xs">
-              <Info size={12} className="text-primary" />
-              Chuẩn A4 dọc
-            </div>
-          </div>
-
-          <div className="w-full text-center text-xs text-mute italic mb-4 no-print flex items-center justify-center gap-1.5 bg-primary/5 p-3 rounded-lg border border-primary/10 max-w-[210mm]">
-            <Sparkles size={14} className="text-primary" />
-            <span>Mẹo: Giao diện xem trước hiển thị mặt trước/sau riêng lẻ, khi in ấn hệ thống sẽ tự động ghép xen kẽ để in 2 mặt hoàn chỉnh.</span>
           </div>
 
           {/* Actual Sheet Container */}
-          <div className="w-full flex flex-col items-center space-y-8 print-sheets-wrapper overflow-x-auto w-full max-w-full">
+          <div className="w-full flex flex-col items-center print-sheets-wrapper overflow-x-auto max-w-full">
             {selectedCardIds.size === 0 ? (
               <div className="w-full max-w-[210mm] aspect-[210/297] border border-dashed border-hairline dark:border-divider-dark rounded-xl bg-surface-card dark:bg-surface-dark flex flex-col items-center justify-center p-8 text-center text-mute dark:text-on-dark-mute no-print shadow-xs">
                 <Printer size={48} className="text-mute/30 mb-3 animate-pulse" />
@@ -574,84 +618,167 @@ export default function PrintFlashcardScreen() {
                 </p>
               </div>
             ) : (
-              pages.map((pageCards, pageIndex) => {
-                const sheetGlobalStartIndex = pageIndex * cardsPerPage;
-                const mirroredCards = getMirroredPageCards(pageCards);
+              <>
+                {/* === PREVIEW: Only show current page === */}
+                {pages.map((pageCards, pageIndex) => {
+                  if (pageIndex !== previewPage) return null;
+                  const sheetGlobalStartIndex = pageIndex * cardsPerPage;
+                  const mirroredCards = getMirroredPageCards(pageCards);
 
-                return (
-                  <React.Fragment key={pageIndex}>
-                    {/* Front sheet container */}
-                    <div 
-                      className={`print-sheet print-front-sheet bg-white text-black shadow-lg border border-zinc-200 dark:border-zinc-800 flex flex-col justify-between ${
-                        activePreviewTab === 'front' ? 'block' : 'hidden print:block'
-                      }`}
-                      style={{
-                        width: '210mm',
-                        height: '297mm',
-                        minWidth: '210mm',
-                        minHeight: '297mm',
-                        padding: '10mm', // standard printing printable margin
-                        pageBreakAfter: 'always',
-                        boxSizing: 'border-box'
-                      }}
+                  return (
+                    <React.Fragment key={`preview-${pageIndex}`}>
+                      {/* Front preview */}
+                      {activePreviewTab === 'front' && (
+                        <div
+                          className="print-sheet bg-white text-black shadow-2lx border border-zinc-400 dark:border-zinc-800 flex flex-col justify-between no-print"
+                          style={{
+                            width: '210mm',
+                            height: '297mm',
+                            minWidth: '210mm',
+                            minHeight: '297mm',
+                            padding: '0mm',
+                            boxSizing: 'border-box'
+                          }}
+                        >
+                          <div className={getGridClass()}>
+                            {pageCards.map((card, idx) => (
+                              <React.Fragment key={idx}>
+                                {renderCard(card, false, sheetGlobalStartIndex + idx)}
+                              </React.Fragment>
+                            ))}
+                            {pageCards.length < cardsPerPage &&
+                              Array.from({ length: cardsPerPage - pageCards.length }).map((_, idx) => (
+                                <React.Fragment key={`empty-${idx}`}>
+                                  {renderCard(null, false, 0)}
+                                </React.Fragment>
+                              ))
+                            }
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Back preview */}
+                      {activePreviewTab === 'back' && (
+                        <div
+                          className="print-sheet bg-white text-black shadow-lg border border-zinc-200 dark:border-zinc-800 flex flex-col justify-between no-print"
+                          style={{
+                            width: '210mm',
+                            height: '297mm',
+                            minWidth: '210mm',
+                            minHeight: '297mm',
+                            padding: '0mm',
+                            boxSizing: 'border-box'
+                          }}
+                        >
+                          <div className={getGridClass()}>
+                            {mirroredCards.map((card, idx) => {
+                              if (!card) {
+                                return (
+                                  <React.Fragment key={`empty-back-${idx}`}>
+                                    {renderCard(null, true, 0)}
+                                  </React.Fragment>
+                                );
+                              }
+                              const origIndexInSelectedList = selectedCards.findIndex(c => c.id === card.id);
+                              return (
+                                <React.Fragment key={card.id}>
+                                  {renderCard(card, true, origIndexInSelectedList)}
+                                </React.Fragment>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+
+                {/* Page navigation */}
+                {totalPages > 1 && (
+                  <div className="flex items-center gap-3 mt-4 no-print">
+                    <button
+                      onClick={() => setPreviewPage(p => Math.max(0, p - 1))}
+                      disabled={previewPage === 0}
+                      className="px-3 py-1.5 text-xs font-bold border border-hairline dark:border-divider-dark rounded-md hover:bg-surface-bone dark:hover:bg-black transition cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                     >
-                      <div className={getGridClass()}>
-                        {pageCards.map((card, idx) => (
-                          <React.Fragment key={idx}>
-                            {renderCard(card, false, sheetGlobalStartIndex + idx)}
-                          </React.Fragment>
-                        ))}
-                        {/* Fill the rest of grid if page has less than cardsPerPage */}
-                        {pageCards.length < cardsPerPage && 
-                          Array.from({ length: cardsPerPage - pageCards.length }).map((_, idx) => (
-                            <React.Fragment key={`empty-${idx}`}>
-                              {renderCard(null, false, 0)}
+                      ← Trước
+                    </button>
+                    <span className="text-xs font-bold text-ink dark:text-on-dark">
+                      Trang {previewPage + 1} / {totalPages}
+                    </span>
+                    <button
+                      onClick={() => setPreviewPage(p => Math.min(totalPages - 1, p + 1))}
+                      disabled={previewPage >= totalPages - 1}
+                      className="px-3 py-1.5 text-xs font-bold border border-hairline dark:border-divider-dark rounded-md hover:bg-surface-bone dark:hover:bg-black transition cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      Sau →
+                    </button>
+                  </div>
+                )}
+
+                {/* === PRINT: Render ALL pages (hidden on screen) === */}
+                {pages.map((pageCards, pageIndex) => {
+                  const sheetGlobalStartIndex = pageIndex * cardsPerPage;
+                  const mirroredCards = getMirroredPageCards(pageCards);
+                  return (
+                    <React.Fragment key={`print-${pageIndex}`}>
+                      <div
+                        className="print-sheet print-front-sheet bg-white text-black hidden print:block"
+                        style={{
+                          width: '210mm',
+                          height: '297mm',
+                          padding: '0mm',
+                          pageBreakAfter: 'always',
+                          boxSizing: 'border-box'
+                        }}
+                      >
+                        <div className={getGridClass()}>
+                          {pageCards.map((card, idx) => (
+                            <React.Fragment key={idx}>
+                              {renderCard(card, false, sheetGlobalStartIndex + idx)}
                             </React.Fragment>
-                          ))
-                        }
+                          ))}
+                          {pageCards.length < cardsPerPage &&
+                            Array.from({ length: cardsPerPage - pageCards.length }).map((_, idx) => (
+                              <React.Fragment key={`empty-${idx}`}>
+                                {renderCard(null, false, 0)}
+                              </React.Fragment>
+                            ))
+                          }
+                        </div>
                       </div>
-                    </div>
-
-                    {/* Back sheet container (mirrored) */}
-                    <div 
-                      className={`print-sheet print-back-sheet bg-white text-black shadow-lg border border-zinc-200 dark:border-zinc-800 flex flex-col justify-between ${
-                        activePreviewTab === 'back' ? 'block' : 'hidden print:block'
-                      }`}
-                      style={{
-                        width: '210mm',
-                        height: '297mm',
-                        minWidth: '210mm',
-                        minHeight: '297mm',
-                        padding: '10mm', // standard printing printable margin
-                        pageBreakAfter: 'always',
-                        boxSizing: 'border-box',
-                        transform: 'rotateY(0deg)' // prevents rendering mirror text, we mirror columns only
-                      }}
-                    >
-                      <div className={getGridClass()}>
-                        {mirroredCards.map((card, idx) => {
-                          if (!card) {
+                      <div
+                        className="print-sheet print-back-sheet bg-white text-black hidden print:block"
+                        style={{
+                          width: '210mm',
+                          height: '297mm',
+                          padding: '0mm',
+                          pageBreakAfter: 'always',
+                          boxSizing: 'border-box'
+                        }}
+                      >
+                        <div className={getGridClass()}>
+                          {mirroredCards.map((card, idx) => {
+                            if (!card) {
+                              return (
+                                <React.Fragment key={`empty-back-${idx}`}>
+                                  {renderCard(null, true, 0)}
+                                </React.Fragment>
+                              );
+                            }
+                            const origIndexInSelectedList = selectedCards.findIndex(c => c.id === card.id);
                             return (
-                              <React.Fragment key={`empty-back-${idx}`}>
-                                {renderCard(null, true, 0)}
+                              <React.Fragment key={card.id}>
+                                {renderCard(card, true, origIndexInSelectedList)}
                               </React.Fragment>
                             );
-                          }
-                          
-                          // Find card's original global index in selected list for correct label matching
-                          const origIndexInSelectedList = selectedCards.findIndex(c => c.id === card.id);
-
-                          return (
-                            <React.Fragment key={card.id}>
-                              {renderCard(card, true, origIndexInSelectedList)}
-                            </React.Fragment>
-                          );
-                        })}
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  </React.Fragment>
-                );
-              })
+                    </React.Fragment>
+                  );
+                })}
+              </>
             )}
           </div>
 
@@ -672,23 +799,53 @@ export default function PrintFlashcardScreen() {
           }
         }
         @media print {
+          /* Hide all non-printable wrappers on screen */
+          .no-print,
+          .no-print * {
+            display: none !important;
+          }
+
+          /* Reset all ancestor wrappers of print sheets to have absolutely no height, padding, margin, or layout restrictions */
+          #root, 
+          .app-layout, 
+          .app-content,
+          main,
+          .max-w-7xl,
+          .flex-row,
+          .flex-col,
+          .flex-1,
+          .print-sheets-wrapper {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: none !important;
+            width: auto !important;
+            height: auto !important;
+            min-height: 0 !important;
+            display: block !important;
+            position: static !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+          }
+
           /* Remove print headers, footers and page margins */
           @page {
             size: A4 portrait !important;
-            margin: 0 !important;
+            margin: 0mm !important;
           }
           
-          body {
+          html, body {
             background: white !important;
             margin: 0 !important;
             padding: 0 !important;
+            overflow: visible !important;
           }
 
           /* Force exact print layouts and hide scrollbars */
           .print-sheet {
             width: 210mm !important;
             height: 297mm !important;
-            padding: 10mm !important;
+            padding: 0 !important;
             margin: 0 !important;
             border: none !important;
             box-shadow: none !important;

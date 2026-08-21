@@ -1,0 +1,1866 @@
+[
+  {
+    "Tiếng Anh": "announce",
+    "Pinyin": "/əˈnaʊns/",
+    "Dịch nghĩa": "thông báo",
+    "exampleHanzi": "The director announced the new policy.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "participate",
+    "Pinyin": "/pɑːˈtɪs.ɪ.peɪt/",
+    "Dịch nghĩa": "tham gia",
+    "exampleHanzi": "Everyone is encouraged to participate in the event.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "arrange",
+    "Pinyin": "/əˈreɪndʒ/",
+    "Dịch nghĩa": "sắp xếp",
+    "exampleHanzi": "Can you arrange a meeting for us?",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cancel",
+    "Pinyin": "/ˈkæn.səl/",
+    "Dịch nghĩa": "hủy bỏ",
+    "exampleHanzi": "The flight was cancelled due to bad weather.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "confirm",
+    "Pinyin": "/kənˈfɜːm/",
+    "Dịch nghĩa": "xác nhận",
+    "exampleHanzi": "Please confirm your attendance by Friday.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "discuss",
+    "Pinyin": "/dɪˈskʌs/",
+    "Dịch nghĩa": "thảo luận",
+    "exampleHanzi": "We need to discuss the budget.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "mention",
+    "Pinyin": "/ˈmen.ʃən/",
+    "Dịch nghĩa": "đề cập",
+    "exampleHanzi": "Did he mention the deadline?",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "remind",
+    "Pinyin": "/rɪˈmaɪnd/",
+    "Dịch nghĩa": "nhắc nhở",
+    "exampleHanzi": "Please remind me to call him.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "contact",
+    "Pinyin": "/ˈkɒn.tækt/",
+    "Dịch nghĩa": "liên hệ",
+    "exampleHanzi": "Contact us if you have any problems.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "inform",
+    "Pinyin": "/ɪnˈfɔːm/",
+    "Dịch nghĩa": "thông báo, báo tin",
+    "exampleHanzi": "Please inform us of any changes.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "receive",
+    "Pinyin": "/rɪˈsiːv/",
+    "Dịch nghĩa": "nhận",
+    "exampleHanzi": "Did you receive my email?",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "respond",
+    "Pinyin": "/rɪˈspɒnd/",
+    "Dịch nghĩa": "phản hồi",
+    "exampleHanzi": "He hasn't responded to my request yet.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "attend",
+    "Pinyin": "/əˈtend/",
+    "Dịch nghĩa": "tham dự",
+    "exampleHanzi": "Are you planning to attend the conference?",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "join",
+    "Pinyin": "/dʒɔɪn/",
+    "Dịch nghĩa": "gia nhập, tham gia",
+    "exampleHanzi": "Join our team today!",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "visit",
+    "Pinyin": "/ˈvɪz.ɪt/",
+    "Dịch nghĩa": "thăm, ghé qua",
+    "exampleHanzi": "Clients will visit the factory tomorrow.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "travel",
+    "Pinyin": "/ˈtræv.əl/",
+    "Dịch nghĩa": "đi lại, du lịch",
+    "exampleHanzi": "He travels frequently for business.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "ticket",
+    "Pinyin": "/ˈtɪk.ɪt/",
+    "Dịch nghĩa": "vé",
+    "exampleHanzi": "Book a flight ticket.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "flight",
+    "Pinyin": "/flaɪt/",
+    "Dịch nghĩa": "chuyến bay",
+    "exampleHanzi": "My flight was delayed.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "hotel",
+    "Pinyin": "/həʊˈtel/",
+    "Dịch nghĩa": "khách sạn",
+    "exampleHanzi": "We stayed at a 5-star hotel.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "reservation",
+    "Pinyin": "/ˌrez.əˈveɪ.ʃən/",
+    "Dịch nghĩa": "sự đặt chỗ",
+    "exampleHanzi": "I have a reservation under the name Smith.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "book",
+    "Pinyin": "/bʊk/",
+    "Dịch nghĩa": "đặt (vé, phòng)",
+    "exampleHanzi": "I'd like to book a room.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "rent",
+    "Pinyin": "/rent/",
+    "Dịch nghĩa": "thuê",
+    "exampleHanzi": "Rent a car.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "repair",
+    "Pinyin": "/rɪˈpeər/",
+    "Dịch nghĩa": "sửa chữa",
+    "exampleHanzi": "The photocopier needs repair.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "fix",
+    "Pinyin": "/fɪks/",
+    "Dịch nghĩa": "sửa",
+    "exampleHanzi": "Can you fix this problem?",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "replace",
+    "Pinyin": "/rɪˈpleɪs/",
+    "Dịch nghĩa": "thay thế",
+    "exampleHanzi": "We need to replace the old printer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "install",
+    "Pinyin": "/ɪnˈstɔːl/",
+    "Dịch nghĩa": "cài đặt, lắp đặt",
+    "exampleHanzi": "Install the new software.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "update",
+    "Pinyin": "/ʌpˈdeɪt/",
+    "Dịch nghĩa": "cập nhật",
+    "exampleHanzi": "Update your antivirus program.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "upgrade",
+    "Pinyin": "/ʌpˈɡreɪd/",
+    "Dịch nghĩa": "nâng cấp",
+    "exampleHanzi": "Upgrade to the premium version.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "invoice",
+    "Pinyin": "/ˈɪn.vɔɪs/",
+    "Dịch nghĩa": "hóa đơn (thanh toán)",
+    "exampleHanzi": "Please pay the invoice within 30 days.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "receipt",
+    "Pinyin": "/rɪˈsiːt/",
+    "Dịch nghĩa": "biên lai (đã trả tiền)",
+    "exampleHanzi": "Keep the receipt for your records.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "airport",
+    "Pinyin": "/ˈeə.pɔːt/",
+    "Dịch nghĩa": "sân bay",
+    "exampleHanzi": "Arrive at the airport early.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "luggage",
+    "Pinyin": "/ˈlʌɡ.ɪdʒ/",
+    "Dịch nghĩa": "hành lý",
+    "exampleHanzi": "Check your luggage.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "baggage",
+    "Pinyin": "/ˈbæɡ.ɪdʒ/",
+    "Dịch nghĩa": "hành lý (không đếm được)",
+    "exampleHanzi": "Lost baggage claim.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "suitcase",
+    "Pinyin": "/ˈsuːt.keɪs/",
+    "Dịch nghĩa": "vali",
+    "exampleHanzi": "Pack your suitcase.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "passenger",
+    "Pinyin": "/ˈpæs.ən.dʒər/",
+    "Dịch nghĩa": "hành khách",
+    "exampleHanzi": "Passengers must wear seatbelts.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "security",
+    "Pinyin": "/sɪˈkjʊə.rɪ.ti/",
+    "Dịch nghĩa": "an ninh",
+    "exampleHanzi": "Go through security check.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "gate",
+    "Pinyin": "/ɡeɪt/",
+    "Dịch nghĩa": "cổng",
+    "exampleHanzi": "Boarding at Gate 5.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "boarding",
+    "Pinyin": "/ˈbɔː.dɪŋ/",
+    "Dịch nghĩa": "lên máy bay",
+    "exampleHanzi": "Boarding pass.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "delay",
+    "Pinyin": "/dɪˈleɪ/",
+    "Dịch nghĩa": "trì hoãn",
+    "exampleHanzi": "The train was delayed.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cancel",
+    "Pinyin": "/ˈkæn.səl/",
+    "Dịch nghĩa": "hủy bỏ",
+    "exampleHanzi": "Cancel the reservation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "departure",
+    "Pinyin": "/dɪˈpɑː.tʃər/",
+    "Dịch nghĩa": "khởi hành",
+    "exampleHanzi": "Departure time.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "arrival",
+    "Pinyin": "/əˈraɪ.vəl/",
+    "Dịch nghĩa": "đến",
+    "exampleHanzi": "Arrival time.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "schedule",
+    "Pinyin": "/ˈʃed.juːl/",
+    "Dịch nghĩa": "lịch trình",
+    "exampleHanzi": "Train schedule.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "map",
+    "Pinyin": "/mæp/",
+    "Dịch nghĩa": "bản đồ",
+    "exampleHanzi": "City map.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "guide",
+    "Pinyin": "/ɡaɪd/",
+    "Dịch nghĩa": "hướng dẫn viên",
+    "exampleHanzi": "Tour guide.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "tour",
+    "Pinyin": "/tʊər/",
+    "Dịch nghĩa": "chuyến tham quan",
+    "exampleHanzi": "City tour.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "trip",
+    "Pinyin": "/trɪp/",
+    "Dịch nghĩa": "chuyến đi",
+    "exampleHanzi": "Business trip.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "visit",
+    "Pinyin": "/ˈvɪz.ɪt/",
+    "Dịch nghĩa": "thăm",
+    "exampleHanzi": "Visit a museum.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "vacation",
+    "Pinyin": "/veɪˈkeɪ.ʃən/",
+    "Dịch nghĩa": "kỳ nghỉ",
+    "exampleHanzi": "Summer vacation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "holiday",
+    "Pinyin": "/ˈhɒl.ə.deɪ/",
+    "Dịch nghĩa": "ngày lễ",
+    "exampleHanzi": "Public holiday.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "weekend",
+    "Pinyin": "/ˌwiːkˈend/",
+    "Dịch nghĩa": "cuối tuần",
+    "exampleHanzi": "Have a nice weekend.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "traffic",
+    "Pinyin": "/ˈtræf.ɪk/",
+    "Dịch nghĩa": "giao thông",
+    "exampleHanzi": "Heavy traffic.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "vehicle",
+    "Pinyin": "/ˈviː.ə.kəl/",
+    "Dịch nghĩa": "xe cộ",
+    "exampleHanzi": "Company vehicle.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "drive",
+    "Pinyin": "/draɪv/",
+    "Dịch nghĩa": "lái xe",
+    "exampleHanzi": "Drive safely.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "ride",
+    "Pinyin": "/raɪd/",
+    "Dịch nghĩa": "cưỡi, đi (xe)",
+    "exampleHanzi": "Ride a bus.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "park",
+    "Pinyin": "/pɑːk/",
+    "Dịch nghĩa": "đậu xe",
+    "exampleHanzi": "Park the car.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "garage",
+    "Pinyin": "/ˈɡær.ɑːʒ/",
+    "Dịch nghĩa": "gara",
+    "exampleHanzi": "Parking garage.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "station",
+    "Pinyin": "/ˈsteɪ.ʃən/",
+    "Dịch nghĩa": "trạm, ga",
+    "exampleHanzi": "Gas station.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "subway",
+    "Pinyin": "/ˈsʌb.weɪ/",
+    "Dịch nghĩa": "tàu điện ngầm",
+    "exampleHanzi": "Take the subway.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cab",
+    "Pinyin": "/kæb/",
+    "Dịch nghĩa": "taxi",
+    "exampleHanzi": "Hail a cab.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "fare",
+    "Pinyin": "/feər/",
+    "Dịch nghĩa": "giá vé (xe)",
+    "exampleHanzi": "Bus fare.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "rent",
+    "Pinyin": "/rent/",
+    "Dịch nghĩa": "thuê",
+    "exampleHanzi": "Rent an apartment.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "lease",
+    "Pinyin": "/liːs/",
+    "Dịch nghĩa": "hợp đồng thuê",
+    "exampleHanzi": "Sign a lease.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "apartment",
+    "Pinyin": "/əˈpɑːt.mənt/",
+    "Dịch nghĩa": "căn hộ",
+    "exampleHanzi": "Studio apartment.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "building",
+    "Pinyin": "/ˈbɪl.dɪŋ/",
+    "Dịch nghĩa": "tòa nhà",
+    "exampleHanzi": "Office building.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "entrance",
+    "Pinyin": "/ˈen.trəns/",
+    "Dịch nghĩa": "lối vào",
+    "exampleHanzi": "Main entrance.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "exit",
+    "Pinyin": "/ˈek.sɪt/",
+    "Dịch nghĩa": "lối ra",
+    "exampleHanzi": "Emergency exit.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "lobby",
+    "Pinyin": "/ˈlɒb.i/",
+    "Dịch nghĩa": "sảnh",
+    "exampleHanzi": "Wait in the lobby.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "elevator",
+    "Pinyin": "/ˈel.ɪ.veɪ.tər/",
+    "Dịch nghĩa": "thang máy",
+    "exampleHanzi": "Take the elevator.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "floor",
+    "Pinyin": "/flɔːr/",
+    "Dịch nghĩa": "tầng",
+    "exampleHanzi": "Ground floor.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "stairs",
+    "Pinyin": "/steəz/",
+    "Dịch nghĩa": "cầu thang",
+    "exampleHanzi": "Use the stairs.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cafeteria",
+    "Pinyin": "/ˌkæf.əˈtɪə.ri.ə/",
+    "Dịch nghĩa": "nhà ăn (tự phục vụ)",
+    "exampleHanzi": "Office cafeteria.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "restaurant",
+    "Pinyin": "/ˈres.trɒnt/",
+    "Dịch nghĩa": "nhà hàng",
+    "exampleHanzi": "Italian restaurant.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "menu",
+    "Pinyin": "/ˈmen.juː/",
+    "Dịch nghĩa": "thực đơn",
+    "exampleHanzi": "Check the menu.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "order",
+    "Pinyin": "/ˈɔː.dər/",
+    "Dịch nghĩa": "gọi món",
+    "exampleHanzi": "Order lunch.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "serve",
+    "Pinyin": "/sɜːv/",
+    "Dịch nghĩa": "phục vụ",
+    "exampleHanzi": "Serve customers.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "waiter",
+    "Pinyin": "/ˈweɪ.tər/",
+    "Dịch nghĩa": "bồi bàn (nam)",
+    "exampleHanzi": "Ask the waiter.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "waitress",
+    "Pinyin": "/ˈweɪ.trəs/",
+    "Dịch nghĩa": "bồi bàn (nữ)",
+    "exampleHanzi": "The waitress brought the bill.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "chef",
+    "Pinyin": "/ʃef/",
+    "Dịch nghĩa": "đầu bếp",
+    "exampleHanzi": "Head chef.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cook",
+    "Pinyin": "/kʊk/",
+    "Dịch nghĩa": "nấu ăn",
+    "exampleHanzi": "Cook dinner.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "kitchen",
+    "Pinyin": "/ˈkɪtʃ.ən/",
+    "Dịch nghĩa": "bếp",
+    "exampleHanzi": "Clean kitchen.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "meal",
+    "Pinyin": "/miːl/",
+    "Dịch nghĩa": "bữa ăn",
+    "exampleHanzi": "Enjoy your meal.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "dish",
+    "Pinyin": "/dɪʃ/",
+    "Dịch nghĩa": "món ăn",
+    "exampleHanzi": "Main dish.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "plate",
+    "Pinyin": "/pleɪt/",
+    "Dịch nghĩa": "đĩa",
+    "exampleHanzi": "Clean plate.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "fork",
+    "Pinyin": "/fɔːk/",
+    "Dịch nghĩa": "nĩa",
+    "exampleHanzi": "Use a fork.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "spoon",
+    "Pinyin": "/spuːn/",
+    "Dịch nghĩa": "thìa",
+    "exampleHanzi": "Soup spoon.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "knife",
+    "Pinyin": "/naɪf/",
+    "Dịch nghĩa": "dao",
+    "exampleHanzi": "Steak knife.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "napkin",
+    "Pinyin": "/ˈnæp.kɪn/",
+    "Dịch nghĩa": "khăn ăn",
+    "exampleHanzi": "Paper napkin.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "bill",
+    "Pinyin": "/bɪl/",
+    "Dịch nghĩa": "hóa đơn",
+    "exampleHanzi": "Ask for the bill.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "tip",
+    "Pinyin": "/tɪp/",
+    "Dịch nghĩa": "tiền bo",
+    "exampleHanzi": "Leave a tip.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cash",
+    "Pinyin": "/kæʃ/",
+    "Dịch nghĩa": "tiền mặt",
+    "exampleHanzi": "Pay cash.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "credit",
+    "Pinyin": "/ˈkred.ɪt/",
+    "Dịch nghĩa": "tín dụng",
+    "exampleHanzi": "Credit card.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "charge",
+    "Pinyin": "/tʃɑːdʒ/",
+    "Dịch nghĩa": "tính phí",
+    "exampleHanzi": "Service charge.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "price",
+    "Pinyin": "/praɪs/",
+    "Dịch nghĩa": "giá",
+    "exampleHanzi": "Regular price.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cost",
+    "Pinyin": "/kɒst/",
+    "Dịch nghĩa": "chi phí",
+    "exampleHanzi": "Total cost.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "discount",
+    "Pinyin": "/ˈdɪs.kaʊnt/",
+    "Dịch nghĩa": "giảm giá",
+    "exampleHanzi": "Employee discount.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "sale",
+    "Pinyin": "/seɪl/",
+    "Dịch nghĩa": "bán hàng, giảm giá",
+    "exampleHanzi": "On sale.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "buy",
+    "Pinyin": "/baɪ/",
+    "Dịch nghĩa": "mua",
+    "exampleHanzi": "Buy groceries.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "sell",
+    "Pinyin": "/sel/",
+    "Dịch nghĩa": "bán",
+    "exampleHanzi": "Sell goods.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "shop",
+    "Pinyin": "/ʃɒp/",
+    "Dịch nghĩa": "cửa hàng",
+    "exampleHanzi": "Gift shop.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "store",
+    "Pinyin": "/stɔːr/",
+    "Dịch nghĩa": "cửa hàng",
+    "exampleHanzi": "Convenience store.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "market",
+    "Pinyin": "/ˈmɑː.kɪt/",
+    "Dịch nghĩa": "chợ",
+    "exampleHanzi": "Farmers market.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "product",
+    "Pinyin": "/ˈprɒd.ʌkt/",
+    "Dịch nghĩa": "sản phẩm",
+    "exampleHanzi": "New product.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "item",
+    "Pinyin": "/ˈaɪ.təm/",
+    "Dịch nghĩa": "món hàng",
+    "exampleHanzi": "Sale item.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "goods",
+    "Pinyin": "/ɡʊdz/",
+    "Dịch nghĩa": "hàng hóa",
+    "exampleHanzi": "Consumer goods.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "stock",
+    "Pinyin": "/stɒk/",
+    "Dịch nghĩa": "hàng tồn kho",
+    "exampleHanzi": "Out of stock.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "inventory",
+    "Pinyin": "/ˈɪn.vən.tər.i/",
+    "Dịch nghĩa": "hàng tồn kho",
+    "exampleHanzi": "Check inventory.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "supply",
+    "Pinyin": "/səˈplaɪ/",
+    "Dịch nghĩa": "cung cấp",
+    "exampleHanzi": "Office supplies.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "order",
+    "Pinyin": "/ˈɔː.dər/",
+    "Dịch nghĩa": "đặt hàng",
+    "exampleHanzi": "Place an order.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "ship",
+    "Pinyin": "/ʃɪp/",
+    "Dịch nghĩa": "gửi hàng",
+    "exampleHanzi": "Ship the order.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "deliver",
+    "Pinyin": "/dɪˈlɪv.ər/",
+    "Dịch nghĩa": "giao hàng",
+    "exampleHanzi": "Deliver packages.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "receive",
+    "Pinyin": "/rɪˈsiːv/",
+    "Dịch nghĩa": "nhận",
+    "exampleHanzi": "Receive a package.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "return",
+    "Pinyin": "/rɪˈtɜːn/",
+    "Dịch nghĩa": "trả lại",
+    "exampleHanzi": "Return policy.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "refund",
+    "Pinyin": "/ˈriː.fʌnd/",
+    "Dịch nghĩa": "hoàn tiền",
+    "exampleHanzi": "Full refund.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "exchange",
+    "Pinyin": "/ɪksˈtʃeɪndʒ/",
+    "Dịch nghĩa": "đổi",
+    "exampleHanzi": "Exchange rate.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "customer",
+    "Pinyin": "/ˈkʌs.tə.mər/",
+    "Dịch nghĩa": "khách hàng",
+    "exampleHanzi": "Customer service.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "client",
+    "Pinyin": "/ˈklaɪ.ənt/",
+    "Dịch nghĩa": "khách hàng (đối tác)",
+    "exampleHanzi": "Meet a client.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "manager",
+    "Pinyin": "/ˈmæn.ɪ.dʒər/",
+    "Dịch nghĩa": "quản lý",
+    "exampleHanzi": "Store manager.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "assistant",
+    "Pinyin": "/əˈsɪs.tənt/",
+    "Dịch nghĩa": "trợ lý",
+    "exampleHanzi": "Sales assistant.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "clerk",
+    "Pinyin": "/klɑːk/",
+    "Dịch nghĩa": "nhân viên bán hàng/văn phòng",
+    "exampleHanzi": "Front desk clerk.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "staff",
+    "Pinyin": "/stɑːf/",
+    "Dịch nghĩa": "nhân viên",
+    "exampleHanzi": "Support staff.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "worker",
+    "Pinyin": "/ˈwɜː.kər/",
+    "Dịch nghĩa": "công nhân",
+    "exampleHanzi": "Construction worker.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "colleague",
+    "Pinyin": "/ˈkɒl.iːɡ/",
+    "Dịch nghĩa": "đồng nghiệp",
+    "exampleHanzi": "Work with colleagues.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "boss",
+    "Pinyin": "/bɒs/",
+    "Dịch nghĩa": "sếp",
+    "exampleHanzi": "Ask the boss.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "company",
+    "Pinyin": "/ˈkʌm.pə.ni/",
+    "Dịch nghĩa": "công ty",
+    "exampleHanzi": "Tech company.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "business",
+    "Pinyin": "/ˈbɪz.nɪs/",
+    "Dịch nghĩa": "kinh doanh",
+    "exampleHanzi": "Do business.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "office",
+    "Pinyin": "/ˈɒf.ɪs/",
+    "Dịch nghĩa": "văn phòng",
+    "exampleHanzi": "Head office.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "department",
+    "Pinyin": "/dɪˈpɑːt.mənt/",
+    "Dịch nghĩa": "phòng ban",
+    "exampleHanzi": "Sales department.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "meeting",
+    "Pinyin": "/ˈmiː.tɪŋ/",
+    "Dịch nghĩa": "cuộc họp",
+    "exampleHanzi": "Staff meeting.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "conference",
+    "Pinyin": "/ˈkɒn.fər.əns/",
+    "Dịch nghĩa": "hội nghị",
+    "exampleHanzi": "Press conference.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "room",
+    "Pinyin": "/ruːm/",
+    "Dịch nghĩa": "phòng",
+    "exampleHanzi": "Meeting room.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "desk",
+    "Pinyin": "/desk/",
+    "Dịch nghĩa": "bàn làm việc",
+    "exampleHanzi": "Front desk.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "chair",
+    "Pinyin": "/tʃeər/",
+    "Dịch nghĩa": "ghế",
+    "exampleHanzi": "Office chair.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "computer",
+    "Pinyin": "/kəmˈpjuː.tər/",
+    "Dịch nghĩa": "máy tính",
+    "exampleHanzi": "Laptop computer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "screen",
+    "Pinyin": "/skriːn/",
+    "Dịch nghĩa": "màn hình",
+    "exampleHanzi": "Computer screen.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "keyboard",
+    "Pinyin": "/ˈkiː.bɔːd/",
+    "Dịch nghĩa": "bàn phím",
+    "exampleHanzi": "Type on keyboard.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "mouse",
+    "Pinyin": "/maʊs/",
+    "Dịch nghĩa": "chuột",
+    "exampleHanzi": "Wireless mouse.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "printer",
+    "Pinyin": "/ˈprɪn.tər/",
+    "Dịch nghĩa": "máy in",
+    "exampleHanzi": "Color printer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "copy",
+    "Pinyin": "/ˈkɒp.i/",
+    "Dịch nghĩa": "bản sao",
+    "exampleHanzi": "Photocopy machine.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "fax",
+    "Pinyin": "/fæks/",
+    "Dịch nghĩa": "máy fax",
+    "exampleHanzi": "Send a fax.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "phone",
+    "Pinyin": "/fəʊn/",
+    "Dịch nghĩa": "điện thoại",
+    "exampleHanzi": "Telephone number.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "call",
+    "Pinyin": "/kɔːl/",
+    "Dịch nghĩa": "gọi",
+    "exampleHanzi": "Make a call.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "email",
+    "Pinyin": "/ˈiː.meɪl/",
+    "Dịch nghĩa": "email",
+    "exampleHanzi": "Check email.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "internet",
+    "Pinyin": "/ˈɪn.tə.net/",
+    "Dịch nghĩa": "internet",
+    "exampleHanzi": "Surf the internet.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "website",
+    "Pinyin": "/ˈweb.saɪt/",
+    "Dịch nghĩa": "trang web",
+    "exampleHanzi": "Company website.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "online",
+    "Pinyin": "/ˈɒn.laɪn/",
+    "Dịch nghĩa": "trực tuyến",
+    "exampleHanzi": "Shop online.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "file",
+    "Pinyin": "/faɪl/",
+    "Dịch nghĩa": "tập tin",
+    "exampleHanzi": "Save the file.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "folder",
+    "Pinyin": "/ˈfəʊl.dər/",
+    "Dịch nghĩa": "thư mục",
+    "exampleHanzi": "New folder.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "document",
+    "Pinyin": "/ˈdɒk.jə.mənt/",
+    "Dịch nghĩa": "tài liệu",
+    "exampleHanzi": "Sign the document.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "paper",
+    "Pinyin": "/ˈpeɪ.pər/",
+    "Dịch nghĩa": "giấy",
+    "exampleHanzi": "White paper.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "pen",
+    "Pinyin": "/pen/",
+    "Dịch nghĩa": "bút",
+    "exampleHanzi": "Blue pen.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "pencil",
+    "Pinyin": "/ˈpen.səl/",
+    "Dịch nghĩa": "bút chì",
+    "exampleHanzi": "Sharpen pencil.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "note",
+    "Pinyin": "/nəʊt/",
+    "Dịch nghĩa": "ghi chú",
+    "exampleHanzi": "Take notes.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "message",
+    "Pinyin": "/ˈmes.ɪdʒ/",
+    "Dịch nghĩa": "tin nhắn",
+    "exampleHanzi": "Text message.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "letter",
+    "Pinyin": "/ˈlet.ər/",
+    "Dịch nghĩa": "thư",
+    "exampleHanzi": "Write a letter.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "mail",
+    "Pinyin": "/meɪl/",
+    "Dịch nghĩa": "thư tín",
+    "exampleHanzi": "Send mail.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "stamp",
+    "Pinyin": "/stæmp/",
+    "Dịch nghĩa": "tem",
+    "exampleHanzi": "Postage stamp.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "envelope",
+    "Pinyin": "/ˈen.və.ləʊp/",
+    "Dịch nghĩa": "phong bì",
+    "exampleHanzi": "Sealed envelope.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "package",
+    "Pinyin": "/ˈpæk.ɪdʒ/",
+    "Dịch nghĩa": "gói hàng",
+    "exampleHanzi": "Delivery package.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "box",
+    "Pinyin": "/bɒks/",
+    "Dịch nghĩa": "hộp",
+    "exampleHanzi": "Shipping box.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "address",
+    "Pinyin": "/əˈdres/",
+    "Dịch nghĩa": "địa chỉ",
+    "exampleHanzi": "Mailing address.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "street",
+    "Pinyin": "/striːt/",
+    "Dịch nghĩa": "đường",
+    "exampleHanzi": "Main street.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "city",
+    "Pinyin": "/ˈsɪt.i/",
+    "Dịch nghĩa": "thành phố",
+    "exampleHanzi": "Capital city.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "state",
+    "Pinyin": "/steɪt/",
+    "Dịch nghĩa": "bang",
+    "exampleHanzi": "State laws.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "country",
+    "Pinyin": "/ˈkʌn.tri/",
+    "Dịch nghĩa": "quốc gia",
+    "exampleHanzi": "Foreign country.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "weather",
+    "Pinyin": "/ˈweð.ər/",
+    "Dịch nghĩa": "thời tiết",
+    "exampleHanzi": "Weather forecast.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "rain",
+    "Pinyin": "/reɪn/",
+    "Dịch nghĩa": "mưa",
+    "exampleHanzi": "Rain coat.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "sun",
+    "Pinyin": "/sʌn/",
+    "Dịch nghĩa": "mặt trời",
+    "exampleHanzi": "Sun glasses.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "snow",
+    "Pinyin": "/snəʊ/",
+    "Dịch nghĩa": "tuyết",
+    "exampleHanzi": "Snow storm.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "wind",
+    "Pinyin": "/wɪnd/",
+    "Dịch nghĩa": "gió",
+    "exampleHanzi": "Strong wind.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "hot",
+    "Pinyin": "/hɒt/",
+    "Dịch nghĩa": "nóng",
+    "exampleHanzi": "Hot summer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cold",
+    "Pinyin": "/kəʊld/",
+    "Dịch nghĩa": "lạnh",
+    "exampleHanzi": "Cold winter.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "warm",
+    "Pinyin": "/wɔːm/",
+    "Dịch nghĩa": "ấm",
+    "exampleHanzi": "Warm spring.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cool",
+    "Pinyin": "/kuːl/",
+    "Dịch nghĩa": "mát",
+    "exampleHanzi": "Cool autumn.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "season",
+    "Pinyin": "/ˈsiː.zən/",
+    "Dịch nghĩa": "mùa",
+    "exampleHanzi": "Four seasons.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "spring",
+    "Pinyin": "/sprɪŋ/",
+    "Dịch nghĩa": "mùa xuân",
+    "exampleHanzi": "Spring flowers.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "summer",
+    "Pinyin": "/ˈsʌm.ər/",
+    "Dịch nghĩa": "mùa hè",
+    "exampleHanzi": "Summer vacation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "autumn",
+    "Pinyin": "/ˈɔː.təm/",
+    "Dịch nghĩa": "mùa thu",
+    "exampleHanzi": "Autumn leaves.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "fall",
+    "Pinyin": "/fɔːl/",
+    "Dịch nghĩa": "mùa thu (Mỹ)",
+    "exampleHanzi": "Fall semester.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "winter",
+    "Pinyin": "/ˈwɪn.tər/",
+    "Dịch nghĩa": "mùa đông",
+    "exampleHanzi": "Winter sports.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "time",
+    "Pinyin": "/taɪm/",
+    "Dịch nghĩa": "thời gian",
+    "exampleHanzi": "Time management.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "date",
+    "Pinyin": "/deɪt/",
+    "Dịch nghĩa": "ngày",
+    "exampleHanzi": "Due date.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "day",
+    "Pinyin": "/deɪ/",
+    "Dịch nghĩa": "ngày",
+    "exampleHanzi": "Good day.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "week",
+    "Pinyin": "/wiːk/",
+    "Dịch nghĩa": "tuần",
+    "exampleHanzi": "Next week.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "month",
+    "Pinyin": "/mʌnθ/",
+    "Dịch nghĩa": "tháng",
+    "exampleHanzi": "Next month.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "year",
+    "Pinyin": "/jɪər/",
+    "Dịch nghĩa": "năm",
+    "exampleHanzi": "Last year.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "hour",
+    "Pinyin": "/aʊər/",
+    "Dịch nghĩa": "giờ",
+    "exampleHanzi": "Office hours.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "minute",
+    "Pinyin": "/ˈmɪn.ɪt/",
+    "Dịch nghĩa": "phút",
+    "exampleHanzi": "Wait a minute.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "second",
+    "Pinyin": "/ˈsek.ənd/",
+    "Dịch nghĩa": "giây",
+    "exampleHanzi": "Just a second.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "morning",
+    "Pinyin": "/ˈmɔː.nɪŋ/",
+    "Dịch nghĩa": "sáng",
+    "exampleHanzi": "Morning meeting.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "afternoon",
+    "Pinyin": "/ˌɑːf.təˈnuːn/",
+    "Dịch nghĩa": "chiều",
+    "exampleHanzi": "Afternoon tea.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "evening",
+    "Pinyin": "/ˈiːv.nɪŋ/",
+    "Dịch nghĩa": "tối",
+    "exampleHanzi": "Evening news.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "night",
+    "Pinyin": "/naɪt/",
+    "Dịch nghĩa": "đêm",
+    "exampleHanzi": "Night shift.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "today",
+    "Pinyin": "/təˈdeɪ/",
+    "Dịch nghĩa": "hôm nay",
+    "exampleHanzi": "Today's news.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "tomorrow",
+    "Pinyin": "/təˈmɒr.əʊ/",
+    "Dịch nghĩa": "ngày mai",
+    "exampleHanzi": "Tomorrow morning.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "yesterday",
+    "Pinyin": "/ˈjes.tə.deɪ/",
+    "Dịch nghĩa": "hôm qua",
+    "exampleHanzi": "Yesterday afternoon.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "now",
+    "Pinyin": "/naʊ/",
+    "Dịch nghĩa": "bây giờ",
+    "exampleHanzi": "Do it now.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "later",
+    "Pinyin": "/ˈleɪ.tər/",
+    "Dịch nghĩa": "sau",
+    "exampleHanzi": "See you later.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "early",
+    "Pinyin": "/ˈɜː.li/",
+    "Dịch nghĩa": "sớm",
+    "exampleHanzi": "Early bird.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "late",
+    "Pinyin": "/leɪt/",
+    "Dịch nghĩa": "muộn",
+    "exampleHanzi": "Late fee.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "soon",
+    "Pinyin": "/suːn/",
+    "Dịch nghĩa": "sớm",
+    "exampleHanzi": "Coming soon.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "always",
+    "Pinyin": "/ˈɔːl.weɪz/",
+    "Dịch nghĩa": "luôn luôn",
+    "exampleHanzi": "Always open.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "usually",
+    "Pinyin": "/ˈjuː.ʒu.ə.li/",
+    "Dịch nghĩa": "thường xuyên",
+    "exampleHanzi": "Usually busy.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "often",
+    "Pinyin": "/ˈɒf.tən/",
+    "Dịch nghĩa": "thường",
+    "exampleHanzi": "Often closed.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "sometimes",
+    "Pinyin": "/ˈsʌm.taɪmz/",
+    "Dịch nghĩa": "thỉnh thoảng",
+    "exampleHanzi": "Sometimes late.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "never",
+    "Pinyin": "/ˈnev.ər/",
+    "Dịch nghĩa": "không bao giờ",
+    "exampleHanzi": "Never happen.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "friend",
+    "Pinyin": "/frend/",
+    "Dịch nghĩa": "bạn",
+    "exampleHanzi": "Close friend.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "family",
+    "Pinyin": "/ˈfæm.əl.i/",
+    "Dịch nghĩa": "gia đình",
+    "exampleHanzi": "Family business.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "parent",
+    "Pinyin": "/ˈpeə.rənt/",
+    "Dịch nghĩa": "phụ huynh",
+    "exampleHanzi": "Single parent.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "child",
+    "Pinyin": "/tʃaɪld/",
+    "Dịch nghĩa": "trẻ em",
+    "exampleHanzi": "Child care.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "student",
+    "Pinyin": "/ˈstjuː.dənt/",
+    "Dịch nghĩa": "sinh viên",
+    "exampleHanzi": "College student.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "teacher",
+    "Pinyin": "/ˈtiː.tʃər/",
+    "Dịch nghĩa": "giáo viên",
+    "exampleHanzi": "School teacher.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "school",
+    "Pinyin": "/skuːl/",
+    "Dịch nghĩa": "trường học",
+    "exampleHanzi": "High school.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "university",
+    "Pinyin": "/ˌjuː.nɪˈvɜː.sə.ti/",
+    "Dịch nghĩa": "đại học",
+    "exampleHanzi": "State university.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "class",
+    "Pinyin": "/klɑːs/",
+    "Dịch nghĩa": "lớp học",
+    "exampleHanzi": "English class.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "lesson",
+    "Pinyin": "/ˈles.ən/",
+    "Dịch nghĩa": "bài học",
+    "exampleHanzi": "Music lesson.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "test",
+    "Pinyin": "/test/",
+    "Dịch nghĩa": "bài kiểm tra",
+    "exampleHanzi": "Driving test.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "exam",
+    "Pinyin": "/ɪɡˈzæm/",
+    "Dịch nghĩa": "kỳ thi",
+    "exampleHanzi": "Final exam.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "study",
+    "Pinyin": "/ˈstʌd.i/",
+    "Dịch nghĩa": "học",
+    "exampleHanzi": "Study abroad.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "learn",
+    "Pinyin": "/lɜːn/",
+    "Dịch nghĩa": "học",
+    "exampleHanzi": "Learn English.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "book",
+    "Pinyin": "/bʊk/",
+    "Dịch nghĩa": "sách",
+    "exampleHanzi": "Text book.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "library",
+    "Pinyin": "/ˈlaɪ.brər.i/",
+    "Dịch nghĩa": "thư viện",
+    "exampleHanzi": "Public library.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "read",
+    "Pinyin": "/riːd/",
+    "Dịch nghĩa": "đọc",
+    "exampleHanzi": "Read a book.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "write",
+    "Pinyin": "/raɪt/",
+    "Dịch nghĩa": "viết",
+    "exampleHanzi": "Write a report.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "listen",
+    "Pinyin": "/ˈlɪs.ən/",
+    "Dịch nghĩa": "nghe",
+    "exampleHanzi": "Listen to music.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "speak",
+    "Pinyin": "/spiːk/",
+    "Dịch nghĩa": "nói",
+    "exampleHanzi": "Speak loud.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "language",
+    "Pinyin": "/ˈlæŋ.ɡwɪdʒ/",
+    "Dịch nghĩa": "ngôn ngữ",
+    "exampleHanzi": "Foreign language.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "word",
+    "Pinyin": "/wɜːd/",
+    "Dịch nghĩa": "từ",
+    "exampleHanzi": "Key word.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "sentence",
+    "Pinyin": "/ˈsen.təns/",
+    "Dịch nghĩa": "câu",
+    "exampleHanzi": "Complete sentence.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "question",
+    "Pinyin": "/ˈkwes.tʃən/",
+    "Dịch nghĩa": "câu hỏi",
+    "exampleHanzi": "Exam question.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "answer",
+    "Pinyin": "/ˈɑːn.sər/",
+    "Dịch nghĩa": "trả lời",
+    "exampleHanzi": "Correct answer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "problem",
+    "Pinyin": "/ˈprɒb.ləm/",
+    "Dịch nghĩa": "vấn đề",
+    "exampleHanzi": "Solve a problem.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "solution",
+    "Pinyin": "/səˈluː.ʃən/",
+    "Dịch nghĩa": "giải pháp",
+    "exampleHanzi": "Find a solution.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  }
+]

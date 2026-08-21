@@ -1,0 +1,810 @@
+[
+  {
+    "Tiếng Anh": "aberration",
+    "Pinyin": "/ˌæb.əˈreɪ.ʃən/",
+    "Dịch nghĩa": "sự sai lệch, bất thường",
+    "exampleHanzi": "The drop in sales was just a temporary aberration.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "abhor",
+    "Pinyin": "/əbˈhɔːr/",
+    "Dịch nghĩa": "ghê tởm, ghét cay ghét đắng",
+    "exampleHanzi": "I abhor all forms of racism.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "acquiesce",
+    "Pinyin": "/ˌæk.wiˈes/",
+    "Dịch nghĩa": "bằng lòng, ưng thuận (miễn cưỡng)",
+    "exampleHanzi": "She eventually acquiesced to his demands.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "alacrity",
+    "Pinyin": "/əˈlæk.rə.ti/",
+    "Dịch nghĩa": "sự sốt sắng, hăm hở",
+    "exampleHanzi": "She accepted the invitation with alacrity.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "amiable",
+    "Pinyin": "/ˈeɪ.mi.ə.bəl/",
+    "Dịch nghĩa": "tử tế, tốt bụng",
+    "exampleHanzi": "He seemed an amiable young man.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "appease",
+    "Pinyin": "/əˈpiːz/",
+    "Dịch nghĩa": "xoa dịu, trấn an",
+    "exampleHanzi": "Amendments have been added to appease local pressure groups.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "arcane",
+    "Pinyin": "/ɑːˈkeɪn/",
+    "Dịch nghĩa": "bí ẩn, kỳ lạ",
+    "exampleHanzi": "The arcane rules of cricket.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "avarice",
+    "Pinyin": "/ˈæv.ər.ɪs/",
+    "Dịch nghĩa": "lòng tham không đáy",
+    "exampleHanzi": "He was driven by avarice.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "brazen",
+    "Pinyin": "/ˈbreɪ.zən/",
+    "Dịch nghĩa": "trơ trẽn, mặt dày",
+    "exampleHanzi": "He told me a brazen lie.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "brusque",
+    "Pinyin": "/brʊsk/",
+    "Dịch nghĩa": "thô lỗ, cộc cằn",
+    "exampleHanzi": "His secretary was a little brusque with me.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cajole",
+    "Pinyin": "/kəˈdʒəʊl/",
+    "Dịch nghĩa": "tán tỉnh, phỉnh phờ",
+    "exampleHanzi": "He really knows how to cajole people into doing what he wants.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "callous",
+    "Pinyin": "/ˈkæl.əs/",
+    "Dịch nghĩa": "nhẫn tâm, vô cảm",
+    "exampleHanzi": "It might sound callous, but I don't care if he's homeless.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "candor",
+    "Pinyin": "/ˈkæn.dər/",
+    "Dịch nghĩa": "sự thật thà, ngay thẳng",
+    "exampleHanzi": "She spoke with candor about her life.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "chide",
+    "Pinyin": "/tʃaɪd/",
+    "Dịch nghĩa": "quở trách, mắng mỏ",
+    "exampleHanzi": "She chided him for his bad manners.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "circumspect",
+    "Pinyin": "/ˈsɜː.kəm.spekt/",
+    "Dịch nghĩa": "thận trọng, cảnh giác",
+    "exampleHanzi": "Officials were circumspect about saying what the talks had achieved.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "clandestine",
+    "Pinyin": "/klænˈdes.tɪn/",
+    "Dịch nghĩa": "bí mật, giấu giếm",
+    "exampleHanzi": "The group held weekly clandestine meetings in a church.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "coerce",
+    "Pinyin": "/kəʊˈɜːs/",
+    "Dịch nghĩa": "ép buộc",
+    "exampleHanzi": "The court heard that the six defendants had been coerced into making a confession.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "coherent",
+    "Pinyin": "/kəʊˈhɪə.rənt/",
+    "Dịch nghĩa": "mạch lạc, chặt chẽ",
+    "exampleHanzi": "When she calmed down, she was more coherent.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "complacency",
+    "Pinyin": "/kəmˈpleɪ.sən.si/",
+    "Dịch nghĩa": "sự tự mãn",
+    "exampleHanzi": "There's no room for complacency if we want to stay in this competition.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "confidant",
+    "Pinyin": "/ˈkɒn.fɪ.dænt/",
+    "Dịch nghĩa": "bạn tâm giao",
+    "exampleHanzi": "He is her closest confidant.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "connive",
+    "Pinyin": "/kəˈnaɪv/",
+    "Dịch nghĩa": "thông đồng, tiếp tay",
+    "exampleHanzi": "Officials were accused of conniving with the company to hide the pollution.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "cumulative",
+    "Pinyin": "/ˈkjuː.mjə.lə.tɪv/",
+    "Dịch nghĩa": "tích lũy",
+    "exampleHanzi": "The cumulative effect of using so many chemicals on the land could be disastrous.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "debase",
+    "Pinyin": "/dɪˈbeɪs/",
+    "Dịch nghĩa": "hạ thấp giá trị, làm giảm tư cách",
+    "exampleHanzi": "Some argue that money has debased football.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "decry",
+    "Pinyin": "/dɪˈkraɪ/",
+    "Dịch nghĩa": "chê bai, công khai chỉ trích",
+    "exampleHanzi": "Lawyers decried the imprisonment of several journalists.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "deferential",
+    "Pinyin": "/ˌdef.əˈren.ʃəl/",
+    "Dịch nghĩa": "tôn trọng, cung kính",
+    "exampleHanzi": "She is always extremely deferential towards anyone in authority.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "demure",
+    "Pinyin": "/dɪˈmjʊər/",
+    "Dịch nghĩa": "khiêm tốn, kín đáo",
+    "exampleHanzi": "She gave him a demure smile.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "deride",
+    "Pinyin": "/dɪˈraɪd/",
+    "Dịch nghĩa": "chế nhạo",
+    "exampleHanzi": "He derided my singing as pathetic.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "despot",
+    "Pinyin": "/ˈdes.pɒt/",
+    "Dịch nghĩa": "kẻ bạo ngược",
+    "exampleHanzi": "The king was regarded as having been an enlightened despot.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "diligent",
+    "Pinyin": "/ˈdɪl.ɪ.dʒənt/",
+    "Dịch nghĩa": "siêng năng, cần cù",
+    "exampleHanzi": "Leo is very diligent in/about his work.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "elated",
+    "Pinyin": "/iˈleɪ.tɪd/",
+    "Dịch nghĩa": "phấn chấn, hoan hỉ",
+    "exampleHanzi": "The prince was reported to be elated at/by the birth of his daughter.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "eloquent",
+    "Pinyin": "/ˈel.ə.kwənt/",
+    "Dịch nghĩa": "hùng hồn, có khả năng hùng biện",
+    "exampleHanzi": "She made an eloquent appeal for action.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "embezzle",
+    "Pinyin": "/ɪmˈbez.əl/",
+    "Dịch nghĩa": "biển thủ, tham ô",
+    "exampleHanzi": "She embezzled thousands of dollars from the charity.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "empathy",
+    "Pinyin": "/ˈem.pə.θi/",
+    "Dịch nghĩa": "sự thấu cảm",
+    "exampleHanzi": "He loves children and has a certain empathy with them.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "enmity",
+    "Pinyin": "/ˈen.mə.ti/",
+    "Dịch nghĩa": "sự thù hằn",
+    "exampleHanzi": "She denied any personal enmity towards him.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "erudite",
+    "Pinyin": "/ˈer.u.daɪt/",
+    "Dịch nghĩa": "thông thái, uyên bác",
+    "exampleHanzi": "He's the author of an erudite book on Scottish history.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "extol",
+    "Pinyin": "/ɪkˈstəʊl/",
+    "Dịch nghĩa": "tán dương, ca tụng",
+    "exampleHanzi": "His book extolling the benefits of vegetarianism sold thousands of copies.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "fabricate",
+    "Pinyin": "/ˈfæb.rɪ.keɪt/",
+    "Dịch nghĩa": "bịa đặt",
+    "exampleHanzi": "He was late, so he fabricated an excuse to avoid trouble.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "feral",
+    "Pinyin": "/ˈfer.əl/",
+    "Dịch nghĩa": "hoang dã",
+    "exampleHanzi": "Feral dogs.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "flabbergasted",
+    "Pinyin": "/ˈflæb.ə.ɡɑː.stɪd/",
+    "Dịch nghĩa": "sửng sốt, kinh ngạc",
+    "exampleHanzi": "He was flabbergasted when we told him how cheap it was.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "forsake",
+    "Pinyin": "/fɔːˈseɪk/",
+    "Dịch nghĩa": "bỏ rơi, từ bỏ",
+    "exampleHanzi": "Do not forsake me!",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "fractious",
+    "Pinyin": "/ˈfræk.ʃəs/",
+    "Dịch nghĩa": "hay gây gổ, cau có",
+    "exampleHanzi": "A fractious child.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "furtive",
+    "Pinyin": "/ˈfɜː.tɪv/",
+    "Dịch nghĩa": "lén lút",
+    "exampleHanzi": "I saw him cast a furtive glance at the woman at the table to his right.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "gluttony",
+    "Pinyin": "/ˈɡlʌt.ən.i/",
+    "Dịch nghĩa": "tính ham ăn",
+    "exampleHanzi": "They treat Christmas as just another excuse for gluttony.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "gratuitous",
+    "Pinyin": "/ɡrəˈtjuː.ɪ.təs/",
+    "Dịch nghĩa": "vô cớ, không cần thiết",
+    "exampleHanzi": "A lot of viewers complained that there was too much gratuitous sex and violence in the film.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "haughty",
+    "Pinyin": "/ˈhɔː.ti/",
+    "Dịch nghĩa": "kiêu căng",
+    "exampleHanzi": "She has a rather haughty manner.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "hypocrisy",
+    "Pinyin": "/hɪˈpɒk.rɪ.si/",
+    "Dịch nghĩa": "đạo đức giả",
+    "exampleHanzi": "There's one rule for her and another rule for everyone else and it's sheer hypocrisy.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "impeccable",
+    "Pinyin": "/ɪmˈpek.ə.bəl/",
+    "Dịch nghĩa": "hoàn hảo, không chê vào đâu được",
+    "exampleHanzi": "His English is impeccable.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "impertinent",
+    "Pinyin": "/ɪmˈpɜː.tɪ.nənt/",
+    "Dịch nghĩa": "xấc xược, láo xược",
+    "exampleHanzi": "I hope he didn't think I was being impertinent when I asked him about his private life.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "implacable",
+    "Pinyin": "/ɪmˈplæk.ə.bəl/",
+    "Dịch nghĩa": "không thể nguôi ngoai, không thể xoa dịu",
+    "exampleHanzi": "an implacable enemy",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "impudent",
+    "Pinyin": "/ˈɪm.pjə.dənt/",
+    "Dịch nghĩa": "trơ tráo",
+    "exampleHanzi": "an impudent remark",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "incisive",
+    "Pinyin": "/ɪnˈsaɪ.sɪv/",
+    "Dịch nghĩa": "sắc sảo",
+    "exampleHanzi": "incisive questions",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "indolent",
+    "Pinyin": "/ˈɪn.dəl.ənt/",
+    "Dịch nghĩa": "lười biếng",
+    "exampleHanzi": "an indolent wave of the hand",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "inept",
+    "Pinyin": "/ɪˈnept/",
+    "Dịch nghĩa": "vụng về, không có khả năng",
+    "exampleHanzi": "He was always rather inept at sport.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "infamy",
+    "Pinyin": "/ˈɪn.fə.mi/",
+    "Dịch nghĩa": "sự tai tiếng",
+    "exampleHanzi": "The president's infamy was known to everyone.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "inhibit",
+    "Pinyin": "/ɪnˈhɪb.ɪt/",
+    "Dịch nghĩa": "ngăn chặn, kiềm chế",
+    "exampleHanzi": "This drug inhibits the growth of tumors.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "innate",
+    "Pinyin": "/ɪˈneɪt/",
+    "Dịch nghĩa": "bẩm sinh",
+    "exampleHanzi": "Cyril's most impressive quality was his innate goodness.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "insatiable",
+    "Pinyin": "/ɪnˈseɪ.ʃə.bəl/",
+    "Dịch nghĩa": "không thể thỏa mãn",
+    "exampleHanzi": "Like so many politicians, he had an insatiable appetite/desire for power.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "insular",
+    "Pinyin": "/ˈɪn.sjə.lər/",
+    "Dịch nghĩa": "thiển cận, hẹp hòi",
+    "exampleHanzi": "insular attitudes",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "intrepid",
+    "Pinyin": "/ɪnˈtrep.ɪd/",
+    "Dịch nghĩa": "gan dạ, dũng cảm",
+    "exampleHanzi": "a team of intrepid explorers",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "inveterate",
+    "Pinyin": "/ɪnˈvet.ər.ət/",
+    "Dịch nghĩa": "thâm căn cố đế (thói quen)",
+    "exampleHanzi": "I never trust anything he says - the man's an inveterate liar.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "jubilant",
+    "Pinyin": "/ˈdʒuː.bəl.ənt/",
+    "Dịch nghĩa": "vui sướng tột độ",
+    "exampleHanzi": "The fans were jubilant at/about/over their team's victory.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "knell",
+    "Pinyin": "/nel/",
+    "Dịch nghĩa": "hồi chuông báo tử",
+    "exampleHanzi": "The closing of the factory sounds a death knell for the town.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "lithe",
+    "Pinyin": "/laɪð/",
+    "Dịch nghĩa": "mềm mại, uyển chuyển",
+    "exampleHanzi": "He had the lithe, athletic body of a ballet dancer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "lurid",
+    "Pinyin": "/ˈlʊə.rɪd/",
+    "Dịch nghĩa": "gây sốc, ghê rợn",
+    "exampleHanzi": "You can read all the lurid details of the affair in today's paper.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "maverick",
+    "Pinyin": "/ˈmæv.ər.ɪk/",
+    "Dịch nghĩa": "người độc lập, không theo khuôn phép",
+    "exampleHanzi": "a political maverick",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "maxim",
+    "Pinyin": "/ˈmæk.sɪm/",
+    "Dịch nghĩa": "châm ngôn",
+    "exampleHanzi": "She lived by the maxim, \"Do right, risk consequences.\"",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "meticulous",
+    "Pinyin": "/məˈtɪk.jə.ləs/",
+    "Dịch nghĩa": "tỉ mỉ, kỹ càng",
+    "exampleHanzi": "Many hours of meticulous preparation have gone into writing the book.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "modicum",
+    "Pinyin": "/ˈmɒd.ɪ.kəm/",
+    "Dịch nghĩa": "số lượng nhỏ",
+    "exampleHanzi": "There's not even a modicum of truth in her statement.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "morose",
+    "Pinyin": "/məˈrəʊs/",
+    "Dịch nghĩa": "buồn rầu, ủ rũ",
+    "exampleHanzi": "a morose expression",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "myriad",
+    "Pinyin": "/ˈmɪr.i.əd/",
+    "Dịch nghĩa": "vô số",
+    "exampleHanzi": "a myriad of choices",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "nadir",
+    "Pinyin": "/ˈneɪ.dɪər/",
+    "Dịch nghĩa": "điểm thấp nhất",
+    "exampleHanzi": "The defeat was the nadir of her career.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "nominal",
+    "Pinyin": "/ˈnɒm.ɪ.nəl/",
+    "Dịch nghĩa": "nhỏ bé, không đáng kể",
+    "exampleHanzi": "a nominal sum/charge",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "novice",
+    "Pinyin": "/ˈnɒv.ɪs/",
+    "Dịch nghĩa": "người mới",
+    "exampleHanzi": "I've never driven a car before - I'm a complete novice.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "nuance",
+    "Pinyin": "/ˈnjuː.ɑːns/",
+    "Dịch nghĩa": "sắc thái",
+    "exampleHanzi": "The painter has managed to capture every nuance of the woman's expression.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "oblivious",
+    "Pinyin": "/əˈblɪv.i.əs/",
+    "Dịch nghĩa": "không hay biết, quên lãng",
+    "exampleHanzi": "Absorbed in her work, she was totally oblivious of her surroundings.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "obsequious",
+    "Pinyin": "/əbˈsiː.kwi.əs/",
+    "Dịch nghĩa": "khúm núm, nịnh nọt",
+    "exampleHanzi": "She is embarrassingly obsequious to anyone in authority.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "obtuse",
+    "Pinyin": "/əbˈtjuːs/",
+    "Dịch nghĩa": "chậm hiểu, đần độn",
+    "exampleHanzi": "The answer's obvious - or are you being deliberately obtuse?",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "panacea",
+    "Pinyin": "/ˌpæn.əˈsiː.ə/",
+    "Dịch nghĩa": "thuốc bách bệnh",
+    "exampleHanzi": "Technology is not a panacea for all our problems.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "parody",
+    "Pinyin": "/ˈpær.ə.di/",
+    "Dịch nghĩa": "trò nhại",
+    "exampleHanzi": "He was a parody of a politician.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "penchant",
+    "Pinyin": "/ˈpɒ̃.ʃɒ̃/",
+    "Dịch nghĩa": "thiên hướng, sở thích",
+    "exampleHanzi": "a penchant for melodrama/skiing/exotic clothes",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "perusal",
+    "Pinyin": "/pəˈruː.zəl/",
+    "Dịch nghĩa": "sự xem xét kỹ",
+    "exampleHanzi": "He sent a copy of the report to the governors for their perusal.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "plethora",
+    "Pinyin": "/ˈpleθ.ər.ə/",
+    "Dịch nghĩa": "sự thừa thãi",
+    "exampleHanzi": "There's a plethora of books about the royal family.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "predilection",
+    "Pinyin": "/ˌpriː.dɪˈlek.ʃən/",
+    "Dịch nghĩa": "sự ưa chuộng",
+    "exampleHanzi": "Ever since she was a child, she has had a predilection for spicy food.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "quaint",
+    "Pinyin": "/kweɪnt/",
+    "Dịch nghĩa": "cổ kính, lạ mắt",
+    "exampleHanzi": "a quaint old cottage",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "rash",
+    "Pinyin": "/ræʃ/",
+    "Dịch nghĩa": "vội vàng, hấp tấp",
+    "exampleHanzi": "It would be rash to assume that.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "refurbish",
+    "Pinyin": "/ˌriːˈfɜː.bɪʃ/",
+    "Dịch nghĩa": "tân trang",
+    "exampleHanzi": "The developers refurbished the house inside and out.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "repudiate",
+    "Pinyin": "/rɪˈpjuː.di.eɪt/",
+    "Dịch nghĩa": "từ chối, bác bỏ",
+    "exampleHanzi": "He repudiated the allegation/charge/claim that he had tried to deceive them.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "rife",
+    "Pinyin": "/raɪf/",
+    "Dịch nghĩa": "lan tràn",
+    "exampleHanzi": "Dysentery and malaria are rife in the refugee camps.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "salient",
+    "Pinyin": "/ˈseɪ.li.ənt/",
+    "Dịch nghĩa": "nổi bật",
+    "exampleHanzi": "She began to summarize the salient features/points of the proposal.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "serendipity",
+    "Pinyin": "/ˌser.ənˈdɪp.ə.ti/",
+    "Dịch nghĩa": "sự tình cờ may mắn",
+    "exampleHanzi": "Finding the book was pure serendipity.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "staid",
+    "Pinyin": "/steɪd/",
+    "Dịch nghĩa": "trầm tính, nghiêm nghị",
+    "exampleHanzi": "In an attempt to change its staid image, the newspaper has created a new section aimed at younger readers.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "superfluous",
+    "Pinyin": "/suːˈpɜː.flu.əs/",
+    "Dịch nghĩa": "dư thừa",
+    "exampleHanzi": "The report was marred by a mass of superfluous detail.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "sycophant",
+    "Pinyin": "/ˈsɪk.ə.fænt/",
+    "Dịch nghĩa": "kẻ nịnh hót",
+    "exampleHanzi": "The president is surrounded by sycophants.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "taciturn",
+    "Pinyin": "/ˈtæs.ɪ.tɜːn/",
+    "Dịch nghĩa": "ít nói, lầm lì",
+    "exampleHanzi": "He's a reserved, taciturn person.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "truculent",
+    "Pinyin": "/ˈtrʌk.jə.lənt/",
+    "Dịch nghĩa": "ngổ ngáo, hay gây sự",
+    "exampleHanzi": "a truculent teenager",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "umbrage",
+    "Pinyin": "/ˈʌm.brɪdʒ/",
+    "Dịch nghĩa": "sự phật ý",
+    "exampleHanzi": "Will she take umbrage if she isn't invited to the wedding?",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "venerable",
+    "Pinyin": "/ˈven.ər.ə.bəl/",
+    "Dịch nghĩa": "đáng kính",
+    "exampleHanzi": "a venerable tradition/company/family",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "vex",
+    "Pinyin": "/veks/",
+    "Dịch nghĩa": "làm bực mình",
+    "exampleHanzi": "This issue looks likely to continue to vex the government.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "vociferous",
+    "Pinyin": "/vəˈsɪf.ər.əs/",
+    "Dịch nghĩa": "om sòm, to tiếng",
+    "exampleHanzi": "Local activist groups have become increasingly vociferous as the volume of traffic has increased.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "wanton",
+    "Pinyin": "/ˈwɒn.tən/",
+    "Dịch nghĩa": "tinh quái, bừa bãi",
+    "exampleHanzi": "wanton destruction of human life",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "zenith",
+    "Pinyin": "/ˈzen.ɪθ/",
+    "Dịch nghĩa": "đỉnh cao",
+    "exampleHanzi": "The summer of 1929 was the zenith of his career.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  }
+]

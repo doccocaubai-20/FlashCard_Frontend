@@ -16,7 +16,7 @@ export default function StudyHubScreen() {
   const activities = [
     {
       title: 'Học thẻ Flashcards',
-      description: 'Học từ vựng qua thuật toán lặp lại ngắt quãng (SRS) thông minh và bộ thẻ ghi nhớ.',
+      description: 'Học từ vựng qua thuật toán lặp lại ngắt quãng và bộ thẻ ghi nhớ.',
       icon: GraduationCap,
       path: '/study',
       color: 'from-blue-500/10 to-indigo-500/10 border-blue-500/30 text-blue-500',
@@ -24,7 +24,7 @@ export default function StudyHubScreen() {
     },
     {
       title: 'Luyện tập Ngữ pháp HSK',
-      description: 'Học các cấu trúc ngữ pháp trọng điểm HSK 1 - 3, kết hợp làm bài tập trắc nghiệm và dịch thuật tự đánh giá.',
+      description: 'Học các cấu trúc ngữ pháp trọng điểm HSK, kết hợp làm bài tập trắc nghiệm và dịch thuật tự đánh giá.',
       icon: BookOpenText,
       path: '/grammar',
       color: 'from-purple-500/10 to-pink-500/10 border-purple-500/30 text-purple-500',
@@ -40,7 +40,7 @@ export default function StudyHubScreen() {
     },
     {
       title: 'Luyện viết chữ Hán',
-      description: 'Tập viết chữ Hán theo thứ tự nét vẽ (stroke order) chuẩn, giúp cải thiện trí nhớ hình học chữ viết.',
+      description: 'Tập viết chữ Hán theo thứ tự nét vẽ chuẩn, giúp cải thiện trí nhớ hình học chữ viết.',
       icon: PenTool,
       path: '/write',
       color: 'from-orange-500/10 to-amber-500/10 border-orange-500/30 text-orange-500',

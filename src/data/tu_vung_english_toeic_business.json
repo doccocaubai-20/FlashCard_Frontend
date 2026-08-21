@@ -1,0 +1,666 @@
+[
+  {
+    "Tiếng Anh": "agenda",
+    "Pinyin": "/əˈdʒen.də/",
+    "Dịch nghĩa": "chương trình nghị sự",
+    "exampleHanzi": "The next item on the agenda is the publicity budget.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "agreement",
+    "Pinyin": "/əˈɡriː.mənt/",
+    "Dịch nghĩa": "hợp đồng, thỏa thuận",
+    "exampleHanzi": "The two countries signed a trade agreement.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "applicant",
+    "Pinyin": "/ˈæp.lɪ.kənt/",
+    "Dịch nghĩa": "ứng viên",
+    "exampleHanzi": "How many applicants did you have for the job?",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "authorization",
+    "Pinyin": "/ˌɔː.θər.aɪˈzeɪ.ʃən/",
+    "Dịch nghĩa": "sự ủy quyền",
+    "exampleHanzi": "Medical records cannot be disclosed without authorization from the patient.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "bonus",
+    "Pinyin": "/ˈbəʊ.nəs/",
+    "Dịch nghĩa": "tiền thưởng",
+    "exampleHanzi": "a Christmas bonus",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "budget",
+    "Pinyin": "/ˈbʌdʒ.ɪt/",
+    "Dịch nghĩa": "ngân sách",
+    "exampleHanzi": "The firm has drawn up a budget for the coming financial year.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "campaign",
+    "Pinyin": "/kæmˈpeɪn/",
+    "Dịch nghĩa": "chiến dịch",
+    "exampleHanzi": "The protests were part of their campaign against the proposed building development.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "career",
+    "Pinyin": "/kəˈrɪər/",
+    "Dịch nghĩa": "sự nghiệp",
+    "exampleHanzi": "He's hoping for a career in the police force.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "clerk",
+    "Pinyin": "/klɑːk/",
+    "Dịch nghĩa": "thư ký",
+    "exampleHanzi": "a filing clerk",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "colleague",
+    "Pinyin": "/ˈkɒl.iːɡ/",
+    "Dịch nghĩa": "đồng nghiệp",
+    "exampleHanzi": "I don't know anything about this, but I'm sure my colleague here can help you.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "competitor",
+    "Pinyin": "/kəmˈpet.ɪ.tər/",
+    "Dịch nghĩa": "đối thủ cạnh tranh",
+    "exampleHanzi": "Their prices are better than any of their competitors.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "conference",
+    "Pinyin": "/ˈkɒn.fər.əns/",
+    "Dịch nghĩa": "hội nghị",
+    "exampleHanzi": "a conference on women's rights",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "consultant",
+    "Pinyin": "/kənˈsʌl.tənt/",
+    "Dịch nghĩa": "cố vấn",
+    "exampleHanzi": "a management/financial/computer consultant",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "contract",
+    "Pinyin": "/ˈkɒn.trækt/",
+    "Dịch nghĩa": "hợp đồng",
+    "exampleHanzi": "a temporary/building contract",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "deadline",
+    "Pinyin": "/ˈded.laɪn/",
+    "Dịch nghĩa": "hạn chót",
+    "exampleHanzi": "I'm afraid you've missed the deadline.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "deficit",
+    "Pinyin": "/ˈdef.ɪ.sɪt/",
+    "Dịch nghĩa": "thâm hụt",
+    "exampleHanzi": "The country is running a balance-of-payments deficit of $250 million.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "director",
+    "Pinyin": "/daɪˈrek.tər/",
+    "Dịch nghĩa": "giám đốc",
+    "exampleHanzi": "She has become the director of the new museum.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "dividend",
+    "Pinyin": "/ˈdɪv.ɪ.dend/",
+    "Dịch nghĩa": "cổ tức",
+    "exampleHanzi": "Dividends will be sent to shareholders.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "employee",
+    "Pinyin": "/ɪmˈplɔɪ.iː/",
+    "Dịch nghĩa": "nhân viên",
+    "exampleHanzi": "The number of employees in the company has trebled over the last decade.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "employer",
+    "Pinyin": "/ɪmˈplɔɪ.ər/",
+    "Dịch nghĩa": "ông chủ",
+    "exampleHanzi": "We need a reference from your former employer.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "executive",
+    "Pinyin": "/ɪɡˈzek.jə.tɪv/",
+    "Dịch nghĩa": "ủy viên ban quản trị",
+    "exampleHanzi": "She is now a senior executive, having worked her way up through the company.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "expenditure",
+    "Pinyin": "/ɪkˈspen.dɪ.tʃər/",
+    "Dịch nghĩa": "chi phí",
+    "exampleHanzi": "It's part of a drive to cut government expenditure.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "facilities",
+    "Pinyin": "/fəˈsɪl.ə.tiz/",
+    "Dịch nghĩa": "cơ sở vật chất",
+    "exampleHanzi": "shopping facilities",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "feedback",
+    "Pinyin": "/ˈfiːd.bæk/",
+    "Dịch nghĩa": "phản hồi",
+    "exampleHanzi": "Have you had any feedback from customers about the new soap?",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "fund",
+    "Pinyin": "/fʌnd/",
+    "Dịch nghĩa": "quỹ",
+    "exampleHanzi": "a pension fund",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "goods",
+    "Pinyin": "/ɡʊdz/",
+    "Dịch nghĩa": "hàng hóa",
+    "exampleHanzi": "There is a 25% discount on all electrical goods until the end of the week.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "growth",
+    "Pinyin": "/ɡrəʊθ/",
+    "Dịch nghĩa": "sự tăng trưởng",
+    "exampleHanzi": "The government is trying to limit population growth.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "guarantee",
+    "Pinyin": "/ˌɡær.ənˈtiː/",
+    "Dịch nghĩa": "bảo hành",
+    "exampleHanzi": "The system costs £99.95 including shipping and handling and a twelve-month guarantee.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "headquarters",
+    "Pinyin": "/ˌhedˈkwɔː.təz/",
+    "Dịch nghĩa": "trụ sở chính",
+    "exampleHanzi": "The company's headquarters is/are in Amsterdam.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "hire",
+    "Pinyin": "/haɪər/",
+    "Dịch nghĩa": "thuê",
+    "exampleHanzi": "I was hired by the first company I applied to.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "income",
+    "Pinyin": "/ˈɪn.kʌm/",
+    "Dịch nghĩa": "thu nhập",
+    "exampleHanzi": "Average incomes have risen by 4.5 percent over the past year.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "insurance",
+    "Pinyin": "/ɪnˈʃʊə.rəns/",
+    "Dịch nghĩa": "bảo hiểm",
+    "exampleHanzi": "life/health/car/travel insurance",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "intern",
+    "Pinyin": "/ˈɪn.tɜːn/",
+    "Dịch nghĩa": "thực tập sinh",
+    "exampleHanzi": "She worked as an intern in a PR company.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "interview",
+    "Pinyin": "/ˈɪn.tə.vjuː/",
+    "Dịch nghĩa": "phỏng vấn",
+    "exampleHanzi": "a job interview",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "investment",
+    "Pinyin": "/ɪnˈvest.mənt/",
+    "Dịch nghĩa": "sự đầu tư",
+    "exampleHanzi": "The government has made a significant investment in public transport.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "invoice",
+    "Pinyin": "/ˈɪn.vɔɪs/",
+    "Dịch nghĩa": "hóa đơn",
+    "exampleHanzi": "Invoices must be submitted by the 24th of every month.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "liability",
+    "Pinyin": "/ˌlaɪ.əˈbɪl.ə.ti/",
+    "Dịch nghĩa": "trách nhiệm pháp lý",
+    "exampleHanzi": "He denies any liability for the damage caused.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "management",
+    "Pinyin": "/ˈmæn.ɪdʒ.mənt/",
+    "Dịch nghĩa": "ban quản lý",
+    "exampleHanzi": "The company has suffered from several years of bad management.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "marketing",
+    "Pinyin": "/ˈmɑː.kɪ.tɪŋ/",
+    "Dịch nghĩa": "tiếp thị",
+    "exampleHanzi": "a career in marketing",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "merger",
+    "Pinyin": "/ˈmɜː.dʒər/",
+    "Dịch nghĩa": "sự sáp nhập",
+    "exampleHanzi": "The merger of these two companies would create the world's biggest accounting firm.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "negotiation",
+    "Pinyin": "/nəˌɡəʊ.ʃiˈeɪ.ʃən/",
+    "Dịch nghĩa": "sự đàm phán",
+    "exampleHanzi": "The agreement was reached after a series of difficult negotiations.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "offer",
+    "Pinyin": "/ˈɒf.ər/",
+    "Dịch nghĩa": "lời đề nghị",
+    "exampleHanzi": "They made a cash offer of £250,000 for the house.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "opportunity",
+    "Pinyin": "/ˌɒp.əˈtjuː.nə.ti/",
+    "Dịch nghĩa": "cơ hội",
+    "exampleHanzi": "Everyone will have an opportunity to comment.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "option",
+    "Pinyin": "/ˈɒp.ʃən/",
+    "Dịch nghĩa": "tùy chọn",
+    "exampleHanzi": "The best option would be to cancel the trip altogether.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "partner",
+    "Pinyin": "/ˈpɑːt.nər/",
+    "Dịch nghĩa": "đối tác",
+    "exampleHanzi": "He's a partner in an insurance company/firm.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "penalty",
+    "Pinyin": "/ˈpen.əl.ti/",
+    "Dịch nghĩa": "hình phạt",
+    "exampleHanzi": "The law now provides a penalty for dropping litter.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "pension",
+    "Pinyin": "/ˈpen.ʃən/",
+    "Dịch nghĩa": "lương hưu",
+    "exampleHanzi": "He won't be able to draw (= receive) his pension until he's 65.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "permission",
+    "Pinyin": "/pəˈmɪʃ.ən/",
+    "Dịch nghĩa": "sự cho phép",
+    "exampleHanzi": "You will need permission from your parents to go on the trip.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "presentation",
+    "Pinyin": "/ˌprez.ənˈteɪ.ʃən/",
+    "Dịch nghĩa": "bài thuyết trình",
+    "exampleHanzi": "The speaker gave an interesting presentation on urban transport.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "product",
+    "Pinyin": "/ˈprɒd.ʌkt/",
+    "Dịch nghĩa": "sản phẩm",
+    "exampleHanzi": "They put a new product on the market.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "profit",
+    "Pinyin": "/ˈprɒf.ɪt/",
+    "Dịch nghĩa": "lợi nhuận",
+    "exampleHanzi": "She makes a big profit from selling waste material to textile companies.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "promotion",
+    "Pinyin": "/prəˈməʊ.ʃən/",
+    "Dịch nghĩa": "sự thăng chức",
+    "exampleHanzi": "Did Steve get the promotion he wanted?",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "proposal",
+    "Pinyin": "/prəˈpəʊ.zəl/",
+    "Dịch nghĩa": "bản đề xuất",
+    "exampleHanzi": "Congress has rejected the latest economic proposal.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "quarter",
+    "Pinyin": "/ˈkwɔː.tər/",
+    "Dịch nghĩa": "quý",
+    "exampleHanzi": "I wait for the bank statement each quarter.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "recruit",
+    "Pinyin": "/rɪˈkruːt/",
+    "Dịch nghĩa": "tuyển dụng",
+    "exampleHanzi": "Charities are trying to recruit new volunteers.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "refund",
+    "Pinyin": "/ˈriː.fʌnd/",
+    "Dịch nghĩa": "hoàn tiền",
+    "exampleHanzi": "I took the radio back to the shop and asked for/demanded/got a refund.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "resign",
+    "Pinyin": "/rɪˈzaɪn/",
+    "Dịch nghĩa": "từ chức",
+    "exampleHanzi": "He resigned from the company in order to take a more challenging job.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "resume",
+    "Pinyin": "/ˈrez.juː.meɪ/",
+    "Dịch nghĩa": "sơ yếu lý lịch",
+    "exampleHanzi": "She sent her resume to 50 companies, but didn't get an interview.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "retail",
+    "Pinyin": "/ˈriː.teɪl/",
+    "Dịch nghĩa": "bán lẻ",
+    "exampleHanzi": "The job is open to applicants with over two years' experience in retail.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "retirement",
+    "Pinyin": "/rɪˈtaɪə.mənt/",
+    "Dịch nghĩa": "sự nghỉ hưu",
+    "exampleHanzi": "Many teachers over the age of 50 are taking early retirement.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "revenue",
+    "Pinyin": "/ˈrev.ən.juː/",
+    "Dịch nghĩa": "doanh thu",
+    "exampleHanzi": "Taxes provide most of the government's revenue.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "salary",
+    "Pinyin": "/ˈsæl.ər.i/",
+    "Dịch nghĩa": "lương",
+    "exampleHanzi": "an annual salary of £40,000",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "sales",
+    "Pinyin": "/seɪlz/",
+    "Dịch nghĩa": "doanh số",
+    "exampleHanzi": "Sales are up by 5% this year.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "schedule",
+    "Pinyin": "/ˈʃed.juːl/",
+    "Dịch nghĩa": "lịch trình",
+    "exampleHanzi": "Everything went according to schedule.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "share",
+    "Pinyin": "/ʃeər/",
+    "Dịch nghĩa": "cổ phiếu",
+    "exampleHanzi": "The value of my shares has risen/fallen by eight percent.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "shipment",
+    "Pinyin": "/ˈʃɪp.mənt/",
+    "Dịch nghĩa": "lô hàng",
+    "exampleHanzi": "A shipment of urgent medical supplies is expected to arrive very soon.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "signature",
+    "Pinyin": "/ˈsɪɡ.nə.tʃər/",
+    "Dịch nghĩa": "chữ ký",
+    "exampleHanzi": "Please put your signature at the bottom of the page.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "staff",
+    "Pinyin": "/stɑːf/",
+    "Dịch nghĩa": "nhân viên",
+    "exampleHanzi": "There is a good relationship between staff and pupils at the school.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "stock",
+    "Pinyin": "/stɒk/",
+    "Dịch nghĩa": "cổ phiếu",
+    "exampleHanzi": "They own 20 percent of the company's stock.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "strategy",
+    "Pinyin": "/ˈstræt.ə.dʒi/",
+    "Dịch nghĩa": "chiến lược",
+    "exampleHanzi": "The company has adopted a new marketing strategy.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "strike",
+    "Pinyin": "/straɪk/",
+    "Dịch nghĩa": "đình công",
+    "exampleHanzi": "Democratization has brought workers the right to strike and join a trade union.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "success",
+    "Pinyin": "/səkˈses/",
+    "Dịch nghĩa": "thành công",
+    "exampleHanzi": "The success of almost any project depends largely on its manager.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "supply",
+    "Pinyin": "/səˈplaɪ/",
+    "Dịch nghĩa": "cung cấp",
+    "exampleHanzi": "Electrical power is supplied by underground cables.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "target",
+    "Pinyin": "/ˈtɑː.ɡɪt/",
+    "Dịch nghĩa": "mục tiêu",
+    "exampleHanzi": "Any new business needs to establish its target market.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "tax",
+    "Pinyin": "/tæks/",
+    "Dịch nghĩa": "thuế",
+    "exampleHanzi": "They're increasing the tax on cigarettes.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "trade",
+    "Pinyin": "/treɪd/",
+    "Dịch nghĩa": "thương mại",
+    "exampleHanzi": "70 percent of the country's trade is with Europe.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "transaction",
+    "Pinyin": "/trænˈzæk.ʃən/",
+    "Dịch nghĩa": "giao dịch",
+    "exampleHanzi": "We need to monitor the transaction of smaller deals.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "trend",
+    "Pinyin": "/trend/",
+    "Dịch nghĩa": "xu hướng",
+    "exampleHanzi": "Surveys show a trend away from home-ownership and toward rented accommodation.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "vacancy",
+    "Pinyin": "/ˈveɪ.kən.si/",
+    "Dịch nghĩa": "vị trí trống",
+    "exampleHanzi": "There is a vacancy for a shop assistant on Saturdays.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "wage",
+    "Pinyin": "/weɪdʒ/",
+    "Dịch nghĩa": "tiền công",
+    "exampleHanzi": "an hourly/daily/weekly wage",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "wholesale",
+    "Pinyin": "/ˈhəʊl.seɪl/",
+    "Dịch nghĩa": "bán buôn",
+    "exampleHanzi": "wholesale prices",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "withdraw",
+    "Pinyin": "/wɪðˈdrɔː/",
+    "Dịch nghĩa": "rút tiền",
+    "exampleHanzi": "This credit card allows you to withdraw up to £200 a day from ATMs.",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  },
+  {
+    "Tiếng Anh": "workforce",
+    "Pinyin": "/ˈwɜːk.fɔːs/",
+    "Dịch nghĩa": "lực lượng lao động",
+    "exampleHanzi": "The majority of factories in the region have a workforce of 50 to 100 (people).",
+    "examplePinyin": "",
+    "exampleMeaning": ""
+  }
+]

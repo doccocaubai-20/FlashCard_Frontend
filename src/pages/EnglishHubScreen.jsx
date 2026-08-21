@@ -24,6 +24,7 @@ import { flashcardApi } from '../services/flashcardApi';
 import { chatApi } from '../services/chatApi';
 import { speakChinese } from '../utils/tts';
 import { englishGrammarData } from '../data/englishGrammarData';
+import { aiFlashcardApi } from '../services/aiFlashcardApi';
 
 export default function EnglishHubScreen() {
   const navigate = useNavigate();
@@ -69,6 +70,15 @@ export default function EnglishHubScreen() {
   const [selectedFreestyleGrammar, setSelectedFreestyleGrammar] = useState('Tự do');
   const [aiChecking, setAiChecking] = useState(false);
   const [aiFeedback, setAiFeedback] = useState('');
+
+  // AI generation states
+  const [showAiGenerate, setShowAiGenerate] = useState(false);
+  const [aiTopic, setAiTopic] = useState('');
+  const [aiCount, setAiCount] = useState(10);
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [aiCards, setAiCards] = useState([]);
+  const [selectedCards, setSelectedCards] = useState(new Set());
+  const [aiSaving, setAiSaving] = useState(false);
 
   // Fetch English Decks
   const fetchEnglishDecks = async () => {
@@ -245,6 +255,85 @@ export default function EnglishHubScreen() {
     } catch (err) {
       console.error(err);
       showToast('Tạo bộ thẻ thất bại.', 'error');
+    }
+  };
+
+  // AI Flashcard Generation Handlers
+  const handleAiGenerate = async () => {
+    if (!aiTopic.trim()) {
+      showToast('Vui lòng nhập chủ đề!', 'warning');
+      return;
+    }
+    setAiGenerating(true);
+    setAiCards([]);
+    setSelectedCards(new Set());
+    try {
+      const existingWords = deckCards.map(c => c.hanzi);
+      const res = await aiFlashcardApi.generate(
+        aiTopic.trim(),
+        aiCount,
+        null,
+        existingWords,
+        'EN'
+      );
+      const cards = res.data?.cards || res.data || [];
+      setAiCards(cards);
+      setSelectedCards(new Set(cards.map((_, i) => i)));
+    } catch (err) {
+      console.error(err);
+      showToast(err.response?.data?.message || 'Không thể tạo từ vựng bằng AI.', 'error');
+    } finally {
+      setAiGenerating(false);
+    }
+  };
+
+  const toggleCardSelection = (idx) => {
+    setSelectedCards((prev) => {
+      const next = new Set(prev);
+      if (next.has(idx)) {
+        next.delete(idx);
+      } else {
+        next.add(idx);
+      }
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedCards.size === aiCards.length) {
+      setSelectedCards(new Set());
+    } else {
+      setSelectedCards(new Set(aiCards.map((_, i) => i)));
+    }
+  };
+
+  const handleAiSave = async () => {
+    if (selectedCards.size === 0) return;
+    setAiSaving(true);
+    try {
+      const payload = Array.from(selectedCards).map(idx => {
+        const card = aiCards[idx];
+        return {
+          deckId: selectedDeck.id,
+          hanzi: card.hanzi,
+          pinyin: card.pinyin,
+          meaning: card.meaning,
+          exampleHanzi: card.exampleHanzi || null,
+          examplePinyin: card.examplePinyin || null,
+          exampleMeaning: card.exampleMeaning || null,
+        };
+      });
+      const res = await flashcardApi.bulkImport(payload);
+      setDeckCards(res.data || []);
+      showToast(`Đã thêm thành công ${payload.length} từ vựng từ AI!`, 'success');
+      setShowAiGenerate(false);
+      setAiCards([]);
+      setAiTopic('');
+    } catch (err) {
+      console.error(err);
+      showToast('Lưu từ vựng thất bại.', 'error');
+    } finally {
+      setAiSaving(false);
     }
   };
 
@@ -566,6 +655,18 @@ Hãy phản hồi bằng tiếng Việt thân thiện, rõ ràng, chi tiết, đ
                       <span>Học Flashcard</span>
                     </button>
                   )}
+                  <button
+                    onClick={() => {
+                      setAiTopic('');
+                      setAiCards([]);
+                      setSelectedCards(new Set());
+                      setShowAiGenerate(true);
+                    }}
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-mono font-bold rounded-lg cursor-pointer hover:bg-purple-500/20"
+                  >
+                    <Sparkles size={12} />
+                    <span>Tạo bằng AI</span>
+                  </button>
                   <button
                     onClick={() => setShowAddCard(true)}
                     className="flex items-center gap-1 px-3 py-1.5 bg-primary/10 border border-primary/20 text-primary text-xs font-mono font-bold rounded-lg cursor-pointer hover:bg-primary/20"
@@ -1030,6 +1131,170 @@ Hãy phản hồi bằng tiếng Việt thân thiện, rõ ràng, chi tiết, đ
             </div>
           </div>
 
+        </div>
+      )}
+
+      {/* AI Generate Modal */}
+      {showAiGenerate && selectedDeck && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="max-w-2xl w-full bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-2xl p-6 shadow-2xl text-left flex flex-col max-h-[90vh]">
+            <div className="flex justify-between items-center border-b border-hairline dark:border-divider-dark pb-3">
+              <h3 className="text-sm font-mono font-bold text-ink dark:text-on-dark uppercase flex items-center gap-1.5">
+                <Sparkles size={16} className="text-purple-500" />
+                Tạo từ vựng bằng AI (Tiếng Anh)
+              </h3>
+              <button
+                onClick={() => setShowAiGenerate(false)}
+                className="text-mute hover:text-ink dark:hover:text-on-dark text-lg"
+              >
+                &times;
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto py-4 space-y-4 pr-1">
+              <div className="bg-purple-500/5 border border-purple-500/10 rounded-xl p-4 space-y-1.5">
+                <p className="text-xs text-purple-700 dark:text-purple-400 font-semibold">
+                  💡 Nhập chủ đề bất kỳ bằng Tiếng Việt hoặc Tiếng Anh
+                </p>
+                <p className="text-[10px] text-mute leading-relaxed">
+                  DeepSeek AI sẽ phân tích chủ đề và tạo ra danh sách từ vựng thông dụng đi kèm phiên âm chuẩn IPA, dịch nghĩa tiếng Việt và câu ví dụ song ngữ.
+                </p>
+              </div>
+
+              {aiCards.length === 0 ? (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="md:col-span-2 space-y-1">
+                      <label className="text-[10px] font-mono font-bold uppercase text-mute">Chủ đề từ vựng</label>
+                      <input
+                        type="text"
+                        placeholder="Ví dụ: Job Interview, Travel, Airport, Cooking..."
+                        value={aiTopic}
+                        onChange={(e) => setAiTopic(e.target.value)}
+                        className="w-full px-3.5 py-2 border border-hairline dark:border-white/10 rounded-lg bg-surface-card dark:bg-surface-dark text-xs text-ink dark:text-on-dark focus:outline-hidden focus:border-primary"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono font-bold uppercase text-mute">Số từ cần tạo</label>
+                      <select
+                        value={aiCount}
+                        onChange={(e) => setAiCount(Number(e.target.value))}
+                        className="w-full px-3.5 py-2 border border-hairline dark:border-white/10 rounded-lg bg-surface-card dark:bg-surface-dark text-xs text-ink dark:text-on-dark focus:outline-hidden focus:border-primary cursor-pointer"
+                      >
+                        <option value={5}>5 từ</option>
+                        <option value={10}>10 từ</option>
+                        <option value={15}>15 từ</option>
+                        <option value={20}>20 từ</option>
+                        <option value={30}>30 từ</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleAiGenerate}
+                    disabled={aiGenerating || !aiTopic.trim()}
+                    className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-xs font-mono font-bold rounded-lg cursor-pointer transition-colors shadow-sm flex items-center justify-center gap-1.5"
+                  >
+                    {aiGenerating ? (
+                      <>
+                        <span className="animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full animate-pulse" />
+                        <span>AI đang chuẩn bị bài giảng...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles size={14} />
+                        <span>Tạo từ vựng ngay</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center border-b border-hairline dark:border-divider-dark pb-2">
+                    <span className="text-[10px] font-mono font-bold text-mute uppercase">
+                      Danh sách từ vựng đề xuất ({selectedCards.size} / {aiCards.length} được chọn)
+                    </span>
+                    <button
+                      onClick={toggleSelectAll}
+                      className="text-[10px] font-mono font-bold text-primary hover:underline cursor-pointer"
+                    >
+                      {selectedCards.size === aiCards.length ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-1">
+                    {aiCards.map((card, idx) => {
+                      const isSelected = selectedCards.has(idx);
+                      return (
+                        <div
+                          key={idx}
+                          onClick={() => toggleCardSelection(idx)}
+                          className={`border rounded-xl p-3.5 text-left cursor-pointer transition-all ${
+                            isSelected
+                              ? 'bg-purple-500/5 border-purple-500 dark:border-purple-400'
+                              : 'bg-surface-card dark:bg-surface-dark border-hairline dark:border-divider-dark hover:border-purple-300'
+                          }`}
+                        >
+                          <div className="flex justify-between items-start gap-2">
+                            <div className="space-y-1 min-w-0">
+                              <div className="flex items-baseline gap-1.5 flex-wrap">
+                                <span className="font-display font-extrabold text-sm text-ink dark:text-on-dark">{card.hanzi}</span>
+                                <span className="text-[10px] font-mono font-semibold text-purple-600 dark:text-purple-400">{card.pinyin}</span>
+                              </div>
+                              <p className="text-xs text-body dark:text-on-dark-mute font-semibold">{card.meaning}</p>
+                              {card.exampleHanzi && (
+                                <div className="border-l-2 border-purple-500/30 pl-2 mt-1.5 py-0.5 space-y-0.5">
+                                  <p className="text-[9px] font-medium text-mute italic leading-relaxed">{card.exampleHanzi}</p>
+                                  {card.exampleMeaning && (
+                                    <p className="text-[8px] text-mute/80 leading-normal">{card.exampleMeaning}</p>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                            <div className={`h-4.5 w-4.5 rounded-full flex items-center justify-center shrink-0 border ${
+                              isSelected ? 'bg-purple-600 border-transparent text-white' : 'border-mute/40'
+                            }`}>
+                              {isSelected && <Check size={10} />}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="border-t border-hairline dark:border-divider-dark pt-3 flex justify-between gap-2">
+              {aiCards.length > 0 && (
+                <button
+                  onClick={() => setAiCards([])}
+                  className="px-4 py-1.5 border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-xs font-mono font-bold rounded-lg cursor-pointer"
+                >
+                  Tạo chủ đề khác
+                </button>
+              )}
+              <div className="flex gap-2 ml-auto">
+                <button
+                  onClick={() => setShowAiGenerate(false)}
+                  className="px-4 py-1.5 border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-xs font-mono font-bold rounded-lg cursor-pointer"
+                >
+                  Hủy bỏ
+                </button>
+                {aiCards.length > 0 && (
+                  <button
+                    onClick={handleAiSave}
+                    disabled={aiSaving || selectedCards.size === 0}
+                    className="px-4 py-1.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-xs font-mono font-bold rounded-lg cursor-pointer shadow-sm flex items-center gap-1.5"
+                  >
+                    {aiSaving && <span className="animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full" />}
+                    <span>Lưu {selectedCards.size} từ vào bộ bài</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
