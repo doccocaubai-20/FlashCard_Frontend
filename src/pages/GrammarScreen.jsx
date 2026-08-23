@@ -41,87 +41,147 @@ const GRAMMAR_GLOSSARY = {
 
 // Sub-component to parse and render formulas interactively with color-coded grammar pills
 function ParsedFormula({ formula }) {
+  if (!formula) return null;
+
   // Split formula components by '+'
   const tokens = formula.split('+');
 
+  const getGlossaryKey = (tokenStr) => {
+    const clean = tokenStr.trim().toLowerCase().replace(/\.$/, '');
+    if (clean === 's' || clean === 'subj' || clean === 'subject') return 'subj';
+    if (clean === 'v' || clean === 'verb') return 'verb';
+    if (clean === 'o' || clean === 'obj' || clean === 'object') return 'obj';
+    if (clean === 'n' || clean === 'noun') return 'noun';
+    if (clean === 'adj' || clean === 'adjective') return 'adj';
+    if (clean === 'adv' || clean === 'adverb') return 'adverb';
+    if (clean === 'prep' || clean === 'preposition') return 'prep';
+    if (clean === 'num' || clean === 'number') return 'number';
+    if (clean === 'm' || clean === 'mw' || clean === 'measure' || clean === 'measure word') return 'measure';
+    if (clean === 'pron' || clean === 'pronoun') return 'pronoun';
+    if (clean === 'place') return 'place';
+    if (clean === 'time') return 'time';
+    return clean;
+  };
+
+  const renderToken = (rawToken, keyPrefix) => {
+    const trimmed = rawToken.trim();
+    if (!trimmed) return null;
+
+    // Check if token contains "hoặc" or "or" to split them
+    if (trimmed.includes(' hoặc ')) {
+      const parts = trimmed.split(' hoặc ');
+      return (
+        <span key={keyPrefix} className="inline-flex items-center gap-1">
+          {parts.map((part, pIdx) => (
+            <React.Fragment key={pIdx}>
+              {pIdx > 0 && <span className="text-[11px] font-bold text-mute dark:text-on-dark-mute px-0.5 select-none">hoặc</span>}
+              {renderToken(part, `${keyPrefix}-part-${pIdx}`)}
+            </React.Fragment>
+          ))}
+        </span>
+      );
+    }
+
+    if (trimmed.includes(' or ')) {
+      const parts = trimmed.split(' or ');
+      return (
+        <span key={keyPrefix} className="inline-flex items-center gap-1">
+          {parts.map((part, pIdx) => (
+            <React.Fragment key={pIdx}>
+              {pIdx > 0 && <span className="text-[11px] font-bold text-mute dark:text-on-dark-mute px-0.5 select-none">hoặc</span>}
+              {renderToken(part, `${keyPrefix}-part-${pIdx}`)}
+            </React.Fragment>
+          ))}
+        </span>
+      );
+    }
+
+    // Check if optional: e.g. "(S)" or "(Obj.)"
+    const isOptional = trimmed.startsWith('(') && trimmed.endsWith(')');
+    let cleanToken = isOptional ? trimmed.slice(1, -1).trim() : trimmed;
+
+    // Strip leading '+' inside parentheses if any, e.g. "(+ Obj.)"
+    if (cleanToken.startsWith('+')) {
+      cleanToken = cleanToken.slice(1).trim();
+    }
+
+    // Strip ending question mark or punctuation for key comparison
+    let finalCleanToken = cleanToken;
+    let suffix = '';
+    if (cleanToken.endsWith('?')) {
+      finalCleanToken = cleanToken.slice(0, -1).trim();
+      suffix = '?';
+    }
+
+    const key = getGlossaryKey(finalCleanToken);
+    const glossaryInfo = GRAMMAR_GLOSSARY[key];
+
+    // Default badge style
+    let badgeStyle = "bg-primary/10 border-primary/20 text-primary dark:text-primary-deep font-bold";
+    let hoverTitle = "Trợ từ hoặc từ khóa cố định bắt buộc có trong câu mẫu";
+
+    if (glossaryInfo) {
+      hoverTitle = `${glossaryInfo.vn}: ${glossaryInfo.desc}`;
+
+      if (key === 'subj') {
+        badgeStyle = "bg-indigo-50 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-900/60 text-indigo-600 dark:text-indigo-400 font-bold shadow-xs";
+      } else if (key === 'verb') {
+        badgeStyle = "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900/60 text-emerald-600 dark:text-emerald-400 font-bold shadow-xs";
+      } else if (key === 'adj') {
+        badgeStyle = "bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900/60 text-amber-600 dark:text-amber-400 font-bold shadow-xs";
+      } else if (key === 'obj') {
+        badgeStyle = "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold shadow-xs";
+      } else if (key === 'noun') {
+        badgeStyle = "bg-sky-50 dark:bg-sky-950/40 border-sky-200 dark:border-sky-900/60 text-sky-600 dark:text-sky-400 font-bold shadow-xs";
+      } else if (key === 'place') {
+        badgeStyle = "bg-teal-50 dark:bg-teal-950/40 border-teal-200 dark:border-teal-900/60 text-teal-600 dark:text-teal-400 font-bold shadow-xs";
+      } else if (key === 'time') {
+        badgeStyle = "bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60 text-rose-600 dark:text-rose-400 font-bold shadow-xs";
+      } else if (key === 'pronoun') {
+        badgeStyle = "bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-900/60 text-purple-600 dark:text-purple-400 font-bold shadow-xs";
+      } else if (key === 'adverb') {
+        badgeStyle = "bg-fuchsia-50 dark:bg-fuchsia-950/40 border-fuchsia-200 dark:border-fuchsia-900/60 text-fuchsia-600 dark:text-fuchsia-400 font-bold shadow-xs";
+      } else if (key === 'prep') {
+        badgeStyle = "bg-violet-50 dark:bg-violet-950/40 border-violet-200 dark:border-violet-900/60 text-violet-600 dark:text-violet-400 font-bold shadow-xs";
+      } else if (key === 'measure') {
+        badgeStyle = "bg-orange-50 dark:bg-orange-950/40 border-orange-200 dark:border-orange-900/60 text-orange-600 dark:text-orange-400 font-bold shadow-xs";
+      } else if (key === 'number') {
+        badgeStyle = "bg-yellow-50 dark:bg-yellow-950/40 border-yellow-200 dark:border-yellow-900/60 text-yellow-600 dark:text-yellow-400 font-bold shadow-xs";
+      }
+    } else {
+      // Check if it's Chinese character
+      const hasChinese = /[\u4e00-\u9fa5]/.test(finalCleanToken);
+      if (hasChinese) {
+        badgeStyle = "bg-primary border border-primary/20 text-white font-extrabold px-3 py-1 shadow-[0_0_8px_rgba(84,203,212,0.3)] rounded-md";
+        hoverTitle = "Trợ từ / Từ khóa cố định bắt buộc có trong câu mẫu";
+      } else {
+        // Fallback style for others
+        badgeStyle = "bg-surface-bone dark:bg-black/35 border-hairline dark:border-divider-dark text-body dark:text-on-dark-mute font-mono text-[11px] px-2 py-0.5 rounded";
+      }
+    }
+
+    const displayText = isOptional ? `(${finalCleanToken})${suffix}` : `${finalCleanToken}${suffix}`;
+
+    return (
+      <span
+        title={hoverTitle}
+        className={`inline-flex items-center px-3 py-1.5 text-sm border cursor-help transition-all hover:scale-105 select-all ${badgeStyle} ${
+          isOptional ? 'border-dashed opacity-75' : ''
+        }`}
+      >
+        {displayText}
+      </span>
+    );
+  };
+
   return (
     <div className="flex flex-wrap items-center justify-center gap-1.5 py-1">
-      {tokens.map((token, index) => {
-        const rawToken = token.trim();
-        if (!rawToken) return null;
-
-        // Check if optional: e.g. "(+ Obj.)" or "(Obj.)"
-        const isOptional = rawToken.startsWith('(') && rawToken.endsWith(')');
-        let cleanToken = isOptional ? rawToken.slice(1, -1).trim() : rawToken;
-
-        // Strip leading '+' inside parentheses if any, e.g. "+ Obj." -> "Obj."
-        if (cleanToken.startsWith('+')) {
-          cleanToken = cleanToken.slice(1).trim();
-        }
-
-        // Clean up trailing dots for comparison to dictionary key, e.g. "Subj." -> "subj"
-        const key = cleanToken.toLowerCase().replace(/\.$/, '');
-        const glossaryInfo = GRAMMAR_GLOSSARY[key];
-
-        // Default badge class (usually for Chinese characters/particles or custom text)
-        let badgeStyle = "bg-primary/10 border-primary/20 text-primary dark:text-primary-deep font-bold";
-        let hoverTitle = "Trợ từ hoặc từ khóa cố định bắt buộc có trong câu mẫu";
-
-        if (glossaryInfo) {
-          hoverTitle = `${glossaryInfo.vn}: ${glossaryInfo.desc}`;
-
-          if (key === 'subj' || key === 'subject') {
-            badgeStyle = "bg-indigo-50 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-900/60 text-indigo-600 dark:text-indigo-400 font-semibold";
-          } else if (key === 'verb' || key === 'mental verb') {
-            badgeStyle = "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900/60 text-emerald-600 dark:text-emerald-400 font-semibold";
-          } else if (key === 'adj' || key === 'adjective') {
-            badgeStyle = "bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900/60 text-amber-600 dark:text-amber-400 font-semibold";
-          } else if (key === 'obj' || key === 'object') {
-            badgeStyle = "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-semibold";
-          } else if (key === 'noun') {
-            badgeStyle = "bg-sky-50 dark:bg-sky-950/40 border-sky-200 dark:border-sky-900/60 text-sky-600 dark:text-sky-400 font-semibold";
-          } else if (key === 'place') {
-            badgeStyle = "bg-teal-50 dark:bg-teal-950/40 border-teal-200 dark:border-teal-900/60 text-teal-600 dark:text-teal-400 font-semibold";
-          } else if (key === 'time') {
-            badgeStyle = "bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60 text-rose-600 dark:text-rose-400 font-semibold";
-          } else if (key === 'pronoun') {
-            badgeStyle = "bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-900/60 text-purple-600 dark:text-purple-400 font-semibold";
-          } else if (key === 'adverb') {
-            badgeStyle = "bg-fuchsia-50 dark:bg-fuchsia-950/40 border-fuchsia-200 dark:border-fuchsia-900/60 text-fuchsia-600 dark:text-fuchsia-400 font-semibold";
-          } else if (key === 'prep' || key === 'preposition') {
-            badgeStyle = "bg-violet-50 dark:bg-violet-950/40 border-violet-200 dark:border-violet-900/60 text-violet-600 dark:text-violet-400 font-semibold";
-          } else if (key === 'measure') {
-            badgeStyle = "bg-orange-50 dark:bg-orange-950/40 border-orange-200 dark:border-orange-900/60 text-orange-600 dark:text-orange-400 font-semibold";
-          } else if (key === 'number') {
-            badgeStyle = "bg-yellow-50 dark:bg-yellow-950/40 border-yellow-200 dark:border-yellow-900/60 text-yellow-600 dark:text-yellow-400 font-semibold";
-          } else if (key === 'verb / adj.' || key === 'noun / pronoun') {
-            badgeStyle = "bg-cyan-50 dark:bg-cyan-950/40 border-cyan-200 dark:border-cyan-900/60 text-cyan-600 dark:text-cyan-400 font-semibold";
-          }
-        } else {
-          // If it doesn't match a glossary key, check if it contains Chinese characters
-          const hasChinese = /[\u4e00-\u9fa5]/.test(cleanToken);
-          if (hasChinese) {
-            badgeStyle = "bg-primary border border-primary/20 text-white font-extrabold px-3 py-1 shadow-[0_0_8px_rgba(84,203,212,0.3)]";
-            hoverTitle = "Trợ từ / Từ khóa cố định bắt buộc có trong câu mẫu";
-          } else {
-            // General fallback
-            badgeStyle = "bg-surface-bone dark:bg-black/35 border-hairline dark:border-divider-dark text-body dark:text-on-dark-mute font-mono text-[11px]";
-          }
-        }
-
-        return (
-          <React.Fragment key={index}>
-            {index > 0 && <span className="text-mute dark:text-on-dark-mute font-light px-0.5 text-xs select-none">+</span>}
-            <span
-              title={hoverTitle}
-              className={`inline-flex items-center px-2.5 py-1 rounded text-xs border cursor-help transition-all hover:scale-105 select-all ${badgeStyle} ${isOptional ? 'border-dashed opacity-75' : ''
-                }`}
-            >
-              {isOptional ? `(${cleanToken})` : cleanToken}
-            </span>
-          </React.Fragment>
-        );
-      })}
+      {tokens.map((token, index) => (
+        <React.Fragment key={index}>
+          {index > 0 && <span className="text-mute dark:text-on-dark-mute font-light px-0.5 text-xs select-none">+</span>}
+          {renderToken(token, `token-${index}`)}
+        </React.Fragment>
+      ))}
     </div>
   );
 }
@@ -236,7 +296,19 @@ export default function GrammarScreen() {
   };
 
   const toggleExpand = (id) => {
-    setExpandedId((prev) => (prev === id ? null : id));
+    setExpandedId((prev) => {
+      const newId = prev === id ? null : id;
+      if (newId) {
+        // Scroll the newly expanded item into view after React re-renders
+        setTimeout(() => {
+          const el = document.getElementById(`grammar-${newId}`);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 80);
+      }
+      return newId;
+    });
   };
 
   const getActiveTab = (groupId) => activeTabs[groupId] || 0;
@@ -548,7 +620,7 @@ export default function GrammarScreen() {
         >
           <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider">
             <Sparkles size={14} className="animate-pulse text-primary" />
-            <span>💡 Mẹo học: Cách phân tích cấu trúc ngữ pháp</span>
+            <span>Mẹo học: Cách phân tích cấu trúc ngữ pháp</span>
           </div>
           <span className="text-xs text-mute dark:text-on-dark-mute font-medium underline">
             {showLegend ? 'Ẩn hướng dẫn' : 'Xem hướng dẫn ký hiệu'}
@@ -646,7 +718,8 @@ export default function GrammarScreen() {
             return (
               <div
                 key={group.id}
-                className="bg-surface-card dark:bg-surface-dark/40 border border-hairline dark:border-divider-dark rounded-md overflow-hidden transition-all shadow-sm"
+                id={`grammar-${group.id}`}
+                className="bg-surface-card dark:bg-surface-dark/40 border border-hairline dark:border-divider-dark rounded-md overflow-hidden transition-all shadow-sm scroll-mt-4"
               >
                 {/* Header Row */}
                 <div
@@ -708,7 +781,7 @@ export default function GrammarScreen() {
                         <span className="text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
                           Công thức cấu trúc
                         </span>
-                        <div className="bg-surface-bone/80 dark:bg-black/35 p-3.5 border border-hairline dark:border-divider-dark rounded-md flex flex-wrap items-center justify-center gap-1 shadow-sm min-h-[52px]">
+                        <div className="bg-surface-bone/80 dark:bg-black/35 p-4 border border-hairline dark:border-divider-dark rounded-md flex flex-wrap items-center justify-center gap-1.5 shadow-sm min-h-[60px]">
                           <ParsedFormula formula={activeItem.formula} />
                         </div>
                       </div>
@@ -718,7 +791,7 @@ export default function GrammarScreen() {
                         <span className="text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
                           Ý nghĩa & Cách dùng
                         </span>
-                        <p className="text-xs font-medium text-body dark:text-on-dark-mute leading-relaxed bg-surface-bone/30 dark:bg-black/10 border border-hairline dark:border-divider-dark rounded-md p-3.5 min-h-[52px] flex items-center">
+                        <p className="text-sm font-medium text-body dark:text-on-dark-mute leading-relaxed bg-surface-bone/30 dark:bg-black/10 border border-hairline dark:border-divider-dark rounded-md p-4 min-h-[60px] flex items-center">
                           {activeItem.explanation}
                         </p>
                       </div>
@@ -743,9 +816,9 @@ export default function GrammarScreen() {
                         {activeItem.tips && (
                           <div className="bg-amber-50/30 dark:bg-amber-950/10 border border-amber-200/50 dark:border-amber-900/30 rounded-md p-4 space-y-1">
                             <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1.5 select-none">
-                              💡 Mẹo học
+                              Mẹo học
                             </span>
-                            <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed font-medium">
+                            <p className="text-sm text-body dark:text-on-dark-mute leading-relaxed font-medium">
                               {activeItem.tips}
                             </p>
                           </div>
@@ -753,9 +826,9 @@ export default function GrammarScreen() {
                         {activeItem.attentions && (
                           <div className="bg-rose-50/30 dark:bg-rose-950/10 border border-rose-200/50 dark:border-rose-900/30 rounded-md p-4 space-y-1">
                             <span className="text-[10px] font-bold text-rose-700 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1.5 select-none">
-                              ⚠️ Lưu ý quan trọng
+                              Lưu ý quan trọng
                             </span>
-                            <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed font-medium">
+                            <p className="text-sm text-body dark:text-on-dark-mute leading-relaxed font-medium">
                               {activeItem.attentions}
                             </p>
                           </div>

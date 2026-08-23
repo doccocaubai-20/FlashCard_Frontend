@@ -75,7 +75,7 @@ let _externalSentences = [];
 // Compile list of unique sentences once when the module loads
 const getAllSentences = () => {
   const list = [];
-  
+
   // 1. From translationData
   if (Array.isArray(translationData)) {
     translationData.forEach(item => {
@@ -153,11 +153,11 @@ let _cachedSentences = null;
 const searchRelatedSentences = (q) => {
   const trimmed = (q || '').trim();
   if (!trimmed) return [];
-  
+
   if (!_cachedSentences) {
     _cachedSentences = getAllSentences();
   }
-  
+
   // Normalize query for Pinyin search
   const cleanPinyin = (str) => {
     return str
@@ -167,20 +167,20 @@ const searchRelatedSentences = (q) => {
       .replace(/ü/g, 'v')
       .replace(/[^a-z0-9]/g, ''); // keep only alphanumeric
   };
-  
+
   const qLower = trimmed.toLowerCase();
   const qPinyinClean = cleanPinyin(trimmed);
   const isHanzi = /[\u4e00-\u9fa5]/.test(trimmed);
-  
+
   const matched = [];
-  
+
   for (const item of _cachedSentences) {
     let matches = false;
-    
+
     if (isHanzi) {
       // Substring check on Hanzi
       matches = item.hanzi.includes(trimmed);
-      
+
       // Fallback clean check
       if (!matches) {
         const cleanQ = trimmed.replace(new RegExp('[.,/#!$%^&*;:{}=\\-_`~()?？。！，、；：\\s]', 'g'), '');
@@ -194,7 +194,7 @@ const searchRelatedSentences = (q) => {
       if (qPinyinClean && sentPinyinClean.includes(qPinyinClean)) {
         matches = true;
       }
-      
+
       // Vietnamese meaning substring check
       if (!matches && item.meaning) {
         const meaningLower = item.meaning.toLowerCase();
@@ -203,19 +203,19 @@ const searchRelatedSentences = (q) => {
         }
       }
     }
-    
+
     if (matches) {
       matched.push(item);
     }
   }
-  
+
   // Sort matches by Hanzi length (shorter sentence first)
   matched.sort((a, b) => {
     if (a.hanzi === trimmed && b.hanzi !== trimmed) return -1;
     if (b.hanzi === trimmed && a.hanzi !== trimmed) return 1;
     return a.hanzi.length - b.hanzi.length;
   });
-  
+
   return matched.slice(0, 10);
 };
 
@@ -307,11 +307,10 @@ function DictionaryWritingPractice({ word }) {
                 setActiveCharIndex(i);
                 setMode('idle');
               }}
-              className={`px-3 py-1 rounded-full text-xs font-bold font-mono transition-all cursor-pointer ${
-                activeCharIndex === i
-                  ? 'bg-primary text-white shadow-sm'
-                  : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-zinc-800 text-ink dark:text-on-dark'
-              }`}
+              className={`px-3 py-1 rounded-full text-xs font-bold font-mono transition-all cursor-pointer ${activeCharIndex === i
+                ? 'bg-primary text-white shadow-sm'
+                : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-zinc-800 text-ink dark:text-on-dark'
+                }`}
             >
               Chữ {i + 1}: {c}
             </button>
@@ -335,9 +334,8 @@ function DictionaryWritingPractice({ word }) {
         <button
           type="button"
           onClick={handleQuiz}
-          className={`px-4 py-1.5 text-white text-xs font-bold rounded-full shadow transition-all cursor-pointer active:scale-95 ${
-            mode === 'quiz' ? 'bg-primary/50' : 'bg-primary hover:bg-primary-deep'
-          }`}
+          className={`px-4 py-1.5 text-white text-xs font-bold rounded-full shadow transition-all cursor-pointer active:scale-95 ${mode === 'quiz' ? 'bg-primary/50' : 'bg-primary hover:bg-primary-deep'
+            }`}
         >
           {mode === 'quiz' ? 'Đang viết...' : 'Tập viết'}
         </button>
@@ -381,7 +379,7 @@ export default function DictionaryScreen() {
 
     while ((match = regex.exec(text)) !== null) {
       const matchIndex = match.index;
-      
+
       if (matchIndex > lastIndex) {
         parts.push(text.substring(lastIndex, matchIndex));
       }
@@ -389,10 +387,10 @@ export default function DictionaryScreen() {
       const rawWord = match[1];
       const pinyinRaw = match[2];
 
-      const searchWord = rawWord.includes('|') 
-        ? rawWord.split('|')[1] 
-        : rawWord.includes('｜') 
-          ? rawWord.split('｜')[1] 
+      const searchWord = rawWord.includes('|')
+        ? rawWord.split('|')[1]
+        : rawWord.includes('｜')
+          ? rawWord.split('｜')[1]
           : rawWord;
 
       const formattedPinyin = convertNumberedPinyin(pinyinRaw);
@@ -813,11 +811,11 @@ export default function DictionaryScreen() {
           score -= 3000;
         }
 
-        const isTransliteration = 
-          en.includes('transliteration') || 
-          en.includes('surname') || 
-          vi.includes('họ ') || 
-          vi.includes('tập đoàn') || 
+        const isTransliteration =
+          en.includes('transliteration') ||
+          en.includes('surname') ||
+          vi.includes('họ ') ||
+          vi.includes('tập đoàn') ||
           vi.includes('diễn viên');
         if (isTransliteration) {
           score -= 5000;
@@ -897,7 +895,7 @@ export default function DictionaryScreen() {
     const helper = async (startIndex) => {
       if (startIndex === s.length) return [];
       if (memo.has(startIndex)) return memo.get(startIndex);
-      
+
       for (let len = Math.min(6, s.length - startIndex); len >= 1; len--) {
         const part = s.substring(startIndex, startIndex + len);
         const matches = await lookupMultiple('pinyin', part);
@@ -919,12 +917,12 @@ export default function DictionaryScreen() {
   async function segmentHanziSentence(text) {
     const cleanText = text.replace(new RegExp('[.,/#!$%^&*;:{}=\\-_`~()?？。！，、；：]', 'g'), '').trim();
     if (!cleanText) return [];
-    
+
     const chars = Array.from(cleanText);
     const result = [];
     let i = 0;
     const maxWordLength = 8;
-    
+
     while (i < chars.length) {
       let matched = false;
       for (let len = Math.min(maxWordLength, chars.length - i); len >= 1; len--) {
@@ -938,7 +936,7 @@ export default function DictionaryScreen() {
           break;
         }
       }
-      
+
       if (!matched) {
         const char = chars[i];
         result.push({
@@ -981,7 +979,7 @@ export default function DictionaryScreen() {
     for (const syl of pinyinSyllables) {
       const matches = await lookupMultiple('pinyin', syl);
       const singleCharMatches = matches.filter(m => m.s && m.s.length === 1);
-      
+
       const getSortScore = (item) => {
         if (!item) return 0;
         const vi = (item.vi || '').toLowerCase();
@@ -989,7 +987,7 @@ export default function DictionaryScreen() {
         if (item.hsk) score += (10 - item.hsk) * 200;
         if (item.b) score += item.b * 10;
         if (item.bwr) score -= item.bwr * 0.1;
-        
+
         const isVariant = vi.includes('biến thể') || vi.includes('chữ cổ');
         if (isVariant) score -= 8000;
         return score;
@@ -1036,11 +1034,11 @@ export default function DictionaryScreen() {
     if (!word) return '';
     if (selectedWord && selectedWord.s === word) return selectedWord.sv || '';
     if (tabDetails && tabDetails.s === word) return tabDetails.sv || '';
-    
+
     // Search in results list
     const found = results.find(r => r.s === word);
     if (found) return found.sv || '';
-    
+
     return '';
   }
 
@@ -1217,7 +1215,7 @@ export default function DictionaryScreen() {
       }
     } catch (err) {
       console.error('Failed to generate AI explanation:', err);
-      
+
       // If rate limited (status 429), show custom rate limit alert
       if (err.response && err.response.status === 429) {
         const errorHtml = `
@@ -1351,8 +1349,8 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                     type="button"
                     onClick={() => handleTabClick(tabText)}
                     className={`px-4 py-1.5 rounded-full text-xs font-mono font-bold transition-all border cursor-pointer whitespace-nowrap ${activeTab === tabText
-                        ? 'bg-primary border-transparent text-white shadow-sm'
-                        : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
+                      ? 'bg-primary border-transparent text-white shadow-sm'
+                      : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
                       }`}
                   >
                     {tabText}
@@ -1366,7 +1364,7 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                   {tabDetails?.s === tabDetails?.t ? 'Từ vựng' : 'Giản thể'}
                 </span>
 
-                 {tabDetails && (
+                {tabDetails && (
                   <div className="absolute top-4 right-4 flex items-center gap-2">
                     <button
                       type="button"
@@ -1379,11 +1377,10 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                     <button
                       type="button"
                       onClick={handleToggleFavorite}
-                      className={`p-2 rounded-full border transition-all cursor-pointer ${
-                        isFavorite(tabDetails.s)
-                          ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
-                          : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
-                      }`}
+                      className={`p-2 rounded-full border transition-all cursor-pointer ${isFavorite(tabDetails.s)
+                        ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
+                        : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
+                        }`}
                       title={isFavorite(tabDetails.s) ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
                     >
                       <Star size={16} fill={isFavorite(tabDetails.s) ? 'currentColor' : 'none'} />
@@ -1501,6 +1498,50 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                       <p className="text-sm text-body dark:text-on-dark-mute leading-relaxed font-medium">
                         {Array.isArray(tabDetails.en) ? tabDetails.en.join('; ') : tabDetails.en}
                       </p>
+                    </div>
+                  )}
+
+                  {/* Examples from Database */}
+                  {tabDetails?.examples && tabDetails.examples.length > 0 && (
+                    <div className="border-t border-hairline dark:border-divider-dark pt-4 mt-4 space-y-2.5">
+                      <h4 className="text-[10px] font-bold text-ink dark:text-on-dark uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
+                        Câu ví dụ trong từ điển
+                      </h4>
+                      <div className="flex flex-col gap-2">
+                        {tabDetails.examples.map((ex, exIdx) => (
+                          <div
+                            key={exIdx}
+                            className="bg-surface-bone/35 dark:bg-black/10 p-3 rounded-xl border border-hairline dark:border-divider-dark/50 flex justify-between items-start gap-4 hover:border-primary/20 transition-all"
+                          >
+                            <div className="flex-1 min-w-0 space-y-0.5 text-left">
+                              <div className="text-sm font-display font-bold text-ink dark:text-on-dark">
+                                <HoverableText text={ex.hanzi} />
+                              </div>
+                              {ex.pinyin && (
+                                <div className="text-[10px] font-mono font-semibold text-primary dark:text-link">
+                                  {ex.pinyin}
+                                </div>
+                              )}
+                              <div className="text-xs text-body dark:text-on-dark-mute italic font-medium">
+                                {ex.meaning}
+                              </div>
+                              <div className="pt-1">
+                                <span className="text-[8px] uppercase font-extrabold text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800/80 px-1 py-0.5 rounded">
+                                  {ex.source}
+                                </span>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={(e) => speakSentence(e, ex.hanzi)}
+                              className="h-7 w-7 rounded-full bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-primary shadow-xs flex items-center justify-center cursor-pointer active:scale-95 transition-all shrink-0"
+                              title="Nghe phát âm"
+                            >
+                              <Volume2 size={11} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1765,11 +1806,11 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                     {relatedSentences.length > 0 && (
                       <div className="flex flex-col gap-4 text-left border-t border-hairline dark:border-divider-dark pt-5 animate-fade-in">
                         <h4 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider flex items-center gap-1.5">
-                          💡 Câu ví dụ liên quan
+                          Câu ví dụ liên quan
                         </h4>
                         <div className="flex flex-col gap-3">
                           {relatedSentences.map((sentence, sIdx) => (
-                            <div 
+                            <div
                               key={sIdx}
                               className="bg-surface-bone/35 dark:bg-surface-dark/20 p-4 rounded-xl border border-hairline dark:border-divider-dark flex justify-between items-start gap-4 hover:border-primary/30 transition-all shadow-xs"
                             >
@@ -1812,8 +1853,8 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
 
         {/* Right Panel: Handwriting Recognition Canvas */}
         <div className="lg:col-span-1 h-full">
-          <HandwritingCanvas 
-            onRecognize={handleRecognize} 
+          <HandwritingCanvas
+            onRecognize={handleRecognize}
             query={query}
             onDeleteLastChar={() => {
               setQuery((prev) => {

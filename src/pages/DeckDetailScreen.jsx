@@ -2,13 +2,23 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchDeckDetails, fetchFlashcardsByDeck, importFlashcards, deleteFlashcard, clearCurrentDeck, updateFlashcard } from '../features/deck/deckSlice';
-import { Upload, Star, X, Trash2, Volume2, Copy, Check, Pencil, Plus } from 'lucide-react';
+import { Upload, Star, X, Trash2, Volume2, Copy, Check, Pencil, Plus, Search } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { deckApi } from '../services/deckApi';
 import { speakChinese } from '../utils/tts';
 import { useToast } from '../context/ToastContext';
 import HoverableText from '../components/common/HoverableText';
 import AiParagraphModal from '../components/common/AiParagraphModal';
+import ConfirmModal from '../components/common/ConfirmModal';
+
+const removeDiacritics = (str) => {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd');
+};
 
 export default function DeckDetailScreen() {
   const { showToast } = useToast();
@@ -35,6 +45,39 @@ export default function DeckDetailScreen() {
     exampleMeaning: '',
   });
   const isVirtual = id === 'favorites';
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: null
+  });
+
+  const getCardDetails = (card) => {
+    const word = card.hanzi || card.front || '';
+    let pinyin = card.pinyin || '';
+    let meaning = card.meaning || '';
+    let sinoVietnamese = card.sinoVietnamese || card.sv || '';
+
+    // If pinyin/meaning are missing but back has '|', split it
+    if ((!pinyin || !meaning) && card.back && card.back.includes('|')) {
+      const parts = card.back.split('|');
+      pinyin = pinyin || parts[0].trim();
+      meaning = meaning || parts.slice(1).join('|').trim();
+    } else if (!meaning && card.back) {
+      meaning = card.back;
+    }
+
+    return {
+      word,
+      pinyin,
+      meaning,
+      sinoVietnamese,
+      exampleHanzi: card.exampleHanzi,
+      exampleMeaning: card.exampleMeaning
+    };
+  };
 
   const fetchParagraphs = () => {
     if (!isVirtual && id) {
@@ -135,24 +178,28 @@ export default function DeckDetailScreen() {
 
   const canDelete = isVirtual || (displayDeck && (!displayDeck.isSystem || user?.role === 'ADMIN'));
 
-  const handleDeleteCard = async (cardId, front) => {
-    if (!window.confirm(`Bạn có chắc chắn muốn xóa thẻ "${front}" này không?`)) {
-      return;
-    }
-
-    try {
-      if (isVirtual) {
-        await favoriteWordsApi.deleteFavorite(cardId);
-        setVirtualCards((prev) => prev.filter((c) => c.id !== cardId));
-        showToast('Đã xóa thẻ khỏi mục yêu thích.', 'success');
-      } else {
-        await dispatch(deleteFlashcard(cardId)).unwrap();
-        showToast('Xóa thẻ bài thành công.', 'success');
+  const handleDeleteCard = (cardId, front) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Xóa thẻ từ vựng',
+      message: `Bạn có chắc chắn muốn xóa thẻ "${front}" này khỏi bộ bài không?`,
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        try {
+          if (isVirtual) {
+            await favoriteWordsApi.deleteFavorite(cardId);
+            setVirtualCards((prev) => prev.filter((c) => c.id !== cardId));
+            showToast('Đã xóa thẻ khỏi mục yêu thích.', 'success');
+          } else {
+            await dispatch(deleteFlashcard(cardId)).unwrap();
+            showToast('Xóa thẻ bài thành công.', 'success');
+          }
+        } catch (err) {
+          console.error(err);
+          showToast('Có lỗi xảy ra khi xóa thẻ bài.', 'error');
+        }
       }
-    } catch (err) {
-      console.error(err);
-      showToast('Có lỗi xảy ra khi xóa thẻ bài.', 'error');
-    }
+    });
   };
 
   const canEdit = !isVirtual && (displayDeck && (!displayDeck.isSystem || user?.role === 'ADMIN'));
@@ -195,19 +242,23 @@ export default function DeckDetailScreen() {
     }
   };
 
-  const handleDeleteParagraph = async (paragraphId) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xóa đoạn văn đã lưu này không?')) {
-      return;
-    }
-
-    try {
-      await deckApi.deleteParagraph(id, paragraphId);
-      setSavedParagraphs((prev) => prev.filter((p) => p.id !== paragraphId));
-      showToast('Xóa đoạn văn đã lưu thành công.', 'success');
-    } catch (err) {
-      console.error(err);
-      showToast('Có lỗi xảy ra khi xóa đoạn văn.', 'error');
-    }
+  const handleDeleteParagraph = (paragraphId) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Xóa đoạn văn ôn tập',
+      message: 'Bạn có chắc chắn muốn xóa đoạn văn đã lưu này không?',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        try {
+          await deckApi.deleteParagraph(id, paragraphId);
+          setSavedParagraphs((prev) => prev.filter((p) => p.id !== paragraphId));
+          showToast('Xóa đoạn văn đã lưu thành công.', 'success');
+        } catch (err) {
+          console.error(err);
+          showToast('Có lỗi xảy ra khi xóa đoạn văn.', 'error');
+        }
+      }
+    });
   };
 
   if (loading) {
@@ -255,6 +306,23 @@ export default function DeckDetailScreen() {
               {displayDeck?.title || displayDeck?.name || 'Chi tiết bộ bài'}
             </h1>
             <p className="mt-2 text-sm text-body dark:text-on-dark-mute">{displayDeck?.description || 'Xem lại các thẻ bài và nhập thêm nếu cần thiết.'}</p>
+            
+            <div className="mt-4 flex flex-wrap items-center gap-2.5 text-xs font-semibold text-mute dark:text-on-dark-mute">
+              <div className="flex items-center gap-1.5 bg-surface-bone dark:bg-white/5 border border-hairline dark:border-white/5 rounded-full px-3 py-1.5 shadow-xs">
+                <span className="text-body dark:text-on-dark/60 font-medium">Số lượng:</span>
+                <span className="font-extrabold text-ink dark:text-on-dark">{displayCards?.length ?? 0} thẻ</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-surface-bone dark:bg-white/5 border border-hairline dark:border-white/5 rounded-full px-3 py-1.5 shadow-xs">
+                <span className="text-body dark:text-on-dark/60 font-medium">Ngày tạo:</span>
+                <span className="font-extrabold text-ink dark:text-on-dark">{displayDeck?.createdAt ? new Date(displayDeck.createdAt).toLocaleDateString() : '---'}</span>
+              </div>
+              {displayDeck?.language && (
+                <div className="flex items-center gap-1.5 bg-surface-bone dark:bg-white/5 border border-hairline dark:border-white/5 rounded-full px-3 py-1.5 shadow-xs">
+                  <span className="text-body dark:text-on-dark/60 font-medium">Ngôn ngữ:</span>
+                  <span className="font-extrabold text-ink dark:text-on-dark">{displayDeck.language === 'EN' ? 'Tiếng Anh' : 'Tiếng Trung'}</span>
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <input
@@ -336,55 +404,146 @@ export default function DeckDetailScreen() {
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_1.5fr] mt-6">
-          <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-bone dark:bg-surface-dark/40 p-5 self-start">
-            <div className="text-sm font-bold text-ink dark:text-on-dark uppercase tracking-wider">Thông tin bộ bài</div>
-            <div className="mt-4 space-y-3 text-sm text-body dark:text-on-dark-mute">
-              <div>
-                Số lượng thẻ: <span className="font-extrabold text-ink dark:text-on-dark">{displayCards?.length ?? 0} thẻ</span>
-              </div>
-              <div>
-                Ngày tạo: <span className="font-semibold text-ink dark:text-on-dark">{displayDeck?.createdAt ? new Date(displayDeck.createdAt).toLocaleDateString() : '---'}</span>
+        <div className="mt-6">
+          <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/30 p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <h2 className="text-base font-bold text-ink dark:text-on-dark font-display tracking-tight shrink-0">Danh sách thẻ bài</h2>
+              
+              {/* Search input field */}
+              <div className="relative flex-1 max-w-md w-full sm:ml-auto">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-mute dark:text-on-dark-mute w-4 h-4" />
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm thẻ từ vựng..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-10 py-1.5 bg-surface-bone dark:bg-white/5 border border-hairline dark:border-divider-dark/50 rounded-full text-xs text-ink dark:text-on-dark focus:outline-none focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-mute"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-mute hover:text-ink dark:hover:text-on-dark cursor-pointer bg-transparent border-none p-0.5 flex items-center justify-center"
+                    title="Xóa tìm kiếm"
+                  >
+                    <X size={12} />
+                  </button>
+                )}
               </div>
             </div>
-          </div>
 
-          <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/30 p-5">
-            <h2 className="text-base font-bold text-ink dark:text-on-dark font-display tracking-tight">Danh sách thẻ bài</h2>
-            <div className="mt-4 space-y-3 pr-2 max-h-[550px] overflow-y-auto">
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 pr-2 max-h-[650px] overflow-y-auto pt-1">
               {displayCards?.length > 0 ? (
-                displayCards.map((card) => (
-                  <div key={card.id || card.front} className="rounded-md border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-surface-dark/20 p-4 transition-colors relative group">
-                    <div className="text-2xl font-extrabold text-ink dark:text-on-dark font-display">
-                      <HoverableText text={card.front} />
-                    </div>
-                    <p className="mt-2 text-sm text-body dark:text-on-dark-mute font-medium leading-relaxed pr-8">{card.back}</p>
-                    <div className="absolute top-4 right-4 flex items-center gap-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
-                      {canEdit && (
-                        <button
-                          type="button"
-                          onClick={() => handleStartEdit(card)}
-                          className="p-1.5 rounded-full hover:bg-primary/10 text-mute hover:text-primary transition-colors cursor-pointer"
-                          title="Sửa thẻ này"
-                        >
-                          <Pencil size={15} />
-                        </button>
-                      )}
-                      {canDelete && (
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteCard(card.id, card.front)}
-                          className="p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-950/30 text-mute hover:text-red-500 transition-colors cursor-pointer"
-                          title="Xóa thẻ này"
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))
+                (() => {
+                  const filteredCards = displayCards.filter(card => {
+                    const { word, pinyin, meaning, sinoVietnamese } = getCardDetails(card);
+                    const q = removeDiacritics(searchQuery).trim();
+                    if (!q) return true;
+
+                    const cleanWord = removeDiacritics(word);
+                    const cleanPinyin = removeDiacritics(pinyin);
+                    const cleanMeaning = removeDiacritics(meaning);
+                    const cleanSino = removeDiacritics(sinoVietnamese);
+
+                    return (
+                      cleanWord.includes(q) ||
+                      cleanPinyin.includes(q) ||
+                      cleanMeaning.includes(q) ||
+                      cleanSino.includes(q)
+                    );
+                  });
+
+                  if (filteredCards.length === 0) {
+                    return (
+                      <div className="rounded-md border border-dashed border-hairline dark:border-divider-dark bg-surface-bone/30 dark:bg-surface-dark/20 p-5 text-sm text-mute dark:text-on-dark-mute text-center col-span-full py-8">
+                        Không tìm thấy thẻ từ vựng nào khớp với từ khóa "{searchQuery}".
+                      </div>
+                    );
+                  }
+
+                  return filteredCards.map((card) => {
+                    const { word, pinyin, meaning, sinoVietnamese, exampleHanzi, exampleMeaning } = getCardDetails(card);
+                    const isEnglish = displayDeck?.language === 'EN';
+                    
+                    return (
+                      <div
+                        key={card.id || card.front}
+                        className="bg-surface-bone/50 dark:bg-surface-dark/20 border border-hairline dark:border-divider-dark p-4 rounded-xl flex gap-3 shadow-xs justify-between group hover:border-primary/30 transition-colors relative"
+                      >
+                        <div className="flex gap-3 min-w-0">
+                          {/* Audio speaker button */}
+                          <button
+                            type="button"
+                            onClick={() => speakChinese(word, isEnglish ? 'en-US' : 'zh-CN')}
+                            className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary/20 shrink-0 cursor-pointer"
+                            title="Nghe phát âm"
+                          >
+                            <Volume2 size={13} />
+                          </button>
+                          
+                          <div className="space-y-2 min-w-0">
+                            <div className="flex flex-wrap items-baseline gap-2">
+                              {/* Word in Hanzi styled */}
+                              <span className="font-display font-extrabold text-lg text-ink dark:text-on-dark leading-tight">
+                                <HoverableText text={word} />
+                              </span>
+                              
+                              {/* Pinyin/IPA */}
+                              {pinyin && (
+                                <span className="text-sm font-mono font-bold text-primary">{pinyin}</span>
+                              )}
+                              
+                              {/* Sino-Vietnamese (Hán Việt) */}
+                              {!isEnglish && sinoVietnamese && (
+                                <span className="text-[10px] font-extrabold text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800/80 px-1.5 py-0.5 rounded-sm uppercase tracking-wider select-none" title="Hán Việt">
+                                  {sinoVietnamese}
+                                </span>
+                              )}
+                            </div>
+                            
+                            {/* Meaning */}
+                            <p className="text-sm font-bold text-body dark:text-on-dark-mute leading-relaxed">{meaning}</p>
+                            
+                            {/* Example sentences */}
+                            {exampleHanzi && (
+                              <div className="border-l-2 border-primary/30 pl-2.5 mt-2 py-0.5 space-y-1">
+                                <p className="text-xs font-bold text-mute dark:text-on-dark-mute/90 leading-relaxed">{exampleHanzi}</p>
+                                {exampleMeaning && (
+                                  <p className="text-[11px] font-semibold text-mute/80 dark:text-on-dark-mute/70 leading-relaxed">{exampleMeaning}</p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {/* Action buttons (pencil, trash) visible on hover */}
+                        <div className="flex flex-col items-center gap-1.5 self-start opacity-0 group-hover:opacity-100 transition-opacity">
+                          {canEdit && (
+                            <button
+                              type="button"
+                              onClick={() => handleStartEdit(card)}
+                              className="p-1 rounded-full hover:bg-primary/10 text-mute hover:text-primary transition-colors cursor-pointer"
+                              title="Sửa thẻ này"
+                            >
+                              <Pencil size={13} />
+                            </button>
+                          )}
+                          {canDelete && (
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteCard(card.id, word)}
+                              className="p-1 rounded-full hover:bg-red-50 dark:hover:bg-red-950/30 text-mute hover:text-red-500 transition-colors cursor-pointer"
+                              title="Xóa thẻ này"
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  });
+                })()
               ) : (
-                <div className="rounded-md border border-dashed border-hairline dark:border-divider-dark bg-surface-bone/30 dark:bg-surface-dark/20 p-5 text-sm text-mute dark:text-on-dark-mute text-center">
+                <div className="rounded-md border border-dashed border-hairline dark:border-divider-dark bg-surface-bone/30 dark:bg-surface-dark/20 p-5 text-sm text-mute dark:text-on-dark-mute text-center col-span-full">
                   Bộ bài này chưa có thẻ nào.
                 </div>
               )}
@@ -435,6 +594,14 @@ export default function DeckDetailScreen() {
           onSave={handleSaveEdit}
         />
       )}
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 }

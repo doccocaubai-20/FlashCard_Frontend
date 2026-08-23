@@ -22,7 +22,7 @@ export default function DictationScreen() {
   const [userInput, setUserInput] = useState('');
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  
+
   // Scoring
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectWords, setIncorrectWords] = useState([]);
@@ -147,8 +147,8 @@ export default function DictationScreen() {
     const cleanInput = userInput.trim();
     const correct = gameMode === 'hanzi'
       ? cleanInput === activeCard.hanzi
-      : (normalizeText(cleanInput) === normalizeText(activeCard.pinyin) || 
-         cleanInput.toLowerCase().replace(/\s+/g, '') === activeCard.pinyin.toLowerCase().replace(/\s+/g, ''));
+      : (normalizeText(cleanInput) === normalizeText(activeCard.pinyin) ||
+        cleanInput.toLowerCase().replace(/\s+/g, '') === activeCard.pinyin.toLowerCase().replace(/\s+/g, ''));
 
     setIsCorrect(correct);
     setIsAnswered(true);
@@ -204,13 +204,13 @@ export default function DictationScreen() {
               onClick={() => startSession('pinyin')}
               className="w-full py-3 bg-primary hover:bg-primary-deep text-white font-mono font-bold rounded-full transition-all cursor-pointer shadow-sm hover:-translate-y-0.5 active:translate-y-0"
             >
-              🎧 Nghe ghi Phiên âm (Pinyin)
+              Nghe ghi Phiên âm (Pinyin)
             </button>
             <button
               onClick={() => startSession('hanzi')}
               className="w-full py-3 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-ink dark:text-on-dark font-mono font-bold rounded-full transition-colors cursor-pointer"
             >
-              ✍️ Nghe viết Chữ Hán
+              Nghe viết Chữ Hán
             </button>
           </div>
 
@@ -229,7 +229,7 @@ export default function DictationScreen() {
   if (!isFinished) {
     return (
       <div className="max-w-xl mx-auto space-y-6 select-none pb-12 text-left">
-        
+
         {/* Progress Bar & Exit */}
         <div className="flex justify-between items-center border-b border-hairline dark:border-divider-dark pb-4">
           <button
@@ -239,7 +239,7 @@ export default function DictationScreen() {
             <ArrowLeft size={14} />
             Dừng chơi
           </button>
-          
+
           <div className="flex items-center gap-3">
             <div className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute">
               Thời gian: {formatTime(elapsedTime)}
@@ -253,7 +253,7 @@ export default function DictationScreen() {
 
         {/* Play Card */}
         <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md p-8 shadow-sm flex flex-col items-center gap-6 relative">
-          
+
           {/* Main Speak button */}
           <button
             onClick={() => handleSpeak(activeCard.hanzi)}
@@ -262,7 +262,7 @@ export default function DictationScreen() {
           >
             <Volume2 size={44} className="group-hover:scale-105 transition-transform" />
           </button>
-          
+
           <div className="text-center">
             <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
               {gameMode === 'pinyin' ? 'Nhập phiên âm Pinyin của từ vừa nghe' : 'Gõ lại chữ Hán chính xác'}
@@ -290,9 +290,8 @@ export default function DictationScreen() {
               <button
                 type="submit"
                 disabled={!userInput.trim()}
-                className={`w-full py-3 text-white font-mono font-bold text-xs rounded-full transition-all cursor-pointer shadow-sm hover:shadow active:scale-95 ${
-                  userInput.trim() ? 'bg-primary hover:bg-primary-deep' : 'bg-primary/40 cursor-not-allowed'
-                }`}
+                className={`w-full py-3 text-white font-mono font-bold text-xs rounded-full transition-all cursor-pointer shadow-sm hover:shadow active:scale-95 ${userInput.trim() ? 'bg-primary hover:bg-primary-deep' : 'bg-primary/40 cursor-not-allowed'
+                  }`}
               >
                 Kiểm tra kết quả
               </button>
@@ -310,14 +309,13 @@ export default function DictationScreen() {
 
           {/* Result Feedback Banner */}
           {isAnswered && (
-            <div 
-              style={{ 
-                backgroundColor: isCorrect ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)', 
-                borderColor: isCorrect ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)' 
+            <div
+              style={{
+                backgroundColor: isCorrect ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                borderColor: isCorrect ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'
               }}
-              className={`w-full border-2 rounded-xl p-4 flex gap-3.5 items-start mt-2 animate-fade-in ${
-                isCorrect ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-              }`}
+              className={`w-full border-2 rounded-xl p-4 flex gap-3.5 items-start mt-2 animate-fade-in ${isCorrect ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                }`}
             >
               <div className="shrink-0 mt-0.5">
                 {isCorrect ? <CheckCircle2 size={20} className="text-green-500" /> : <XCircle size={20} className="text-red-500" />}
@@ -345,7 +343,7 @@ export default function DictationScreen() {
   return (
     <div className="max-w-xl mx-auto pt-6 pb-12 select-none text-left">
       <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md p-8 text-center shadow-lg animate-in fade-in zoom-in-95 duration-300 space-y-6">
-        
+
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary animate-bounce">
           <Trophy size={36} />
         </div>

@@ -188,7 +188,7 @@ export default function GameScreen() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-12 select-none">
-      
+
       {/* Top action header bar */}
       <div className="flex items-center justify-between border-b border-hairline dark:border-divider-dark pb-4">
         <button
@@ -237,19 +237,17 @@ export default function GameScreen() {
                 key={item.id}
                 onClick={() => handleItemClick(item)}
                 disabled={isMatched}
-                className={`min-h-[110px] flex items-center justify-center p-4 text-center rounded-md border text-sm transition-all duration-200 shadow-sm cursor-pointer ${
-                  isMatched
-                    ? 'opacity-0 scale-90 pointer-events-none'
-                    : isWrong
+                className={`min-h-[110px] flex items-center justify-center p-4 text-center rounded-md border text-sm transition-all duration-200 shadow-sm cursor-pointer ${isMatched
+                  ? 'opacity-0 scale-90 pointer-events-none'
+                  : isWrong
                     ? 'border-red-500 bg-red-500/10 text-red-500 animate-shake'
                     : isSelected
-                    ? 'border-primary bg-primary/15 text-primary ring-2 ring-primary/40 shadow-[0_0_12px_rgba(15,82,87,0.3)] dark:shadow-[0_0_15px_rgba(15,82,87,0.55)]'
-                    : 'bg-surface-card dark:bg-surface-dark hover:bg-surface-bone dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark hover:-translate-y-0.5'
-                }`}
+                      ? 'border-primary bg-primary/15 text-primary ring-2 ring-primary/40 shadow-[0_0_12px_rgba(15,82,87,0.3)] dark:shadow-[0_0_15px_rgba(15,82,87,0.55)]'
+                      : 'bg-surface-card dark:bg-surface-dark hover:bg-surface-bone dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark hover:-translate-y-0.5'
+                  }`}
               >
-                <span className={`whitespace-pre-wrap leading-relaxed ${
-                  item.type === 'hanzi' ? 'text-3xl font-display font-extrabold' : 'text-xs font-semibold'
-                }`}>
+                <span className={`whitespace-pre-wrap leading-relaxed ${item.type === 'hanzi' ? 'text-3xl font-display font-extrabold' : 'text-xs font-semibold'
+                  }`}>
                   {item.content}
                 </span>
               </button>
@@ -263,11 +261,11 @@ export default function GameScreen() {
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary mb-6 animate-bounce">
               <CheckCircle size={36} />
             </div>
-            <h2 className="font-display text-2xl font-extrabold text-ink dark:text-on-dark tracking-tight">Chiến thắng! 🎉</h2>
+            <h2 className="font-display text-2xl font-extrabold text-ink dark:text-on-dark tracking-tight">Chiến thắng!</h2>
             <p className="text-sm text-body dark:text-on-dark-mute mt-3 leading-relaxed">
-              Tuyệt vời! Bạn đã hoàn thành việc ghép tất cả các cặp thẻ trong thời gian **{formatTime(elapsedTime)}** với tổng số **{moves} lượt thử**.
+              Tuyệt vời! Bạn đã hoàn thành việc ghép tất cả các cặp thẻ trong thời gian {formatTime(elapsedTime)} với tổng số {moves} lượt thử.
             </p>
-            
+
             <div className="mt-8 flex flex-col gap-3">
               <button
                 onClick={() => initializeGame()}

@@ -25,11 +25,19 @@ import { chatApi } from '../services/chatApi';
 import { speakChinese } from '../utils/tts';
 import { englishGrammarData } from '../data/englishGrammarData';
 import { aiFlashcardApi } from '../services/aiFlashcardApi';
+import ConfirmModal from '../components/common/ConfirmModal';
 
 export default function EnglishHubScreen() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { showToast } = useToast();
+
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: null
+  });
 
   const [activeTab, setActiveTab] = useState('vocab'); // vocab, grammar, unscramble, freestyle
   
@@ -371,34 +379,46 @@ export default function EnglishHubScreen() {
     }
   };
 
-  const handleDeleteDeck = async (deckId, e) => {
+  const handleDeleteDeck = (deckId, e) => {
     e.stopPropagation();
-    if (!window.confirm('Bạn có chắc muốn xóa bộ thẻ này? Tất cả các từ vựng bên trong sẽ bị mất!')) return;
-    
-    try {
-      await deckApi.deleteDeck(deckId);
-      showToast('Đã xóa bộ thẻ thành công.', 'success');
-      if (selectedDeck && selectedDeck.id === deckId) {
-        setSelectedDeck(null);
+    setConfirmModal({
+      isOpen: true,
+      title: 'Xóa bộ thẻ bài',
+      message: 'Bạn có chắc muốn xóa bộ thẻ này? Tất cả các từ vựng bên trong sẽ bị mất!',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        try {
+          await deckApi.deleteDeck(deckId);
+          showToast('Đã xóa bộ thẻ thành công.', 'success');
+          if (selectedDeck && selectedDeck.id === deckId) {
+            setSelectedDeck(null);
+          }
+          fetchEnglishDecks();
+        } catch (err) {
+          console.error(err);
+          showToast('Không thể xóa bộ thẻ.', 'error');
+        }
       }
-      fetchEnglishDecks();
-    } catch (err) {
-      console.error(err);
-      showToast('Không thể xóa bộ thẻ.', 'error');
-    }
+    });
   };
 
-  const handleDeleteCard = async (cardId) => {
-    if (!window.confirm('Bạn muốn xóa thẻ từ vựng này?')) return;
-    
-    try {
-      await flashcardApi.delete(cardId);
-      showToast('Đã xóa thẻ.', 'success');
-      setDeckCards(deckCards.filter(c => c.id !== cardId));
-    } catch (err) {
-      console.error(err);
-      showToast('Không thể xóa thẻ.', 'error');
-    }
+  const handleDeleteCard = (cardId) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Xóa thẻ từ vựng',
+      message: 'Bạn muốn xóa thẻ từ vựng này?',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        try {
+          await flashcardApi.delete(cardId);
+          showToast('Đã xóa thẻ.', 'success');
+          setDeckCards(deckCards.filter(c => c.id !== cardId));
+        } catch (err) {
+          console.error(err);
+          showToast('Không thể xóa thẻ.', 'error');
+        }
+      }
+    });
   };
 
   // Tab 2: Save Grammar Pattern as Card
@@ -1298,6 +1318,13 @@ Hãy phản hồi bằng tiếng Việt thân thiện, rõ ràng, chi tiết, đ
         </div>
       )}
 
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 }

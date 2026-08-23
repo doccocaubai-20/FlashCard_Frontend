@@ -608,6 +608,14 @@ export default function StudyScreen() {
   const [frontFaceMode, setFrontFaceMode] = useState('hanzi'); // hanzi, meaning
   const [showPinyinOnFront, setShowPinyinOnFront] = useState(false);
   const [isShuffleEnabled, setIsShuffleEnabled] = useState(false);
+  const [ttsTrigger, setTtsTrigger] = useState(() => {
+    return localStorage.getItem('chongzi_tts_trigger') || 'change';
+  });
+
+  const handleUpdateTtsTrigger = (val) => {
+    setTtsTrigger(val);
+    localStorage.setItem('chongzi_tts_trigger', val);
+  };
 
   // Passive Listening state
   const [isPassiveStarted, setIsPassiveStarted] = useState(false);
@@ -707,6 +715,48 @@ export default function StudyScreen() {
     setShowWriting(false);
     setShowSpeaking(false);
   }, [currentIndex]);
+
+  // Auto-play TTS pronunciation when card changes
+  useEffect(() => {
+    if (!isStudyStarted || isStudyFinished || activeQueue.length === 0) return;
+    if (ttsTrigger !== 'change') return; // Only autoplay on card change if setting matches
+
+    const currentCard = activeQueue[currentIndex];
+    if (!currentCard) return;
+
+    // Determine deck language
+    const currentDeck = decks.find((d) => d.id === currentCard.deckId);
+    const isEnglish = currentDeck?.language === 'EN';
+    const lang = isEnglish ? 'en-US' : 'zh-CN';
+    const word = currentCard.hanzi || currentCard.front || '';
+
+    if (word) {
+      // Small timeout to ensure visual transition finishes smoothly
+      const timer = setTimeout(() => {
+        speakChinese(word, lang);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex, activeQueue, isStudyStarted, isStudyFinished, decks, ttsTrigger]);
+
+  // Auto-play TTS pronunciation when card is flipped
+  useEffect(() => {
+    if (!isStudyStarted || isStudyFinished || activeQueue.length === 0) return;
+    if (ttsTrigger !== 'flip' || !isFlipped) return; // Only autoplay on flip if setting matches
+
+    const currentCard = activeQueue[currentIndex];
+    if (!currentCard) return;
+
+    // Determine deck language
+    const currentDeck = decks.find((d) => d.id === currentCard.deckId);
+    const isEnglish = currentDeck?.language === 'EN';
+    const lang = isEnglish ? 'en-US' : 'zh-CN';
+    const word = currentCard.hanzi || currentCard.front || '';
+
+    if (word) {
+      speakChinese(word, lang);
+    }
+  }, [isFlipped, currentIndex, activeQueue, isStudyStarted, isStudyFinished, decks, ttsTrigger]);
 
   // Fetch decks and favorites once on mount
   useEffect(() => {
@@ -1240,7 +1290,7 @@ export default function StudyScreen() {
           {/* Left Column (5 cols): Flashcard, SRS Ratings, and Navigation */}
           <div className="lg:col-span-5 flex flex-col items-center space-y-6 w-full">
             {currentCard ? (
-              <div className="relative w-full max-w-xl mx-auto">
+              <div className="relative w-full max-w-xl mx-auto flex-shrink-0 mb-2">
                 <Flashcard 
                   cardData={currentCard} 
                   isFlipped={isFlipped} 
@@ -1293,7 +1343,7 @@ export default function StudyScreen() {
             )}
 
             {/* Unified Navigation Buttons (Back & Next) */}
-            <div className="flex items-center justify-between gap-6 w-full max-w-xl mx-auto pt-2">
+            <div className="flex items-center justify-between gap-6 w-full max-w-xl mx-auto pt-6 pb-2 flex-shrink-0">
               <button
                 type="button"
                 onClick={handlePrevClassic}
@@ -1585,18 +1635,26 @@ export default function StudyScreen() {
         <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">{t('study.study_mode')}</h3>
         <div className="grid gap-4 sm:grid-cols-2">
           {/* Backed Repetition Block */}
-          <button
+          <div
+            role="button"
+            tabIndex={selectedDeckId === 'favorites' ? -1 : 0}
             onClick={() => {
               if (selectedDeckId === 'favorites') return;
               setStudyMode('srs');
             }}
-            disabled={selectedDeckId === 'favorites'}
-            className={`p-6 rounded-xl border-2 transition-all text-left flex items-start gap-4 hover:shadow-md relative ${
+            onKeyDown={(e) => {
+              if (selectedDeckId === 'favorites') return;
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setStudyMode('srs');
+              }
+            }}
+            className={`p-6 rounded-xl border-2 transition-all text-left flex items-start gap-4 hover:shadow-md relative select-none outline-none focus:ring-2 focus:ring-primary/50 ${
               selectedDeckId === 'favorites'
                 ? 'opacity-40 cursor-not-allowed bg-surface-card border-hairline dark:bg-surface-dark text-ink dark:text-on-dark'
                 : studyMode === 'srs'
-                  ? 'bg-surface-card dark:bg-surface-dark border-primary shadow-lg shadow-primary/15 scale-[1.01]'
-                  : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
+                  ? 'bg-surface-card dark:bg-surface-dark border-primary shadow-lg shadow-primary/15 scale-[1.01] cursor-pointer'
+                  : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark cursor-pointer'
             }`}
           >
             {studyMode === 'srs' && selectedDeckId !== 'favorites' && (
@@ -1661,12 +1719,20 @@ export default function StudyScreen() {
                 )}
               </div>
             </div>
-          </button>
+          </div>
 
           {/* Classic Mode Block */}
-          <button
+          <div
+            role="button"
+            tabIndex={0}
             onClick={() => setStudyMode('classic')}
-            className={`p-6 rounded-xl border-2 transition-all text-left flex items-start gap-4 cursor-pointer hover:shadow-md relative ${
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setStudyMode('classic');
+              }
+            }}
+            className={`p-6 rounded-xl border-2 transition-all text-left flex items-start gap-4 hover:shadow-md relative select-none outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer ${
               studyMode === 'classic'
                 ? 'bg-surface-card dark:bg-surface-dark border-primary shadow-lg shadow-primary/15 scale-[1.01]'
                 : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
@@ -1697,7 +1763,7 @@ export default function StudyScreen() {
                 {t('study.free_order')}
               </div>
             </div>
-          </button>
+          </div>
         </div>
       </div>
 
@@ -1724,6 +1790,43 @@ export default function StudyScreen() {
             }`}
           >
             {t('study.show_meaning_first')}
+          </button>
+        </div>
+      </div>
+
+      {/* Row: PHÁT ÂM TỰ ĐỘNG */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Phát âm tự động (TTS)</h3>
+        <div className="flex flex-wrap gap-4">
+          <button
+            onClick={() => handleUpdateTtsTrigger('change')}
+            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${
+              ttsTrigger === 'change'
+                ? 'bg-primary border-transparent text-white shadow-sm'
+                : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
+            }`}
+          >
+            Chuyển thẻ là phát âm ngay
+          </button>
+          <button
+            onClick={() => handleUpdateTtsTrigger('flip')}
+            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${
+              ttsTrigger === 'flip'
+                ? 'bg-primary border-transparent text-white shadow-sm'
+                : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
+            }`}
+          >
+            Lật thẻ mới phát âm
+          </button>
+          <button
+            onClick={() => handleUpdateTtsTrigger('none')}
+            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${
+              ttsTrigger === 'none'
+                ? 'bg-primary border-transparent text-white shadow-sm'
+                : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
+            }`}
+          >
+            Tắt phát âm tự động
           </button>
         </div>
       </div>

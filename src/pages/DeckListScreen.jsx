@@ -7,12 +7,13 @@ import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { socialApi } from '../services/socialApi';
 import api from '../services/api';
 import { useToast } from '../context/ToastContext';
+import ConfirmModal from '../components/common/ConfirmModal';
 
 // ─── Tab toggle ───────────────────────────────────────────────────────────────
 const TABS = [
   { id: 'personal', label: 'Bộ thẻ cá nhân' },
   { id: 'system', label: 'Bộ thẻ hệ thống' },
-  { id: 'explore', label: '🌐 Khám phá cộng đồng' },
+  { id: 'explore', label: 'Khám phá cộng đồng' },
 ];
 
 // Curated premium preset colors for cards
@@ -74,6 +75,13 @@ export default function DeckListScreen() {
   const isLoading = useSelector((state) => state.deck.isLoading);
 
   const [activeTab, setActiveTab] = useState('personal');
+
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: null
+  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('create'); // 'create' | 'edit'
@@ -201,17 +209,23 @@ export default function DeckListScreen() {
     }
   };
 
-  const handleDelete = async (e, id, title) => {
+  const handleDelete = (e, id, title) => {
     e.stopPropagation();
-    if (window.confirm(`Bạn có chắc chắn muốn xóa bộ bài "${title || 'Chưa đặt tên'}" không?`)) {
-      try {
-        await dispatch(deleteDeck(id)).unwrap();
-        showToast('Đã xóa bộ bài thành công!', 'success');
-      } catch (err) {
-        console.error('Failed to delete deck:', err);
-        showToast('Không thể xóa bộ bài.', 'error');
+    setConfirmModal({
+      isOpen: true,
+      title: 'Xóa bộ bài học',
+      message: `Bạn có chắc chắn muốn xóa bộ bài "${title || 'Chưa đặt tên'}" không? Toàn bộ thẻ từ vựng bên trong sẽ bị mất.`,
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        try {
+          await dispatch(deleteDeck(id)).unwrap();
+          showToast('Đã xóa bộ bài thành công!', 'success');
+        } catch (err) {
+          console.error('Failed to delete deck:', err);
+          showToast('Không thể xóa bộ bài.', 'error');
+        }
       }
-    }
+    });
   };
 
   const handleShare = async (e, deckId) => {
@@ -430,8 +444,8 @@ export default function DeckListScreen() {
                           </div>
                           <div className="flex items-center gap-1.5">
                             <span className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${deck.language === 'EN'
-                                ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20'
-                                : 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20'
+                              ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20'
+                              : 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20'
                               }`}>
                               {deck.language === 'EN' ? 'Tiếng Anh' : 'Tiếng Trung'}
                             </span>
@@ -522,13 +536,13 @@ export default function DeckListScreen() {
                   >
                     <div>
                       <div className="flex items-center justify-between mb-4">
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-black/35 ${style.iconColor} group-hover:${style.iconBg} group-hover:text-white transition-colors duration-300 shadow-xs`}>
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-black/35 ${style.iconColor} group-hover:${style.iconBg} group-hover:text-black transition-colors duration-300 shadow-xs`}>
                           <BookOpen size={20} />
                         </div>
                         <div className="flex items-center gap-1.5">
                           <span className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${deck.language === 'EN'
-                              ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20'
-                              : 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20'
+                            ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20'
+                            : 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20'
                             }`}>
                             {deck.language === 'EN' ? 'Tiếng Anh' : 'Tiếng Trung'}
                           </span>
@@ -987,6 +1001,13 @@ export default function DeckListScreen() {
         </div>
       )}
 
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 }

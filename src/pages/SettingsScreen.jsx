@@ -285,6 +285,53 @@ export default function SettingsScreen() {
         </div>
       </div>
 
+      {/* Section Extension: ChongZi Extension */}
+      <div className="space-y-3">
+        <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
+          Tiện ích mở rộng (Browser Extension)
+        </h2>
+        <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md shadow-sm p-6 transition-colors space-y-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-[#f3f4f6] dark:bg-zinc-800 text-ink dark:text-on-dark rounded-xl shrink-0">
+                {/* Google Chrome SVG Icon */}
+                <svg className="h-8 w-8 text-[#14b8a6]" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C8.21 0 4.89 1.77 2.76 4.53L7.75 13.16C8.22 10.37 10.63 8.25 13.5 8.25H22.92C21.84 3.48 17.58 0 12 0ZM1.13 6.95C0.4 8.5 0 10.22 0 12C0 17.07 3.58 21.29 8.27 22.31L13.26 13.68C12.18 13.68 10.28 13.06 9.34 11.43L1.13 6.95ZM15.75 12C15.75 14.07 14.07 15.75 12 15.75C9.93 15.75 8.25 14.07 8.25 12C8.25 9.93 9.93 8.25 12 8.25C14.07 8.25 15.75 9.93 15.75 12ZM19.23 11.45C19.78 13.04 19.46 15.65 18.23 17.15L13.73 24.94C18.91 24.58 23 20.25 23 15C23 13.77 22.77 12.59 22.35 11.5L19.23 11.45Z" />
+                </svg>
+              </div>
+              <div>
+                <span className="text-sm font-bold text-ink dark:text-on-dark block">
+                  Cài đặt ChongZi Extension
+                </span>
+                <span className="text-xs text-mute dark:text-on-dark-mute mt-1.5 block leading-relaxed">
+                  Dịch &amp; lưu từ vựng từ bất kỳ trang web nào vào bộ từ ChongZi của bạn trực tiếp bằng phím tắt hoặc chuột phải.
+                </span>
+              </div>
+            </div>
+            
+            <a 
+              href="/chongzi-extension.zip" 
+              download="chongzi-extension.zip"
+              className="w-full sm:w-auto px-5 py-2.5 bg-primary hover:bg-primary-deep text-white font-mono font-bold text-xs rounded-full text-center transition-all cursor-pointer shadow-sm shrink-0"
+            >
+              📥 Tải tiện ích (.zip)
+            </a>
+          </div>
+
+          <div className="border-t border-hairline dark:border-divider-dark pt-4 mt-2">
+            <span className="text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider block mb-2">Hướng dẫn cài đặt thủ công:</span>
+            <ol className="list-decimal list-inside text-xs text-mute dark:text-on-dark-mute space-y-2 leading-relaxed">
+              <li>Tải tệp tin <code className="bg-surface-bone dark:bg-black/35 px-1 py-0.5 rounded font-mono font-bold">chongzi-extension.zip</code> phía trên và giải nén thư mục trên máy tính.</li>
+              <li>Mở trình duyệt Google Chrome (hoặc Edge, Brave) và truy cập đường dẫn <code className="bg-surface-bone dark:bg-black/35 px-1 py-0.5 rounded font-mono font-bold">chrome://extensions</code>.</li>
+              <li>Bật tùy chọn <strong className="text-ink dark:text-on-dark font-bold">Chế độ cho nhà phát triển (Developer mode)</strong> ở góc trên bên phải.</li>
+              <li>Chọn nút <strong className="text-ink dark:text-on-dark font-bold">Tải thư mục đã giải nén (Load unpacked)</strong> ở góc trên bên trái.</li>
+              <li>Chọn thư mục <code className="bg-surface-bone dark:bg-black/35 px-1 py-0.5 rounded font-mono font-bold">chongzi-extension</code> mà bạn vừa giải nén.</li>
+              <li>Mở popup tiện ích từ thanh công cụ, nhấn <strong className="text-primary font-bold">🔗 Đồng bộ Đăng nhập từ Tab</strong> để bắt đầu sử dụng!</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
       {/* Section 3: Thông tin cá nhân (Avatar + Form) */}
       <div className="space-y-3">
         <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">

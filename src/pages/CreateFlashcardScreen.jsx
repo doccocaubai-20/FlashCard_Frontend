@@ -11,18 +11,18 @@ import { useToast } from '../context/ToastContext';
 // ─── Tab definitions ──────────────────────────────────────────────────────────
 const TABS = [
   { id: 'manual', label: '✍️ Tạo thủ công' },
-  { id: 'ai',     label: '✨ Tạo bằng AI' },
+  { id: 'ai', label: '✨ Tạo bằng AI' },
 ];
 
 // ─── HSK Level options ────────────────────────────────────────────────────────
 const HSK_LEVELS = [
-  { value: null,  label: 'Không giới hạn' },
-  { value: 1,     label: 'HSK 1' },
-  { value: 2,     label: 'HSK 2' },
-  { value: 3,     label: 'HSK 3' },
-  { value: 4,     label: 'HSK 4' },
-  { value: 5,     label: 'HSK 5' },
-  { value: 6,     label: 'HSK 6' },
+  { value: null, label: 'Không giới hạn' },
+  { value: 1, label: 'HSK 1' },
+  { value: 2, label: 'HSK 2' },
+  { value: 3, label: 'HSK 3' },
+  { value: 4, label: 'HSK 4' },
+  { value: 5, label: 'HSK 5' },
+  { value: 6, label: 'HSK 6' },
 ];
 
 const COUNT_OPTIONS = [5, 10, 15, 20, 30];
@@ -363,11 +363,10 @@ export default function CreateFlashcardScreen() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-5 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer ${
-              activeTab === tab.id
-                ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
-                : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
-            }`}
+            className={`px-5 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer ${activeTab === tab.id
+              ? 'bg-surface-card dark:bg-surface-dark text-primary shadow-xs border border-hairline dark:border-divider-dark'
+              : 'text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark'
+              }`}
           >
             {tab.label}
           </button>
@@ -457,13 +456,12 @@ export default function CreateFlashcardScreen() {
                       <button
                         type="button"
                         onClick={() => setShowHandwriting(!showHandwriting)}
-                        className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border transition-colors flex items-center gap-1 cursor-pointer ${
-                          showHandwriting
-                            ? 'bg-primary border-transparent text-white'
-                            : 'bg-surface-bone dark:bg-black/30 border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
-                        }`}
+                        className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border transition-colors flex items-center gap-1 cursor-pointer ${showHandwriting
+                          ? 'bg-primary border-transparent text-white'
+                          : 'bg-primary dark:bg-black/30 border-hairline dark:border-divider-dark text-white hover:text-ink dark:hover:text-on-dark'
+                          }`}
                       >
-                        ✍️ {showHandwriting ? 'Đóng viết' : 'Viết tay'}
+                        {showHandwriting ? 'Đóng viết' : 'Viết tay'}
                       </button>
                     </div>
                   </label>
@@ -785,11 +783,10 @@ export default function CreateFlashcardScreen() {
                     <div
                       key={idx}
                       onClick={() => toggleCardSelection(idx)}
-                      className={`group relative p-4 rounded-xl border cursor-pointer transition-all duration-200 ${
-                        isSelected
-                          ? 'border-primary bg-primary/5 dark:bg-primary/10 shadow-sm'
-                          : 'border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/50 opacity-60 hover:opacity-80'
-                      }`}
+                      className={`group relative p-4 rounded-xl border cursor-pointer transition-all duration-200 ${isSelected
+                        ? 'border-primary bg-primary/5 dark:bg-primary/10 shadow-sm'
+                        : 'border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/50 opacity-60 hover:opacity-80'
+                        }`}
                     >
                       {/* Checkbox */}
                       <div className={`absolute top-3 right-3 ${isSelected ? 'text-primary' : 'text-mute'}`}>
