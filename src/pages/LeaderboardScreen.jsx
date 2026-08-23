@@ -3,6 +3,49 @@ import { useSelector } from 'react-redux';
 import api from '../services/api';
 import { Trophy, Flame, Layers, Award, RefreshCw } from 'lucide-react';
 
+function LeaderboardAvatar({ url, name, className }) {
+  const [isBroken, setIsBroken] = useState(false);
+
+  if (url && !isBroken) {
+    return (
+      <img
+        src={url}
+        alt={name || 'avatar'}
+        className={className}
+        onError={() => setIsBroken(true)}
+      />
+    );
+  }
+
+  const getInitialsBg = (name) => {
+    const bgColors = [
+      'bg-red-500 text-white',
+      'bg-amber-500 text-white',
+      'bg-emerald-500 text-white',
+      'bg-blue-500 text-white',
+      'bg-indigo-500 text-white',
+      'bg-purple-500 text-white',
+      'bg-pink-500 text-white',
+      'bg-teal-500 text-white',
+    ];
+    let hash = 0;
+    const cleanName = name || 'Anonymous';
+    for (let i = 0; i < cleanName.length; i++) {
+      hash = cleanName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return bgColors[Math.abs(hash) % bgColors.length];
+  };
+
+  const bgClass = getInitialsBg(name);
+  const initials = name ? name.substring(0, 2).toUpperCase() : '?';
+
+  return (
+    <div className={`h-full w-full flex items-center justify-center font-bold text-center ${bgClass}`}>
+      {initials}
+    </div>
+  );
+}
+
 export default function LeaderboardScreen() {
   const [ranking, setRanking] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -114,11 +157,7 @@ export default function LeaderboardScreen() {
                         ? 'border-stone-300 ring-4 ring-stone-300/10' 
                         : 'border-amber-700 ring-4 ring-amber-700/10'
                   }`}>
-                    {player.avatarUrl ? (
-                      <img src={player.avatarUrl} alt="avatar" className="h-full w-full object-cover" />
-                    ) : (
-                      player.name.substring(0, 2).toUpperCase()
-                    )}
+                    <LeaderboardAvatar url={player.avatarUrl} name={player.name} className="h-full w-full object-cover" />
                   </div>
                   {/* Badge position icon */}
                   <div className={`absolute -top-2 -right-1 h-6 w-6 rounded-full flex items-center justify-center text-xs font-black shadow-sm text-white ${
@@ -207,11 +246,7 @@ export default function LeaderboardScreen() {
                     <td className="py-3.5">
                       <div className="flex items-center gap-2">
                         <div className="h-7 w-7 rounded-full bg-surface-bone dark:bg-black font-bold flex items-center justify-center text-[10px] shadow-xs text-ink dark:text-on-dark overflow-hidden border border-hairline dark:border-divider-dark">
-                          {player.avatarUrl ? (
-                            <img src={player.avatarUrl} alt="avatar" className="h-full w-full object-cover" />
-                          ) : (
-                            player.name.substring(0, 2).toUpperCase()
-                          )}
+                          <LeaderboardAvatar url={player.avatarUrl} name={player.name} className="h-full w-full object-cover" />
                         </div>
                         <span className={isCurrent ? 'text-primary font-bold' : 'text-ink dark:text-on-dark font-medium'}>
                           {player.name}

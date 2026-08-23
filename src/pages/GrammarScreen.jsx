@@ -1,11 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, navigate } from 'react';
 import { grammarData } from '../data/grammarData';
-import { 
-  BookOpenText, 
-  Volume2, 
-  Sparkles, 
-  Filter, 
-  ChevronDown, 
+import {
+  BookOpenText,
+  Volume2,
+  Sparkles,
+  Filter,
+  ChevronDown,
   ChevronUp,
   CheckCircle2,
   XCircle,
@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import HoverableText from '../components/common/HoverableText';
 import grammarQuestionBank from '../data/grammarQuestionBank.json';
+import { useNavigate } from 'react-router-dom';
 
 // Glossary mapping for grammar terminology to help beginners analyze structures
 const GRAMMAR_GLOSSARY = {
@@ -52,7 +53,7 @@ function ParsedFormula({ formula }) {
         // Check if optional: e.g. "(+ Obj.)" or "(Obj.)"
         const isOptional = rawToken.startsWith('(') && rawToken.endsWith(')');
         let cleanToken = isOptional ? rawToken.slice(1, -1).trim() : rawToken;
-        
+
         // Strip leading '+' inside parentheses if any, e.g. "+ Obj." -> "Obj."
         if (cleanToken.startsWith('+')) {
           cleanToken = cleanToken.slice(1).trim();
@@ -68,7 +69,7 @@ function ParsedFormula({ formula }) {
 
         if (glossaryInfo) {
           hoverTitle = `${glossaryInfo.vn}: ${glossaryInfo.desc}`;
-          
+
           if (key === 'subj' || key === 'subject') {
             badgeStyle = "bg-indigo-50 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-900/60 text-indigo-600 dark:text-indigo-400 font-semibold";
           } else if (key === 'verb' || key === 'mental verb') {
@@ -113,9 +114,8 @@ function ParsedFormula({ formula }) {
             {index > 0 && <span className="text-mute dark:text-on-dark-mute font-light px-0.5 text-xs select-none">+</span>}
             <span
               title={hoverTitle}
-              className={`inline-flex items-center px-2.5 py-1 rounded text-xs border cursor-help transition-all hover:scale-105 select-all ${badgeStyle} ${
-                isOptional ? 'border-dashed opacity-75' : ''
-              }`}
+              className={`inline-flex items-center px-2.5 py-1 rounded text-xs border cursor-help transition-all hover:scale-105 select-all ${badgeStyle} ${isOptional ? 'border-dashed opacity-75' : ''
+                }`}
             >
               {isOptional ? `(${cleanToken})` : cleanToken}
             </span>
@@ -127,14 +127,15 @@ function ParsedFormula({ formula }) {
 }
 
 export default function GrammarScreen() {
+  const navigate = useNavigate()
   const [filterLevel, setFilterLevel] = useState('All');
-  
+
   // Grouping by title to resolve duplication at runtime
   const groupedGrammar = useMemo(() => {
     const list = filterLevel === 'All' ? grammarData : grammarData.filter((g) => g.level === filterLevel);
     const groups = [];
     const map = new Map();
-    
+
     list.forEach((item) => {
       // Group by level and title to prevent collision across levels
       const key = `${item.level}_${item.title}`;
@@ -245,7 +246,7 @@ export default function GrammarScreen() {
 
   if (practiceId && currentQuizQuestions.length > 0) {
     const currentGrammar = grammarData.find(g => g.id === practiceId);
-    
+
     return (
       <div className="max-w-2xl mx-auto space-y-6 text-left pb-12 select-none">
         {/* Progress header & exit */}
@@ -257,7 +258,7 @@ export default function GrammarScreen() {
             <ArrowLeft size={14} />
             Thoát luyện tập
           </button>
-          
+
           <div className="flex items-center gap-3">
             <span className="text-[10px] font-mono font-extrabold uppercase bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 rounded flex-shrink-0">
               {currentGrammar?.level || 'Ngữ pháp'}
@@ -345,7 +346,7 @@ export default function GrammarScreen() {
                 {currentQuestion.options.map((option) => {
                   const isSelected = selectedOption === option.id;
                   const isCorrectAnswer = option.id === currentQuestion.answer;
-                  
+
                   let cardStyle = 'bg-surface-card border-hairline hover:bg-surface-bone dark:hover:bg-black/30 text-ink dark:text-on-dark';
                   if (isChecked) {
                     if (isCorrectAnswer) {
@@ -367,13 +368,12 @@ export default function GrammarScreen() {
                       onClick={() => setSelectedOption(option.id)}
                       className={`p-4 rounded-xl border-2 text-left text-base transition-all flex items-center gap-3 cursor-pointer ${cardStyle}`}
                     >
-                      <span className={`h-6 w-6 shrink-0 rounded-full flex items-center justify-center text-xs font-mono font-bold ${
-                        isSelected 
-                          ? 'bg-primary text-white' 
-                          : isChecked && isCorrectAnswer 
-                            ? 'bg-emerald-500 text-white'
-                            : 'bg-surface-bone dark:bg-black/40 text-mute'
-                      }`}>
+                      <span className={`h-6 w-6 shrink-0 rounded-full flex items-center justify-center text-xs font-mono font-bold ${isSelected
+                        ? 'bg-primary text-white'
+                        : isChecked && isCorrectAnswer
+                          ? 'bg-emerald-500 text-white'
+                          : 'bg-surface-bone dark:bg-black/40 text-mute'
+                        }`}>
                         {option.id}
                       </span>
                       <span className="font-display font-bold leading-normal hanzi-text">{option.text}</span>
@@ -390,8 +390,8 @@ export default function GrammarScreen() {
                 <textarea
                   disabled={isChecked}
                   placeholder={
-                    currentQuestion.type === 'translate_zh_vi' 
-                      ? 'Nhập bản dịch tiếng Việt...' 
+                    currentQuestion.type === 'translate_zh_vi'
+                      ? 'Nhập bản dịch tiếng Việt...'
                       : 'Nhập câu tiếng Trung (Pinyin hoặc Chữ Hán)...'
                   }
                   value={translationInput}
@@ -404,9 +404,9 @@ export default function GrammarScreen() {
 
             {/* Answer check explanation / Reference translation */}
             {isChecked && (
-              <div 
-                style={{ 
-                  backgroundColor: currentQuestion.type === 'mcq' 
+              <div
+                style={{
+                  backgroundColor: currentQuestion.type === 'mcq'
                     ? (isCorrect ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)')
                     : 'rgba(84, 203, 212, 0.12)',
                   borderColor: currentQuestion.type === 'mcq'
@@ -417,25 +417,24 @@ export default function GrammarScreen() {
               >
                 <div className="shrink-0 mt-0.5">
                   {currentQuestion.type === 'mcq' ? (
-                    isCorrect 
-                      ? <CheckCircle2 size={20} className="text-emerald-500" /> 
+                    isCorrect
+                      ? <CheckCircle2 size={20} className="text-emerald-500" />
                       : <XCircle size={20} className="text-red-500" />
                   ) : (
                     <Award size={20} className="text-primary" />
                   )}
                 </div>
                 <div className="flex-1 text-left space-y-1">
-                  <h4 className={`text-sm font-bold ${
-                    currentQuestion.type === 'mcq'
-                      ? (isCorrect ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400')
-                      : 'text-primary'
-                  }`}>
-                    {currentQuestion.type === 'mcq' 
-                      ? (isCorrect ? 'Tuyệt vời! Bạn trả lời chính xác.' : 'Chưa chính xác!') 
+                  <h4 className={`text-sm font-bold ${currentQuestion.type === 'mcq'
+                    ? (isCorrect ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400')
+                    : 'text-primary'
+                    }`}>
+                    {currentQuestion.type === 'mcq'
+                      ? (isCorrect ? 'Tuyệt vời! Bạn trả lời chính xác.' : 'Chưa chính xác!')
                       : 'So sánh với đáp án mẫu:'
                     }
                   </h4>
-                  
+
                   {currentQuestion.type === 'mcq' ? (
                     <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed pt-1 font-medium">
                       {currentQuestion.explanation}
@@ -453,7 +452,7 @@ export default function GrammarScreen() {
                           </p>
                         )}
                       </div>
-                      
+
                       <div className="bg-surface-bone/50 dark:bg-black/20 p-3 rounded-lg border border-hairline dark:border-zinc-850 space-y-1">
                         <span className="text-[9px] font-mono text-mute uppercase block">Đáp án của bạn:</span>
                         <p className="text-sm font-semibold text-body dark:text-on-dark-mute leading-relaxed italic">
@@ -473,11 +472,10 @@ export default function GrammarScreen() {
                   type="button"
                   disabled={currentQuestion.type === 'mcq' ? !selectedOption : !translationInput.trim()}
                   onClick={handleCheckQuestion}
-                  className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer shadow-sm ${
-                    (currentQuestion.type === 'mcq' ? selectedOption : translationInput.trim())
-                      ? 'bg-primary hover:bg-primary-deep text-white hover:scale-[1.02] active:scale-98'
-                      : 'bg-primary/30 text-white/60 cursor-not-allowed'
-                  }`}
+                  className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer shadow-sm ${(currentQuestion.type === 'mcq' ? selectedOption : translationInput.trim())
+                    ? 'bg-primary hover:bg-primary-deep text-white hover:scale-[1.02] active:scale-98'
+                    : 'bg-primary/30 text-white/60 cursor-not-allowed'
+                    }`}
                 >
                   Kiểm tra kết quả
                 </button>
@@ -526,9 +524,13 @@ export default function GrammarScreen() {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Page Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white shadow-sm shrink-0">
-          <BookOpenText size={18} />
-        </div>
+        <button
+          onClick={() => navigate(-1)}
+          className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-bone dark:hover:bg-zinc-800 text-mute transition-all cursor-pointer border border-hairline dark:border-zinc-800"
+        >
+          <ArrowLeft size={16} />
+        </button>
+
         <div>
           <h1 className="font-display text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight">Ngữ pháp HSK</h1>
           <p className="text-mute dark:text-on-dark-mute text-sm mt-0.5">
@@ -552,7 +554,7 @@ export default function GrammarScreen() {
             {showLegend ? 'Ẩn hướng dẫn' : 'Xem hướng dẫn ký hiệu'}
           </span>
         </button>
-        
+
         {showLegend && (
           <div className="px-5 pb-5 border-t border-hairline dark:border-divider-dark pt-4 space-y-3 animate-fade-in text-left">
             <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed">
@@ -574,7 +576,7 @@ export default function GrammarScreen() {
                 if (key === 'number') colorClass = "bg-yellow-50 border-yellow-200 text-yellow-600 dark:bg-yellow-950/40 dark:border-yellow-900/60 dark:text-yellow-400";
 
                 const displayKey = key.charAt(0).toUpperCase() + key.slice(1) + (['verb', 'noun', 'place', 'time', 'pronoun', 'adverb', 'number'].includes(key) ? '' : '.');
-                
+
                 return (
                   <div key={key} className="border border-hairline dark:border-divider-dark rounded p-2 flex flex-col gap-0.5 bg-surface-bone/25 dark:bg-black/15">
                     <span className={`inline-self-start px-2 py-0.5 rounded text-[10px] border font-bold ${colorClass}`}>
@@ -603,7 +605,7 @@ export default function GrammarScreen() {
           <Filter size={14} />
           Lọc theo cấp độ:
         </div>
-        
+
         <div className="flex gap-1.5 select-none overflow-x-auto no-scrollbar max-w-full pb-1 flex-nowrap -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
           {['All', 'HSK 1', 'HSK 2', 'HSK 3', 'HSK 4', 'HSK 5', 'HSK 6'].map((lvl) => (
             <button
@@ -621,11 +623,10 @@ export default function GrammarScreen() {
                   setExpandedId(null);
                 }
               }}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border cursor-pointer shrink-0 ${
-                filterLevel === lvl
-                  ? 'bg-primary border-transparent text-white shadow-sm'
-                  : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-              }`}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border cursor-pointer shrink-0 ${filterLevel === lvl
+                ? 'bg-primary border-transparent text-white shadow-sm'
+                : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
+                }`}
             >
               {lvl === 'All' ? 'Tất cả' : lvl}
             </button>
@@ -679,7 +680,7 @@ export default function GrammarScreen() {
                 {/* Collapsible Content */}
                 {isExpanded && activeItem && (
                   <div className="px-5 pb-6 border-t border-hairline dark:border-divider-dark pt-5 space-y-5 text-left animate-fade-in">
-                    
+
                     {/* Sub-structures Tab Selector (if duplicate formulas exist under this title) */}
                     {itemsCount > 1 && (
                       <div className="flex flex-wrap gap-1.5 p-1 bg-surface-bone/50 dark:bg-black/30 rounded-md border border-hairline dark:border-divider-dark">
@@ -688,11 +689,10 @@ export default function GrammarScreen() {
                             key={item.id}
                             type="button"
                             onClick={() => setActiveTab(group.id, idx)}
-                            className={`flex-1 min-w-[120px] px-3 py-1.5 rounded text-xs font-bold transition-all cursor-pointer text-center ${
-                              activeIdx === idx
-                                ? 'bg-primary text-white shadow-sm'
-                                : 'text-mute hover:text-ink hover:bg-surface-bone dark:text-on-dark-mute dark:hover:text-on-dark dark:hover:bg-black/40'
-                            }`}
+                            className={`flex-1 min-w-[120px] px-3 py-1.5 rounded text-xs font-bold transition-all cursor-pointer text-center ${activeIdx === idx
+                              ? 'bg-primary text-white shadow-sm'
+                              : 'text-mute hover:text-ink hover:bg-surface-bone dark:text-on-dark-mute dark:hover:text-on-dark dark:hover:bg-black/40'
+                              }`}
                           >
                             Cách dùng {idx + 1}
                           </button>
@@ -702,7 +702,7 @@ export default function GrammarScreen() {
 
                     {/* Formula & Explanation Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
-                      
+
                       {/* Formula representation (parsed) */}
                       <div className="md:col-span-6 space-y-2">
                         <span className="text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">

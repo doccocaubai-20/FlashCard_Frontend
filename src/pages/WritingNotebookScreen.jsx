@@ -64,6 +64,11 @@ export default function WritingNotebookScreen() {
   // Stroke data cache
   const [charDataMap, setCharDataMap] = useState({});
   const [loadingStrokes, setLoadingStrokes] = useState(false);
+  const charDataMapRef = useRef({});
+
+  useEffect(() => {
+    charDataMapRef.current = charDataMap;
+  }, [charDataMap]);
 
   // Fetch user decks for importing words
   useEffect(() => {
@@ -149,34 +154,47 @@ export default function WritingNotebookScreen() {
         });
       });
 
-      const charsToFetch = Array.from(allChars).filter(char => !charDataMap[char]);
+      const currentMap = charDataMapRef.current;
+      const charsToFetch = Array.from(allChars).filter(char => !currentMap[char]);
       if (charsToFetch.length === 0) return;
 
       setLoadingStrokes(true);
-      const newStrokeData = { ...charDataMap };
+      const fetchedData = {};
 
       await Promise.all(
         charsToFetch.map(async (char) => {
-          try {
-            const res = await fetch(`https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/${encodeURIComponent(char)}.json`);
-            if (res.ok) {
-              const data = await res.json();
-              newStrokeData[char] = data;
+          // Fallback array of CDNs (fastly -> main jsdelivr -> unpkg) to handle blocks in Vietnam
+          const urls = [
+            `https://fastly.jsdelivr.net/npm/hanzi-writer-data@2.0/${encodeURIComponent(char)}.json`,
+            `https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/${encodeURIComponent(char)}.json`,
+            `https://unpkg.com/hanzi-writer-data@2.0/${encodeURIComponent(char)}.json`
+          ];
+          
+          for (const url of urls) {
+            try {
+              const res = await fetch(url);
+              if (res.ok) {
+                const data = await res.json();
+                fetchedData[char] = data;
+                break; // Stop trying fallbacks once successful
+              }
+            } catch (e) {
+              console.warn(`Failed to fetch stroke data for ${char} from ${url}:`, e);
             }
-          } catch (e) {
-            console.warn(`Failed to fetch stroke data for: ${char}`, e);
           }
         })
       );
 
-      setCharDataMap(newStrokeData);
+      if (Object.keys(fetchedData).length > 0) {
+        setCharDataMap(prev => ({ ...prev, ...fetchedData }));
+      }
       setLoadingStrokes(false);
     };
 
     if (wordsList.length > 0) {
       fetchAllStrokeData();
     }
-  }, [wordsList, charDataMap]);
+  }, [wordsList]);
 
   // Custom edit handler for a word's metadata
   const handleEditWord = (index) => {
@@ -382,7 +400,7 @@ export default function WritingNotebookScreen() {
                 <button
                   onClick={() => setSourceMode('deck')}
                   className={`flex-1 pb-2 text-[10px] font-mono font-bold uppercase border-b-2 tracking-wider ${
-                    sourceMode === 'deck' ? 'border-transparent text-mute' : 'border-primary text-primary'
+                    sourceMode === 'deck' ? 'border-primary text-primary' : 'border-transparent text-mute'
                   }`}
                 >
                   Chọn từ Thư viện

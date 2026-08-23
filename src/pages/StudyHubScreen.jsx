@@ -102,7 +102,7 @@ export default function StudyHubScreen() {
             <div
               key={index}
               onClick={() => navigate(act.path)}
-              className="group border border-hairline dark:border-white/5 bg-surface-card dark:bg-surface-dark/60 rounded-xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left"
+              className="group border border-hairline hover:border-primary/30 dark:border-white/5 dark:hover:border-primary/40 bg-surface-card dark:bg-surface-dark/60 rounded-xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left"
             >
               <div className="space-y-4">
                 {/* Icon & Badge row */}
@@ -110,7 +110,7 @@ export default function StudyHubScreen() {
                   <div className={`h-11 w-11 rounded-xl border bg-gradient-to-br ${act.color} flex items-center justify-center`}>
                     <Icon size={20} />
                   </div>
-                  <span className="text-[9px] font-bold tracking-widest uppercase text-mute px-2.5 py-1 rounded-full bg-surface-bone dark:bg-white/5">
+                  <span className="text-[9px] font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-2.5 py-1 rounded-full">
                     {act.badge}
                   </span>
                 </div>

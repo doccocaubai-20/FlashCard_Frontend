@@ -89,7 +89,7 @@ export default function AuthScreen() {
             {isLogin ? 'Chào mừng trở lại' : 'Tạo tài khoản mới'}
           </h2>
           <p className="text-sm text-body dark:text-on-dark-mute mt-2">
-            Hệ thống học Flashcard thông minh tiếng Trung ChongZi
+            ChongZi Tiếng Trung
           </p>
         </div>
 
@@ -154,7 +154,7 @@ export default function AuthScreen() {
 
         {/* Google Buttons Section */}
         <div className="mt-6 space-y-3">
-          
+
           {/* Overlay container: custom button under, transparent Google button over */}
           <div className="relative w-full max-w-[380px] mx-auto h-10 select-none">
             {/* Custom Google Button UI */}

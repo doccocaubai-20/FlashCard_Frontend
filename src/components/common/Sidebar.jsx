@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 
 export default function Sidebar() {
+  const [avatarBroken, setAvatarBroken] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
@@ -200,8 +201,8 @@ export default function Sidebar() {
             className="flex items-center gap-2.5 overflow-hidden cursor-pointer hover:opacity-80 transition-opacity flex-1"
           >
             <div className="h-9 w-9 flex-shrink-0 rounded-full bg-primary-light dark:bg-primary/20 text-primary dark:text-on-dark border border-hairline dark:border-divider-dark font-bold text-sm flex items-center justify-center shadow-sm overflow-hidden">
-              {user?.avatarUrl ? (
-                <img src={user.avatarUrl} alt="avatar" className="h-full w-full object-cover" />
+              {user?.avatarUrl && !avatarBroken ? (
+                <img src={user.avatarUrl} alt="avatar" className="h-full w-full object-cover" onError={() => setAvatarBroken(true)} />
               ) : (
                 initials
               )}

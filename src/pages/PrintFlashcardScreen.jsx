@@ -105,6 +105,7 @@ export default function PrintFlashcardScreen() {
   // Fetch cards based on source selection
   useEffect(() => {
     setLoading(true);
+    setPreviewPage(0); // Reset to page 1 on deck/source change
     if (source === 'notebook') {
       favoriteWordsApi.getFavorites()
         .then((res) => {
@@ -152,6 +153,26 @@ export default function PrintFlashcardScreen() {
     }
   }, [source, selectedDeckId]);
 
+  // Helper to chunk cards into printable sheets based on A4 layouts
+  const getCardsPerPage = () => {
+    if (layout === 'a5-16') return 16;
+    if (layout === 'a6-2') return 2;
+    return 8; // a4-8 default
+  };
+
+  const selectedCards = allCards.filter(c => selectedCardIds.has(c.id));
+  const cardsPerPage = getCardsPerPage();
+  const totalPages = Math.ceil(selectedCards.length / cardsPerPage);
+
+  // Keep previewPage in bounds when totalPages changes (e.g. from card selections)
+  useEffect(() => {
+    if (totalPages > 0 && previewPage >= totalPages) {
+      setPreviewPage(totalPages - 1);
+    } else if (totalPages === 0 && previewPage !== 0) {
+      setPreviewPage(0);
+    }
+  }, [totalPages, previewPage]);
+
   const toggleSelectCard = (id) => {
     setSelectedCardIds((prev) => {
       const next = new Set(prev);
@@ -179,17 +200,6 @@ export default function PrintFlashcardScreen() {
     }
     window.print();
   };
-
-  // Helper to chunk cards into printable sheets based on A4 layouts
-  const getCardsPerPage = () => {
-    if (layout === 'a5-16') return 16;
-    if (layout === 'a6-2') return 2;
-    return 8; // a4-8 default
-  };
-
-  const selectedCards = allCards.filter(c => selectedCardIds.has(c.id));
-  const cardsPerPage = getCardsPerPage();
-  const totalPages = Math.ceil(selectedCards.length / cardsPerPage);
 
   // Split selected cards into sheet pages
   const pages = [];
@@ -796,82 +806,6 @@ export default function PrintFlashcardScreen() {
             box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
             border-radius: 4px;
             margin-bottom: 2rem;
-          }
-        }
-        @media print {
-          /* Hide all non-printable wrappers on screen */
-          .no-print,
-          .no-print * {
-            display: none !important;
-          }
-
-          /* Reset all ancestor wrappers of print sheets to have absolutely no height, padding, margin, or layout restrictions */
-          #root, 
-          .app-layout, 
-          .app-content,
-          main,
-          .max-w-7xl,
-          .flex-row,
-          .flex-col,
-          .flex-1,
-          .print-sheets-wrapper {
-            padding: 0 !important;
-            margin: 0 !important;
-            max-width: none !important;
-            width: auto !important;
-            height: auto !important;
-            min-height: 0 !important;
-            display: block !important;
-            position: static !important;
-            border: none !important;
-            box-shadow: none !important;
-            background: transparent !important;
-          }
-
-          /* Remove print headers, footers and page margins */
-          @page {
-            size: A4 portrait !important;
-            margin: 0mm !important;
-          }
-          
-          html, body {
-            background: white !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow: visible !important;
-          }
-
-          /* Force exact print layouts and hide scrollbars */
-          .print-sheet {
-            width: 210mm !important;
-            height: 297mm !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            border: none !important;
-            box-shadow: none !important;
-            page-break-after: always !important;
-            display: block !important;
-            background: white !important;
-            box-sizing: border-box !important;
-          }
-
-          /* Force nested elements to show colors and borders */
-          .border-dashed {
-            border-style: dashed !important;
-            border-color: #d4d4d8 !important; /* zinc-300 */
-          }
-          .text-primary {
-            color: #0f5257 !important; /* brand primary color */
-          }
-          
-          /* Hide dark mode styles for white printouts */
-          .dark .print-sheet {
-            background: white !important;
-            color: black !important;
-          }
-          
-          .dark .border-dashed {
-            border-color: #d4d4d8 !important;
           }
         }
       `}</style>

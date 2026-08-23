@@ -130,8 +130,8 @@ function HeroWord() {
               onClick={handleToggleFavorite}
               disabled={favLoading}
               className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all cursor-pointer ${isFavorite
-                  ? 'bg-amber-500/15 text-amber-500 hover:bg-amber-500/25'
-                  : 'bg-surface-bone dark:bg-white/5 text-mute hover:text-amber-500'
+                ? 'bg-amber-500/15 text-amber-500 hover:bg-amber-500/25'
+                : 'bg-surface-bone dark:bg-white/5 text-mute hover:text-amber-500'
                 }`}
               title={isFavorite ? 'Bỏ yêu thích' : 'Yêu thích'}
             >
@@ -150,7 +150,7 @@ function HeroWord() {
         <div className="flex-1 min-w-0 space-y-3">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-bold text-mute uppercase tracking-widest flex items-center gap-1">
-              <Sparkles size={11} className="text-primary" />
+
               Từ vựng hôm nay
             </span>
             {wotd.hsk && (
@@ -176,7 +176,6 @@ function HeroWord() {
             to={`/write?word=${encodeURIComponent(wotd.s)}`}
             className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary-deep transition-colors mt-1 group"
           >
-            <PenTool size={12} />
             Tập viết chữ này
             <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
           </Link>
@@ -526,7 +525,7 @@ export default function DashboardScreen() {
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 transition-all cursor-pointer shadow-xs"
             >
               <LayoutGrid size={13} />
-              <span>Không gian Game</span>
+              <span>Chuyển giao diện</span>
             </button>
             {streak > 0 && (
               <div className="flex items-center gap-1.5 text-sm font-semibold bg-amber-50 dark:bg-amber-950/30 border border-amber-200/50 dark:border-amber-800/30 text-amber-700 dark:text-amber-400 px-4 py-2 rounded-full">
@@ -598,7 +597,7 @@ export default function DashboardScreen() {
                 Tất cả →
               </Link>
             </div>
-            <div className="space-y-1.5 max-h-[280px] overflow-y-auto">
+            <div className="space-y-1.5 max-h-[200px] overflow-y-auto">
               {decks?.length > 0 ? (
                 decks.slice(0, 6).map((deck) => (
                   <Link
@@ -856,8 +855,8 @@ export default function DashboardScreen() {
                               onClick={() => !hasCompletedTodayQuiz && setSelectedQuizOption(index)}
                               disabled={hasCompletedTodayQuiz}
                               className={`w-full text-left px-3 py-2.5 rounded-xl text-[10px] font-semibold transition-all flex items-center justify-between cursor-pointer border ${selectedQuizOption === index
-                                  ? 'bg-primary/25 border-primary text-white'
-                                  : 'bg-white/5 hover:bg-white/10 border-white/5 text-white/80'
+                                ? 'bg-primary/25 border-primary text-white'
+                                : 'bg-white/5 hover:bg-white/10 border-white/5 text-white/80'
                                 } ${hasCompletedTodayQuiz ? 'cursor-not-allowed opacity-80' : ''}`}
                             >
                               <span className="truncate pr-2">{opt.text}</span>
@@ -878,8 +877,8 @@ export default function DashboardScreen() {
                             onClick={handleAnswerQuiz}
                             disabled={selectedQuizOption === null}
                             className={`px-3.5 py-1.5 rounded-full text-[10px] font-black transition-all shadow-xs cursor-pointer ${selectedQuizOption !== null
-                                ? 'bg-primary hover:bg-primary-deep text-slate-950 font-bold'
-                                : 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed'
+                              ? 'bg-primary hover:bg-primary-deep text-slate-950 font-bold'
+                              : 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed'
                               }`}
                           >
                             {t('dashboard.submit')}
@@ -991,8 +990,8 @@ export default function DashboardScreen() {
                       onClick={handleUseXpBoost}
                       disabled={!(summary?.xpBoostCount > 0)}
                       className={`px-2.5 py-1 rounded-full text-[9px] font-bold transition-all shrink-0 ${summary?.xpBoostCount > 0
-                          ? 'bg-primary hover:bg-primary-deep text-slate-950 font-black cursor-pointer'
-                          : 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed'
+                        ? 'bg-primary hover:bg-primary-deep text-slate-950 font-black cursor-pointer'
+                        : 'bg-white/5 text-white/30 border border-white/5 cursor-not-allowed'
                         }`}
                     >
                       {t('dashboard.activate')}

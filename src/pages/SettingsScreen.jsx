@@ -57,6 +57,11 @@ export default function SettingsScreen() {
   const [passwordMsg, setPasswordMsg] = useState('');
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarMsg, setAvatarMsg] = useState('');
+  const [avatarBroken, setAvatarBroken] = useState(false);
+
+  useEffect(() => {
+    setAvatarBroken(false);
+  }, [profileData.avatarUrl]);
 
   const handleLanguageSelect = async (code) => {
     setProfileData((prev) => ({ ...prev, nativeLanguage: code }));
@@ -291,8 +296,8 @@ export default function SettingsScreen() {
           <div className="py-6 flex flex-col items-center gap-4 border-b border-hairline dark:border-divider-dark">
             <div className="relative group">
               <div className="h-28 w-28 rounded-full overflow-hidden bg-surface-bone dark:bg-surface-dark border-4 border-surface-card dark:border-surface-dark ring-2 ring-hairline dark:ring-divider-dark shadow-sm">
-                {profileData.avatarUrl ? (
-                  <img src={profileData.avatarUrl} alt="Avatar preview" className="h-full w-full object-cover" />
+                {profileData.avatarUrl && !avatarBroken ? (
+                  <img src={profileData.avatarUrl} alt="Avatar preview" className="h-full w-full object-cover" onError={() => setAvatarBroken(true)} />
                 ) : (
                   <div className="h-full w-full flex items-center justify-center bg-primary text-white font-extrabold text-3xl select-none">
                     {profileData.name ? profileData.name.substring(0, 2).toUpperCase() : 'U'}

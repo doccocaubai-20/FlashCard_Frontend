@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ChevronRight, 
-  Sparkles, 
-  BarChart2, 
+import {
+  ChevronRight,
+  Sparkles,
+  BarChart2,
   Award,
   BookOpen
 } from 'lucide-react';
@@ -80,14 +80,12 @@ export default function HskExamListScreen() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-16 select-none animate-fade-in">
-      
+
       {/* Header Info */}
       <div className="space-y-2">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-mono font-bold tracking-wider uppercase">
-          <BookOpen size={11} />
-          Luyện Đề
-        </span>
+
         <h1 className="font-display text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight">
+
           Luyện đề tổng hợp
         </h1>
         <p className="text-sm text-mute dark:text-on-dark-mute max-w-2xl leading-relaxed">
@@ -98,7 +96,7 @@ export default function HskExamListScreen() {
       {/* Main Standard Mock Exams */}
       <div className="space-y-4">
         {exams.map((exam) => (
-          <div 
+          <div
             key={exam.id}
             onClick={() => navigate(`/hsk-exams/${exam.id}/play`)}
             className="flex items-center justify-between p-4 bg-surface-card dark:bg-surface-dark/40 border border-hairline dark:border-divider-dark rounded-md hover:border-primary transition-all duration-300 cursor-pointer shadow-xs hover:shadow-md hover:-translate-y-0.5"
@@ -163,13 +161,12 @@ export default function HskExamListScreen() {
           <Sparkles size={14} />
           Ôn điểm yếu (adaptive)
         </button>
-        <button 
+        <button
           onClick={() => setShowHistory(!showHistory)}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-full border text-xs font-mono font-bold transition-all cursor-pointer ${
-            showHistory 
-              ? 'bg-ink text-white border-ink dark:bg-on-dark dark:text-ink dark:border-on-dark' 
-              : 'border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
-          }`}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-full border text-xs font-mono font-bold transition-all cursor-pointer ${showHistory
+            ? 'bg-ink text-white border-ink dark:bg-on-dark dark:text-ink dark:border-on-dark'
+            : 'border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
+            }`}
         >
           <BarChart2 size={14} />
           {showHistory ? 'Ẩn tiến độ' : 'Xem tiến độ'}
@@ -183,7 +180,7 @@ export default function HskExamListScreen() {
             <Award size={16} className="text-primary" />
             Lịch sử làm bài thi HSK
           </h3>
-          
+
           {history.length === 0 ? (
             <p className="text-xs text-mute leading-relaxed text-center py-6">
               Bạn chưa tham gia bài thi mô phỏng nào. Hãy hoàn thành đề thi đầu tiên để ghi nhận tiến độ!
@@ -234,7 +231,7 @@ export default function HskExamListScreen() {
         <h2 className="text-sm font-mono font-bold text-mute uppercase tracking-widest">
           Bài thi HSK 1 chính thức (Đề chuẩn)
         </h2>
-        <div 
+        <div
           onClick={() => navigate('/hsk-exams/hsk1-mock-1/play')}
           className="bg-red-600 rounded-md overflow-hidden text-white cursor-pointer hover:shadow-lg transition-shadow duration-300 relative flex flex-col justify-between"
         >
@@ -244,7 +241,7 @@ export default function HskExamListScreen() {
             <h3 className="font-display text-2xl font-extrabold tracking-wide uppercase">HSK 1 模拟试卷</h3>
             <p className="text-xs opacity-90 font-medium">Đề thi mô phỏng HSK 1 — Hoa Ngữ 360</p>
           </div>
-          
+
           {/* Stats table info */}
           <div className="px-6 pb-6 bg-red-700/40 border-t border-white/10 grid grid-cols-4 gap-4 py-4 text-center">
             <div className="space-y-0.5">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import HandwritingCanvas from '../components/common/HandwritingCanvas';
 import { useDictionary } from '../hooks/useDictionary';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
@@ -159,7 +159,7 @@ export default function FreeWriteScreen() {
     const helper = async (startIndex) => {
       if (startIndex === s.length) return [];
       if (memo.has(startIndex)) return memo.get(startIndex);
-      
+
       for (let len = Math.min(6, s.length - startIndex); len >= 1; len--) {
         const part = s.substring(startIndex, startIndex + len);
         const matches = await lookupMultiple('pinyin', part);
@@ -217,7 +217,7 @@ export default function FreeWriteScreen() {
 
     // Not Hanzi: try Pinyin or Meaning
     const lowerQ = cleanQ.toLowerCase();
-    
+
     // Check if it matches a direct meaning or single word pinyin first
     const directPinyinMatches = await lookupMultiple('pinyin', lowerQ);
     const directPinyin = directPinyinMatches.find(m => m.s === lowerQ || m.p === lowerQ || m.sp === lowerQ);
@@ -228,7 +228,7 @@ export default function FreeWriteScreen() {
     const words = lowerQ.split(/\s+/);
     const pinyinSyllables = [];
     let isPurePinyin = true;
-    
+
     for (const word of words) {
       const segmented = await segmentPinyin(word);
       if (segmented && segmented.length > 0) {
@@ -241,11 +241,11 @@ export default function FreeWriteScreen() {
 
     if (isPurePinyin && pinyinSyllables.length > 0) {
       const resolvedChars = [];
-      
+
       for (const syl of pinyinSyllables) {
         const matches = await lookupMultiple('pinyin', syl);
         const singleCharMatches = matches.filter(m => m.s && m.s.length === 1);
-        
+
         if (singleCharMatches.length > 0) {
           singleCharMatches.sort((a, b) => getSortScore(b, syl) - getSortScore(a, syl));
           resolvedChars.push(singleCharMatches[0]);
@@ -260,7 +260,7 @@ export default function FreeWriteScreen() {
 
       if (isPurePinyin && resolvedChars.length > 0) {
         const combinedHanzi = resolvedChars.map(c => c.s).join('');
-        
+
         // If the joined Hanzi word exists in the dictionary, return it directly!
         const exactMatches = await lookupMultiple('hanzi', combinedHanzi);
         const exactMatch = exactMatches.find(m => m.s === combinedHanzi);
@@ -446,8 +446,8 @@ export default function FreeWriteScreen() {
     setMode('quiz');
 
     // Get total strokes
-    const strokeCount = writerRef.current._withData && writerRef.current._withData.character 
-      ? writerRef.current._withData.character.strokes.length 
+    const strokeCount = writerRef.current._withData && writerRef.current._withData.character
+      ? writerRef.current._withData.character.strokes.length
       : 0;
     setQuizTotalStrokes(strokeCount);
     setQuizCurrentStroke(0);
@@ -465,7 +465,7 @@ export default function FreeWriteScreen() {
       onComplete: (summary) => {
         const finalMistakes = summary.totalMistakes || 0;
         const finalScore = Math.max(0, 100 - finalMistakes * 10);
-        
+
         let grade = 'C';
         let feedback = 'Hãy cố gắng luyện tập thêm nhiều lần!';
         if (finalScore >= 95) {
@@ -505,9 +505,7 @@ export default function FreeWriteScreen() {
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Page Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white shadow-sm shrink-0">
-          <BookOpen size={18} />
-        </div>
+
         <div>
           <h1 className="font-display text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight">Luyện viết chữ Hán</h1>
           <p className="text-mute dark:text-on-dark-mute text-sm mt-0.5">
@@ -518,12 +516,12 @@ export default function FreeWriteScreen() {
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        
+
         {/* Left Side: Writing Practice (Luyện viết chuẩn) */}
         {selectedWord ? (
           <div className="lg:col-span-5 bg-surface-card dark:bg-surface-dark/50 p-6 rounded-xl border border-hairline dark:border-white/5 shadow-sm flex flex-col items-center gap-4 transition-colors min-h-[550px] justify-center">
             <span className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Luyện viết chuẩn</span>
-            
+
             {chars.length > 1 && (
               <div className="flex gap-1.5 mb-1 overflow-x-auto max-w-full select-none no-scrollbar">
                 {chars.map((c, i) => (
@@ -531,11 +529,10 @@ export default function FreeWriteScreen() {
                     key={i}
                     type="button"
                     onClick={() => setActiveCharIndex(i)}
-                    className={`px-3 py-1 rounded-full text-xs font-bold font-mono transition-all cursor-pointer ${
-                      activeCharIndex === i
-                        ? 'bg-primary text-white shadow-sm'
-                        : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-white/5 text-ink dark:text-on-dark'
-                    }`}
+                    className={`px-3 py-1 rounded-full text-xs font-bold font-mono transition-all cursor-pointer ${activeCharIndex === i
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-white/5 text-ink dark:text-on-dark'
+                      }`}
                   >
                     Chữ {i + 1}: {c}
                   </button>
@@ -576,9 +573,8 @@ export default function FreeWriteScreen() {
               <button
                 type="button"
                 onClick={handleQuiz}
-                className={`px-3.5 py-1.5 text-white text-xs font-mono font-semibold rounded-full shadow transition-all cursor-pointer ${
-                  mode === 'quiz' ? 'bg-primary/50' : 'bg-primary hover:bg-primary-deep'
-                }`}
+                className={`px-3.5 py-1.5 text-white text-xs font-mono font-semibold rounded-full shadow transition-all cursor-pointer ${mode === 'quiz' ? 'bg-primary/50' : 'bg-primary hover:bg-primary-deep'
+                  }`}
               >
                 {mode === 'quiz' ? 'Đang viết...' : 'Luyện viết'}
               </button>
@@ -622,7 +618,7 @@ export default function FreeWriteScreen() {
 
         {/* Right Side: Translation Details & Handwriting Canvas */}
         <div className="lg:col-span-7 bg-surface-card dark:bg-surface-dark/50 p-6 rounded-xl border border-hairline dark:border-white/5 shadow-sm flex flex-col gap-6 transition-colors min-h-[550px]">
-          
+
           {/* Query Edit Bar */}
           <div className="flex gap-2.5 items-center">
             <div className="relative flex-1">
@@ -645,7 +641,7 @@ export default function FreeWriteScreen() {
                 </button>
               )}
             </div>
-            
+
             {query && (
               <button
                 type="button"
@@ -666,7 +662,7 @@ export default function FreeWriteScreen() {
 
           {selectedWord ? (
             <div className="flex flex-col gap-6 text-left flex-1">
-              
+
               {/* Word & Buttons Bar */}
               <div className="flex justify-between items-start border-b border-hairline dark:border-divider-dark pb-4 flex-wrap gap-4">
                 <div>
@@ -697,11 +693,10 @@ export default function FreeWriteScreen() {
                   <button
                     type="button"
                     onClick={handleToggleFavorite}
-                    className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all cursor-pointer ${
-                      isFavorite(selectedWord.s)
-                        ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
-                        : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
-                    }`}
+                    className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all cursor-pointer ${isFavorite(selectedWord.s)
+                      ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
+                      : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
+                      }`}
                     title={isFavorite(selectedWord.s) ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
                   >
                     <Star size={16} fill={isFavorite(selectedWord.s) ? 'currentColor' : 'none'} />
@@ -719,7 +714,7 @@ export default function FreeWriteScreen() {
 
               {/* Bento Content Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start flex-1">
-                
+
                 {/* Details & Meaning */}
                 <div className="space-y-4">
                   <div>
@@ -759,8 +754,8 @@ export default function FreeWriteScreen() {
 
                 {/* Handwriting Canvas */}
                 <div>
-                  <HandwritingCanvas 
-                    onRecognize={handleRecognize} 
+                  <HandwritingCanvas
+                    onRecognize={handleRecognize}
                     query={query}
                     onDeleteLastChar={() => {
                       setQuery((prev) => {
@@ -778,8 +773,8 @@ export default function FreeWriteScreen() {
             </div>
           ) : (
             <div className="flex-1 flex flex-col justify-center max-w-[400px] mx-auto w-full">
-              <HandwritingCanvas 
-                onRecognize={handleRecognize} 
+              <HandwritingCanvas
+                onRecognize={handleRecognize}
                 query={query}
                 onDeleteLastChar={() => {
                   setQuery((prev) => {
@@ -804,13 +799,12 @@ export default function FreeWriteScreen() {
               <div className="text-7xl font-display font-extrabold text-ink dark:text-on-dark animate-pulse">
                 {quizReport.character}
               </div>
-              <div className={`absolute -top-1.5 right-4 h-12 w-12 rounded-full border-2 font-mono font-extrabold text-base flex items-center justify-center shadow ${
-                quizReport.score >= 90
-                  ? 'bg-amber-500/10 border-amber-500/35 text-amber-500'
-                  : quizReport.score >= 70
+              <div className={`absolute -top-1.5 right-4 h-12 w-12 rounded-full border-2 font-mono font-extrabold text-base flex items-center justify-center shadow ${quizReport.score >= 90
+                ? 'bg-amber-500/10 border-amber-500/35 text-amber-500'
+                : quizReport.score >= 70
                   ? 'bg-teal-500/10 border-teal-500/35 text-teal-500'
                   : 'bg-orange-500/10 border-orange-500/35 text-orange-500'
-              }`}>
+                }`}>
                 {quizReport.grade}
               </div>
             </div>
@@ -852,7 +846,7 @@ export default function FreeWriteScreen() {
                   <ArrowRight size={14} />
                 </button>
               )}
-              
+
               <button
                 onClick={handleQuiz}
                 className="w-full py-3 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-ink dark:text-on-dark font-mono font-bold text-xs rounded-full transition-colors cursor-pointer"

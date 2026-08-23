@@ -15,6 +15,57 @@ const TABS = [
   { id: 'explore', label: '🌐 Khám phá cộng đồng' },
 ];
 
+// Curated premium preset colors for cards
+const getDeckStyle = (deckId) => {
+  const presets = [
+    {
+      bg: 'bg-gradient-to-br from-indigo-50/50 to-indigo-100/30 dark:from-indigo-950/10 dark:to-indigo-900/10 border-indigo-100 dark:border-indigo-900/30',
+      iconBg: 'bg-indigo-500',
+      iconColor: 'text-indigo-600 dark:text-indigo-400',
+      barBg: 'bg-indigo-500'
+    },
+    {
+      bg: 'bg-gradient-to-br from-rose-50/50 to-rose-100/30 dark:from-rose-950/10 dark:to-rose-900/10 border-rose-100 dark:border-rose-900/30',
+      iconBg: 'bg-rose-500',
+      iconColor: 'text-rose-600 dark:text-rose-400',
+      barBg: 'bg-rose-500'
+    },
+    {
+      bg: 'bg-gradient-to-br from-emerald-50/50 to-emerald-100/30 dark:from-emerald-950/10 dark:to-emerald-900/10 border-emerald-100 dark:border-emerald-900/30',
+      iconBg: 'bg-emerald-500',
+      iconColor: 'text-emerald-600 dark:text-emerald-400',
+      barBg: 'bg-emerald-500'
+    },
+    {
+      bg: 'bg-gradient-to-br from-purple-50/50 to-purple-100/30 dark:from-purple-950/10 dark:to-purple-900/10 border-purple-100 dark:border-purple-900/30',
+      iconBg: 'bg-purple-500',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      barBg: 'bg-purple-500'
+    },
+    {
+      bg: 'bg-gradient-to-br from-teal-50/50 to-teal-100/30 dark:from-teal-950/10 dark:to-teal-900/10 border-teal-100 dark:border-teal-900/30',
+      iconBg: 'bg-teal-500',
+      iconColor: 'text-teal-600 dark:text-teal-400',
+      barBg: 'bg-teal-500'
+    },
+    {
+      bg: 'bg-gradient-to-br from-sky-50/50 to-sky-100/30 dark:from-sky-950/10 dark:to-sky-900/10 border-sky-100 dark:border-sky-900/30',
+      iconBg: 'bg-sky-500',
+      iconColor: 'text-sky-600 dark:text-sky-400',
+      barBg: 'bg-sky-500'
+    },
+    {
+      bg: 'bg-gradient-to-br from-cyan-50/50 to-cyan-100/30 dark:from-cyan-950/10 dark:to-cyan-900/10 border-cyan-100 dark:border-cyan-900/30',
+      iconBg: 'bg-cyan-500',
+      iconColor: 'text-cyan-600 dark:text-cyan-400',
+      barBg: 'bg-cyan-500'
+    },
+  ];
+
+  const idx = (Number(deckId) || 0) % presets.length;
+  return presets[idx];
+};
+
 export default function DeckListScreen() {
   const { showToast } = useToast();
   const dispatch = useDispatch();
@@ -355,7 +406,6 @@ export default function DeckListScreen() {
                 </div>
               </div>
 
-              {/* User's regular decks (non-system) */}
               {personalDecks.length === 0 ? (
                 <div className="col-span-full rounded-xl border border-dashed border-hairline dark:border-divider-dark bg-surface-bone/30 dark:bg-surface-dark/10 p-8 text-center flex flex-col items-center justify-center min-h-[220px] space-y-3">
                   <div className="text-3xl animate-bounce">🗂️</div>
@@ -365,81 +415,90 @@ export default function DeckListScreen() {
                   </p>
                 </div>
               ) : (
-                personalDecks.map((deck) => (
-                  <div
-                    key={deck.id}
-                    onClick={() => navigate(`/decks/${deck.id}`)}
-                    className="group relative flex flex-col justify-between p-6 bg-surface-card dark:bg-surface-dark/60 rounded-xl border border-hairline dark:border-white/5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
-                  >
-                    <div>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-bone dark:bg-surface-dark text-ink dark:text-on-dark group-hover:bg-primary group-hover:text-white dark:group-hover:bg-primary dark:group-hover:text-white transition-colors duration-300">
-                          <Folder size={20} />
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          {deck.isPublic && (
-                            <span className="text-[10px] font-bold text-green-600 bg-green-500/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                              Đã chia sẻ
+                personalDecks.map((deck, index) => {
+                  const style = getDeckStyle(index);
+                  return (
+                    <div
+                      key={deck.id}
+                      onClick={() => navigate(`/decks/${deck.id}`)}
+                      className={`group relative flex flex-col justify-between p-6 ${style.bg} rounded-xl border shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-black/35 ${style.iconColor} group-hover:${style.iconBg} group-hover:text-black transition-colors duration-300 shadow-xs`}>
+                            <Folder size={20} />
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <span className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${deck.language === 'EN'
+                                ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20'
+                                : 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20'
+                              }`}>
+                              {deck.language === 'EN' ? 'Tiếng Anh' : 'Tiếng Trung'}
                             </span>
-                          )}
-                        </div>
-                      </div>
-                      <h3 className="text-lg font-bold text-ink dark:text-on-dark group-hover:text-primary dark:group-hover:text-primary transition-colors font-display tracking-tight">
-                        {deck.title || deck.name || 'Bộ bài chưa đặt tên'}
-                      </h3>
-                      <p className="text-sm text-body dark:text-on-dark-mute mt-2 line-clamp-2 leading-relaxed">
-                        {deck.description || 'Không có mô tả cho bộ bài này.'}
-                      </p>
-
-                      {/* studied progress bar */}
-                      {deck.cardCount > 0 && (
-                        <div className="mt-4">
-                          <div className="flex justify-between text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute mb-1">
-                            <span>Đã thuộc: {deck.studiedCount ?? 0}/{deck.cardCount} từ</span>
-                            <span>{Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%</span>
-                          </div>
-                          <div className="h-1.5 w-full bg-surface-bone dark:bg-black/30 rounded-full overflow-hidden border border-hairline dark:border-divider-dark">
-                            <div
-                              className="h-full bg-primary rounded-full transition-all duration-300"
-                              style={{ width: `${Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%` }}
-                            />
+                            {deck.isPublic && (
+                              <span className="text-[9px] font-extrabold text-green-600 bg-green-500/10 border border-green-500/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                                Đã chia sẻ
+                              </span>
+                            )}
                           </div>
                         </div>
-                      )}
-                    </div>
+                        <h3 className="text-lg font-bold text-ink dark:text-on-dark group-hover:text-primary dark:group-hover:text-primary transition-colors font-display tracking-tight">
+                          {deck.title || deck.name || 'Bộ bài chưa đặt tên'}
+                        </h3>
+                        <p className="text-sm text-body dark:text-on-dark-mute mt-2 line-clamp-2 leading-relaxed font-semibold">
+                          {deck.description || 'Không có mô tả cho bộ bài này.'}
+                        </p>
 
-                    <div className="flex items-center justify-between border-t border-hairline dark:border-divider-dark mt-6 pt-4">
-                      <span className="text-xs font-semibold text-mute dark:text-on-dark-mute">
-                        {deck.cardCount ?? 0} thẻ
-                      </span>
+                        {/* studied progress bar */}
+                        {deck.cardCount > 0 && (
+                          <div className="mt-4">
+                            <div className="flex justify-between text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute mb-1">
+                              <span>Đã thuộc: {deck.studiedCount ?? 0}/{deck.cardCount} từ</span>
+                              <span>{Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%</span>
+                            </div>
+                            <div className="h-1.5 w-full bg-white/60 dark:bg-black/35 rounded-full overflow-hidden border border-hairline dark:border-divider-dark/40">
+                              <div
+                                className={`h-full ${style.barBg} rounded-full transition-all duration-300`}
+                                style={{ width: `${Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%` }}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
 
-                      {/* Actions */}
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={(e) => handleShare(e, deck.id)}
-                          className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
-                          title="Chia sẻ bộ bài"
-                        >
-                          <Share2 size={16} />
-                        </button>
-                        <button
-                          onClick={(e) => handleOpenEdit(e, deck)}
-                          className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
-                          title="Sửa tên bộ bài"
-                        >
-                          <Edit3 size={16} />
-                        </button>
-                        <button
-                          onClick={(e) => handleDelete(e, deck.id, deck.title || deck.name)}
-                          className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
-                          title="Xóa bộ bài"
-                        >
-                          <Trash2 size={16} />
-                        </button>
+                      <div className="flex items-center justify-between border-t border-hairline dark:border-divider-dark mt-6 pt-4">
+                        <span className="text-xs font-semibold text-mute dark:text-on-dark-mute">
+                          {deck.cardCount ?? 0} thẻ
+                        </span>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={(e) => handleShare(e, deck.id)}
+                            className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
+                            title="Chia sẻ bộ bài"
+                          >
+                            <Share2 size={16} />
+                          </button>
+                          <button
+                            onClick={(e) => handleOpenEdit(e, deck)}
+                            className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
+                            title="Sửa tên bộ bài"
+                          >
+                            <Edit3 size={16} />
+                          </button>
+                          <button
+                            onClick={(e) => handleDelete(e, deck.id, deck.title || deck.name)}
+                            className="p-2 text-mute dark:text-on-dark-mute hover:text-primary dark:hover:text-primary hover:bg-surface-bone dark:hover:bg-black rounded-full transition-colors cursor-pointer"
+                            title="Xóa bộ bài"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           )}
@@ -453,53 +512,63 @@ export default function DeckListScreen() {
             <div className="text-center py-12 text-mute dark:text-on-dark-mute">Đang tải danh sách bộ bài hệ thống...</div>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {/* System decks only */}
-              {decks.filter(d => d.isSystem).map((deck) => (
-                <div
-                  key={deck.id}
-                  onClick={() => navigate(`/decks/${deck.id}`)}
-                  className="group relative flex flex-col justify-between p-6 bg-surface-card dark:bg-surface-dark/60 rounded-xl border border-hairline dark:border-white/5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer animate-fade-in"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300 animate-pulse">
-                        <BookOpen size={20} />
+              {decks.filter(d => d.isSystem).map((deck, index) => {
+                const style = getDeckStyle(index);
+                return (
+                  <div
+                    key={deck.id}
+                    onClick={() => navigate(`/decks/${deck.id}`)}
+                    className={`group relative flex flex-col justify-between p-6 ${style.bg} rounded-xl border shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer animate-fade-in`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-black/35 ${style.iconColor} group-hover:${style.iconBg} group-hover:text-white transition-colors duration-300 shadow-xs`}>
+                          <BookOpen size={20} />
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${deck.language === 'EN'
+                              ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20'
+                              : 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20'
+                            }`}>
+                            {deck.language === 'EN' ? 'Tiếng Anh' : 'Tiếng Trung'}
+                          </span>
+                          <span className="text-[9px] font-extrabold text-primary bg-primary/10 border border-primary/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                            Hệ thống
+                          </span>
+                        </div>
                       </div>
-                      <span className="text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                        Hệ thống
+                      <h3 className="text-lg font-bold text-ink dark:text-on-dark group-hover:text-primary dark:group-hover:text-primary transition-colors font-display tracking-tight">
+                        {deck.title || deck.name || 'Bộ bài hệ thống'}
+                      </h3>
+                      <p className="text-sm text-body dark:text-on-dark-mute mt-2 line-clamp-2 leading-relaxed font-semibold">
+                        {deck.description || 'Không có mô tả cho bộ bài này.'}
+                      </p>
+
+                      {/* studied progress bar */}
+                      {deck.cardCount > 0 && (
+                        <div className="mt-4">
+                          <div className="flex justify-between text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute mb-1">
+                            <span>Đã thuộc: {deck.studiedCount ?? 0}/{deck.cardCount} từ</span>
+                            <span>{Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%</span>
+                          </div>
+                          <div className="h-1.5 w-full bg-white/60 dark:bg-black/35 rounded-full overflow-hidden border border-hairline dark:border-divider-dark/40">
+                            <div
+                              className={`h-full ${style.barBg} rounded-full transition-all duration-300`}
+                              style={{ width: `${Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%` }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between border-t border-hairline dark:border-divider-dark mt-6 pt-4">
+                      <span className="text-xs font-semibold text-mute dark:text-on-dark-mute">
+                        {deck.cardCount ?? 0} thẻ
                       </span>
                     </div>
-                    <h3 className="text-lg font-bold text-ink dark:text-on-dark group-hover:text-primary dark:group-hover:text-primary transition-colors font-display tracking-tight">
-                      {deck.title || deck.name || 'Bộ bài hệ thống'}
-                    </h3>
-                    <p className="text-sm text-body dark:text-on-dark-mute mt-2 line-clamp-2 leading-relaxed">
-                      {deck.description || 'Không có mô tả cho bộ bài này.'}
-                    </p>
-
-                    {/* studied progress bar */}
-                    {deck.cardCount > 0 && (
-                      <div className="mt-4">
-                        <div className="flex justify-between text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute mb-1">
-                          <span>Đã thuộc: {deck.studiedCount ?? 0}/{deck.cardCount} từ</span>
-                          <span>{Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%</span>
-                        </div>
-                        <div className="h-1.5 w-full bg-surface-bone dark:bg-black/30 rounded-full overflow-hidden border border-hairline dark:border-divider-dark">
-                          <div
-                            className="h-full bg-primary rounded-full transition-all duration-300"
-                            style={{ width: `${Math.round(((deck.studiedCount ?? 0) / deck.cardCount) * 100)}%` }}
-                          />
-                        </div>
-                      </div>
-                    )}
                   </div>
-
-                  <div className="flex items-center justify-between border-t border-hairline dark:border-divider-dark mt-6 pt-4">
-                    <span className="text-xs font-semibold text-mute dark:text-on-dark-mute">
-                      {deck.cardCount ?? 0} thẻ
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </>

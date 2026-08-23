@@ -383,3 +383,98 @@ strong .hanzi-text,
 b .hanzi-text {
   font-weight: 500 !important;
 }
+
+/* ════════════════════════════════════════════
+   GLOBAL PRINT LAYOUT & RESET SYSTEM
+   ════════════════════════════════════════════ */
+@media print {
+  /* Hide all non-printable layout wrappers globally */
+  .no-print,
+  .no-print *,
+  .app-sidebar,
+  .mobile-header,
+  .sidebar-backdrop,
+  .floating-dict-btn,
+  .floating-dictionary-container,
+  #floating-dictionary,
+  header,
+  aside,
+  footer,
+  iframe,
+  [class*="z-[99999]"],
+  [class*="z-[99998]"] {
+    display: none !important;
+  }
+
+  /* Flatten and reset body wrappers for layout printing */
+  #root, 
+  .app-layout, 
+  .app-content,
+  .app-content > div,
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    display: block !important;
+    position: static !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    overflow: visible !important;
+  }
+
+  /* Setup A4 Page Margins to 0 for borderless flashcard grids */
+  @page {
+    size: A4 portrait !important;
+    margin: 0mm !important;
+  }
+  
+  html, body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Print sheets structure sizing */
+  .print-sheet {
+    width: 210mm !important;
+    height: 297mm !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    page-break-after: always !important;
+    display: block !important;
+    background: white !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Force borders to be visible */
+  .border-dashed {
+    border-style: dashed !important;
+    border-color: #d4d4d8 !important; /* zinc-300 */
+  }
+
+  /* Fix dark-mode white-on-white text invisibility in print preview */
+  .print-sheet,
+  .print-sheet *,
+  .print-sheet span,
+  .print-sheet div,
+  .print-sheet p,
+  .print-sheet h3 {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+    background-color: transparent !important;
+  }
+
+  .print-sheet .text-primary {
+    color: #0f5257 !important;
+    -webkit-text-fill-color: #0f5257 !important;
+  }
+}

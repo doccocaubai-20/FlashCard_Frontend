@@ -63,11 +63,8 @@ export default function GameArcadeScreen() {
             <div
               key={index}
               onClick={() => navigate(game.path)}
-              className="group border border-hairline dark:border-white/5 bg-surface-card dark:bg-surface-dark/60 rounded-xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left relative overflow-hidden"
+              className="group border border-hairline hover:border-primary/30 dark:border-white/5 dark:hover:border-primary/40 bg-surface-card dark:bg-surface-dark/60 rounded-xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left relative overflow-hidden"
             >
-              {/* Top accent on hover */}
-              <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-hero-glow opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
               <div className="space-y-4">
                 {/* Icon & Badge row */}
                 <div className="flex justify-between items-center">
