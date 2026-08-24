@@ -21,7 +21,7 @@ import {
   Star
 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
-import { speakChinese } from '../utils/tts';
+import { speakChinese, getBestVoice } from '../utils/tts';
 import { flashcardApi } from '../services/flashcardApi';
 import { dictionaryHistoryApi } from '../services/dictionaryHistoryApi';
 
@@ -474,6 +474,13 @@ const speakUtterance = (text, lang, rate) => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = lang;
     utterance.rate = rate;
+
+    // Apply the best neural/online voice if available
+    const voiceInfo = getBestVoice(lang);
+    if (voiceInfo && voiceInfo.voice) {
+      utterance.voice = voiceInfo.voice;
+    }
+
     utterance.onend = () => resolve();
     utterance.onerror = (err) => {
       console.warn('Speech error:', err);

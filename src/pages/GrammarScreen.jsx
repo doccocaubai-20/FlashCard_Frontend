@@ -19,6 +19,7 @@ import {
 import HoverableText from '../components/common/HoverableText';
 import grammarQuestionBank from '../data/grammarQuestionBank.json';
 import { useNavigate } from 'react-router-dom';
+import { speakChinese } from '../utils/tts';
 
 // Glossary mapping for grammar terminology to help beginners analyze structures
 const GRAMMAR_GLOSSARY = {
@@ -287,12 +288,7 @@ export default function GrammarScreen() {
 
   const handleSpeakExample = (e, text) => {
     e.stopPropagation();
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.8;
-    window.speechSynthesis.speak(utterance);
+    speakChinese(text, 'zh-CN');
   };
 
   const toggleExpand = (id) => {

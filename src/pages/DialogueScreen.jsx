@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Play, Square, Volume2, ArrowRight, ExternalLink } from 'lucide-react';
 import { dialoguesData } from '../data/dialoguesData';
 import HoverableText from '../components/common/HoverableText';
+import { getBestVoice } from '../utils/tts';
 
 export default function DialogueScreen() {
   const navigate = useNavigate();
@@ -48,6 +49,13 @@ export default function DialogueScreen() {
     utterance.lang = 'zh-CN';
     utterance.rate = speechRate;
 
+    const line = selectedDialogue.lines[index];
+    const gender = line?.speaker.startsWith('A:') ? 'male' : 'female';
+    const voiceInfo = getBestVoice('zh-CN', gender);
+    if (voiceInfo && voiceInfo.voice) {
+      utterance.voice = voiceInfo.voice;
+    }
+
     utterance.onend = () => {
       setPlayingIndex(-1);
     };
@@ -78,6 +86,12 @@ export default function DialogueScreen() {
     const utterance = new SpeechSynthesisUtterance(line.hanzi);
     utterance.lang = 'zh-CN';
     utterance.rate = speechRate;
+
+    const gender = line.speaker.startsWith('A:') ? 'male' : 'female';
+    const voiceInfo = getBestVoice('zh-CN', gender);
+    if (voiceInfo && voiceInfo.voice) {
+      utterance.voice = voiceInfo.voice;
+    }
 
     utterance.onend = () => {
       // Small pause between turns
