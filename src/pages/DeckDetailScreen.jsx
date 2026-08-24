@@ -11,6 +11,33 @@ import HoverableText from '../components/common/HoverableText';
 import AiParagraphModal from '../components/common/AiParagraphModal';
 import ConfirmModal from '../components/common/ConfirmModal';
 
+const TOPICS = {
+  1: { name: 'Cơ thể & Sinh học', color: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 dark:bg-emerald-500/5 dark:border-emerald-500/10' },
+  2: { name: 'Sức khỏe & Y tế', color: 'bg-teal-500/10 text-teal-500 border-teal-500/20 dark:bg-teal-500/5 dark:border-teal-500/10' },
+  3: { name: 'Tâm lý & Nhận thức', color: 'bg-sky-500/10 text-sky-500 border-sky-500/20 dark:bg-sky-500/5 dark:border-sky-500/10' },
+  4: { name: 'Thời trang & Chăm sóc', color: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20 dark:bg-indigo-500/5 dark:border-indigo-500/10' },
+  5: { name: 'Gia đình & Vòng đời', color: 'bg-rose-500/10 text-rose-500 border-rose-500/20 dark:bg-rose-500/5 dark:border-rose-500/10' },
+  6: { name: 'Giao tiếp & Tương tác', color: 'bg-violet-500/10 text-violet-500 border-violet-500/20 dark:bg-violet-500/5 dark:border-violet-500/10' },
+  7: { name: 'Giáo dục & Học thuật', color: 'bg-purple-500/10 text-purple-500 border-purple-500/20 dark:bg-purple-500/5 dark:border-purple-500/10' },
+  8: { name: 'Tôn giáo & Triết học', color: 'bg-amber-700/10 text-amber-700 border-amber-700/20 dark:bg-amber-700/5 dark:border-amber-700/10' },
+  9: { name: 'Địa lý & Cảnh quan', color: 'bg-green-600/10 text-green-600 border-green-600/20 dark:bg-green-600/5 dark:border-green-600/10' },
+  10: { name: 'Khí hậu & Thời tiết', color: 'bg-blue-400/10 text-blue-500 border-blue-400/20 dark:bg-blue-400/5 dark:border-blue-400/10' },
+  11: { name: 'Hệ sinh thái Động - Thực vật', color: 'bg-lime-600/10 text-lime-600 border-lime-600/20 dark:bg-lime-600/5 dark:border-lime-600/10' },
+  12: { name: 'Vũ trụ & Thiên văn', color: 'bg-fuchsia-600/10 text-fuchsia-600 border-fuchsia-600/20 dark:bg-fuchsia-600/5 dark:border-fuchsia-600/10' },
+  13: { name: 'Thương mại & Tài chính', color: 'bg-amber-500/10 text-amber-500 border-amber-500/20 dark:bg-amber-500/5 dark:border-amber-500/10' },
+  14: { name: 'Nghề nghiệp & Việc làm', color: 'bg-orange-500/10 text-orange-500 border-orange-500/20 dark:bg-orange-500/5 dark:border-orange-500/10' },
+  15: { name: 'Chính trị & Pháp luật', color: 'bg-blue-600/10 text-blue-600 border-blue-600/20 dark:bg-blue-600/5 dark:border-blue-600/10' },
+  16: { name: 'Quân sự & Quốc phòng', color: 'bg-red-600/10 text-red-600 border-red-600/20 dark:bg-red-600/5 dark:border-red-600/10' },
+  17: { name: 'Nghệ thuật & Biểu diễn', color: 'bg-pink-500/10 text-pink-500 border-pink-500/20 dark:bg-pink-500/5 dark:border-pink-500/10' },
+  18: { name: 'Ẩm thực & Đồ uống', color: 'bg-yellow-600/10 text-yellow-600 border-yellow-600/20 dark:bg-yellow-600/5 dark:border-yellow-600/10' },
+  19: { name: 'Thể thao & Trò chơi', color: 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20 dark:bg-cyan-500/5 dark:border-cyan-500/10' },
+  20: { name: 'Du lịch & Khách sạn', color: 'bg-emerald-600/10 text-emerald-600 border-emerald-600/20 dark:bg-emerald-600/5 dark:border-emerald-600/10' },
+  21: { name: 'Khoa học tự nhiên & Đo lường', color: 'bg-stone-500/10 text-stone-500 border-stone-500/20 dark:bg-stone-500/5 dark:border-stone-500/10' },
+  22: { name: 'Công nghệ thông tin & Viễn thông', color: 'bg-blue-500/10 text-blue-500 border-blue-500/20 dark:bg-blue-500/5 dark:border-blue-500/10' },
+  23: { name: 'Kỹ thuật & Sản xuất', color: 'bg-slate-600/10 text-slate-600 border-slate-600/20 dark:bg-slate-600/5 dark:border-slate-600/10' },
+  24: { name: 'Giao thông & Hạ tầng', color: 'bg-zinc-500/10 text-zinc-500 border-zinc-500/20 dark:bg-zinc-500/5 dark:border-zinc-500/10' },
+};
+
 const removeDiacritics = (str) => {
   if (!str) return '';
   return str
@@ -75,7 +102,8 @@ export default function DeckDetailScreen() {
       meaning,
       sinoVietnamese,
       exampleHanzi: card.exampleHanzi,
-      exampleMeaning: card.exampleMeaning
+      exampleMeaning: card.exampleMeaning,
+      topicId: card.topicId
     };
   };
 
@@ -461,7 +489,7 @@ export default function DeckDetailScreen() {
                   }
 
                   return filteredCards.map((card) => {
-                    const { word, pinyin, meaning, sinoVietnamese, exampleHanzi, exampleMeaning } = getCardDetails(card);
+                    const { word, pinyin, meaning, sinoVietnamese, exampleHanzi, exampleMeaning, topicId } = getCardDetails(card);
                     const isEnglish = displayDeck?.language === 'EN';
                     
                     return (
@@ -496,6 +524,13 @@ export default function DeckDetailScreen() {
                               {!isEnglish && sinoVietnamese && (
                                 <span className="text-[10px] font-extrabold text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800/80 px-1.5 py-0.5 rounded-sm uppercase tracking-wider select-none" title="Hán Việt">
                                   {sinoVietnamese}
+                                </span>
+                              )}
+
+                              {/* Topic Pill */}
+                              {topicId && TOPICS[topicId] && (
+                                <span className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-md border ${TOPICS[topicId].color}`} title="Chủ đề từ vựng">
+                                  🏷️ {TOPICS[topicId].name}
                                 </span>
                               )}
                             </div>

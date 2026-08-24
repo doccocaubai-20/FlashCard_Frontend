@@ -8,6 +8,7 @@ export const studyApi = {
         const query = params.length > 0 ? `?${params.join('&')}` : '';
         return api.get(`/api/study/today${query}`);
     },
-    getAllCards: (deckId) => api.get('/api/study/all-cards', { params: { deckId } }),
+    getAllCards: (deckId, limit, offset) =>
+        api.get('/api/study/all-cards', { params: { deckId, limit, offset } }),
     review: (data) => api.post('/api/study/review', data),
 };

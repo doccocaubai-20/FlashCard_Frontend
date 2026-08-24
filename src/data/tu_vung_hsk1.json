@@ -7,7 +7,8 @@
         "Dịch nghĩa": "yêu\nmê, ham, yêu thích",
         "exampleHanzi": "我爱你。",
         "examplePinyin": "Wǒ ài nǐ.",
-        "exampleMeaning": "Anh yêu em."
+        "exampleMeaning": "Anh yêu em.",
+        "topicId": 3
     },
     {
         "STT": "2",
@@ -17,7 +18,8 @@
         "Dịch nghĩa": "sở thích",
         "exampleHanzi": "我的爱好是看书。",
         "examplePinyin": "Wǒ de àihào shì kàn shū.",
-        "exampleMeaning": "Sở thích của tôi là đọc sách."
+        "exampleMeaning": "Sở thích của tôi là đọc sách.",
+        "topicId": 3
     },
     {
         "STT": "3",
@@ -27,7 +29,8 @@
         "Dịch nghĩa": "tám",
         "exampleHanzi": "我有八个苹果。",
         "examplePinyin": "Wǒ yǒu bā ge píngguǒ.",
-        "exampleMeaning": "Tôi có tám quả táo."
+        "exampleMeaning": "Tôi có tám quả táo.",
+        "topicId": 21
     },
     {
         "STT": "4",
@@ -37,7 +40,8 @@
         "Dịch nghĩa": "bố",
         "exampleHanzi": "爸爸是老师。",
         "examplePinyin": "Bàba shì lǎoshī.",
-        "exampleMeaning": "Bố là giáo viên."
+        "exampleMeaning": "Bố là giáo viên.",
+        "topicId": 5
     },
     {
         "STT": "5",
@@ -47,7 +51,8 @@
         "Dịch nghĩa": "đi, nhé, nhỉ (đứng cuối câu)",
         "exampleHanzi": "我们走吧。",
         "examplePinyin": "Wǒmen zǒu ba.",
-        "exampleMeaning": "Chúng ta đi thôi."
+        "exampleMeaning": "Chúng ta đi thôi.",
+        "topicId": 6
     },
     {
         "STT": "6",
@@ -57,7 +62,8 @@
         "Dịch nghĩa": "trắng",
         "exampleHanzi": "这是白色的。",
         "examplePinyin": "Zhè shì báisè de.",
-        "exampleMeaning": "Cái này màu trắng."
+        "exampleMeaning": "Cái này màu trắng.",
+        "topicId": 4
     },
     {
         "STT": "7",
@@ -67,7 +73,8 @@
         "Dịch nghĩa": "ban ngày",
         "exampleHanzi": "白天很热。",
         "examplePinyin": "Báitiān hěn rè.",
-        "exampleMeaning": "Ban ngày rất nóng."
+        "exampleMeaning": "Ban ngày rất nóng.",
+        "topicId": 9
     },
     {
         "STT": "8",
@@ -77,7 +84,8 @@
         "Dịch nghĩa": "trăm",
         "exampleHanzi": "一百是数字。",
         "examplePinyin": "Yī bǎi shì shùzì.",
-        "exampleMeaning": "Một trăm là một con số."
+        "exampleMeaning": "Một trăm là một con số.",
+        "topicId": 21
     },
     {
         "STT": "9",
@@ -87,7 +95,8 @@
         "Dịch nghĩa": "lớp, lớp học\nlớp, ca (làm việc)",
         "exampleHanzi": "我在一班。",
         "examplePinyin": "Wǒ zài yī bān.",
-        "exampleMeaning": "Tôi ở lớp một."
+        "exampleMeaning": "Tôi ở lớp một.",
+        "topicId": 7
     },
     {
         "STT": "10",
@@ -97,7 +106,8 @@
         "Dịch nghĩa": "một nửa",
         "exampleHanzi": "我吃半个苹果。",
         "examplePinyin": "Wǒ chī bàn ge píngguǒ.",
-        "exampleMeaning": "Tôi ăn nửa quả táo."
+        "exampleMeaning": "Tôi ăn nửa quả táo.",
+        "topicId": 21
     },
     {
         "STT": "11",
@@ -107,7 +117,8 @@
         "Dịch nghĩa": "nửa năm",
         "exampleHanzi": "我学半年中文。",
         "examplePinyin": "Wǒ xué bàn nián zhōngwén.",
-        "exampleMeaning": "Tôi học tiếng Trung nửa năm."
+        "exampleMeaning": "Tôi học tiếng Trung nửa năm.",
+        "topicId": 21
     },
     {
         "STT": "12",
@@ -117,7 +128,8 @@
         "Dịch nghĩa": "nửa ngày",
         "exampleHanzi": "我等了半天。",
         "examplePinyin": "Wǒ děng le bàn tiān.",
-        "exampleMeaning": "Tôi đợi nửa ngày."
+        "exampleMeaning": "Tôi đợi nửa ngày.",
+        "topicId": 21
     },
     {
         "STT": "13",
@@ -127,7 +139,8 @@
         "Dịch nghĩa": "giúp đỡ",
         "exampleHanzi": "你帮我一下。",
         "examplePinyin": "Nǐ bāng wǒ yīxià.",
-        "exampleMeaning": "Bạn giúp tôi một chút."
+        "exampleMeaning": "Bạn giúp tôi một chút.",
+        "topicId": 6
     },
     {
         "STT": "14",
@@ -137,7 +150,8 @@
         "Dịch nghĩa": "giúp đỡ",
         "exampleHanzi": "他帮忙我。",
         "examplePinyin": "Tā bāngmáng wǒ.",
-        "exampleMeaning": "Anh ấy giúp đỡ tôi."
+        "exampleMeaning": "Anh ấy giúp đỡ tôi.",
+        "topicId": 6
     },
     {
         "STT": "15",
@@ -147,7 +161,8 @@
         "Dịch nghĩa": "túi, bao, ví\nbao, gói, túi\nbọc / bao gồm",
         "exampleHanzi": "我有一个包。",
         "examplePinyin": "Wǒ yǒu yī ge bāo.",
-        "exampleMeaning": "Tôi có một cái túi."
+        "exampleMeaning": "Tôi có một cái túi.",
+        "topicId": 4
     },
     {
         "STT": "16",
@@ -157,7 +172,8 @@
         "Dịch nghĩa": "bánh bao",
         "exampleHanzi": "我吃包子。",
         "examplePinyin": "Wǒ chī bāozi.",
-        "exampleMeaning": "Tôi ăn bánh bao."
+        "exampleMeaning": "Tôi ăn bánh bao.",
+        "topicId": 18
     },
     {
         "STT": "17",
@@ -167,7 +183,8 @@
         "Dịch nghĩa": "cốc, ly",
         "exampleHanzi": "一个杯。",
         "examplePinyin": "Yī gè bēi.",
-        "exampleMeaning": "Một cái cốc."
+        "exampleMeaning": "Một cái cốc.",
+        "topicId": 18
     },
     {
         "STT": "18",
@@ -177,7 +194,8 @@
         "Dịch nghĩa": "chiếc cốc, ly",
         "exampleHanzi": "杯子在水里。",
         "examplePinyin": "Bēizi zài shuǐ lǐ.",
-        "exampleMeaning": "Cái cốc ở trong nước."
+        "exampleMeaning": "Cái cốc ở trong nước.",
+        "topicId": 18
     },
     {
         "STT": "19",
@@ -187,7 +205,8 @@
         "Dịch nghĩa": "bắc (hướng bắc)",
         "exampleHanzi": "北是方向。",
         "examplePinyin": "Běi shì fāngxiàng.",
-        "exampleMeaning": "Bắc là phương hướng."
+        "exampleMeaning": "Bắc là phương hướng.",
+        "topicId": 9
     },
     {
         "STT": "20",
@@ -197,7 +216,8 @@
         "Dịch nghĩa": "phía bắc, hướng bắc",
         "exampleHanzi": "北边有山。",
         "examplePinyin": "Běibiān yǒu shān.",
-        "exampleMeaning": "Phía bắc có núi."
+        "exampleMeaning": "Phía bắc có núi.",
+        "topicId": 9
     },
     {
         "STT": "21",
@@ -207,7 +227,8 @@
         "Dịch nghĩa": "Bắc Kinh",
         "exampleHanzi": "他在北京。",
         "examplePinyin": "Tā zài Běijīng.",
-        "exampleMeaning": "Anh ấy ở Bắc Kinh."
+        "exampleMeaning": "Anh ấy ở Bắc Kinh.",
+        "topicId": 9
     },
     {
         "STT": "22",
@@ -217,7 +238,8 @@
         "Dịch nghĩa": "vở, tập, cuốn\n(dùng cho sách vở sổ sách)",
         "exampleHanzi": "一本书。",
         "examplePinyin": "Yī běn shū.",
-        "exampleMeaning": "Một quyển sách."
+        "exampleMeaning": "Một quyển sách.",
+        "topicId": 7
     },
     {
         "STT": "23",
@@ -227,7 +249,8 @@
         "Dịch nghĩa": "vở, tập, cuốn vở",
         "exampleHanzi": "本子在这里。",
         "examplePinyin": "Běnzi zài zhèlǐ.",
-        "exampleMeaning": "Cuốn vở ở đây."
+        "exampleMeaning": "Cuốn vở ở đây.",
+        "topicId": 7
     },
     {
         "STT": "24",
@@ -237,7 +260,8 @@
         "Dịch nghĩa": "so, hơn, so với\nso sánh / sánh bằng / ra hiệu",
         "exampleHanzi": "他比我大。",
         "examplePinyin": "Tā bǐ wǒ dà.",
-        "exampleMeaning": "Anh ấy lớn hơn tôi."
+        "exampleMeaning": "Anh ấy lớn hơn tôi.",
+        "topicId": 21
     },
     {
         "STT": "25",
@@ -247,7 +271,8 @@
         "Dịch nghĩa": "chớ, đừng, không được",
         "exampleHanzi": "别去。",
         "examplePinyin": "Bié qù.",
-        "exampleMeaning": "Đừng đi."
+        "exampleMeaning": "Đừng đi.",
+        "topicId": 6
     },
     {
         "STT": "26",
@@ -257,7 +282,8 @@
         "Dịch nghĩa": "khác, cái khác",
         "exampleHanzi": "我要别的。",
         "examplePinyin": "Wǒ yào bié de.",
-        "exampleMeaning": "Tôi muốn cái khác."
+        "exampleMeaning": "Tôi muốn cái khác.",
+        "topicId": 3
     },
     {
         "STT": "27",
@@ -267,7 +293,8 @@
         "Dịch nghĩa": "người khác",
         "exampleHanzi": "别人来了。",
         "examplePinyin": "Biérén lái le.",
-        "exampleMeaning": "Người khác đến rồi."
+        "exampleMeaning": "Người khác đến rồi.",
+        "topicId": 3
     },
     {
         "STT": "28",
@@ -277,7 +304,8 @@
         "Dịch nghĩa": "bệnh, ốm đau\nbị ốm, bị bệnh",
         "exampleHanzi": "他病了。",
         "examplePinyin": "Tā bìng le.",
-        "exampleMeaning": "Anh ấy bị ốm."
+        "exampleMeaning": "Anh ấy bị ốm.",
+        "topicId": 2
     },
     {
         "STT": "29",
@@ -287,7 +315,8 @@
         "Dịch nghĩa": "bệnh nhân",
         "exampleHanzi": "病人喝水。",
         "examplePinyin": "Bìngrén hē shuǐ.",
-        "exampleMeaning": "Bệnh nhân uống nước."
+        "exampleMeaning": "Bệnh nhân uống nước.",
+        "topicId": 2
     },
     {
         "STT": "30",
@@ -297,7 +326,8 @@
         "Dịch nghĩa": "ít khi / không quá, không ... lắm",
         "exampleHanzi": "我不大去。",
         "examplePinyin": "Wǒ bù dà qù.",
-        "exampleMeaning": "Tôi ít khi đi."
+        "exampleMeaning": "Tôi ít khi đi.",
+        "topicId": 21
     },
     {
         "STT": "31",
@@ -307,7 +337,8 @@
         "Dịch nghĩa": "không đúng",
         "exampleHanzi": "这个不对。",
         "examplePinyin": "Zhège bù duì.",
-        "exampleMeaning": "Cái này không đúng."
+        "exampleMeaning": "Cái này không đúng.",
+        "topicId": 6
     },
     {
         "STT": "32",
@@ -317,7 +348,8 @@
         "Dịch nghĩa": "không có gì (đáp lại lời cảm ơn)",
         "exampleHanzi": "不客气。",
         "examplePinyin": "Bú kèqì.",
-        "exampleMeaning": "Không có gì."
+        "exampleMeaning": "Không có gì.",
+        "topicId": 6
     },
     {
         "STT": "33",
@@ -327,7 +359,8 @@
         "Dịch nghĩa": "không cần",
         "exampleHanzi": "不用谢。",
         "examplePinyin": "Búyòng xiè.",
-        "exampleMeaning": "Không cần cảm ơn."
+        "exampleMeaning": "Không cần cảm ơn.",
+        "topicId": 6
     },
     {
         "STT": "34",
@@ -337,7 +370,8 @@
         "Dịch nghĩa": "chả, chẳng, không",
         "exampleHanzi": "我不去。",
         "examplePinyin": "Wǒ bú qù.",
-        "exampleMeaning": "Tôi không đi."
+        "exampleMeaning": "Tôi không đi.",
+        "topicId": 6
     },
     {
         "STT": "35",
@@ -347,7 +381,8 @@
         "Dịch nghĩa": "món ăn, rau củ",
         "exampleHanzi": "我吃菜。",
         "examplePinyin": "Wǒ chī cài.",
-        "exampleMeaning": "Tôi ăn rau."
+        "exampleMeaning": "Tôi ăn rau.",
+        "topicId": 18
     },
     {
         "STT": "36",
@@ -357,7 +392,8 @@
         "Dịch nghĩa": "trà",
         "exampleHanzi": "我喝茶。",
         "examplePinyin": "Wǒ hē chá.",
-        "exampleMeaning": "Tôi uống trà."
+        "exampleMeaning": "Tôi uống trà.",
+        "topicId": 18
     },
     {
         "STT": "37",
@@ -367,7 +403,8 @@
         "Dịch nghĩa": "thiếu, kém, không đủ\nkém, tệ, không tốt",
         "exampleHanzi": "这个菜差。",
         "examplePinyin": "Zhège cài chà.",
-        "exampleMeaning": "Món này tệ."
+        "exampleMeaning": "Món này tệ.",
+        "topicId": 21
     },
     {
         "STT": "38",
@@ -377,7 +414,8 @@
         "Dịch nghĩa": "thường, thường xuyên",
         "exampleHanzi": "我常来。",
         "examplePinyin": "Wǒ cháng lái.",
-        "exampleMeaning": "Tôi thường đến."
+        "exampleMeaning": "Tôi thường đến.",
+        "topicId": 21
     },
     {
         "STT": "39",
@@ -387,7 +425,8 @@
         "Dịch nghĩa": "thường, thường thường",
         "exampleHanzi": "他常常吃。",
         "examplePinyin": "Tā chángcháng chī.",
-        "exampleMeaning": "Anh ấy thường ăn."
+        "exampleMeaning": "Anh ấy thường ăn.",
+        "topicId": 21
     },
     {
         "STT": "40",
@@ -397,7 +436,8 @@
         "Dịch nghĩa": "hát, ca, kêu",
         "exampleHanzi": "她唱了。",
         "examplePinyin": "Tā chàng le.",
-        "exampleMeaning": "Cô ấy hát rồi."
+        "exampleMeaning": "Cô ấy hát rồi.",
+        "topicId": 17
     },
     {
         "STT": "41",
@@ -407,7 +447,8 @@
         "Dịch nghĩa": "hát",
         "exampleHanzi": "我唱歌。",
         "examplePinyin": "Wǒ chànggē.",
-        "exampleMeaning": "Tôi hát."
+        "exampleMeaning": "Tôi hát.",
+        "topicId": 17
     },
     {
         "STT": "42",
@@ -417,7 +458,8 @@
         "Dịch nghĩa": "xe",
         "exampleHanzi": "这是车。",
         "examplePinyin": "Zhè shì chē.",
-        "exampleMeaning": "Đây là xe."
+        "exampleMeaning": "Đây là xe.",
+        "topicId": 20
     },
     {
         "STT": "43",
@@ -427,7 +469,8 @@
         "Dịch nghĩa": "vé xe",
         "exampleHanzi": "我买车票。",
         "examplePinyin": "Wǒ mǎi chēpiào.",
-        "exampleMeaning": "Tôi mua vé xe."
+        "exampleMeaning": "Tôi mua vé xe.",
+        "topicId": 20
     },
     {
         "STT": "44",
@@ -437,7 +480,8 @@
         "Dịch nghĩa": "trên xe",
         "exampleHanzi": "他在车上。",
         "examplePinyin": "Tā zài chē shàng.",
-        "exampleMeaning": "Anh ấy ở trên xe."
+        "exampleMeaning": "Anh ấy ở trên xe.",
+        "topicId": 20
     },
     {
         "STT": "45",
@@ -447,7 +491,8 @@
         "Dịch nghĩa": "ga, bến xe",
         "exampleHanzi": "我去车站。",
         "examplePinyin": "Wǒ qù chēzhàn.",
-        "exampleMeaning": "Tôi đi đến bến xe."
+        "exampleMeaning": "Tôi đi đến bến xe.",
+        "topicId": 20
     },
     {
         "STT": "46",
@@ -457,7 +502,8 @@
         "Dịch nghĩa": "ăn",
         "exampleHanzi": "我吃苹果。",
         "examplePinyin": "Wǒ chī píngguǒ.",
-        "exampleMeaning": "Tôi ăn táo."
+        "exampleMeaning": "Tôi ăn táo.",
+        "topicId": 18
     },
     {
         "STT": "47",
@@ -467,7 +513,8 @@
         "Dịch nghĩa": "ăn cơm",
         "exampleHanzi": "我们吃饭。",
         "examplePinyin": "Wǒmen chīfàn.",
-        "exampleMeaning": "Chúng tôi ăn cơm."
+        "exampleMeaning": "Chúng tôi ăn cơm.",
+        "topicId": 18
     },
     {
         "STT": "48",
@@ -477,7 +524,8 @@
         "Dịch nghĩa": "ra, xuất",
         "exampleHanzi": "他出学校。",
         "examplePinyin": "Tā chū xuéxiào.",
-        "exampleMeaning": "Anh ấy ra khỏi trường."
+        "exampleMeaning": "Anh ấy ra khỏi trường.",
+        "topicId": 20
     },
     {
         "STT": "49",
@@ -487,7 +535,8 @@
         "Dịch nghĩa": "đi ra, ra đây",
         "exampleHanzi": "你出来。",
         "examplePinyin": "Nǐ chūlái.",
-        "exampleMeaning": "Bạn ra đây."
+        "exampleMeaning": "Bạn ra đây.",
+        "topicId": 20
     },
     {
         "STT": "50",
@@ -497,7 +546,8 @@
         "Dịch nghĩa": "ra ngoài",
         "exampleHanzi": "我出去。",
         "examplePinyin": "Wǒ chūqù.",
-        "exampleMeaning": "Tôi ra ngoài."
+        "exampleMeaning": "Tôi ra ngoài.",
+        "topicId": 20
     },
     {
         "STT": "51",
@@ -507,7 +557,8 @@
         "Dịch nghĩa": "mặc, đi, mang, đeo",
         "exampleHanzi": "她穿衣服。",
         "examplePinyin": "Tā chuān yīfu.",
-        "exampleMeaning": "Cô ấy mặc quần áo."
+        "exampleMeaning": "Cô ấy mặc quần áo.",
+        "topicId": 4
     },
     {
         "STT": "52",
@@ -517,7 +568,8 @@
         "Dịch nghĩa": "giường",
         "exampleHanzi": "床很大。",
         "examplePinyin": "Chuáng hěn dà.",
-        "exampleMeaning": "Giường rất to."
+        "exampleMeaning": "Giường rất to.",
+        "topicId": 5
     },
     {
         "STT": "53",
@@ -527,7 +579,8 @@
         "Dịch nghĩa": "lần",
         "exampleHanzi": "我去一次。",
         "examplePinyin": "Wǒ qù yī cì.",
-        "exampleMeaning": "Tôi đi một lần."
+        "exampleMeaning": "Tôi đi một lần.",
+        "topicId": 21
     },
     {
         "STT": "54",
@@ -537,7 +590,8 @@
         "Dịch nghĩa": "từ, theo",
         "exampleHanzi": "我从家来。",
         "examplePinyin": "Wǒ cóng jiā lái.",
-        "exampleMeaning": "Tôi từ nhà đến."
+        "exampleMeaning": "Tôi từ nhà đến.",
+        "topicId": 9
     },
     {
         "STT": "55",
@@ -547,7 +601,8 @@
         "Dịch nghĩa": "sai, nhầm / tệ, kém\nsai lầm, lỗi sai",
         "exampleHanzi": "这个不对，错了。",
         "examplePinyin": "Zhège bù duì, cuò le.",
-        "exampleMeaning": "Cái này không đúng, sai rồi."
+        "exampleMeaning": "Cái này không đúng, sai rồi.",
+        "topicId": 21
     },
     {
         "STT": "56",
@@ -557,7 +612,8 @@
         "Dịch nghĩa": "gõ, đập, đánh",
         "exampleHanzi": "他打桌子。",
         "examplePinyin": "Tā dǎ zhuōzi.",
-        "exampleMeaning": "Anh ấy gõ bàn."
+        "exampleMeaning": "Anh ấy gõ bàn.",
+        "topicId": 6
     },
     {
         "STT": "57",
@@ -567,7 +623,8 @@
         "Dịch nghĩa": "bắt xe, gọi xe taxi, bắt taxi",
         "exampleHanzi": "我打车去。",
         "examplePinyin": "Wǒ dǎchē qù.",
-        "exampleMeaning": "Tôi bắt taxi đi."
+        "exampleMeaning": "Tôi bắt taxi đi.",
+        "topicId": 20
     },
     {
         "STT": "58",
@@ -577,7 +634,8 @@
         "Dịch nghĩa": "gọi điện thoại",
         "exampleHanzi": "我打电话。",
         "examplePinyin": "Wǒ dǎ diànhuà.",
-        "exampleMeaning": "Tôi gọi điện thoại."
+        "exampleMeaning": "Tôi gọi điện thoại.",
+        "topicId": 22
     },
     {
         "STT": "59",
@@ -587,7 +645,8 @@
         "Dịch nghĩa": "mở ra, kéo ra, tháo gỡ",
         "exampleHanzi": "打开门。",
         "examplePinyin": "Dǎkāi mén.",
-        "exampleMeaning": "Mở cửa ra."
+        "exampleMeaning": "Mở cửa ra.",
+        "topicId": 22
     },
     {
         "STT": "60",
@@ -597,7 +656,8 @@
         "Dịch nghĩa": "đánh bóng",
         "exampleHanzi": "我们打球。",
         "examplePinyin": "Wǒmen dǎ qiú.",
-        "exampleMeaning": "Chúng tôi đánh bóng."
+        "exampleMeaning": "Chúng tôi đánh bóng.",
+        "topicId": 19
     },
     {
         "STT": "61",
@@ -607,7 +667,8 @@
         "Dịch nghĩa": "lớn, to",
         "exampleHanzi": "这个苹果很大。",
         "examplePinyin": "Zhège píngguǒ hěn dà.",
-        "exampleMeaning": "Quả táo này rất to."
+        "exampleMeaning": "Quả táo này rất to.",
+        "topicId": 21
     },
     {
         "STT": "62",
@@ -617,7 +678,8 @@
         "Dịch nghĩa": "đại học",
         "exampleHanzi": "他在大学学习。",
         "examplePinyin": "Tā zài dàxué xuéxí.",
-        "exampleMeaning": "Anh ấy học ở đại học."
+        "exampleMeaning": "Anh ấy học ở đại học.",
+        "topicId": 7
     },
     {
         "STT": "63",
@@ -627,7 +689,8 @@
         "Dịch nghĩa": "sinh viên",
         "exampleHanzi": "我是大学生。",
         "examplePinyin": "Wǒ shì dàxuéshēng.",
-        "exampleMeaning": "Tôi là sinh viên."
+        "exampleMeaning": "Tôi là sinh viên.",
+        "topicId": 7
     },
     {
         "STT": "64",
@@ -637,7 +700,8 @@
         "Dịch nghĩa": "đến",
         "exampleHanzi": "我到了学校。",
         "examplePinyin": "Wǒ dào le xuéxiào.",
-        "exampleMeaning": "Tôi đã đến trường."
+        "exampleMeaning": "Tôi đã đến trường.",
+        "topicId": 20
     },
     {
         "STT": "65",
@@ -647,7 +711,8 @@
         "Dịch nghĩa": "được, đạt được, nhận được",
         "exampleHanzi": "他得到一本书。",
         "examplePinyin": "Tā dédào yī běn shū.",
-        "exampleMeaning": "Anh ấy nhận được một quyển sách."
+        "exampleMeaning": "Anh ấy nhận được một quyển sách.",
+        "topicId": 6
     },
     {
         "STT": "66",
@@ -657,7 +722,8 @@
         "Dịch nghĩa": "mà, một cách (diễn tả cách thức hành động\ntheo tính từ, nhấn mạnh trạng thái)",
         "exampleHanzi": "地很大。",
         "examplePinyin": "Dì hěn dà.",
-        "exampleMeaning": "Đất rất rộng."
+        "exampleMeaning": "Đất rất rộng.",
+        "topicId": 6
     },
     {
         "STT": "67",
@@ -667,7 +733,8 @@
         "Dịch nghĩa": "cái, vật, người (từ dùng thay cho người và vật\nđã đề cập trước đó) /\ndùng để nhấn mạnh hành động, sự việc đã",
         "exampleHanzi": "这是我的书。",
         "examplePinyin": "Zhè shì wǒ de shū.",
-        "exampleMeaning": "Đây là sách của tôi."
+        "exampleMeaning": "Đây là sách của tôi.",
+        "topicId": 6
     },
     {
         "STT": "68",
@@ -677,14 +744,16 @@
         "Dịch nghĩa": "đợi",
         "exampleHanzi": "请等我一下。",
         "examplePinyin": "Qǐng děng wǒ yīxià.",
-        "exampleMeaning": "Làm ơn đợi tôi một chút."
+        "exampleMeaning": "Làm ơn đợi tôi một chút.",
+        "topicId": 21
     },
     {
         "STT": "69",
         "Tiếng Trung": "地",
         "Pinyin": "dì",
         "Từ loại": "danh từ",
-        "Dịch nghĩa": "đất, trái đất, địa cầu"
+        "Dịch nghĩa": "đất, trái đất, địa cầu",
+        "topicId": 9
     },
     {
         "STT": "70",
@@ -694,7 +763,8 @@
         "Dịch nghĩa": "địa điểm",
         "exampleHanzi": "这个地点很好。",
         "examplePinyin": "Zhège dìdiǎn hěn hǎo.",
-        "exampleMeaning": "Địa điểm này rất tốt."
+        "exampleMeaning": "Địa điểm này rất tốt.",
+        "topicId": 9
     },
     {
         "STT": "71",
@@ -704,7 +774,8 @@
         "Dịch nghĩa": "nơi, chỗ",
         "exampleHanzi": "那个地方很美。",
         "examplePinyin": "Nàge dìfang hěn měi.",
-        "exampleMeaning": "Nơi đó rất đẹp."
+        "exampleMeaning": "Nơi đó rất đẹp.",
+        "topicId": 9
     },
     {
         "STT": "72",
@@ -714,7 +785,8 @@
         "Dịch nghĩa": "mặt đất, dưới đất",
         "exampleHanzi": "书在地上。",
         "examplePinyin": "Shū zài dìshang.",
-        "exampleMeaning": "Sách ở trên mặt đất."
+        "exampleMeaning": "Sách ở trên mặt đất.",
+        "topicId": 9
     },
     {
         "STT": "73",
@@ -724,21 +796,24 @@
         "Dịch nghĩa": "bản đồ",
         "exampleHanzi": "我看地图。",
         "examplePinyin": "Wǒ kàn dìtú.",
-        "exampleMeaning": "Tôi xem bản đồ."
+        "exampleMeaning": "Tôi xem bản đồ.",
+        "topicId": 9
     },
     {
         "STT": "74",
         "Tiếng Trung": "弟弟 | 弟",
         "Pinyin": "dìdi | dì",
         "Từ loại": "danh từ",
-        "Dịch nghĩa": "em trai"
+        "Dịch nghĩa": "em trai",
+        "topicId": 5
     },
     {
         "STT": "75",
         "Tiếng Trung": "第（第二）",
         "Pinyin": "dì (dì-èr)",
         "Từ loại": "tiền tố",
-        "Dịch nghĩa": "thứ tự, thứ hạng (thứ hạng 2)"
+        "Dịch nghĩa": "thứ tự, thứ hạng (thứ hạng 2)",
+        "topicId": 21
     },
     {
         "STT": "76",
@@ -748,7 +823,8 @@
         "Dịch nghĩa": "giờ (trong thời gian) / điều, điểm\nđặt, gọi (món) / chấm\ngiọt / điểm / phẩy / giờ",
         "exampleHanzi": "现在几点？",
         "examplePinyin": "Xiànzài jǐ diǎn?",
-        "exampleMeaning": "Bây giờ là mấy giờ?"
+        "exampleMeaning": "Bây giờ là mấy giờ?",
+        "topicId": 21
     },
     {
         "STT": "77",
@@ -758,7 +834,8 @@
         "Dịch nghĩa": "điện, pin, điện năng",
         "exampleHanzi": "有电吗？",
         "examplePinyin": "Yǒu diàn ma?",
-        "exampleMeaning": "Có điện không?"
+        "exampleMeaning": "Có điện không?",
+        "topicId": 22
     },
     {
         "STT": "78",
@@ -768,7 +845,8 @@
         "Dịch nghĩa": "điện thoại, cuộc điện thoại, cuộc gọi đến",
         "exampleHanzi": "我打电话。",
         "examplePinyin": "Wǒ dǎ diànhuà.",
-        "exampleMeaning": "Tôi gọi điện thoại."
+        "exampleMeaning": "Tôi gọi điện thoại.",
+        "topicId": 22
     },
     {
         "STT": "79",
@@ -778,7 +856,8 @@
         "Dịch nghĩa": "máy tính",
         "exampleHanzi": "这是电脑。",
         "examplePinyin": "Zhè shì diànnǎo.",
-        "exampleMeaning": "Đây là máy tính."
+        "exampleMeaning": "Đây là máy tính.",
+        "topicId": 22
     },
     {
         "STT": "80",
@@ -788,7 +867,8 @@
         "Dịch nghĩa": "ti vi, vô tuyến, truyền hình",
         "exampleHanzi": "我看电视。",
         "examplePinyin": "Wǒ kàn diànshì.",
-        "exampleMeaning": "Tôi xem ti vi."
+        "exampleMeaning": "Tôi xem ti vi.",
+        "topicId": 22
     },
     {
         "STT": "81",
@@ -798,7 +878,8 @@
         "Dịch nghĩa": "ti vi, máy thu hình, máy truyền hình",
         "exampleHanzi": "电视机大。",
         "examplePinyin": "Diànshìjī dà.",
-        "exampleMeaning": "Ti vi to."
+        "exampleMeaning": "Ti vi to.",
+        "topicId": 22
     },
     {
         "STT": "82",
@@ -808,7 +889,8 @@
         "Dịch nghĩa": "điện ảnh",
         "exampleHanzi": "我爱看电影。",
         "examplePinyin": "Wǒ ài kàn diànyǐng.",
-        "exampleMeaning": "Tôi thích xem phim."
+        "exampleMeaning": "Tôi thích xem phim.",
+        "topicId": 17
     },
     {
         "STT": "83",
@@ -818,7 +900,8 @@
         "Dịch nghĩa": "rạp chiếu phim",
         "exampleHanzi": "去电影院。",
         "examplePinyin": "Qù diànyǐngyuàn.",
-        "exampleMeaning": "Đi rạp chiếu phim."
+        "exampleMeaning": "Đi rạp chiếu phim.",
+        "topicId": 17
     },
     {
         "STT": "84",
@@ -828,7 +911,8 @@
         "Dịch nghĩa": "đông (hướng đông)",
         "exampleHanzi": "东是方向。",
         "examplePinyin": "Dōng shì fāngxiàng.",
-        "exampleMeaning": "Đông là hướng."
+        "exampleMeaning": "Đông là hướng.",
+        "topicId": 9
     },
     {
         "STT": "85",
@@ -838,7 +922,8 @@
         "Dịch nghĩa": "phía đông, hướng đông",
         "exampleHanzi": "他在东边。",
         "examplePinyin": "Tā zài dōngbiān.",
-        "exampleMeaning": "Anh ấy ở phía đông."
+        "exampleMeaning": "Anh ấy ở phía đông.",
+        "topicId": 9
     },
     {
         "STT": "86",
@@ -848,7 +933,8 @@
         "Dịch nghĩa": "đồ vật, thứ",
         "exampleHanzi": "这是东西。",
         "examplePinyin": "Zhè shì dōngxi.",
-        "exampleMeaning": "Đây là đồ vật."
+        "exampleMeaning": "Đây là đồ vật.",
+        "topicId": 4
     },
     {
         "STT": "87",
@@ -858,7 +944,8 @@
         "Dịch nghĩa": "động, chuyển động, lay động",
         "exampleHanzi": "别动！",
         "examplePinyin": "Bié dòng!",
-        "exampleMeaning": "Đừng động đậy!"
+        "exampleMeaning": "Đừng động đậy!",
+        "topicId": 21
     },
     {
         "STT": "88",
@@ -868,7 +955,8 @@
         "Dịch nghĩa": "động tác, hành động",
         "exampleHanzi": "动作慢。",
         "examplePinyin": "Dòngzuò màn.",
-        "exampleMeaning": "Động tác chậm."
+        "exampleMeaning": "Động tác chậm.",
+        "topicId": 21
     },
     {
         "STT": "89",
@@ -878,7 +966,8 @@
         "Dịch nghĩa": "đều",
         "exampleHanzi": "我们都好。",
         "examplePinyin": "Wǒmen dōu hǎo.",
-        "exampleMeaning": "Chúng tôi đều tốt."
+        "exampleMeaning": "Chúng tôi đều tốt.",
+        "topicId": 21
     },
     {
         "STT": "90",
@@ -888,7 +977,8 @@
         "Dịch nghĩa": "đọc",
         "exampleHanzi": "我读书。",
         "examplePinyin": "Wǒ dú shū.",
-        "exampleMeaning": "Tôi đọc sách."
+        "exampleMeaning": "Tôi đọc sách.",
+        "topicId": 7
     },
     {
         "STT": "91",
@@ -898,7 +988,8 @@
         "Dịch nghĩa": "đọc sách",
         "exampleHanzi": "我爱读书。",
         "examplePinyin": "Wǒ ài dúshū.",
-        "exampleMeaning": "Tôi thích đọc sách."
+        "exampleMeaning": "Tôi thích đọc sách.",
+        "topicId": 7
     },
     {
         "STT": "92",
@@ -908,7 +999,8 @@
         "Dịch nghĩa": "đúng",
         "exampleHanzi": "这个答案对。",
         "examplePinyin": "Zhège dá'àn duì.",
-        "exampleMeaning": "Câu trả lời này đúng."
+        "exampleMeaning": "Câu trả lời này đúng.",
+        "topicId": 21
     },
     {
         "STT": "93",
@@ -918,7 +1010,8 @@
         "Dịch nghĩa": "xin lỗi",
         "exampleHanzi": "对不起，我错了。",
         "examplePinyin": "Duìbuqǐ, wǒ cuò le.",
-        "exampleMeaning": "Xin lỗi, tôi sai rồi."
+        "exampleMeaning": "Xin lỗi, tôi sai rồi.",
+        "topicId": 6
     },
     {
         "STT": "94",
@@ -928,7 +1021,8 @@
         "Dịch nghĩa": "nhiều, lắm\nbao nhiêu",
         "exampleHanzi": "他有很多书。",
         "examplePinyin": "Tā yǒu hěn duō shū.",
-        "exampleMeaning": "Anh ấy có nhiều sách."
+        "exampleMeaning": "Anh ấy có nhiều sách.",
+        "topicId": 21
     },
     {
         "STT": "95",
@@ -938,7 +1032,8 @@
         "Dịch nghĩa": "bao nhiêu",
         "exampleHanzi": "你有多少钱？",
         "examplePinyin": "Nǐ yǒu duōshao qián?",
-        "exampleMeaning": "Bạn có bao nhiêu tiền?"
+        "exampleMeaning": "Bạn có bao nhiêu tiền?",
+        "topicId": 21
     },
     {
         "STT": "96",
@@ -948,7 +1043,8 @@
         "Dịch nghĩa": "đói\nbỏ đói, để đói",
         "exampleHanzi": "我饿了。",
         "examplePinyin": "Wǒ è le.",
-        "exampleMeaning": "Tôi đói rồi."
+        "exampleMeaning": "Tôi đói rồi.",
+        "topicId": 2
     },
     {
         "STT": "97",
@@ -958,7 +1054,8 @@
         "Dịch nghĩa": "con trai",
         "exampleHanzi": "他有一个儿子。",
         "examplePinyin": "Tā yǒu yī gè érzi.",
-        "exampleMeaning": "Anh ấy có một con trai."
+        "exampleMeaning": "Anh ấy có một con trai.",
+        "topicId": 5
     },
     {
         "STT": "98",
@@ -968,7 +1065,8 @@
         "Dịch nghĩa": "số 2",
         "exampleHanzi": "我有两个苹果。",
         "examplePinyin": "Wǒ yǒu liǎng gè píngguǒ.",
-        "exampleMeaning": "Tôi có hai quả táo."
+        "exampleMeaning": "Tôi có hai quả táo.",
+        "topicId": 21
     },
     {
         "STT": "99",
@@ -978,7 +1076,8 @@
         "Dịch nghĩa": "cơm, bữa",
         "exampleHanzi": "我吃米饭。",
         "examplePinyin": "Wǒ chī mǐfàn.",
-        "exampleMeaning": "Tôi ăn cơm."
+        "exampleMeaning": "Tôi ăn cơm.",
+        "topicId": 18
     },
     {
         "STT": "100",
@@ -988,7 +1087,8 @@
         "Dịch nghĩa": "nhà hàng",
         "exampleHanzi": "我们去饭店吃饭。",
         "examplePinyin": "Wǒmen qù fàndiàn chīfàn.",
-        "exampleMeaning": "Chúng tôi đi nhà hàng ăn cơm."
+        "exampleMeaning": "Chúng tôi đi nhà hàng ăn cơm.",
+        "topicId": 18
     },
     {
         "STT": "101",
@@ -998,7 +1098,8 @@
         "Dịch nghĩa": "căn phòng, buồng",
         "exampleHanzi": "这个房间很大。",
         "examplePinyin": "Zhège fángjiān hěn dà.",
-        "exampleMeaning": "Căn phòng này rất lớn."
+        "exampleMeaning": "Căn phòng này rất lớn.",
+        "topicId": 9
     },
     {
         "STT": "102",
@@ -1008,7 +1109,8 @@
         "Dịch nghĩa": "nhà, nhà cửa",
         "exampleHanzi": "他的房子很小。",
         "examplePinyin": "Tā de fángzi hěn xiǎo.",
-        "exampleMeaning": "Nhà của anh ấy rất nhỏ."
+        "exampleMeaning": "Nhà của anh ấy rất nhỏ.",
+        "topicId": 9
     },
     {
         "STT": "103",
@@ -1018,7 +1120,8 @@
         "Dịch nghĩa": "để, cất, đặt",
         "exampleHanzi": "请放书在桌子上。",
         "examplePinyin": "Qǐng fàng shū zài zhuōzi shàng.",
-        "exampleMeaning": "Xin hãy để sách trên bàn."
+        "exampleMeaning": "Xin hãy để sách trên bàn.",
+        "topicId": 21
     },
     {
         "STT": "104",
@@ -1028,7 +1131,8 @@
         "Dịch nghĩa": "nghỉ, nghỉ định kỳ",
         "exampleHanzi": "明天放假。",
         "examplePinyin": "Míngtiān fàngjià.",
-        "exampleMeaning": "Ngày mai nghỉ."
+        "exampleMeaning": "Ngày mai nghỉ.",
+        "topicId": 20
     },
     {
         "STT": "105",
@@ -1038,7 +1142,8 @@
         "Dịch nghĩa": "tan học",
         "exampleHanzi": "我们三点放学。",
         "examplePinyin": "Wǒmen sān diǎn fàngxué.",
-        "exampleMeaning": "Chúng tôi tan học lúc ba giờ."
+        "exampleMeaning": "Chúng tôi tan học lúc ba giờ.",
+        "topicId": 7
     },
     {
         "STT": "106",
@@ -1048,7 +1153,8 @@
         "Dịch nghĩa": "bay",
         "exampleHanzi": "鸟飞了。",
         "examplePinyin": "Niǎo fēi le.",
-        "exampleMeaning": "Con chim bay rồi."
+        "exampleMeaning": "Con chim bay rồi.",
+        "topicId": 24
     },
     {
         "STT": "107",
@@ -1058,7 +1164,8 @@
         "Dịch nghĩa": "máy bay",
         "exampleHanzi": "飞机很大。",
         "examplePinyin": "Fēijī hěn dà.",
-        "exampleMeaning": "Máy bay rất to."
+        "exampleMeaning": "Máy bay rất to.",
+        "topicId": 24
     },
     {
         "STT": "108",
@@ -1068,7 +1175,8 @@
         "Dịch nghĩa": "rất, cực kỳ\nphân số",
         "exampleHanzi": "他非常高兴。",
         "examplePinyin": "Tā fēicháng gāoxìng.",
-        "exampleMeaning": "Anh ấy rất vui."
+        "exampleMeaning": "Anh ấy rất vui.",
+        "topicId": 3
     },
     {
         "STT": "109",
@@ -1078,7 +1186,8 @@
         "Dịch nghĩa": "phần, phân (đo chiều dài, trọng lượng, lãi\nsuất) / sào (đo diện tích) / xu (tiền tệ) / phút",
         "exampleHanzi": "现在几点了？两点十分。",
         "examplePinyin": "Xiànzài jǐ diǎn le? Liǎng diǎn shí fēn.",
-        "exampleMeaning": "Bây giờ mấy giờ? Hai giờ mười phút."
+        "exampleMeaning": "Bây giờ mấy giờ? Hai giờ mười phút.",
+        "topicId": 21
     },
     {
         "STT": "110",
@@ -1088,7 +1197,8 @@
         "Dịch nghĩa": "gió",
         "exampleHanzi": "今天有风。",
         "examplePinyin": "Jīntiān yǒu fēng.",
-        "exampleMeaning": "Hôm nay có gió."
+        "exampleMeaning": "Hôm nay có gió.",
+        "topicId": 10
     },
     {
         "STT": "111",
@@ -1098,7 +1208,8 @@
         "Dịch nghĩa": "khô, cạn",
         "exampleHanzi": "他在干什么？",
         "examplePinyin": "Tā zài gàn shénme?",
-        "exampleMeaning": "Anh ấy đang làm gì?"
+        "exampleMeaning": "Anh ấy đang làm gì?",
+        "topicId": 4
     },
     {
         "STT": "112",
@@ -1108,14 +1219,16 @@
         "Dịch nghĩa": "sạch sẽ, gọn gàng",
         "exampleHanzi": "教室很干净。",
         "examplePinyin": "Jiàoshì hěn gānjìng.",
-        "exampleMeaning": "Phòng học rất sạch sẽ."
+        "exampleMeaning": "Phòng học rất sạch sẽ.",
+        "topicId": 4
     },
     {
         "STT": "113",
         "Tiếng Trung": "干",
         "Pinyin": "gàn",
         "Từ loại": "động từ",
-        "Dịch nghĩa": "làm, làm việc, làm cái gì đó"
+        "Dịch nghĩa": "làm, làm việc, làm cái gì đó",
+        "topicId": 14
     },
     {
         "STT": "114",
@@ -1125,7 +1238,8 @@
         "Dịch nghĩa": "làm gì, tại sao",
         "exampleHanzi": "你干什么？",
         "examplePinyin": "Nǐ gàn shénme?",
-        "exampleMeaning": "Bạn làm gì?"
+        "exampleMeaning": "Bạn làm gì?",
+        "topicId": 3
     },
     {
         "STT": "115",
@@ -1135,7 +1249,8 @@
         "Dịch nghĩa": "cao",
         "exampleHanzi": "山很高。",
         "examplePinyin": "Shān hěn gāo.",
-        "exampleMeaning": "Núi rất cao."
+        "exampleMeaning": "Núi rất cao.",
+        "topicId": 21
     },
     {
         "STT": "116",
@@ -1145,7 +1260,8 @@
         "Dịch nghĩa": "vui vẻ, phấn chấn, cao hứng",
         "exampleHanzi": "我很高兴。",
         "examplePinyin": "Wǒ hěn gāoxìng.",
-        "exampleMeaning": "Tôi rất vui."
+        "exampleMeaning": "Tôi rất vui.",
+        "topicId": 3
     },
     {
         "STT": "117",
@@ -1155,7 +1271,8 @@
         "Dịch nghĩa": "kể, bảo, nói cho",
         "exampleHanzi": "他告诉我了。",
         "examplePinyin": "Tā gàosu wǒ le.",
-        "exampleMeaning": "Anh ấy nói cho tôi rồi."
+        "exampleMeaning": "Anh ấy nói cho tôi rồi.",
+        "topicId": 6
     },
     {
         "STT": "118",
@@ -1165,7 +1282,8 @@
         "Dịch nghĩa": "anh, anh trai",
         "exampleHanzi": "哥哥是学生。",
         "examplePinyin": "Gēge shì xuéshēng.",
-        "exampleMeaning": "Anh trai là học sinh."
+        "exampleMeaning": "Anh trai là học sinh.",
+        "topicId": 5
     },
     {
         "STT": "119",
@@ -1175,7 +1293,8 @@
         "Dịch nghĩa": "ca khúc, bài hát, bài ca",
         "exampleHanzi": "我喜欢听歌。",
         "examplePinyin": "Wǒ xǐhuān tīng gē.",
-        "exampleMeaning": "Tôi thích nghe nhạc."
+        "exampleMeaning": "Tôi thích nghe nhạc.",
+        "topicId": 17
     },
     {
         "STT": "120",
@@ -1185,7 +1304,8 @@
         "Dịch nghĩa": "cái, chiếc",
         "exampleHanzi": "我有一个苹果。",
         "examplePinyin": "Wǒ yǒu yī gè píngguǒ.",
-        "exampleMeaning": "Tôi có một quả táo."
+        "exampleMeaning": "Tôi có một quả táo.",
+        "topicId": 21
     },
     {
         "STT": "121",
@@ -1195,7 +1315,8 @@
         "Dịch nghĩa": "cho ai làm việc gì đó / đưa cho\ntới, cho (hành động hướng tới ai) / đưa cho",
         "exampleHanzi": "我给你一本书。",
         "examplePinyin": "Wǒ gěi nǐ yī běn shū.",
-        "exampleMeaning": "Tôi đưa cho bạn một quyển sách."
+        "exampleMeaning": "Tôi đưa cho bạn một quyển sách.",
+        "topicId": 6
     },
     {
         "STT": "122",
@@ -1205,7 +1326,8 @@
         "Dịch nghĩa": "với, cùng, so với\nvà, cùng",
         "exampleHanzi": "我跟他去。",
         "examplePinyin": "Wǒ gēn tā qù.",
-        "exampleMeaning": "Tôi đi với anh ấy."
+        "exampleMeaning": "Tôi đi với anh ấy.",
+        "topicId": 6
     },
     {
         "STT": "123",
@@ -1215,7 +1337,8 @@
         "Dịch nghĩa": "theo, gả\ncông nhân",
         "exampleHanzi": "他是工人。",
         "examplePinyin": "Tā shì gōngrén.",
-        "exampleMeaning": "Anh ấy là công nhân."
+        "exampleMeaning": "Anh ấy là công nhân.",
+        "topicId": 14
     },
     {
         "STT": "124",
@@ -1225,7 +1348,8 @@
         "Dịch nghĩa": "làm việc\nviệc làm / nhiệm vụ",
         "exampleHanzi": "我工作。",
         "examplePinyin": "Wǒ gōngzuò.",
-        "exampleMeaning": "Tôi làm việc."
+        "exampleMeaning": "Tôi làm việc.",
+        "topicId": 14
     },
     {
         "STT": "125",
@@ -1235,7 +1359,8 @@
         "Dịch nghĩa": "đóng, tắt, khép",
         "exampleHanzi": "关门。",
         "examplePinyin": "Guān mén.",
-        "exampleMeaning": "Đóng cửa."
+        "exampleMeaning": "Đóng cửa.",
+        "topicId": 21
     },
     {
         "STT": "126",
@@ -1245,7 +1370,8 @@
         "Dịch nghĩa": "đóng lại, tắt, khóa",
         "exampleHanzi": "请关上窗。",
         "examplePinyin": "Qǐng guān shàng chuāng.",
-        "exampleMeaning": "Làm ơn đóng cửa sổ lại."
+        "exampleMeaning": "Làm ơn đóng cửa sổ lại.",
+        "topicId": 21
     },
     {
         "STT": "127",
@@ -1255,7 +1381,8 @@
         "Dịch nghĩa": "đắt, quý giá",
         "exampleHanzi": "这个很贵。",
         "examplePinyin": "Zhège hěn guì.",
-        "exampleMeaning": "Cái này rất đắt."
+        "exampleMeaning": "Cái này rất đắt.",
+        "topicId": 13
     },
     {
         "STT": "128",
@@ -1265,7 +1392,8 @@
         "Dịch nghĩa": "nước, quốc",
         "exampleHanzi": "中国很大。",
         "examplePinyin": "Zhōngguó hěn dà.",
-        "exampleMeaning": "Trung Quốc rất lớn."
+        "exampleMeaning": "Trung Quốc rất lớn.",
+        "topicId": 15
     },
     {
         "STT": "129",
@@ -1275,7 +1403,8 @@
         "Dịch nghĩa": "đất nước, nhà nước, quốc gia, lãnh thổ",
         "exampleHanzi": "我爱国家。",
         "examplePinyin": "Wǒ ài guójiā.",
-        "exampleMeaning": "Tôi yêu đất nước."
+        "exampleMeaning": "Tôi yêu đất nước.",
+        "topicId": 15
     },
     {
         "STT": "130",
@@ -1285,7 +1414,8 @@
         "Dịch nghĩa": "nước ngoài",
         "exampleHanzi": "他在国外。",
         "examplePinyin": "Tā zài guówài.",
-        "exampleMeaning": "Anh ấy ở nước ngoài."
+        "exampleMeaning": "Anh ấy ở nước ngoài.",
+        "topicId": 9
     },
     {
         "STT": "131",
@@ -1295,7 +1425,8 @@
         "Dịch nghĩa": "qua, vượt qua",
         "exampleHanzi": "我过马路。",
         "examplePinyin": "Wǒ guò mǎlù.",
-        "exampleMeaning": "Tôi qua đường."
+        "exampleMeaning": "Tôi qua đường.",
+        "topicId": 21
     },
     {
         "STT": "132",
@@ -1305,7 +1436,8 @@
         "Dịch nghĩa": "còn, vẫn",
         "exampleHanzi": "我明天还书。",
         "examplePinyin": "Wǒ míngtiān huán shū.",
-        "exampleMeaning": "Ngày mai tôi trả sách."
+        "exampleMeaning": "Ngày mai tôi trả sách.",
+        "topicId": 3
     },
     {
         "STT": "133",
@@ -1315,7 +1447,8 @@
         "Dịch nghĩa": "vẫn còn, như thế, hãy cứ\nhay, hay là",
         "exampleHanzi": "你去还是我去？",
         "examplePinyin": "Nǐ qù háishì wǒ qù?",
-        "exampleMeaning": "Bạn đi hay tôi đi?"
+        "exampleMeaning": "Bạn đi hay tôi đi?",
+        "topicId": 3
     },
     {
         "STT": "134",
@@ -1325,7 +1458,8 @@
         "Dịch nghĩa": "còn có, vẫn còn",
         "exampleHanzi": "我还有钱。",
         "examplePinyin": "Wǒ hái yǒu qián.",
-        "exampleMeaning": "Tôi còn có tiền."
+        "exampleMeaning": "Tôi còn có tiền.",
+        "topicId": 3
     },
     {
         "STT": "135",
@@ -1335,7 +1469,8 @@
         "Dịch nghĩa": "trẻ em, đứa trẻ",
         "exampleHanzi": "孩子小。",
         "examplePinyin": "Háizi xiǎo.",
-        "exampleMeaning": "Đứa trẻ còn nhỏ."
+        "exampleMeaning": "Đứa trẻ còn nhỏ.",
+        "topicId": 5
     },
     {
         "STT": "136",
@@ -1345,7 +1480,8 @@
         "Dịch nghĩa": "tiếng Hán",
         "exampleHanzi": "我学汉语。",
         "examplePinyin": "Wǒ xué hànyǔ.",
-        "exampleMeaning": "Tôi học tiếng Hán."
+        "exampleMeaning": "Tôi học tiếng Hán.",
+        "topicId": 7
     },
     {
         "STT": "137",
@@ -1355,7 +1491,8 @@
         "Dịch nghĩa": "chữ Hán",
         "exampleHanzi": "这是汉字。",
         "examplePinyin": "Zhè shì hànzì.",
-        "exampleMeaning": "Đây là chữ Hán."
+        "exampleMeaning": "Đây là chữ Hán.",
+        "topicId": 7
     },
     {
         "STT": "138",
@@ -1365,7 +1502,8 @@
         "Dịch nghĩa": "ổn, hay, tốt, lành",
         "exampleHanzi": "你好。",
         "examplePinyin": "Nǐ hǎo.",
-        "exampleMeaning": "Chào bạn."
+        "exampleMeaning": "Chào bạn.",
+        "topicId": 3
     },
     {
         "STT": "139",
@@ -1375,7 +1513,8 @@
         "Dịch nghĩa": "ngon",
         "exampleHanzi": "米饭好吃。",
         "examplePinyin": "Mǐfàn hǎochī.",
-        "exampleMeaning": "Cơm ngon."
+        "exampleMeaning": "Cơm ngon.",
+        "topicId": 18
     },
     {
         "STT": "140",
@@ -1385,7 +1524,8 @@
         "Dịch nghĩa": "đẹp, xinh, coi được, hay, thú vị",
         "exampleHanzi": "花好看。",
         "examplePinyin": "Huā hǎokàn.",
-        "exampleMeaning": "Hoa đẹp."
+        "exampleMeaning": "Hoa đẹp.",
+        "topicId": 4
     },
     {
         "STT": "141",
@@ -1395,7 +1535,8 @@
         "Dịch nghĩa": "hay, êm tai, dễ nghe",
         "exampleHanzi": "歌好听。",
         "examplePinyin": "Gē hǎotīng.",
-        "exampleMeaning": "Bài hát hay."
+        "exampleMeaning": "Bài hát hay.",
+        "topicId": 17
     },
     {
         "STT": "142",
@@ -1405,7 +1546,8 @@
         "Dịch nghĩa": "hay, thú vị, thích thú",
         "exampleHanzi": "这个好玩儿。",
         "examplePinyin": "Zhège hǎowánr.",
-        "exampleMeaning": "Cái này thú vị."
+        "exampleMeaning": "Cái này thú vị.",
+        "topicId": 19
     },
     {
         "STT": "143",
@@ -1415,7 +1557,8 @@
         "Dịch nghĩa": "số thứ tự, số ngày, số cỡ",
         "exampleHanzi": "今天一号。",
         "examplePinyin": "Jīntiān yī hào.",
-        "exampleMeaning": "Hôm nay ngày một."
+        "exampleMeaning": "Hôm nay ngày một.",
+        "topicId": 21
     },
     {
         "STT": "144",
@@ -1425,7 +1568,8 @@
         "Dịch nghĩa": "người / hạng, loại / vụ (giao dịch mua bán)\nuống",
         "exampleHanzi": "我喝水。",
         "examplePinyin": "Wǒ hē shuǐ.",
-        "exampleMeaning": "Tôi uống nước."
+        "exampleMeaning": "Tôi uống nước.",
+        "topicId": 18
     },
     {
         "STT": "145",
@@ -1435,7 +1579,8 @@
         "Dịch nghĩa": "liên quan / với, cùng\nvà, với",
         "exampleHanzi": "我和你。",
         "examplePinyin": "Wǒ hé nǐ.",
-        "exampleMeaning": "Tôi và bạn."
+        "exampleMeaning": "Tôi và bạn.",
+        "topicId": 6
     },
     {
         "STT": "146",
@@ -1445,7 +1590,8 @@
         "Dịch nghĩa": "rất",
         "exampleHanzi": "他很好。",
         "examplePinyin": "Tā hěn hǎo.",
-        "exampleMeaning": "Anh ấy rất tốt."
+        "exampleMeaning": "Anh ấy rất tốt.",
+        "topicId": 3
     },
     {
         "STT": "147",
@@ -1455,7 +1601,8 @@
         "Dịch nghĩa": "sau, phía sau, mặt sau",
         "exampleHanzi": "后是学校。",
         "examplePinyin": "Hòu shì xuéxiào.",
-        "exampleMeaning": "Phía sau là trường học."
+        "exampleMeaning": "Phía sau là trường học.",
+        "topicId": 21
     },
     {
         "STT": "148",
@@ -1465,7 +1612,8 @@
         "Dịch nghĩa": "phía sau, đằng sau",
         "exampleHanzi": "猫在后边。",
         "examplePinyin": "Māo zài hòubiān.",
-        "exampleMeaning": "Con mèo ở đằng sau."
+        "exampleMeaning": "Con mèo ở đằng sau.",
+        "topicId": 9
     },
     {
         "STT": "149",
@@ -1475,7 +1623,8 @@
         "Dịch nghĩa": "ngày kia",
         "exampleHanzi": "后天去。",
         "examplePinyin": "Hòutiān qù.",
-        "exampleMeaning": "Ngày kia đi."
+        "exampleMeaning": "Ngày kia đi.",
+        "topicId": 21
     },
     {
         "STT": "150",
@@ -1485,7 +1634,8 @@
         "Dịch nghĩa": "hoa",
         "exampleHanzi": "花很红。",
         "examplePinyin": "Huā hěn hóng.",
-        "exampleMeaning": "Hoa rất đỏ."
+        "exampleMeaning": "Hoa rất đỏ.",
+        "topicId": 11
     },
     {
         "STT": "151",
@@ -1495,7 +1645,8 @@
         "Dịch nghĩa": "lời nói, câu nói",
         "exampleHanzi": "他的话很少。",
         "examplePinyin": "Tā de huà hěn shǎo.",
-        "exampleMeaning": "Anh ấy nói rất ít."
+        "exampleMeaning": "Anh ấy nói rất ít.",
+        "topicId": 6
     },
     {
         "STT": "152",
@@ -1505,14 +1656,16 @@
         "Dịch nghĩa": "xấu, không tốt, quá, hết sức",
         "exampleHanzi": "这个苹果坏了。",
         "examplePinyin": "Zhège píngguǒ huài le.",
-        "exampleMeaning": "Quả táo này hỏng rồi."
+        "exampleMeaning": "Quả táo này hỏng rồi.",
+        "topicId": 3
     },
     {
         "STT": "153",
         "Tiếng Trung": "还",
         "Pinyin": "huán",
         "Từ loại": "động từ",
-        "Dịch nghĩa": "về, trả lại, đáp lại"
+        "Dịch nghĩa": "về, trả lại, đáp lại",
+        "topicId": 6
     },
     {
         "STT": "154",
@@ -1522,7 +1675,8 @@
         "Dịch nghĩa": "quay về, trở về",
         "exampleHanzi": "他回学校了。",
         "examplePinyin": "Tā huí xuéxiào le.",
-        "exampleMeaning": "Anh ấy quay lại trường rồi."
+        "exampleMeaning": "Anh ấy quay lại trường rồi.",
+        "topicId": 9
     },
     {
         "STT": "155",
@@ -1532,7 +1686,8 @@
         "Dịch nghĩa": "đáp, trả lời\ncâu trả lời",
         "exampleHanzi": "请回答我。",
         "examplePinyin": "Qǐng huídá wǒ.",
-        "exampleMeaning": "Xin hãy trả lời tôi."
+        "exampleMeaning": "Xin hãy trả lời tôi.",
+        "topicId": 6
     },
     {
         "STT": "156",
@@ -1542,7 +1697,8 @@
         "Dịch nghĩa": "trở về, quay lại",
         "exampleHanzi": "我回到家里。",
         "examplePinyin": "Wǒ huí dào jiā lǐ.",
-        "exampleMeaning": "Tôi trở về nhà."
+        "exampleMeaning": "Tôi trở về nhà.",
+        "topicId": 9
     },
     {
         "STT": "157",
@@ -1552,7 +1708,8 @@
         "Dịch nghĩa": "về nhà",
         "exampleHanzi": "我们回家吧。",
         "examplePinyin": "Wǒmen huí jiā ba.",
-        "exampleMeaning": "Chúng ta về nhà đi."
+        "exampleMeaning": "Chúng ta về nhà đi.",
+        "topicId": 5
     },
     {
         "STT": "158",
@@ -1562,7 +1719,8 @@
         "Dịch nghĩa": "về, trở lại, quay về",
         "exampleHanzi": "他回来了。",
         "examplePinyin": "Tā huí lái le.",
-        "exampleMeaning": "Anh ấy đã quay về."
+        "exampleMeaning": "Anh ấy đã quay về.",
+        "topicId": 9
     },
     {
         "STT": "159",
@@ -1572,7 +1730,8 @@
         "Dịch nghĩa": "về, trở lại, quay về (đi khỏi chỗ người nói)",
         "exampleHanzi": "你回去吗？",
         "examplePinyin": "Nǐ huí qù ma?",
-        "exampleMeaning": "Bạn có quay về không?"
+        "exampleMeaning": "Bạn có quay về không?",
+        "topicId": 9
     },
     {
         "STT": "160",
@@ -1582,7 +1741,8 @@
         "Dịch nghĩa": "biết, có thể, có khả năng",
         "exampleHanzi": "我会说中文。",
         "examplePinyin": "Wǒ huì shuō Zhōngwén.",
-        "exampleMeaning": "Tôi biết nói tiếng Trung."
+        "exampleMeaning": "Tôi biết nói tiếng Trung.",
+        "topicId": 3
     },
     {
         "STT": "161",
@@ -1592,7 +1752,8 @@
         "Dịch nghĩa": "tàu hỏa",
         "exampleHanzi": "火车很快。",
         "examplePinyin": "Huǒchē hěn kuài.",
-        "exampleMeaning": "Tàu hỏa rất nhanh."
+        "exampleMeaning": "Tàu hỏa rất nhanh.",
+        "topicId": 24
     },
     {
         "STT": "162",
@@ -1602,7 +1763,8 @@
         "Dịch nghĩa": "sân bay",
         "exampleHanzi": "他在机场。",
         "examplePinyin": "Tā zài jīchǎng.",
-        "exampleMeaning": "Anh ấy ở sân bay."
+        "exampleMeaning": "Anh ấy ở sân bay.",
+        "topicId": 20
     },
     {
         "STT": "163",
@@ -1612,7 +1774,8 @@
         "Dịch nghĩa": "vé máy bay",
         "exampleHanzi": "我买机票。",
         "examplePinyin": "Wǒ mǎi jīpiào.",
-        "exampleMeaning": "Tôi mua vé máy bay."
+        "exampleMeaning": "Tôi mua vé máy bay.",
+        "topicId": 20
     },
     {
         "STT": "164",
@@ -1622,7 +1785,8 @@
         "Dịch nghĩa": "trứng gà",
         "exampleHanzi": "我吃鸡蛋。",
         "examplePinyin": "Wǒ chī jīdàn.",
-        "exampleMeaning": "Tôi ăn trứng gà."
+        "exampleMeaning": "Tôi ăn trứng gà.",
+        "topicId": 18
     },
     {
         "STT": "165",
@@ -1632,7 +1796,8 @@
         "Dịch nghĩa": "mấy, vài\nbao nhiêu, mấy",
         "exampleHanzi": "你有几个？",
         "examplePinyin": "Nǐ yǒu jǐ gè?",
-        "exampleMeaning": "Bạn có mấy cái?"
+        "exampleMeaning": "Bạn có mấy cái?",
+        "topicId": 21
     },
     {
         "STT": "166",
@@ -1642,7 +1807,8 @@
         "Dịch nghĩa": "nhớ, ghi nhớ, ghi chép",
         "exampleHanzi": "我记这个字。",
         "examplePinyin": "Wǒ jì zhège zì.",
-        "exampleMeaning": "Tôi nhớ chữ này."
+        "exampleMeaning": "Tôi nhớ chữ này.",
+        "topicId": 3
     },
     {
         "STT": "167",
@@ -1652,7 +1818,8 @@
         "Dịch nghĩa": "nhớ, nhớ lại, nhớ được",
         "exampleHanzi": "我记得你。",
         "examplePinyin": "Wǒ jìde nǐ.",
-        "exampleMeaning": "Tôi nhớ bạn."
+        "exampleMeaning": "Tôi nhớ bạn.",
+        "topicId": 3
     },
     {
         "STT": "168",
@@ -1662,7 +1829,8 @@
         "Dịch nghĩa": "nhớ, ghi nhớ, nhớ kĩ",
         "exampleHanzi": "请记住我。",
         "examplePinyin": "Qǐng jìzhù wǒ.",
-        "exampleMeaning": "Xin hãy nhớ tôi."
+        "exampleMeaning": "Xin hãy nhớ tôi.",
+        "topicId": 3
     },
     {
         "STT": "169",
@@ -1672,7 +1840,8 @@
         "Dịch nghĩa": "nhà, gia đình\nhiệu, tiệm, nhà",
         "exampleHanzi": "我家很大。",
         "examplePinyin": "Wǒ jiā hěn dà.",
-        "exampleMeaning": "Nhà tôi rất lớn."
+        "exampleMeaning": "Nhà tôi rất lớn.",
+        "topicId": 5
     },
     {
         "STT": "170",
@@ -1682,7 +1851,8 @@
         "Dịch nghĩa": "trong nhà, trong gia đình",
         "exampleHanzi": "我在家里。",
         "examplePinyin": "Wǒ zài jiālǐ.",
-        "exampleMeaning": "Tôi ở trong nhà."
+        "exampleMeaning": "Tôi ở trong nhà.",
+        "topicId": 5
     },
     {
         "STT": "171",
@@ -1692,7 +1862,8 @@
         "Dịch nghĩa": "người nhà, người thân",
         "exampleHanzi": "我爱家人。",
         "examplePinyin": "Wǒ ài jiārén.",
-        "exampleMeaning": "Tôi yêu người nhà."
+        "exampleMeaning": "Tôi yêu người nhà.",
+        "topicId": 5
     },
     {
         "STT": "172",
@@ -1702,7 +1873,8 @@
         "Dịch nghĩa": "căn, phòng",
         "exampleHanzi": "一间房子。",
         "examplePinyin": "Yī jiān fángzi.",
-        "exampleMeaning": "Một căn phòng."
+        "exampleMeaning": "Một căn phòng.",
+        "topicId": 9
     },
     {
         "STT": "173",
@@ -1712,7 +1884,8 @@
         "Dịch nghĩa": "gặp, thấy",
         "exampleHanzi": "我见他。",
         "examplePinyin": "Wǒ jiàn tā.",
-        "exampleMeaning": "Tôi gặp anh ấy."
+        "exampleMeaning": "Tôi gặp anh ấy.",
+        "topicId": 6
     },
     {
         "STT": "174",
@@ -1722,7 +1895,8 @@
         "Dịch nghĩa": "gặp mặt",
         "exampleHanzi": "我们见面。",
         "examplePinyin": "Wǒmen jiànmiàn.",
-        "exampleMeaning": "Chúng tôi gặp mặt."
+        "exampleMeaning": "Chúng tôi gặp mặt.",
+        "topicId": 6
     },
     {
         "STT": "175",
@@ -1732,7 +1906,8 @@
         "Dịch nghĩa": "dạy",
         "exampleHanzi": "老师教我。",
         "examplePinyin": "Lǎoshī jiāo wǒ.",
-        "exampleMeaning": "Thầy giáo dạy tôi."
+        "exampleMeaning": "Thầy giáo dạy tôi.",
+        "topicId": 7
     },
     {
         "STT": "176",
@@ -1742,7 +1917,8 @@
         "Dịch nghĩa": "kêu, gọi",
         "exampleHanzi": "我叫小明。",
         "examplePinyin": "Wǒ jiào Xiǎo Míng.",
-        "exampleMeaning": "Tôi tên là Tiểu Minh."
+        "exampleMeaning": "Tôi tên là Tiểu Minh.",
+        "topicId": 6
     },
     {
         "STT": "177",
@@ -1752,7 +1928,8 @@
         "Dịch nghĩa": "toà nhà giảng dạy",
         "exampleHanzi": "教学楼很大。",
         "examplePinyin": "Jiàoxuélóu hěn dà.",
-        "exampleMeaning": "Tòa nhà giảng dạy rất lớn."
+        "exampleMeaning": "Tòa nhà giảng dạy rất lớn.",
+        "topicId": 7
     },
     {
         "STT": "178",
@@ -1762,7 +1939,8 @@
         "Dịch nghĩa": "chị gái",
         "exampleHanzi": "我姐姐好。",
         "examplePinyin": "Wǒ jiějie hǎo.",
-        "exampleMeaning": "Chị gái tôi tốt."
+        "exampleMeaning": "Chị gái tôi tốt.",
+        "topicId": 5
     },
     {
         "STT": "179",
@@ -1772,7 +1950,8 @@
         "Dịch nghĩa": "giới thiệu, đề xuất",
         "exampleHanzi": "我介绍他。",
         "examplePinyin": "Wǒ jièshào tā.",
-        "exampleMeaning": "Tôi giới thiệu anh ấy."
+        "exampleMeaning": "Tôi giới thiệu anh ấy.",
+        "topicId": 6
     },
     {
         "STT": "180",
@@ -1782,7 +1961,8 @@
         "Dịch nghĩa": "năm nay",
         "exampleHanzi": "今年是2025年。",
         "examplePinyin": "Jīnnián shì èr líng èr wǔ nián.",
-        "exampleMeaning": "Năm nay là năm 2025."
+        "exampleMeaning": "Năm nay là năm 2025.",
+        "topicId": 21
     },
     {
         "STT": "181",
@@ -1792,7 +1972,8 @@
         "Dịch nghĩa": "hôm nay",
         "exampleHanzi": "今天天气很好。",
         "examplePinyin": "Jīntiān tiānqì hěn hǎo.",
-        "exampleMeaning": "Hôm nay thời tiết rất đẹp."
+        "exampleMeaning": "Hôm nay thời tiết rất đẹp.",
+        "topicId": 21
     },
     {
         "STT": "182",
@@ -1802,7 +1983,8 @@
         "Dịch nghĩa": "vào",
         "exampleHanzi": "请进。",
         "examplePinyin": "Qǐng jìn.",
-        "exampleMeaning": "Mời vào."
+        "exampleMeaning": "Mời vào.",
+        "topicId": 9
     },
     {
         "STT": "183",
@@ -1812,7 +1994,8 @@
         "Dịch nghĩa": "vào, đi vào",
         "exampleHanzi": "他进来了。",
         "examplePinyin": "Tā jìnlái le.",
-        "exampleMeaning": "Anh ấy đi vào rồi."
+        "exampleMeaning": "Anh ấy đi vào rồi.",
+        "topicId": 9
     },
     {
         "STT": "184",
@@ -1822,7 +2005,8 @@
         "Dịch nghĩa": "vào trong, đi vào, hướng vào trong",
         "exampleHanzi": "我们进去吧。",
         "examplePinyin": "Wǒmen jìnqù ba.",
-        "exampleMeaning": "Chúng ta đi vào trong đi."
+        "exampleMeaning": "Chúng ta đi vào trong đi.",
+        "topicId": 9
     },
     {
         "STT": "185",
@@ -1832,7 +2016,8 @@
         "Dịch nghĩa": "số 9",
         "exampleHanzi": "我有九个苹果。",
         "examplePinyin": "Wǒ yǒu jiǔ gè píngguǒ.",
-        "exampleMeaning": "Tôi có chín quả táo."
+        "exampleMeaning": "Tôi có chín quả táo.",
+        "topicId": 21
     },
     {
         "STT": "186",
@@ -1842,7 +2027,8 @@
         "Dịch nghĩa": "thì, liền, cứ, ngay, đã, rồi, chính là, chỉ, tận",
         "exampleHanzi": "我吃了饭就去。",
         "examplePinyin": "Wǒ chī le fàn jiù qù.",
-        "exampleMeaning": "Tôi ăn cơm xong liền đi."
+        "exampleMeaning": "Tôi ăn cơm xong liền đi.",
+        "topicId": 6
     },
     {
         "STT": "187",
@@ -1852,7 +2038,8 @@
         "Dịch nghĩa": "cảm thấy, nghĩ, cho rằng",
         "exampleHanzi": "我觉得很冷。",
         "examplePinyin": "Wǒ juéde hěn lěng.",
-        "exampleMeaning": "Tôi cảm thấy rất lạnh."
+        "exampleMeaning": "Tôi cảm thấy rất lạnh.",
+        "topicId": 3
     },
     {
         "STT": "188",
@@ -1862,7 +2049,8 @@
         "Dịch nghĩa": "mở, bật",
         "exampleHanzi": "请开门。",
         "examplePinyin": "Qǐng kāi mén.",
-        "exampleMeaning": "Làm ơn mở cửa."
+        "exampleMeaning": "Làm ơn mở cửa.",
+        "topicId": 6
     },
     {
         "STT": "189",
@@ -1872,7 +2060,8 @@
         "Dịch nghĩa": "lái xe",
         "exampleHanzi": "他开车去学校。",
         "examplePinyin": "Tā kāichē qù xuéxiào.",
-        "exampleMeaning": "Anh ấy lái xe đi học."
+        "exampleMeaning": "Anh ấy lái xe đi học.",
+        "topicId": 24
     },
     {
         "STT": "190",
@@ -1882,7 +2071,8 @@
         "Dịch nghĩa": "họp",
         "exampleHanzi": "我们明天开会。",
         "examplePinyin": "Wǒmen míngtiān kāihuì.",
-        "exampleMeaning": "Ngày mai chúng tôi họp."
+        "exampleMeaning": "Ngày mai chúng tôi họp.",
+        "topicId": 6
     },
     {
         "STT": "191",
@@ -1892,7 +2082,8 @@
         "Dịch nghĩa": "chọc, trêu, đùa, giỡn, giễu, nói đùa",
         "exampleHanzi": "他在开玩笑。",
         "examplePinyin": "Tā zài kāiwánxiào.",
-        "exampleMeaning": "Anh ấy đang nói đùa."
+        "exampleMeaning": "Anh ấy đang nói đùa.",
+        "topicId": 6
     },
     {
         "STT": "192",
@@ -1902,7 +2093,8 @@
         "Dịch nghĩa": "xem, nhìn",
         "exampleHanzi": "我看书。",
         "examplePinyin": "Wǒ kàn shū.",
-        "exampleMeaning": "Tôi xem sách."
+        "exampleMeaning": "Tôi xem sách.",
+        "topicId": 6
     },
     {
         "STT": "193",
@@ -1912,7 +2104,8 @@
         "Dịch nghĩa": "khám bệnh",
         "exampleHanzi": "我去看病。",
         "examplePinyin": "Wǒ qù kànbìng.",
-        "exampleMeaning": "Tôi đi khám bệnh."
+        "exampleMeaning": "Tôi đi khám bệnh.",
+        "topicId": 2
     },
     {
         "STT": "194",
@@ -1922,7 +2115,8 @@
         "Dịch nghĩa": "nhìn thấy",
         "exampleHanzi": "我看到他了。",
         "examplePinyin": "Wǒ kàndào tā le.",
-        "exampleMeaning": "Tôi nhìn thấy anh ấy rồi."
+        "exampleMeaning": "Tôi nhìn thấy anh ấy rồi.",
+        "topicId": 6
     },
     {
         "STT": "195",
@@ -1932,7 +2126,8 @@
         "Dịch nghĩa": "trông thấy",
         "exampleHanzi": "我看见一只猫。",
         "examplePinyin": "Wǒ kànjiàn yī zhī māo.",
-        "exampleMeaning": "Tôi trông thấy một con mèo."
+        "exampleMeaning": "Tôi trông thấy một con mèo.",
+        "topicId": 6
     },
     {
         "STT": "196",
@@ -1942,7 +2137,8 @@
         "Dịch nghĩa": "thi, kiểm tra",
         "exampleHanzi": "我明天考汉语。",
         "examplePinyin": "Wǒ míngtiān kǎo Hànyǔ.",
-        "exampleMeaning": "Ngày mai tôi thi tiếng Trung."
+        "exampleMeaning": "Ngày mai tôi thi tiếng Trung.",
+        "topicId": 7
     },
     {
         "STT": "197",
@@ -1952,7 +2148,8 @@
         "Dịch nghĩa": "kỳ thi",
         "exampleHanzi": "考试很难。",
         "examplePinyin": "Kǎoshì hěn nán.",
-        "exampleMeaning": "Kỳ thi rất khó."
+        "exampleMeaning": "Kỳ thi rất khó.",
+        "topicId": 7
     },
     {
         "STT": "198",
@@ -1962,7 +2159,8 @@
         "Dịch nghĩa": "khát",
         "exampleHanzi": "我渴了。",
         "examplePinyin": "Wǒ kě le.",
-        "exampleMeaning": "Tôi khát rồi."
+        "exampleMeaning": "Tôi khát rồi.",
+        "topicId": 2
     },
     {
         "STT": "199",
@@ -1972,7 +2170,8 @@
         "Dịch nghĩa": "môn học, tiết học",
         "exampleHanzi": "我有汉语课。",
         "examplePinyin": "Wǒ yǒu Hànyǔ kè.",
-        "exampleMeaning": "Tôi có tiết học tiếng Trung."
+        "exampleMeaning": "Tôi có tiết học tiếng Trung.",
+        "topicId": 7
     },
     {
         "STT": "200",
@@ -1982,7 +2181,8 @@
         "Dịch nghĩa": "sách, sách vở, sách giáo khoa",
         "exampleHanzi": "这是课本。",
         "examplePinyin": "Zhè shì kèběn.",
-        "exampleMeaning": "Đây là sách giáo khoa."
+        "exampleMeaning": "Đây là sách giáo khoa.",
+        "topicId": 7
     },
     {
         "STT": "201",
@@ -1992,7 +2192,8 @@
         "Dịch nghĩa": "bài khóa, bài văn",
         "exampleHanzi": "课文很好。",
         "examplePinyin": "Kèwén hěn hǎo.",
-        "exampleMeaning": "Bài khóa rất hay."
+        "exampleMeaning": "Bài khóa rất hay.",
+        "topicId": 7
     },
     {
         "STT": "202",
@@ -2002,7 +2203,8 @@
         "Dịch nghĩa": "gia đình\nmiệng / lưỡi (dao, kiếm, kéo) / bộ phận",
         "exampleHanzi": "我家有三口人。",
         "examplePinyin": "Wǒ jiā yǒu sān kǒu rén.",
-        "exampleMeaning": "Nhà tôi có ba người."
+        "exampleMeaning": "Nhà tôi có ba người.",
+        "topicId": 1
     },
     {
         "STT": "203",
@@ -2012,7 +2214,8 @@
         "Dịch nghĩa": "viên, hòn, cục, tảng, thỏi, miếng\nviên, bánh, đống, khối, miếng, đồng (tiền)",
         "exampleHanzi": "我有一块钱。",
         "examplePinyin": "Wǒ yǒu yī kuài qián.",
-        "exampleMeaning": "Tôi có một đồng tiền."
+        "exampleMeaning": "Tôi có một đồng tiền.",
+        "topicId": 21
     },
     {
         "STT": "204",
@@ -2022,7 +2225,8 @@
         "Dịch nghĩa": "nhanh, mau, chóng\nsắp, gần, mau",
         "exampleHanzi": "他跑得快。",
         "examplePinyin": "Tā pǎo de kuài.",
-        "exampleMeaning": "Anh ấy chạy nhanh."
+        "exampleMeaning": "Anh ấy chạy nhanh.",
+        "topicId": 21
     },
     {
         "STT": "205",
@@ -2032,7 +2236,8 @@
         "Dịch nghĩa": "đến, tới",
         "exampleHanzi": "他来学校。",
         "examplePinyin": "Tā lái xuéxiào.",
-        "exampleMeaning": "Anh ấy đến trường."
+        "exampleMeaning": "Anh ấy đến trường.",
+        "topicId": 20
     },
     {
         "STT": "206",
@@ -2042,7 +2247,8 @@
         "Dịch nghĩa": "đến, đạt được, đạt đến",
         "exampleHanzi": "我来到北京。",
         "examplePinyin": "Wǒ láidào Běijīng.",
-        "exampleMeaning": "Tôi đến Bắc Kinh."
+        "exampleMeaning": "Tôi đến Bắc Kinh.",
+        "topicId": 20
     },
     {
         "STT": "207",
@@ -2052,7 +2258,8 @@
         "Dịch nghĩa": "già",
         "exampleHanzi": "他老了。",
         "examplePinyin": "Tā lǎo le.",
-        "exampleMeaning": "Ông ấy già rồi."
+        "exampleMeaning": "Ông ấy già rồi.",
+        "topicId": 5
     },
     {
         "STT": "208",
@@ -2062,7 +2269,8 @@
         "Dịch nghĩa": "người già",
         "exampleHanzi": "老人喝水。",
         "examplePinyin": "Lǎorén hē shuǐ.",
-        "exampleMeaning": "Người già uống nước."
+        "exampleMeaning": "Người già uống nước.",
+        "topicId": 5
     },
     {
         "STT": "209",
@@ -2072,7 +2280,8 @@
         "Dịch nghĩa": "giáo viên",
         "exampleHanzi": "老师好。",
         "examplePinyin": "Lǎoshī hǎo.",
-        "exampleMeaning": "Chào thầy/cô giáo."
+        "exampleMeaning": "Chào thầy/cô giáo.",
+        "topicId": 7
     },
     {
         "STT": "210",
@@ -2082,7 +2291,8 @@
         "Dịch nghĩa": "đã, rồi",
         "exampleHanzi": "我吃了。",
         "examplePinyin": "Wǒ chī le.",
-        "exampleMeaning": "Tôi ăn rồi."
+        "exampleMeaning": "Tôi ăn rồi.",
+        "topicId": 21
     },
     {
         "STT": "211",
@@ -2092,7 +2302,8 @@
         "Dịch nghĩa": "mệt",
         "exampleHanzi": "我很累。",
         "examplePinyin": "Wǒ hěn lèi.",
-        "exampleMeaning": "Tôi rất mệt."
+        "exampleMeaning": "Tôi rất mệt.",
+        "topicId": 2
     },
     {
         "STT": "212",
@@ -2102,7 +2313,8 @@
         "Dịch nghĩa": "lạnh",
         "exampleHanzi": "今天很冷。",
         "examplePinyin": "Jīntiān hěn lěng.",
-        "exampleMeaning": "Hôm nay rất lạnh."
+        "exampleMeaning": "Hôm nay rất lạnh.",
+        "topicId": 10
     },
     {
         "STT": "213",
@@ -2112,7 +2324,8 @@
         "Dịch nghĩa": "bên trong, phía trong",
         "exampleHanzi": "他在家里。",
         "examplePinyin": "Tā zài jiā lǐ.",
-        "exampleMeaning": "Anh ấy ở trong nhà."
+        "exampleMeaning": "Anh ấy ở trong nhà.",
+        "topicId": 9
     },
     {
         "STT": "214",
@@ -2122,7 +2335,8 @@
         "Dịch nghĩa": "trong, bên trong, phía trong",
         "exampleHanzi": "书包里边有书。",
         "examplePinyin": "Shūbāo lǐbian yǒu shū.",
-        "exampleMeaning": "Bên trong cặp sách có sách."
+        "exampleMeaning": "Bên trong cặp sách có sách.",
+        "topicId": 9
     },
     {
         "STT": "215",
@@ -2132,7 +2346,8 @@
         "Dịch nghĩa": "hai (chỉ số lượng)",
         "exampleHanzi": "我有两个苹果。",
         "examplePinyin": "Wǒ yǒu liǎng gè píngguǒ.",
-        "exampleMeaning": "Tôi có hai quả táo."
+        "exampleMeaning": "Tôi có hai quả táo.",
+        "topicId": 21
     },
     {
         "STT": "216",
@@ -2142,7 +2357,8 @@
         "Dịch nghĩa": "số 0",
         "exampleHanzi": "我的电话是零。",
         "examplePinyin": "Wǒ de diànhuà shì líng.",
-        "exampleMeaning": "Số điện thoại của tôi là số không."
+        "exampleMeaning": "Số điện thoại của tôi là số không.",
+        "topicId": 21
     },
     {
         "STT": "217",
@@ -2152,7 +2368,8 @@
         "Dịch nghĩa": "số 6",
         "exampleHanzi": "我有六个杯子。",
         "examplePinyin": "Wǒ yǒu liù gè bēizi.",
-        "exampleMeaning": "Tôi có sáu cái cốc."
+        "exampleMeaning": "Tôi có sáu cái cốc.",
+        "topicId": 21
     },
     {
         "STT": "218",
@@ -2162,7 +2379,8 @@
         "Dịch nghĩa": "tòa nhà, lầu",
         "exampleHanzi": "这是大楼。",
         "examplePinyin": "Zhè shì dàlóu.",
-        "exampleMeaning": "Đây là tòa nhà lớn."
+        "exampleMeaning": "Đây là tòa nhà lớn.",
+        "topicId": 9
     },
     {
         "STT": "219",
@@ -2172,7 +2390,8 @@
         "Dịch nghĩa": "tầng trên, lầu trên",
         "exampleHanzi": "他在楼上。",
         "examplePinyin": "Tā zài lóushàng.",
-        "exampleMeaning": "Anh ấy ở tầng trên."
+        "exampleMeaning": "Anh ấy ở tầng trên.",
+        "topicId": 9
     },
     {
         "STT": "220",
@@ -2182,7 +2401,8 @@
         "Dịch nghĩa": "tầng dưới, lầu dưới",
         "exampleHanzi": "我在楼下等你。",
         "examplePinyin": "Wǒ zài lóuxià děng nǐ.",
-        "exampleMeaning": "Tôi ở tầng dưới đợi bạn."
+        "exampleMeaning": "Tôi ở tầng dưới đợi bạn.",
+        "topicId": 9
     },
     {
         "STT": "221",
@@ -2192,7 +2412,8 @@
         "Dịch nghĩa": "đường, tuyến đường\nloại / hàng, đội",
         "exampleHanzi": "这条路很长。",
         "examplePinyin": "Zhè tiáo lù hěn cháng.",
-        "exampleMeaning": "Con đường này rất dài."
+        "exampleMeaning": "Con đường này rất dài.",
+        "topicId": 24
     },
     {
         "STT": "222",
@@ -2202,7 +2423,8 @@
         "Dịch nghĩa": "ngã, giao lộ, nút giao",
         "exampleHanzi": "他在路口等我。",
         "examplePinyin": "Tā zài lùkǒu děng wǒ.",
-        "exampleMeaning": "Anh ấy ở ngã đường đợi tôi."
+        "exampleMeaning": "Anh ấy ở ngã đường đợi tôi.",
+        "topicId": 24
     },
     {
         "STT": "223",
@@ -2212,7 +2434,8 @@
         "Dịch nghĩa": "trên đường, dọc đường",
         "exampleHanzi": "路上小心。",
         "examplePinyin": "Lùshang xiǎoxīn.",
-        "exampleMeaning": "Trên đường hãy cẩn thận."
+        "exampleMeaning": "Trên đường hãy cẩn thận.",
+        "topicId": 24
     },
     {
         "STT": "224",
@@ -2222,7 +2445,8 @@
         "Dịch nghĩa": "mẹ",
         "exampleHanzi": "妈妈爱我。",
         "examplePinyin": "Māma ài wǒ.",
-        "exampleMeaning": "Mẹ yêu tôi."
+        "exampleMeaning": "Mẹ yêu tôi.",
+        "topicId": 5
     },
     {
         "STT": "225",
@@ -2232,7 +2456,8 @@
         "Dịch nghĩa": "đường cái, đường quốc lộ",
         "exampleHanzi": "马路上有车。",
         "examplePinyin": "Mǎlù shang yǒu chē.",
-        "exampleMeaning": "Trên đường cái có xe."
+        "exampleMeaning": "Trên đường cái có xe.",
+        "topicId": 24
     },
     {
         "STT": "226",
@@ -2242,7 +2467,8 @@
         "Dịch nghĩa": "ngay lập tức",
         "exampleHanzi": "我马上来。",
         "examplePinyin": "Wǒ mǎshàng lái.",
-        "exampleMeaning": "Tôi đến ngay."
+        "exampleMeaning": "Tôi đến ngay.",
+        "topicId": 21
     },
     {
         "STT": "227",
@@ -2252,7 +2478,8 @@
         "Dịch nghĩa": "không, ư, à",
         "exampleHanzi": "你好吗？",
         "examplePinyin": "Nǐ hǎo ma?",
-        "exampleMeaning": "Bạn khỏe không?"
+        "exampleMeaning": "Bạn khỏe không?",
+        "topicId": 21
     },
     {
         "STT": "228",
@@ -2262,7 +2489,8 @@
         "Dịch nghĩa": "mua",
         "exampleHanzi": "我买书。",
         "examplePinyin": "Wǒ mǎi shū.",
-        "exampleMeaning": "Tôi mua sách."
+        "exampleMeaning": "Tôi mua sách.",
+        "topicId": 13
     },
     {
         "STT": "229",
@@ -2272,7 +2500,8 @@
         "Dịch nghĩa": "chậm",
         "exampleHanzi": "车慢。",
         "examplePinyin": "Chē màn.",
-        "exampleMeaning": "Xe chậm."
+        "exampleMeaning": "Xe chậm.",
+        "topicId": 21
     },
     {
         "STT": "230",
@@ -2282,7 +2511,8 @@
         "Dịch nghĩa": "bận",
         "exampleHanzi": "他很忙。",
         "examplePinyin": "Tā hěn máng.",
-        "exampleMeaning": "Anh ấy rất bận."
+        "exampleMeaning": "Anh ấy rất bận.",
+        "topicId": 14
     },
     {
         "STT": "231",
@@ -2292,7 +2522,8 @@
         "Dịch nghĩa": "hào (tiền)",
         "exampleHanzi": "五毛钱。",
         "examplePinyin": "Wǔ máo qián.",
-        "exampleMeaning": "Năm hào."
+        "exampleMeaning": "Năm hào.",
+        "topicId": 13
     },
     {
         "STT": "232",
@@ -2302,7 +2533,8 @@
         "Dịch nghĩa": "chưa, chưa từng\nkhông, không có /",
         "exampleHanzi": "他没来。",
         "examplePinyin": "Tā méi lái.",
-        "exampleMeaning": "Anh ấy chưa đến."
+        "exampleMeaning": "Anh ấy chưa đến.",
+        "topicId": 21
     },
     {
         "STT": "233",
@@ -2312,7 +2544,8 @@
         "Dịch nghĩa": "không sao, đừng ngại, không có gì",
         "exampleHanzi": "没关系。",
         "examplePinyin": "Méi guānxì.",
-        "exampleMeaning": "Không sao."
+        "exampleMeaning": "Không sao.",
+        "topicId": 21
     },
     {
         "STT": "234",
@@ -2322,7 +2555,8 @@
         "Dịch nghĩa": "không sao, không việc gì, không hề gì",
         "exampleHanzi": "没什么。",
         "examplePinyin": "Méi shénme.",
-        "exampleMeaning": "Không có gì."
+        "exampleMeaning": "Không có gì.",
+        "topicId": 21
     },
     {
         "STT": "235",
@@ -2332,7 +2566,8 @@
         "Dịch nghĩa": "không sao\nkhông, không có /",
         "exampleHanzi": "没事儿。",
         "examplePinyin": "Méi shìr.",
-        "exampleMeaning": "Không sao."
+        "exampleMeaning": "Không sao.",
+        "topicId": 21
     },
     {
         "STT": "236",
@@ -2342,14 +2577,16 @@
         "Dịch nghĩa": "không bằng / không đủ / đều không",
         "exampleHanzi": "我没有钱。",
         "examplePinyin": "Wǒ méiyǒu qián.",
-        "exampleMeaning": "Tôi không có tiền."
+        "exampleMeaning": "Tôi không có tiền.",
+        "topicId": 21
     },
     {
         "STT": "237",
         "Tiếng Trung": "妹妹|妹",
         "Pinyin": "mèimei|mèi",
         "Từ loại": "phó từ\ndanh từ",
-        "Dịch nghĩa": "chưa, chưa từng\nem gái"
+        "Dịch nghĩa": "chưa, chưa từng\nem gái",
+        "topicId": 5
     },
     {
         "STT": "238",
@@ -2359,7 +2596,8 @@
         "Dịch nghĩa": "cửa, cánh cửa\nmôn học",
         "exampleHanzi": "门开了。",
         "examplePinyin": "Mén kāi le.",
-        "exampleMeaning": "Cửa mở rồi."
+        "exampleMeaning": "Cửa mở rồi.",
+        "topicId": 9
     },
     {
         "STT": "239",
@@ -2369,21 +2607,24 @@
         "Dịch nghĩa": "cửa, cổng",
         "exampleHanzi": "他在门口。",
         "examplePinyin": "Tā zài ménkǒu.",
-        "exampleMeaning": "Anh ấy ở cửa."
+        "exampleMeaning": "Anh ấy ở cửa.",
+        "topicId": 9
     },
     {
         "STT": "240",
         "Tiếng Trung": "门票\n们",
         "Pinyin": "ménpiào\nmen",
         "Từ loại": "danh từ",
-        "Dịch nghĩa": "vé vào cửa"
+        "Dịch nghĩa": "vé vào cửa",
+        "topicId": 20
     },
     {
         "STT": "241",
         "Tiếng Trung": "(朋友们)",
         "Pinyin": "(péngyoumen)",
         "Từ loại": "hậu tố",
-        "Dịch nghĩa": "chúng, các, bọn (các bạn, chúng bạn)"
+        "Dịch nghĩa": "chúng, các, bọn (các bạn, chúng bạn)",
+        "topicId": 21
     },
     {
         "STT": "242",
@@ -2393,7 +2634,8 @@
         "Dịch nghĩa": "cơm",
         "exampleHanzi": "我吃米饭。",
         "examplePinyin": "Wǒ chī mǐfàn.",
-        "exampleMeaning": "Tôi ăn cơm."
+        "exampleMeaning": "Tôi ăn cơm.",
+        "topicId": 18
     },
     {
         "STT": "243",
@@ -2403,7 +2645,8 @@
         "Dịch nghĩa": "bánh mì",
         "exampleHanzi": "他吃面包。",
         "examplePinyin": "Tā chī miànbāo.",
-        "exampleMeaning": "Anh ấy ăn bánh mì."
+        "exampleMeaning": "Anh ấy ăn bánh mì.",
+        "topicId": 18
     },
     {
         "STT": "244",
@@ -2413,7 +2656,8 @@
         "Dịch nghĩa": "mì sợi",
         "exampleHanzi": "我爱吃面条儿。",
         "examplePinyin": "Wǒ ài chī miàntiáor.",
-        "exampleMeaning": "Tôi thích ăn mì sợi."
+        "exampleMeaning": "Tôi thích ăn mì sợi.",
+        "topicId": 18
     },
     {
         "STT": "245",
@@ -2423,7 +2667,8 @@
         "Dịch nghĩa": "tên",
         "exampleHanzi": "你叫什么名字？",
         "examplePinyin": "Nǐ jiào shénme míngzì?",
-        "exampleMeaning": "Bạn tên là gì?"
+        "exampleMeaning": "Bạn tên là gì?",
+        "topicId": 7
     },
     {
         "STT": "246",
@@ -2433,7 +2678,8 @@
         "Dịch nghĩa": "rõ ràng, công khai, hiểu biết\nbiết, hiểu",
         "exampleHanzi": "我明白。",
         "examplePinyin": "Wǒ míngbai.",
-        "exampleMeaning": "Tôi hiểu."
+        "exampleMeaning": "Tôi hiểu.",
+        "topicId": 3
     },
     {
         "STT": "247",
@@ -2443,7 +2689,8 @@
         "Dịch nghĩa": "năm sau",
         "exampleHanzi": "明年我工作。",
         "examplePinyin": "Míngnián wǒ gōngzuò.",
-        "exampleMeaning": "Năm sau tôi đi làm."
+        "exampleMeaning": "Năm sau tôi đi làm.",
+        "topicId": 21
     },
     {
         "STT": "248",
@@ -2453,7 +2700,8 @@
         "Dịch nghĩa": "ngày mai",
         "exampleHanzi": "明天见。",
         "examplePinyin": "Míngtiān jiàn.",
-        "exampleMeaning": "Hẹn gặp lại ngày mai."
+        "exampleMeaning": "Hẹn gặp lại ngày mai.",
+        "topicId": 21
     },
     {
         "STT": "249",
@@ -2463,7 +2711,8 @@
         "Dịch nghĩa": "cầm, đưa, lấy, nắm",
         "exampleHanzi": "我拿书。",
         "examplePinyin": "Wǒ ná shū.",
-        "exampleMeaning": "Tôi cầm sách."
+        "exampleMeaning": "Tôi cầm sách.",
+        "topicId": 21
     },
     {
         "STT": "250",
@@ -2473,7 +2722,8 @@
         "Dịch nghĩa": "nào, đâu, gì",
         "exampleHanzi": "你是哪国人？",
         "examplePinyin": "Nǐ shì nǎ guó rén?",
-        "exampleMeaning": "Bạn là người nước nào?"
+        "exampleMeaning": "Bạn là người nước nào?",
+        "topicId": 21
     },
     {
         "STT": "251",
@@ -2483,7 +2733,8 @@
         "Dịch nghĩa": "đâu, ở đâu, chỗ nào, đâu có",
         "exampleHanzi": "你去哪里？",
         "examplePinyin": "Nǐ qù nǎlǐ?",
-        "exampleMeaning": "Bạn đi đâu?"
+        "exampleMeaning": "Bạn đi đâu?",
+        "topicId": 9
     },
     {
         "STT": "252",
@@ -2493,7 +2744,8 @@
         "Dịch nghĩa": "đâu, chỗ nào",
         "exampleHanzi": "他在哪儿？",
         "examplePinyin": "Tā zài nǎr?",
-        "exampleMeaning": "Anh ấy ở đâu?"
+        "exampleMeaning": "Anh ấy ở đâu?",
+        "topicId": 9
     },
     {
         "STT": "253",
@@ -2503,7 +2755,8 @@
         "Dịch nghĩa": "cái nào, người nào, những cái nào",
         "exampleHanzi": "哪些是书？",
         "examplePinyin": "Nǎxiē shì shū?",
-        "exampleMeaning": "Những cái nào là sách?"
+        "exampleMeaning": "Những cái nào là sách?",
+        "topicId": 9
     },
     {
         "STT": "254",
@@ -2513,7 +2766,8 @@
         "Dịch nghĩa": "kia, đó",
         "exampleHanzi": "那是我的。",
         "examplePinyin": "Nà shì wǒ de.",
-        "exampleMeaning": "Đó là của tôi."
+        "exampleMeaning": "Đó là của tôi.",
+        "topicId": 9
     },
     {
         "STT": "255",
@@ -2523,7 +2777,8 @@
         "Dịch nghĩa": "bên đó",
         "exampleHanzi": "他在那边。",
         "examplePinyin": "Tā zài nàbiān.",
-        "exampleMeaning": "Anh ấy ở bên đó."
+        "exampleMeaning": "Anh ấy ở bên đó.",
+        "topicId": 9
     },
     {
         "STT": "256",
@@ -2533,7 +2788,8 @@
         "Dịch nghĩa": "ở đó",
         "exampleHanzi": "他在那里。",
         "examplePinyin": "Tā zài nàlǐ.",
-        "exampleMeaning": "Anh ấy ở đó."
+        "exampleMeaning": "Anh ấy ở đó.",
+        "topicId": 9
     },
     {
         "STT": "257",
@@ -2543,7 +2799,8 @@
         "Dịch nghĩa": "ở kia",
         "exampleHanzi": "书在那儿。",
         "examplePinyin": "Shū zài nàr.",
-        "exampleMeaning": "Sách ở kia."
+        "exampleMeaning": "Sách ở kia.",
+        "topicId": 9
     },
     {
         "STT": "258",
@@ -2553,7 +2810,8 @@
         "Dịch nghĩa": "những... ấy, những... đó, những... kia",
         "exampleHanzi": "那些是我的。",
         "examplePinyin": "Nàxiē shì wǒ de.",
-        "exampleMeaning": "Những cái đó là của tôi."
+        "exampleMeaning": "Những cái đó là của tôi.",
+        "topicId": 9
     },
     {
         "STT": "259",
@@ -2563,7 +2821,8 @@
         "Dịch nghĩa": "sữa",
         "exampleHanzi": "我喝奶。",
         "examplePinyin": "Wǒ hē nǎi.",
-        "exampleMeaning": "Tôi uống sữa."
+        "exampleMeaning": "Tôi uống sữa.",
+        "topicId": 18
     },
     {
         "STT": "260",
@@ -2573,7 +2832,8 @@
         "Dịch nghĩa": "bà nội",
         "exampleHanzi": "奶奶好。",
         "examplePinyin": "Nǎinai hǎo.",
-        "exampleMeaning": "Bà nội khỏe."
+        "exampleMeaning": "Bà nội khỏe.",
+        "topicId": 5
     },
     {
         "STT": "261",
@@ -2583,7 +2843,8 @@
         "Dịch nghĩa": "nam, con trai",
         "exampleHanzi": "他是男。",
         "examplePinyin": "Tā shì nán.",
-        "exampleMeaning": "Anh ấy là nam."
+        "exampleMeaning": "Anh ấy là nam.",
+        "topicId": 5
     },
     {
         "STT": "262",
@@ -2593,7 +2854,8 @@
         "Dịch nghĩa": "bé trai",
         "exampleHanzi": "这是男孩儿。",
         "examplePinyin": "Zhè shì nánháir.",
-        "exampleMeaning": "Đây là bé trai."
+        "exampleMeaning": "Đây là bé trai.",
+        "topicId": 5
     },
     {
         "STT": "263",
@@ -2603,7 +2865,8 @@
         "Dịch nghĩa": "bạn trai",
         "exampleHanzi": "我有男朋友。",
         "examplePinyin": "Wǒ yǒu nánpéngyou.",
-        "exampleMeaning": "Tôi có bạn trai."
+        "exampleMeaning": "Tôi có bạn trai.",
+        "topicId": 5
     },
     {
         "STT": "264",
@@ -2613,7 +2876,8 @@
         "Dịch nghĩa": "đàn ông",
         "exampleHanzi": "他是男人。",
         "examplePinyin": "Tā shì nánrén.",
-        "exampleMeaning": "Anh ấy là đàn ông."
+        "exampleMeaning": "Anh ấy là đàn ông.",
+        "topicId": 5
     },
     {
         "STT": "265",
@@ -2623,7 +2887,8 @@
         "Dịch nghĩa": "học sinh nam",
         "exampleHanzi": "他是男生。",
         "examplePinyin": "Tā shì nánshēng.",
-        "exampleMeaning": "Anh ấy là học sinh nam."
+        "exampleMeaning": "Anh ấy là học sinh nam.",
+        "topicId": 5
     },
     {
         "STT": "266",
@@ -2633,7 +2898,8 @@
         "Dịch nghĩa": "hướng nam",
         "exampleHanzi": "他在南。",
         "examplePinyin": "Tā zài nán.",
-        "exampleMeaning": "Anh ấy ở hướng nam."
+        "exampleMeaning": "Anh ấy ở hướng nam.",
+        "topicId": 9
     },
     {
         "STT": "267",
@@ -2643,7 +2909,8 @@
         "Dịch nghĩa": "phía nam",
         "exampleHanzi": "学校在南边。",
         "examplePinyin": "Xuéxiào zài nánbiān.",
-        "exampleMeaning": "Trường học ở phía nam."
+        "exampleMeaning": "Trường học ở phía nam.",
+        "topicId": 9
     },
     {
         "STT": "268",
@@ -2653,7 +2920,8 @@
         "Dịch nghĩa": "khó",
         "exampleHanzi": "这个很难。",
         "examplePinyin": "Zhège hěn nán.",
-        "exampleMeaning": "Cái này rất khó."
+        "exampleMeaning": "Cái này rất khó.",
+        "topicId": 3
     },
     {
         "STT": "269",
@@ -2663,7 +2931,8 @@
         "Dịch nghĩa": "thế, nhỉ, vậy, đâu",
         "exampleHanzi": "你呢？",
         "examplePinyin": "Nǐ ne?",
-        "exampleMeaning": "Còn bạn thì sao?"
+        "exampleMeaning": "Còn bạn thì sao?",
+        "topicId": 21
     },
     {
         "STT": "270",
@@ -2673,7 +2942,8 @@
         "Dịch nghĩa": "có thể",
         "exampleHanzi": "我能去。",
         "examplePinyin": "Wǒ néng qù.",
-        "exampleMeaning": "Tôi có thể đi."
+        "exampleMeaning": "Tôi có thể đi.",
+        "topicId": 21
     },
     {
         "STT": "271",
@@ -2683,7 +2953,8 @@
         "Dịch nghĩa": "bạn",
         "exampleHanzi": "你好。",
         "examplePinyin": "Nǐ hǎo.",
-        "exampleMeaning": "Chào bạn."
+        "exampleMeaning": "Chào bạn.",
+        "topicId": 21
     },
     {
         "STT": "272",
@@ -2693,7 +2964,8 @@
         "Dịch nghĩa": "các bạn",
         "exampleHanzi": "你们好。",
         "examplePinyin": "Nǐmen hǎo.",
-        "exampleMeaning": "Chào các bạn."
+        "exampleMeaning": "Chào các bạn.",
+        "topicId": 21
     },
     {
         "STT": "273",
@@ -2703,7 +2975,8 @@
         "Dịch nghĩa": "năm",
         "exampleHanzi": "今年是马年。",
         "examplePinyin": "Jīnnián shì mǎ nián.",
-        "exampleMeaning": "Năm nay là năm Ngựa."
+        "exampleMeaning": "Năm nay là năm Ngựa.",
+        "topicId": 21
     },
     {
         "STT": "274",
@@ -2713,7 +2986,8 @@
         "Dịch nghĩa": "ngài, bạn (lịch sự)",
         "exampleHanzi": "您好。",
         "examplePinyin": "Nín hǎo.",
-        "exampleMeaning": "Xin chào ngài."
+        "exampleMeaning": "Xin chào ngài.",
+        "topicId": 21
     },
     {
         "STT": "275",
@@ -2723,7 +2997,8 @@
         "Dịch nghĩa": "sữa bò",
         "exampleHanzi": "我喝牛奶。",
         "examplePinyin": "Wǒ hē niúnǎi.",
-        "exampleMeaning": "Tôi uống sữa bò."
+        "exampleMeaning": "Tôi uống sữa bò.",
+        "topicId": 18
     },
     {
         "STT": "276",
@@ -2733,7 +3008,8 @@
         "Dịch nghĩa": "nữ, con gái",
         "exampleHanzi": "她是女的。",
         "examplePinyin": "Tā shì nǚ de.",
-        "exampleMeaning": "Cô ấy là nữ."
+        "exampleMeaning": "Cô ấy là nữ.",
+        "topicId": 5
     },
     {
         "STT": "277",
@@ -2743,7 +3019,8 @@
         "Dịch nghĩa": "con gái",
         "exampleHanzi": "我有一个女儿。",
         "examplePinyin": "Wǒ yǒu yī gè nǚ'ér.",
-        "exampleMeaning": "Tôi có một cô con gái."
+        "exampleMeaning": "Tôi có một cô con gái.",
+        "topicId": 5
     },
     {
         "STT": "278",
@@ -2753,7 +3030,8 @@
         "Dịch nghĩa": "bé gái",
         "exampleHanzi": "女孩儿在看书。",
         "examplePinyin": "Nǚháir zài kàn shū.",
-        "exampleMeaning": "Bé gái đang đọc sách."
+        "exampleMeaning": "Bé gái đang đọc sách.",
+        "topicId": 5
     },
     {
         "STT": "279",
@@ -2763,7 +3041,8 @@
         "Dịch nghĩa": "bạn gái",
         "exampleHanzi": "他是我的女朋友。",
         "examplePinyin": "Tā shì wǒ de nǚpéngyou.",
-        "exampleMeaning": "Cô ấy là bạn gái của tôi."
+        "exampleMeaning": "Cô ấy là bạn gái của tôi.",
+        "topicId": 5
     },
     {
         "STT": "280",
@@ -2773,7 +3052,8 @@
         "Dịch nghĩa": "phụ nữ",
         "exampleHanzi": "那个女人很好。",
         "examplePinyin": "Nà gè nǚrén hěn hǎo.",
-        "exampleMeaning": "Người phụ nữ đó rất tốt."
+        "exampleMeaning": "Người phụ nữ đó rất tốt.",
+        "topicId": 5
     },
     {
         "STT": "281",
@@ -2783,7 +3063,8 @@
         "Dịch nghĩa": "nữ sinh, cô gái",
         "exampleHanzi": "她是女生。",
         "examplePinyin": "Tā shì nǚshēng.",
-        "exampleMeaning": "Cô ấy là nữ sinh."
+        "exampleMeaning": "Cô ấy là nữ sinh.",
+        "topicId": 5
     },
     {
         "STT": "282",
@@ -2793,7 +3074,8 @@
         "Dịch nghĩa": "bên cạnh",
         "exampleHanzi": "他坐在我旁边。",
         "examplePinyin": "Tā zuò zài wǒ pángbiān.",
-        "exampleMeaning": "Anh ấy ngồi bên cạnh tôi."
+        "exampleMeaning": "Anh ấy ngồi bên cạnh tôi.",
+        "topicId": 9
     },
     {
         "STT": "283",
@@ -2803,7 +3085,8 @@
         "Dịch nghĩa": "chạy",
         "exampleHanzi": "他跑得很快。",
         "examplePinyin": "Tā pǎo de hěn kuài.",
-        "exampleMeaning": "Anh ấy chạy rất nhanh."
+        "exampleMeaning": "Anh ấy chạy rất nhanh.",
+        "topicId": 19
     },
     {
         "STT": "284",
@@ -2813,7 +3096,8 @@
         "Dịch nghĩa": "bạn bè",
         "exampleHanzi": "他是我的朋友。",
         "examplePinyin": "Tā shì wǒ de péngyou.",
-        "exampleMeaning": "Anh ấy là bạn của tôi."
+        "exampleMeaning": "Anh ấy là bạn của tôi.",
+        "topicId": 5
     },
     {
         "STT": "285",
@@ -2823,7 +3107,8 @@
         "Dịch nghĩa": "vé, phiếu, thẻ, hoá đơn",
         "exampleHanzi": "我有一张票。",
         "examplePinyin": "Wǒ yǒu yī zhāng piào.",
-        "exampleMeaning": "Tôi có một cái vé."
+        "exampleMeaning": "Tôi có một cái vé.",
+        "topicId": 20
     },
     {
         "STT": "286",
@@ -2833,7 +3118,8 @@
         "Dịch nghĩa": "số 7",
         "exampleHanzi": "我有七个苹果。",
         "examplePinyin": "Wǒ yǒu qī gè píngguǒ.",
-        "exampleMeaning": "Tôi có bảy quả táo."
+        "exampleMeaning": "Tôi có bảy quả táo.",
+        "topicId": 21
     },
     {
         "STT": "287",
@@ -2843,7 +3129,8 @@
         "Dịch nghĩa": "dậy, xê, rời khỏi, cất cánh, hất lên, nổi",
         "exampleHanzi": "他起得很早。",
         "examplePinyin": "Tā qǐ de hěn zǎo.",
-        "exampleMeaning": "Anh ấy dậy rất sớm."
+        "exampleMeaning": "Anh ấy dậy rất sớm.",
+        "topicId": 21
     },
     {
         "STT": "288",
@@ -2853,7 +3140,8 @@
         "Dịch nghĩa": "thức dậy",
         "exampleHanzi": "我七点起床。",
         "examplePinyin": "Wǒ qī diǎn qǐchuáng.",
-        "exampleMeaning": "Tôi thức dậy lúc bảy giờ."
+        "exampleMeaning": "Tôi thức dậy lúc bảy giờ.",
+        "topicId": 21
     },
     {
         "STT": "289",
@@ -2863,7 +3151,8 @@
         "Dịch nghĩa": "ngồi dậy, đứng dậy, ngủ dậy",
         "exampleHanzi": "你起来吧。",
         "examplePinyin": "Nǐ qǐlái ba.",
-        "exampleMeaning": "Bạn đứng dậy đi."
+        "exampleMeaning": "Bạn đứng dậy đi.",
+        "topicId": 21
     },
     {
         "STT": "290",
@@ -2873,7 +3162,8 @@
         "Dịch nghĩa": "xe ô tô",
         "exampleHanzi": "这是汽车。",
         "examplePinyin": "Zhè shì qìchē.",
-        "exampleMeaning": "Đây là xe ô tô."
+        "exampleMeaning": "Đây là xe ô tô.",
+        "topicId": 24
     },
     {
         "STT": "291",
@@ -2883,7 +3173,8 @@
         "Dịch nghĩa": "phía trước",
         "exampleHanzi": "他在前。",
         "examplePinyin": "Tā zài qián.",
-        "exampleMeaning": "Anh ấy ở phía trước."
+        "exampleMeaning": "Anh ấy ở phía trước.",
+        "topicId": 9
     },
     {
         "STT": "292",
@@ -2893,7 +3184,8 @@
         "Dịch nghĩa": "phía trước, đằng trước",
         "exampleHanzi": "学校在前边。",
         "examplePinyin": "Xuéxiào zài qiánbian.",
-        "exampleMeaning": "Trường học ở phía trước."
+        "exampleMeaning": "Trường học ở phía trước.",
+        "topicId": 9
     },
     {
         "STT": "293",
@@ -2903,7 +3195,8 @@
         "Dịch nghĩa": "hôm kia",
         "exampleHanzi": "前天是星期天。",
         "examplePinyin": "Qiántiān shì xīngqītiān.",
-        "exampleMeaning": "Hôm kia là chủ nhật."
+        "exampleMeaning": "Hôm kia là chủ nhật.",
+        "topicId": 21
     },
     {
         "STT": "294",
@@ -2913,7 +3206,8 @@
         "Dịch nghĩa": "tiền",
         "exampleHanzi": "我没有钱。",
         "examplePinyin": "Wǒ méiyǒu qián.",
-        "exampleMeaning": "Tôi không có tiền."
+        "exampleMeaning": "Tôi không có tiền.",
+        "topicId": 13
     },
     {
         "STT": "295",
@@ -2923,7 +3217,8 @@
         "Dịch nghĩa": "ví tiền",
         "exampleHanzi": "这是我的钱包。",
         "examplePinyin": "Zhè shì wǒ de qiánbāo.",
-        "exampleMeaning": "Đây là ví tiền của tôi."
+        "exampleMeaning": "Đây là ví tiền của tôi.",
+        "topicId": 13
     },
     {
         "STT": "296",
@@ -2933,7 +3228,8 @@
         "Dịch nghĩa": "mời, xin",
         "exampleHanzi": "请喝茶。",
         "examplePinyin": "Qǐng hē chá.",
-        "exampleMeaning": "Mời uống trà."
+        "exampleMeaning": "Mời uống trà.",
+        "topicId": 21
     },
     {
         "STT": "297",
@@ -2943,7 +3239,8 @@
         "Dịch nghĩa": "xin nghỉ",
         "exampleHanzi": "我今天请假。",
         "examplePinyin": "Wǒ jīntiān qǐngjià.",
-        "exampleMeaning": "Hôm nay tôi xin nghỉ."
+        "exampleMeaning": "Hôm nay tôi xin nghỉ.",
+        "topicId": 14
     },
     {
         "STT": "298",
@@ -2953,7 +3250,8 @@
         "Dịch nghĩa": "mời vào",
         "exampleHanzi": "请进，请坐。",
         "examplePinyin": "Qǐng jìn, qǐng zuò.",
-        "exampleMeaning": "Mời vào, mời ngồi."
+        "exampleMeaning": "Mời vào, mời ngồi.",
+        "topicId": 21
     },
     {
         "STT": "299",
@@ -2963,7 +3261,8 @@
         "Dịch nghĩa": "xin hỏi",
         "exampleHanzi": "请问，你叫什么？",
         "examplePinyin": "Qǐngwèn, nǐ jiào shénme?",
-        "exampleMeaning": "Xin hỏi, bạn tên gì?"
+        "exampleMeaning": "Xin hỏi, bạn tên gì?",
+        "topicId": 21
     },
     {
         "STT": "300",
@@ -2973,7 +3272,8 @@
         "Dịch nghĩa": "mời ngồi",
         "exampleHanzi": "请坐在这里。",
         "examplePinyin": "Qǐng zuò zài zhèlǐ.",
-        "exampleMeaning": "Mời ngồi ở đây."
+        "exampleMeaning": "Mời ngồi ở đây.",
+        "topicId": 21
     },
     {
         "STT": "301",
@@ -2983,7 +3283,8 @@
         "Dịch nghĩa": "quả bóng, hình cầu, quả, nắm",
         "exampleHanzi": "我有一个球。",
         "examplePinyin": "Wǒ yǒu yī gè qiú.",
-        "exampleMeaning": "Tôi có một quả bóng."
+        "exampleMeaning": "Tôi có một quả bóng.",
+        "topicId": 19
     },
     {
         "STT": "302",
@@ -2993,7 +3294,8 @@
         "Dịch nghĩa": "đi",
         "exampleHanzi": "我去学校。",
         "examplePinyin": "Wǒ qù xuéxiào.",
-        "exampleMeaning": "Tôi đi học."
+        "exampleMeaning": "Tôi đi học.",
+        "topicId": 20
     },
     {
         "STT": "303",
@@ -3003,7 +3305,8 @@
         "Dịch nghĩa": "năm ngoái",
         "exampleHanzi": "去年我三岁。",
         "examplePinyin": "Qùnián wǒ sān suì.",
-        "exampleMeaning": "Năm ngoái tôi ba tuổi."
+        "exampleMeaning": "Năm ngoái tôi ba tuổi.",
+        "topicId": 21
     },
     {
         "STT": "304",
@@ -3013,7 +3316,8 @@
         "Dịch nghĩa": "nóng, nóng lòng",
         "exampleHanzi": "今天很热。",
         "examplePinyin": "Jīntiān hěn rè.",
-        "exampleMeaning": "Hôm nay rất nóng."
+        "exampleMeaning": "Hôm nay rất nóng.",
+        "topicId": 10
     },
     {
         "STT": "305",
@@ -3023,7 +3327,8 @@
         "Dịch nghĩa": "làm nóng, hâm nóng\nngười",
         "exampleHanzi": "那个人是老师。",
         "examplePinyin": "Nà gè rén shì lǎoshī.",
-        "exampleMeaning": "Người đó là giáo viên."
+        "exampleMeaning": "Người đó là giáo viên.",
+        "topicId": 1
     },
     {
         "STT": "306",
@@ -3033,7 +3338,8 @@
         "Dịch nghĩa": "biết, quen biết, nhận ra\nnhận thức",
         "exampleHanzi": "我认识他。",
         "examplePinyin": "Wǒ rènshi tā.",
-        "exampleMeaning": "Tôi quen biết anh ấy."
+        "exampleMeaning": "Tôi quen biết anh ấy.",
+        "topicId": 3
     },
     {
         "STT": "307",
@@ -3043,7 +3349,8 @@
         "Dịch nghĩa": "nghiêm túc, chăm chỉ, cẩn thận",
         "exampleHanzi": "他学习很认真。",
         "examplePinyin": "Tā xuéxí hěn rènzhēn.",
-        "exampleMeaning": "Anh ấy học rất chăm chỉ."
+        "exampleMeaning": "Anh ấy học rất chăm chỉ.",
+        "topicId": 3
     },
     {
         "STT": "308",
@@ -3053,7 +3360,8 @@
         "Dịch nghĩa": "ngày",
         "exampleHanzi": "一月一日。",
         "examplePinyin": "Yī yuè yī rì.",
-        "exampleMeaning": "Ngày một tháng một."
+        "exampleMeaning": "Ngày một tháng một.",
+        "topicId": 21
     },
     {
         "STT": "309",
@@ -3063,7 +3371,8 @@
         "Dịch nghĩa": "ngày tháng",
         "exampleHanzi": "今天日期是几号？",
         "examplePinyin": "Jīntiān rìqī shì jǐ hào?",
-        "exampleMeaning": "Hôm nay là ngày mấy?"
+        "exampleMeaning": "Hôm nay là ngày mấy?",
+        "topicId": 21
     },
     {
         "STT": "310",
@@ -3073,7 +3382,8 @@
         "Dịch nghĩa": "thịt",
         "exampleHanzi": "我爱吃肉。",
         "examplePinyin": "Wǒ ài chī ròu.",
-        "exampleMeaning": "Tôi thích ăn thịt."
+        "exampleMeaning": "Tôi thích ăn thịt.",
+        "topicId": 18
     },
     {
         "STT": "311",
@@ -3083,7 +3393,8 @@
         "Dịch nghĩa": "số 3",
         "exampleHanzi": "我有三个苹果。",
         "examplePinyin": "Wǒ yǒu sān gè píngguǒ.",
-        "exampleMeaning": "Tôi có ba quả táo."
+        "exampleMeaning": "Tôi có ba quả táo.",
+        "topicId": 21
     },
     {
         "STT": "312",
@@ -3093,7 +3404,8 @@
         "Dịch nghĩa": "núi",
         "exampleHanzi": "那座山很大。",
         "examplePinyin": "Nà zuò shān hěn dà.",
-        "exampleMeaning": "Ngọn núi đó rất lớn."
+        "exampleMeaning": "Ngọn núi đó rất lớn.",
+        "topicId": 9
     },
     {
         "STT": "313",
@@ -3103,7 +3415,8 @@
         "Dịch nghĩa": "trung tâm thương mại",
         "exampleHanzi": "我去商场。",
         "examplePinyin": "Wǒ qù shāngchǎng.",
-        "exampleMeaning": "Tôi đi trung tâm thương mại."
+        "exampleMeaning": "Tôi đi trung tâm thương mại.",
+        "topicId": 13
     },
     {
         "STT": "314",
@@ -3113,7 +3426,8 @@
         "Dịch nghĩa": "cửa hàng",
         "exampleHanzi": "这个商店很小。",
         "examplePinyin": "Zhè gè shāngdiàn hěn xiǎo.",
-        "exampleMeaning": "Cửa hàng này rất nhỏ."
+        "exampleMeaning": "Cửa hàng này rất nhỏ.",
+        "topicId": 13
     },
     {
         "STT": "315",
@@ -3123,7 +3437,8 @@
         "Dịch nghĩa": "trên, bên trên\nlên, đi lên, đến, ra, vào (ca, học)",
         "exampleHanzi": "书在桌子上。",
         "examplePinyin": "Shū zài zhuōzi shàng.",
-        "exampleMeaning": "Sách ở trên bàn."
+        "exampleMeaning": "Sách ở trên bàn.",
+        "topicId": 9
     },
     {
         "STT": "316",
@@ -3133,7 +3448,8 @@
         "Dịch nghĩa": "đi làm",
         "exampleHanzi": "我每天上班。",
         "examplePinyin": "Wǒ měitiān shàngbān.",
-        "exampleMeaning": "Tôi đi làm mỗi ngày."
+        "exampleMeaning": "Tôi đi làm mỗi ngày.",
+        "topicId": 14
     },
     {
         "STT": "317",
@@ -3143,7 +3459,8 @@
         "Dịch nghĩa": "phía trên, bên trên",
         "exampleHanzi": "书在上边。",
         "examplePinyin": "Shū zài shàngbian.",
-        "exampleMeaning": "Sách ở phía trên."
+        "exampleMeaning": "Sách ở phía trên.",
+        "topicId": 9
     },
     {
         "STT": "318",
@@ -3153,7 +3470,8 @@
         "Dịch nghĩa": "lên xe",
         "exampleHanzi": "我们上车吧。",
         "examplePinyin": "Wǒmen shàng chē ba.",
-        "exampleMeaning": "Chúng ta lên xe đi."
+        "exampleMeaning": "Chúng ta lên xe đi.",
+        "topicId": 20
     },
     {
         "STT": "319",
@@ -3163,7 +3481,8 @@
         "Dịch nghĩa": "lần trước",
         "exampleHanzi": "上次你来了。",
         "examplePinyin": "Shàngcì nǐ lái le.",
-        "exampleMeaning": "Lần trước bạn đã đến."
+        "exampleMeaning": "Lần trước bạn đã đến.",
+        "topicId": 21
     },
     {
         "STT": "320",
@@ -3173,7 +3492,8 @@
         "Dịch nghĩa": "lên lớp, vào học, đi học",
         "exampleHanzi": "他上课了。",
         "examplePinyin": "Tā shàngkè le.",
-        "exampleMeaning": "Anh ấy vào học rồi."
+        "exampleMeaning": "Anh ấy vào học rồi.",
+        "topicId": 7
     },
     {
         "STT": "321",
@@ -3183,7 +3503,8 @@
         "Dịch nghĩa": "lên mạng, lướt mạng",
         "exampleHanzi": "我喜欢上网。",
         "examplePinyin": "Wǒ xǐhuān shàngwǎng.",
-        "exampleMeaning": "Tôi thích lên mạng."
+        "exampleMeaning": "Tôi thích lên mạng.",
+        "topicId": 22
     },
     {
         "STT": "322",
@@ -3193,7 +3514,8 @@
         "Dịch nghĩa": "buổi sáng",
         "exampleHanzi": "上午我工作。",
         "examplePinyin": "Shàngwǔ wǒ gōngzuò.",
-        "exampleMeaning": "Buổi sáng tôi làm việc."
+        "exampleMeaning": "Buổi sáng tôi làm việc.",
+        "topicId": 21
     },
     {
         "STT": "323",
@@ -3203,7 +3525,8 @@
         "Dịch nghĩa": "đến trường, đi học",
         "exampleHanzi": "孩子上学了。",
         "examplePinyin": "Háizi shàngxué le.",
-        "exampleMeaning": "Đứa trẻ đi học rồi."
+        "exampleMeaning": "Đứa trẻ đi học rồi.",
+        "topicId": 7
     },
     {
         "STT": "324",
@@ -3213,7 +3536,8 @@
         "Dịch nghĩa": "ít\nthiếu, nợ, bớt, mất",
         "exampleHanzi": "水很少。",
         "examplePinyin": "Shuǐ hěn shǎo.",
-        "exampleMeaning": "Nước rất ít."
+        "exampleMeaning": "Nước rất ít.",
+        "topicId": 21
     },
     {
         "STT": "325",
@@ -3223,7 +3547,8 @@
         "Dịch nghĩa": "ai",
         "exampleHanzi": "他是谁？",
         "examplePinyin": "Tā shì shuí?",
-        "exampleMeaning": "Anh ấy là ai?"
+        "exampleMeaning": "Anh ấy là ai?",
+        "topicId": 3
     },
     {
         "STT": "326",
@@ -3233,7 +3558,8 @@
         "Dịch nghĩa": "trên người, bên mình, trong người",
         "exampleHanzi": "我身上有钱。",
         "examplePinyin": "Wǒ shēnshang yǒu qián.",
-        "exampleMeaning": "Trên người tôi có tiền."
+        "exampleMeaning": "Trên người tôi có tiền.",
+        "topicId": 1
     },
     {
         "STT": "327",
@@ -3243,7 +3569,8 @@
         "Dịch nghĩa": "cơ thể, thân thể",
         "exampleHanzi": "身体好。",
         "examplePinyin": "Shēntǐ hǎo.",
-        "exampleMeaning": "Cơ thể khỏe."
+        "exampleMeaning": "Cơ thể khỏe.",
+        "topicId": 1
     },
     {
         "STT": "328",
@@ -3253,7 +3580,8 @@
         "Dịch nghĩa": "cái gì",
         "exampleHanzi": "你吃什么？",
         "examplePinyin": "Nǐ chī shénme?",
-        "exampleMeaning": "Bạn ăn gì?"
+        "exampleMeaning": "Bạn ăn gì?",
+        "topicId": 3
     },
     {
         "STT": "329",
@@ -3263,7 +3591,8 @@
         "Dịch nghĩa": "bị bệnh",
         "exampleHanzi": "他生病了。",
         "examplePinyin": "Tā shēngbìng le.",
-        "exampleMeaning": "Anh ấy bị bệnh rồi."
+        "exampleMeaning": "Anh ấy bị bệnh rồi.",
+        "topicId": 2
     },
     {
         "STT": "330",
@@ -3273,7 +3602,8 @@
         "Dịch nghĩa": "tức giận, nổi giận",
         "exampleHanzi": "妈妈生气了。",
         "examplePinyin": "Māma shēngqì le.",
-        "exampleMeaning": "Mẹ tức giận rồi."
+        "exampleMeaning": "Mẹ tức giận rồi.",
+        "topicId": 3
     },
     {
         "STT": "331",
@@ -3283,7 +3613,8 @@
         "Dịch nghĩa": "sinh nhật",
         "exampleHanzi": "今天是我的生日。",
         "examplePinyin": "Jīntiān shì wǒ de shēngrì.",
-        "exampleMeaning": "Hôm nay là sinh nhật của tôi."
+        "exampleMeaning": "Hôm nay là sinh nhật của tôi.",
+        "topicId": 5
     },
     {
         "STT": "332",
@@ -3293,7 +3624,8 @@
         "Dịch nghĩa": "số 10",
         "exampleHanzi": "我有十本书。",
         "examplePinyin": "Wǒ yǒu shí běn shū.",
-        "exampleMeaning": "Tôi có mười cuốn sách."
+        "exampleMeaning": "Tôi có mười cuốn sách.",
+        "topicId": 21
     },
     {
         "STT": "333",
@@ -3303,7 +3635,8 @@
         "Dịch nghĩa": "lúc, khi",
         "exampleHanzi": "你什么时候来？",
         "examplePinyin": "Nǐ shénme shíhou lái?",
-        "exampleMeaning": "Bạn đến lúc nào?"
+        "exampleMeaning": "Bạn đến lúc nào?",
+        "topicId": 21
     },
     {
         "STT": "334",
@@ -3313,7 +3646,8 @@
         "Dịch nghĩa": "thời gian",
         "exampleHanzi": "现在没有时间。",
         "examplePinyin": "Xiànzài méiyǒu shíjiān.",
-        "exampleMeaning": "Bây giờ không có thời gian."
+        "exampleMeaning": "Bây giờ không có thời gian.",
+        "topicId": 21
     },
     {
         "STT": "335",
@@ -3323,7 +3657,8 @@
         "Dịch nghĩa": "việc, chuyện",
         "exampleHanzi": "我有事。",
         "examplePinyin": "Wǒ yǒu shì.",
-        "exampleMeaning": "Tôi có việc."
+        "exampleMeaning": "Tôi có việc.",
+        "topicId": 3
     },
     {
         "STT": "336",
@@ -3333,7 +3668,8 @@
         "Dịch nghĩa": "thử",
         "exampleHanzi": "你试一下。",
         "examplePinyin": "Nǐ shì yīxià.",
-        "exampleMeaning": "Bạn thử một chút."
+        "exampleMeaning": "Bạn thử một chút.",
+        "topicId": 3
     },
     {
         "STT": "337",
@@ -3343,7 +3679,8 @@
         "Dịch nghĩa": "là",
         "exampleHanzi": "他是老师。",
         "examplePinyin": "Tā shì lǎoshī.",
-        "exampleMeaning": "Anh ấy là giáo viên."
+        "exampleMeaning": "Anh ấy là giáo viên.",
+        "topicId": 3
     },
     {
         "STT": "338",
@@ -3353,7 +3690,8 @@
         "Dịch nghĩa": "phải không",
         "exampleHanzi": "你是不是学生？",
         "examplePinyin": "Nǐ shì bù shì xuéshēng?",
-        "exampleMeaning": "Bạn có phải là học sinh không?"
+        "exampleMeaning": "Bạn có phải là học sinh không?",
+        "topicId": 3
     },
     {
         "STT": "339",
@@ -3363,7 +3701,8 @@
         "Dịch nghĩa": "tay",
         "exampleHanzi": "他的手很大。",
         "examplePinyin": "Tā de shǒu hěn dà.",
-        "exampleMeaning": "Tay của anh ấy rất to."
+        "exampleMeaning": "Tay của anh ấy rất to.",
+        "topicId": 1
     },
     {
         "STT": "340",
@@ -3373,7 +3712,8 @@
         "Dịch nghĩa": "điện thoại di động",
         "exampleHanzi": "我的手机在这里。",
         "examplePinyin": "Wǒ de shǒujī zài zhèlǐ.",
-        "exampleMeaning": "Điện thoại di động của tôi ở đây."
+        "exampleMeaning": "Điện thoại di động của tôi ở đây.",
+        "topicId": 22
     },
     {
         "STT": "341",
@@ -3383,7 +3723,8 @@
         "Dịch nghĩa": "sách",
         "exampleHanzi": "我爱看书。",
         "examplePinyin": "Wǒ ài kàn shū.",
-        "exampleMeaning": "Tôi thích đọc sách."
+        "exampleMeaning": "Tôi thích đọc sách.",
+        "topicId": 7
     },
     {
         "STT": "342",
@@ -3393,7 +3734,8 @@
         "Dịch nghĩa": "túi sách, cặp sách",
         "exampleHanzi": "书包里有什么？",
         "examplePinyin": "Shūbāo lǐ yǒu shénme?",
-        "exampleMeaning": "Trong cặp sách có gì?"
+        "exampleMeaning": "Trong cặp sách có gì?",
+        "topicId": 7
     },
     {
         "STT": "343",
@@ -3403,7 +3745,8 @@
         "Dịch nghĩa": "hiệu sách",
         "exampleHanzi": "书店在哪儿？",
         "examplePinyin": "Shūdiàn zài nǎr?",
-        "exampleMeaning": "Hiệu sách ở đâu?"
+        "exampleMeaning": "Hiệu sách ở đâu?",
+        "topicId": 7
     },
     {
         "STT": "344",
@@ -3413,7 +3756,8 @@
         "Dịch nghĩa": "cây",
         "exampleHanzi": "树很高。",
         "examplePinyin": "Shù hěn gāo.",
-        "exampleMeaning": "Cây rất cao."
+        "exampleMeaning": "Cây rất cao.",
+        "topicId": 11
     },
     {
         "STT": "345",
@@ -3423,7 +3767,8 @@
         "Dịch nghĩa": "nước",
         "exampleHanzi": "我要喝水。",
         "examplePinyin": "Wǒ yào hē shuǐ.",
-        "exampleMeaning": "Tôi muốn uống nước."
+        "exampleMeaning": "Tôi muốn uống nước.",
+        "topicId": 18
     },
     {
         "STT": "346",
@@ -3433,7 +3778,8 @@
         "Dịch nghĩa": "hoa quả, trái cây",
         "exampleHanzi": "我吃水果。",
         "examplePinyin": "Wǒ chī shuǐguǒ.",
-        "exampleMeaning": "Tôi ăn trái cây."
+        "exampleMeaning": "Tôi ăn trái cây.",
+        "topicId": 18
     },
     {
         "STT": "347",
@@ -3443,7 +3789,8 @@
         "Dịch nghĩa": "ngủ, nằm dài",
         "exampleHanzi": "他睡。",
         "examplePinyin": "Tā shuì.",
-        "exampleMeaning": "Anh ấy ngủ."
+        "exampleMeaning": "Anh ấy ngủ.",
+        "topicId": 2
     },
     {
         "STT": "348",
@@ -3453,7 +3800,8 @@
         "Dịch nghĩa": "ngủ, đi ngủ, ngủ nghê",
         "exampleHanzi": "我睡觉。",
         "examplePinyin": "Wǒ shuìjiào.",
-        "exampleMeaning": "Tôi đi ngủ."
+        "exampleMeaning": "Tôi đi ngủ.",
+        "topicId": 2
     },
     {
         "STT": "349",
@@ -3463,7 +3811,8 @@
         "Dịch nghĩa": "nói",
         "exampleHanzi": "他说中文。",
         "examplePinyin": "Tā shuō zhōngwén.",
-        "exampleMeaning": "Anh ấy nói tiếng Trung."
+        "exampleMeaning": "Anh ấy nói tiếng Trung.",
+        "topicId": 3
     },
     {
         "STT": "350",
@@ -3473,7 +3822,8 @@
         "Dịch nghĩa": "nói chuyện",
         "exampleHanzi": "我们说话。",
         "examplePinyin": "Wǒmen shuōhuà.",
-        "exampleMeaning": "Chúng tôi nói chuyện."
+        "exampleMeaning": "Chúng tôi nói chuyện.",
+        "topicId": 3
     },
     {
         "STT": "351",
@@ -3483,7 +3833,8 @@
         "Dịch nghĩa": "số 4",
         "exampleHanzi": "我有四个苹果。",
         "examplePinyin": "Wǒ yǒu sì gè píngguǒ.",
-        "exampleMeaning": "Tôi có bốn quả táo."
+        "exampleMeaning": "Tôi có bốn quả táo.",
+        "topicId": 21
     },
     {
         "STT": "352",
@@ -3493,7 +3844,8 @@
         "Dịch nghĩa": "đưa, giao, tặng, tiễn",
         "exampleHanzi": "我送你书。",
         "examplePinyin": "Wǒ sòng nǐ shū.",
-        "exampleMeaning": "Tôi tặng bạn sách."
+        "exampleMeaning": "Tôi tặng bạn sách.",
+        "topicId": 13
     },
     {
         "STT": "353",
@@ -3503,7 +3855,8 @@
         "Dịch nghĩa": "tuổi",
         "exampleHanzi": "他五岁。",
         "examplePinyin": "Tā wǔ suì.",
-        "exampleMeaning": "Anh ấy năm tuổi."
+        "exampleMeaning": "Anh ấy năm tuổi.",
+        "topicId": 21
     },
     {
         "STT": "354",
@@ -3513,7 +3866,8 @@
         "Dịch nghĩa": "anh ấy, ông ấy, cậu ấy",
         "exampleHanzi": "他是老师。",
         "examplePinyin": "Tā shì lǎoshī.",
-        "exampleMeaning": "Anh ấy là giáo viên."
+        "exampleMeaning": "Anh ấy là giáo viên.",
+        "topicId": 3
     },
     {
         "STT": "355",
@@ -3523,7 +3877,8 @@
         "Dịch nghĩa": "họ (nam)",
         "exampleHanzi": "他们喝水。",
         "examplePinyin": "Tāmen hē shuǐ.",
-        "exampleMeaning": "Họ uống nước."
+        "exampleMeaning": "Họ uống nước.",
+        "topicId": 3
     },
     {
         "STT": "356",
@@ -3533,7 +3888,8 @@
         "Dịch nghĩa": "cô ấy, bà ấy, chị ấy",
         "exampleHanzi": "她是我朋友。",
         "examplePinyin": "Tā shì wǒ péngyou.",
-        "exampleMeaning": "Cô ấy là bạn tôi."
+        "exampleMeaning": "Cô ấy là bạn tôi.",
+        "topicId": 3
     },
     {
         "STT": "357",
@@ -3543,7 +3899,8 @@
         "Dịch nghĩa": "họ (nữ)",
         "exampleHanzi": "她们看书。",
         "examplePinyin": "Tāmen kàn shū.",
-        "exampleMeaning": "Họ đọc sách."
+        "exampleMeaning": "Họ đọc sách.",
+        "topicId": 3
     },
     {
         "STT": "358",
@@ -3553,7 +3910,8 @@
         "Dịch nghĩa": "quá, rất",
         "exampleHanzi": "天气太热。",
         "examplePinyin": "Tiānqì tài rè.",
-        "exampleMeaning": "Thời tiết quá nóng."
+        "exampleMeaning": "Thời tiết quá nóng.",
+        "topicId": 3
     },
     {
         "STT": "359",
@@ -3563,7 +3921,8 @@
         "Dịch nghĩa": "trời, thời gian\nngày",
         "exampleHanzi": "今天好。",
         "examplePinyin": "Jīntiān hǎo.",
-        "exampleMeaning": "Hôm nay tốt."
+        "exampleMeaning": "Hôm nay tốt.",
+        "topicId": 21
     },
     {
         "STT": "360",
@@ -3573,7 +3932,8 @@
         "Dịch nghĩa": "thời tiết",
         "exampleHanzi": "天气好。",
         "examplePinyin": "Tiānqì hǎo.",
-        "exampleMeaning": "Thời tiết đẹp."
+        "exampleMeaning": "Thời tiết đẹp.",
+        "topicId": 10
     },
     {
         "STT": "361",
@@ -3583,7 +3943,8 @@
         "Dịch nghĩa": "nghe",
         "exampleHanzi": "我听音乐。",
         "examplePinyin": "Wǒ tīng yīnyuè.",
-        "exampleMeaning": "Tôi nghe nhạc."
+        "exampleMeaning": "Tôi nghe nhạc.",
+        "topicId": 3
     },
     {
         "STT": "362",
@@ -3593,7 +3954,8 @@
         "Dịch nghĩa": "nghe, nghe thấy, nghe được",
         "exampleHanzi": "我听到声音。",
         "examplePinyin": "Wǒ tīngdào shēngyīn.",
-        "exampleMeaning": "Tôi nghe thấy âm thanh."
+        "exampleMeaning": "Tôi nghe thấy âm thanh.",
+        "topicId": 3
     },
     {
         "STT": "363",
@@ -3603,7 +3965,8 @@
         "Dịch nghĩa": "nghe, nghe thấy",
         "exampleHanzi": "我听见你说话。",
         "examplePinyin": "Wǒ tīngjiàn nǐ shuōhuà.",
-        "exampleMeaning": "Tôi nghe thấy bạn nói."
+        "exampleMeaning": "Tôi nghe thấy bạn nói.",
+        "topicId": 3
     },
     {
         "STT": "364",
@@ -3613,7 +3976,8 @@
         "Dịch nghĩa": "nghe viết, nghe chép chính tả",
         "exampleHanzi": "我们做听写。",
         "examplePinyin": "Wǒmen zuò tīngxiě.",
-        "exampleMeaning": "Chúng tôi làm bài nghe viết."
+        "exampleMeaning": "Chúng tôi làm bài nghe viết.",
+        "topicId": 7
     },
     {
         "STT": "365",
@@ -3623,7 +3987,8 @@
         "Dịch nghĩa": "bạn học",
         "exampleHanzi": "他是我的同学。",
         "examplePinyin": "Tā shì wǒ de tóngxué.",
-        "exampleMeaning": "Anh ấy là bạn học của tôi."
+        "exampleMeaning": "Anh ấy là bạn học của tôi.",
+        "topicId": 7
     },
     {
         "STT": "366",
@@ -3633,7 +3998,8 @@
         "Dịch nghĩa": "thư viện",
         "exampleHanzi": "我去图书馆。",
         "examplePinyin": "Wǒ qù túshūguǎn.",
-        "exampleMeaning": "Tôi đi thư viện."
+        "exampleMeaning": "Tôi đi thư viện.",
+        "topicId": 7
     },
     {
         "STT": "367",
@@ -3643,7 +4009,8 @@
         "Dịch nghĩa": "ngoài, bên ngoài",
         "exampleHanzi": "他在门外。",
         "examplePinyin": "Tā zài mén wài.",
-        "exampleMeaning": "Anh ấy ở ngoài cửa."
+        "exampleMeaning": "Anh ấy ở ngoài cửa.",
+        "topicId": 9
     },
     {
         "STT": "368",
@@ -3653,7 +4020,8 @@
         "Dịch nghĩa": "bên ngoài",
         "exampleHanzi": "外边很冷。",
         "examplePinyin": "Wàibiān hěn lěng.",
-        "exampleMeaning": "Bên ngoài rất lạnh."
+        "exampleMeaning": "Bên ngoài rất lạnh.",
+        "topicId": 9
     },
     {
         "STT": "369",
@@ -3663,7 +4031,8 @@
         "Dịch nghĩa": "nước ngoài",
         "exampleHanzi": "他去外国。",
         "examplePinyin": "Tā qù wàiguó.",
-        "exampleMeaning": "Anh ấy đi nước ngoài."
+        "exampleMeaning": "Anh ấy đi nước ngoài.",
+        "topicId": 9
     },
     {
         "STT": "370",
@@ -3673,7 +4042,8 @@
         "Dịch nghĩa": "ngoại ngữ",
         "exampleHanzi": "我学外语。",
         "examplePinyin": "Wǒ xué wàiyǔ.",
-        "exampleMeaning": "Tôi học ngoại ngữ."
+        "exampleMeaning": "Tôi học ngoại ngữ.",
+        "topicId": 7
     },
     {
         "STT": "371",
@@ -3683,7 +4053,8 @@
         "Dịch nghĩa": "chơi",
         "exampleHanzi": "我们玩儿游戏。",
         "examplePinyin": "Wǒmen wánr yóuxì.",
-        "exampleMeaning": "Chúng tôi chơi trò chơi."
+        "exampleMeaning": "Chúng tôi chơi trò chơi.",
+        "topicId": 19
     },
     {
         "STT": "372",
@@ -3693,7 +4064,8 @@
         "Dịch nghĩa": "muộn, trễ",
         "exampleHanzi": "现在很晚了。",
         "examplePinyin": "Xiànzài hěn wǎn le.",
-        "exampleMeaning": "Bây giờ rất muộn rồi."
+        "exampleMeaning": "Bây giờ rất muộn rồi.",
+        "topicId": 21
     },
     {
         "STT": "373",
@@ -3703,7 +4075,8 @@
         "Dịch nghĩa": "bữa tối",
         "exampleHanzi": "我吃晚饭。",
         "examplePinyin": "Wǒ chī wǎnfàn.",
-        "exampleMeaning": "Tôi ăn bữa tối."
+        "exampleMeaning": "Tôi ăn bữa tối.",
+        "topicId": 18
     },
     {
         "STT": "374",
@@ -3713,7 +4086,8 @@
         "Dịch nghĩa": "buổi tối",
         "exampleHanzi": "晚上我看书。",
         "examplePinyin": "Wǎnshàng wǒ kàn shū.",
-        "exampleMeaning": "Buổi tối tôi đọc sách."
+        "exampleMeaning": "Buổi tối tôi đọc sách.",
+        "topicId": 21
     },
     {
         "STT": "375",
@@ -3723,7 +4097,8 @@
         "Dịch nghĩa": "trực tuyến, trên mạng",
         "exampleHanzi": "我在网上学习。",
         "examplePinyin": "Wǒ zài wǎngshàng xuéxí.",
-        "exampleMeaning": "Tôi học trực tuyến."
+        "exampleMeaning": "Tôi học trực tuyến.",
+        "topicId": 22
     },
     {
         "STT": "376",
@@ -3733,7 +4108,8 @@
         "Dịch nghĩa": "bạn trên mạng",
         "exampleHanzi": "我有一个网友。",
         "examplePinyin": "Wǒ yǒu yī gè wǎngyǒu.",
-        "exampleMeaning": "Tôi có một người bạn trên mạng."
+        "exampleMeaning": "Tôi có một người bạn trên mạng.",
+        "topicId": 22
     },
     {
         "STT": "377",
@@ -3743,7 +4119,8 @@
         "Dịch nghĩa": "quên, bỏ quên",
         "exampleHanzi": "我忘了名字。",
         "examplePinyin": "Wǒ wàng le míngzì.",
-        "exampleMeaning": "Tôi quên tên rồi."
+        "exampleMeaning": "Tôi quên tên rồi.",
+        "topicId": 3
     },
     {
         "STT": "378",
@@ -3753,7 +4130,8 @@
         "Dịch nghĩa": "quên, không nhớ, quên khuấy",
         "exampleHanzi": "我忘记带书了。",
         "examplePinyin": "Wǒ wàngjì dài shū le.",
-        "exampleMeaning": "Tôi quên mang sách rồi."
+        "exampleMeaning": "Tôi quên mang sách rồi.",
+        "topicId": 3
     },
     {
         "STT": "379",
@@ -3763,7 +4141,8 @@
         "Dịch nghĩa": "hỏi",
         "exampleHanzi": "我问你一个问题。",
         "examplePinyin": "Wǒ wèn nǐ yī gè wèntí.",
-        "exampleMeaning": "Tôi hỏi bạn một câu hỏi."
+        "exampleMeaning": "Tôi hỏi bạn một câu hỏi.",
+        "topicId": 3
     },
     {
         "STT": "380",
@@ -3773,7 +4152,8 @@
         "Dịch nghĩa": "tôi",
         "exampleHanzi": "我是学生。",
         "examplePinyin": "Wǒ shì xuéshēng.",
-        "exampleMeaning": "Tôi là học sinh."
+        "exampleMeaning": "Tôi là học sinh.",
+        "topicId": 3
     },
     {
         "STT": "381",
@@ -3783,7 +4163,8 @@
         "Dịch nghĩa": "chúng tôi",
         "exampleHanzi": "我们去学校。",
         "examplePinyin": "Wǒmen qù xuéxiào.",
-        "exampleMeaning": "Chúng tôi đi đến trường."
+        "exampleMeaning": "Chúng tôi đi đến trường.",
+        "topicId": 3
     },
     {
         "STT": "382",
@@ -3793,7 +4174,8 @@
         "Dịch nghĩa": "số 5",
         "exampleHanzi": "我有五本书。",
         "examplePinyin": "Wǒ yǒu wǔ běn shū.",
-        "exampleMeaning": "Tôi có năm quyển sách."
+        "exampleMeaning": "Tôi có năm quyển sách.",
+        "topicId": 21
     },
     {
         "STT": "383",
@@ -3803,7 +4185,8 @@
         "Dịch nghĩa": "bữa trưa",
         "exampleHanzi": "我吃午饭。",
         "examplePinyin": "Wǒ chī wǔfàn.",
-        "exampleMeaning": "Tôi ăn bữa trưa."
+        "exampleMeaning": "Tôi ăn bữa trưa.",
+        "topicId": 18
     },
     {
         "STT": "384",
@@ -3813,7 +4196,8 @@
         "Dịch nghĩa": "phía tây",
         "exampleHanzi": "他在西边。",
         "examplePinyin": "Tā zài xī biān.",
-        "exampleMeaning": "Anh ấy ở phía tây."
+        "exampleMeaning": "Anh ấy ở phía tây.",
+        "topicId": 9
     },
     {
         "STT": "385",
@@ -3823,7 +4207,8 @@
         "Dịch nghĩa": "phía tây, hướng tây",
         "exampleHanzi": "学校在西边。",
         "examplePinyin": "Xuéxiào zài xī biān.",
-        "exampleMeaning": "Trường học ở phía tây."
+        "exampleMeaning": "Trường học ở phía tây.",
+        "topicId": 9
     },
     {
         "STT": "386",
@@ -3833,7 +4218,8 @@
         "Dịch nghĩa": "rửa, giặt",
         "exampleHanzi": "我洗手。",
         "examplePinyin": "Wǒ xǐ shǒu.",
-        "exampleMeaning": "Tôi rửa tay."
+        "exampleMeaning": "Tôi rửa tay.",
+        "topicId": 4
     },
     {
         "STT": "387",
@@ -3843,7 +4229,8 @@
         "Dịch nghĩa": "nhà vệ sinh",
         "exampleHanzi": "洗手间在哪儿？",
         "examplePinyin": "Xǐshǒujiān zài nǎr?",
-        "exampleMeaning": "Nhà vệ sinh ở đâu?"
+        "exampleMeaning": "Nhà vệ sinh ở đâu?",
+        "topicId": 4
     },
     {
         "STT": "388",
@@ -3853,7 +4240,8 @@
         "Dịch nghĩa": "thích\ndưới, phía dưới / sau / trong (một phạm vi,",
         "exampleHanzi": "我喜欢猫。",
         "examplePinyin": "Wǒ xǐhuān māo.",
-        "exampleMeaning": "Tôi thích mèo."
+        "exampleMeaning": "Tôi thích mèo.",
+        "topicId": 3
     },
     {
         "STT": "389",
@@ -3863,7 +4251,8 @@
         "Dịch nghĩa": "điều kiện nào đó)\nxuống, tan (kết thúc công việc) / đủ (biểu thị",
         "exampleHanzi": "我下午去。",
         "examplePinyin": "Wǒ xiàwǔ qù.",
-        "exampleMeaning": "Tôi đi vào buổi chiều."
+        "exampleMeaning": "Tôi đi vào buổi chiều.",
+        "topicId": 9
     },
     {
         "STT": "390",
@@ -3873,7 +4262,8 @@
         "Dịch nghĩa": "tan làm",
         "exampleHanzi": "我五点下班。",
         "examplePinyin": "Wǒ wǔ diǎn xiàbān.",
-        "exampleMeaning": "Tôi tan làm lúc năm giờ."
+        "exampleMeaning": "Tôi tan làm lúc năm giờ.",
+        "topicId": 14
     },
     {
         "STT": "391",
@@ -3883,7 +4273,8 @@
         "Dịch nghĩa": "phía dưới",
         "exampleHanzi": "书在下边。",
         "examplePinyin": "Shū zài xiàbian.",
-        "exampleMeaning": "Cuốn sách ở phía dưới."
+        "exampleMeaning": "Cuốn sách ở phía dưới.",
+        "topicId": 9
     },
     {
         "STT": "392",
@@ -3893,7 +4284,8 @@
         "Dịch nghĩa": "xuống xe",
         "exampleHanzi": "我下车了。",
         "examplePinyin": "Wǒ xià chē le.",
-        "exampleMeaning": "Tôi xuống xe rồi."
+        "exampleMeaning": "Tôi xuống xe rồi.",
+        "topicId": 20
     },
     {
         "STT": "393",
@@ -3903,7 +4295,8 @@
         "Dịch nghĩa": "lần sau, lần tới",
         "exampleHanzi": "下次再见。",
         "examplePinyin": "Xià cì zàijiàn.",
-        "exampleMeaning": "Lần sau gặp lại."
+        "exampleMeaning": "Lần sau gặp lại.",
+        "topicId": 21
     },
     {
         "STT": "394",
@@ -3913,7 +4306,8 @@
         "Dịch nghĩa": "tan học",
         "exampleHanzi": "我们下课了。",
         "examplePinyin": "Wǒmen xià kè le.",
-        "exampleMeaning": "Chúng tôi tan học rồi."
+        "exampleMeaning": "Chúng tôi tan học rồi.",
+        "topicId": 7
     },
     {
         "STT": "395",
@@ -3923,7 +4317,8 @@
         "Dịch nghĩa": "buổi chiều",
         "exampleHanzi": "下午好。",
         "examplePinyin": "Xiàwǔ hǎo.",
-        "exampleMeaning": "Chào buổi chiều."
+        "exampleMeaning": "Chào buổi chiều.",
+        "topicId": 21
     },
     {
         "STT": "396",
@@ -3933,7 +4328,8 @@
         "Dịch nghĩa": "mưa",
         "exampleHanzi": "今天下雨。",
         "examplePinyin": "Jīntiān xià yǔ.",
-        "exampleMeaning": "Hôm nay trời mưa."
+        "exampleMeaning": "Hôm nay trời mưa.",
+        "topicId": 10
     },
     {
         "STT": "397",
@@ -3943,7 +4339,8 @@
         "Dịch nghĩa": "trước tiên",
         "exampleHanzi": "你先走。",
         "examplePinyin": "Nǐ xiān zǒu.",
-        "exampleMeaning": "Anh đi trước đi."
+        "exampleMeaning": "Anh đi trước đi.",
+        "topicId": 21
     },
     {
         "STT": "398",
@@ -3953,7 +4350,8 @@
         "Dịch nghĩa": "ông, ngài, thầy",
         "exampleHanzi": "先生好。",
         "examplePinyin": "Xiānsheng hǎo.",
-        "exampleMeaning": "Chào ông."
+        "exampleMeaning": "Chào ông.",
+        "topicId": 3
     },
     {
         "STT": "399",
@@ -3963,7 +4361,8 @@
         "Dịch nghĩa": "bây giờ",
         "exampleHanzi": "现在几点？",
         "examplePinyin": "Xiànzài jǐ diǎn?",
-        "exampleMeaning": "Bây giờ mấy giờ?"
+        "exampleMeaning": "Bây giờ mấy giờ?",
+        "topicId": 21
     },
     {
         "STT": "400",
@@ -3973,7 +4372,8 @@
         "Dịch nghĩa": "muốn, nghĩ, nhớ",
         "exampleHanzi": "我想喝水。",
         "examplePinyin": "Wǒ xiǎng hē shuǐ.",
-        "exampleMeaning": "Tôi muốn uống nước."
+        "exampleMeaning": "Tôi muốn uống nước.",
+        "topicId": 3
     },
     {
         "STT": "401",
@@ -3983,7 +4383,8 @@
         "Dịch nghĩa": "nhỏ",
         "exampleHanzi": "这个很小。",
         "examplePinyin": "Zhège hěn xiǎo.",
-        "exampleMeaning": "Cái này rất nhỏ."
+        "exampleMeaning": "Cái này rất nhỏ.",
+        "topicId": 1
     },
     {
         "STT": "402",
@@ -3993,7 +4394,8 @@
         "Dịch nghĩa": "trẻ con",
         "exampleHanzi": "小孩儿在玩。",
         "examplePinyin": "Xiǎoháir zài wán.",
-        "exampleMeaning": "Trẻ con đang chơi."
+        "exampleMeaning": "Trẻ con đang chơi.",
+        "topicId": 5
     },
     {
         "STT": "403",
@@ -4003,7 +4405,8 @@
         "Dịch nghĩa": "cô, tiểu thư",
         "exampleHanzi": "小姐，你好。",
         "examplePinyin": "Xiǎojiě, nǐ hǎo.",
-        "exampleMeaning": "Chào cô."
+        "exampleMeaning": "Chào cô.",
+        "topicId": 5
     },
     {
         "STT": "404",
@@ -4013,7 +4416,8 @@
         "Dịch nghĩa": "trẻ em, bạn nhỏ",
         "exampleHanzi": "小朋友来了。",
         "examplePinyin": "Xiǎopéngyǒu lái le.",
-        "exampleMeaning": "Bạn nhỏ đến rồi."
+        "exampleMeaning": "Bạn nhỏ đến rồi.",
+        "topicId": 5
     },
     {
         "STT": "405",
@@ -4023,7 +4427,8 @@
         "Dịch nghĩa": "giờ",
         "exampleHanzi": "一个小时。",
         "examplePinyin": "Yī gè xiǎoshí.",
-        "exampleMeaning": "Một giờ."
+        "exampleMeaning": "Một giờ.",
+        "topicId": 21
     },
     {
         "STT": "406",
@@ -4033,7 +4438,8 @@
         "Dịch nghĩa": "tiểu học",
         "exampleHanzi": "我上小学。",
         "examplePinyin": "Wǒ shàng xiǎoxué.",
-        "exampleMeaning": "Tôi học tiểu học."
+        "exampleMeaning": "Tôi học tiểu học.",
+        "topicId": 7
     },
     {
         "STT": "407",
@@ -4043,7 +4449,8 @@
         "Dịch nghĩa": "học sinh tiểu học",
         "exampleHanzi": "他是小学生。",
         "examplePinyin": "Tā shì xiǎoxuéshēng.",
-        "exampleMeaning": "Cậu ấy là học sinh tiểu học."
+        "exampleMeaning": "Cậu ấy là học sinh tiểu học.",
+        "topicId": 7
     },
     {
         "STT": "408",
@@ -4053,7 +4460,8 @@
         "Dịch nghĩa": "cười",
         "exampleHanzi": "她笑。",
         "examplePinyin": "Tā xiào.",
-        "exampleMeaning": "Cô ấy cười."
+        "exampleMeaning": "Cô ấy cười.",
+        "topicId": 3
     },
     {
         "STT": "409",
@@ -4063,7 +4471,8 @@
         "Dịch nghĩa": "viết",
         "exampleHanzi": "我写字。",
         "examplePinyin": "Wǒ xiě zì.",
-        "exampleMeaning": "Tôi viết chữ."
+        "exampleMeaning": "Tôi viết chữ.",
+        "topicId": 7
     },
     {
         "STT": "410",
@@ -4073,7 +4482,8 @@
         "Dịch nghĩa": "cảm ơn",
         "exampleHanzi": "谢谢你。",
         "examplePinyin": "Xièxie nǐ.",
-        "exampleMeaning": "Cảm ơn bạn."
+        "exampleMeaning": "Cảm ơn bạn.",
+        "topicId": 6
     },
     {
         "STT": "411",
@@ -4083,7 +4493,8 @@
         "Dịch nghĩa": "mới",
         "exampleHanzi": "这是新书。",
         "examplePinyin": "Zhè shì xīn shū.",
-        "exampleMeaning": "Đây là sách mới."
+        "exampleMeaning": "Đây là sách mới.",
+        "topicId": 4
     },
     {
         "STT": "412",
@@ -4093,7 +4504,8 @@
         "Dịch nghĩa": "năm mới",
         "exampleHanzi": "新年好。",
         "examplePinyin": "Xīnnián hǎo.",
-        "exampleMeaning": "Chúc mừng năm mới."
+        "exampleMeaning": "Chúc mừng năm mới.",
+        "topicId": 8
     },
     {
         "STT": "413",
@@ -4103,7 +4515,8 @@
         "Dịch nghĩa": "tuần lễ, thứ",
         "exampleHanzi": "一个星期有七天。",
         "examplePinyin": "Yī gè xīngqī yǒu qī tiān.",
-        "exampleMeaning": "Một tuần có bảy ngày."
+        "exampleMeaning": "Một tuần có bảy ngày.",
+        "topicId": 21
     },
     {
         "STT": "414",
@@ -4113,7 +4526,8 @@
         "Dịch nghĩa": "chủ nhật",
         "exampleHanzi": "今天是星期日。",
         "examplePinyin": "Jīntiān shì xīngqīrì.",
-        "exampleMeaning": "Hôm nay là chủ nhật."
+        "exampleMeaning": "Hôm nay là chủ nhật.",
+        "topicId": 21
     },
     {
         "STT": "415",
@@ -4123,7 +4537,8 @@
         "Dịch nghĩa": "chủ nhật",
         "exampleHanzi": "星期天我休息。",
         "examplePinyin": "Xīngqītiān wǒ xiūxi.",
-        "exampleMeaning": "Chủ nhật tôi nghỉ ngơi."
+        "exampleMeaning": "Chủ nhật tôi nghỉ ngơi.",
+        "topicId": 21
     },
     {
         "STT": "416",
@@ -4133,7 +4548,8 @@
         "Dịch nghĩa": "được, ổn, có thể\ngiỏi, tốt, ổn",
         "exampleHanzi": "这个行。",
         "examplePinyin": "Zhège xíng.",
-        "exampleMeaning": "Cái này được."
+        "exampleMeaning": "Cái này được.",
+        "topicId": 6
     },
     {
         "STT": "417",
@@ -4143,7 +4559,8 @@
         "Dịch nghĩa": "nghỉ ngơi",
         "exampleHanzi": "我们休息。",
         "examplePinyin": "Wǒmen xiūxi.",
-        "exampleMeaning": "Chúng tôi nghỉ ngơi."
+        "exampleMeaning": "Chúng tôi nghỉ ngơi.",
+        "topicId": 2
     },
     {
         "STT": "418",
@@ -4153,7 +4570,8 @@
         "Dịch nghĩa": "học",
         "exampleHanzi": "我学中文。",
         "examplePinyin": "Wǒ xué Zhōngwén.",
-        "exampleMeaning": "Tôi học tiếng Trung."
+        "exampleMeaning": "Tôi học tiếng Trung.",
+        "topicId": 7
     },
     {
         "STT": "419",
@@ -4163,7 +4581,8 @@
         "Dịch nghĩa": "học sinh",
         "exampleHanzi": "她是学生。",
         "examplePinyin": "Tā shì xuéshēng.",
-        "exampleMeaning": "Cô ấy là học sinh."
+        "exampleMeaning": "Cô ấy là học sinh.",
+        "topicId": 7
     },
     {
         "STT": "420",
@@ -4173,7 +4592,8 @@
         "Dịch nghĩa": "học tập",
         "exampleHanzi": "我学习汉语。",
         "examplePinyin": "Wǒ xuéxí Hànyǔ.",
-        "exampleMeaning": "Tôi học tiếng Hán."
+        "exampleMeaning": "Tôi học tiếng Hán.",
+        "topicId": 7
     },
     {
         "STT": "421",
@@ -4183,7 +4603,8 @@
         "Dịch nghĩa": "trường học",
         "exampleHanzi": "我去学校。",
         "examplePinyin": "Wǒ qù xuéxiào.",
-        "exampleMeaning": "Tôi đi đến trường."
+        "exampleMeaning": "Tôi đi đến trường.",
+        "topicId": 7
     },
     {
         "STT": "422",
@@ -4193,7 +4614,8 @@
         "Dịch nghĩa": "học viện, viện",
         "exampleHanzi": "这是学院。",
         "examplePinyin": "Zhè shì xuéyuàn.",
-        "exampleMeaning": "Đây là học viện."
+        "exampleMeaning": "Đây là học viện.",
+        "topicId": 7
     },
     {
         "STT": "423",
@@ -4203,7 +4625,8 @@
         "Dịch nghĩa": "muốn, phải, cần",
         "exampleHanzi": "我要水。",
         "examplePinyin": "Wǒ yào shuǐ.",
-        "exampleMeaning": "Tôi muốn nước."
+        "exampleMeaning": "Tôi muốn nước.",
+        "topicId": 3
     },
     {
         "STT": "424",
@@ -4213,7 +4636,8 @@
         "Dịch nghĩa": "ông nội",
         "exampleHanzi": "爷爷好。",
         "examplePinyin": "Yéye hǎo.",
-        "exampleMeaning": "Ông nội khỏe."
+        "exampleMeaning": "Ông nội khỏe.",
+        "topicId": 5
     },
     {
         "STT": "425",
@@ -4223,7 +4647,8 @@
         "Dịch nghĩa": "cũng",
         "exampleHanzi": "我也去。",
         "examplePinyin": "Wǒ yě qù.",
-        "exampleMeaning": "Tôi cũng đi."
+        "exampleMeaning": "Tôi cũng đi.",
+        "topicId": 6
     },
     {
         "STT": "426",
@@ -4233,7 +4658,8 @@
         "Dịch nghĩa": "trang (giấy)",
         "exampleHanzi": "一页书。",
         "examplePinyin": "Yī yè shū.",
-        "exampleMeaning": "Một trang sách."
+        "exampleMeaning": "Một trang sách.",
+        "topicId": 21
     },
     {
         "STT": "427",
@@ -4243,7 +4669,8 @@
         "Dịch nghĩa": "số 1",
         "exampleHanzi": "一个人。",
         "examplePinyin": "Yī gè rén.",
-        "exampleMeaning": "Một người."
+        "exampleMeaning": "Một người.",
+        "topicId": 21
     },
     {
         "STT": "428",
@@ -4253,7 +4680,8 @@
         "Dịch nghĩa": "quần áo",
         "exampleHanzi": "我的衣服。",
         "examplePinyin": "Wǒ de yīfu.",
-        "exampleMeaning": "Quần áo của tôi."
+        "exampleMeaning": "Quần áo của tôi.",
+        "topicId": 4
     },
     {
         "STT": "429",
@@ -4263,7 +4691,8 @@
         "Dịch nghĩa": "bác sĩ",
         "exampleHanzi": "他是医生。",
         "examplePinyin": "Tā shì yīshēng.",
-        "exampleMeaning": "Anh ấy là bác sĩ."
+        "exampleMeaning": "Anh ấy là bác sĩ.",
+        "topicId": 2
     },
     {
         "STT": "430",
@@ -4273,7 +4702,8 @@
         "Dịch nghĩa": "bệnh viện",
         "exampleHanzi": "去医院。",
         "examplePinyin": "Qù yīyuàn.",
-        "exampleMeaning": "Đi đến bệnh viện."
+        "exampleMeaning": "Đi đến bệnh viện.",
+        "topicId": 2
     },
     {
         "STT": "431",
@@ -4283,7 +4713,8 @@
         "Dịch nghĩa": "một nửa",
         "exampleHanzi": "一半苹果。",
         "examplePinyin": "Yībàn píngguǒ.",
-        "exampleMeaning": "Một nửa quả táo."
+        "exampleMeaning": "Một nửa quả táo.",
+        "topicId": 21
     },
     {
         "STT": "432",
@@ -4293,7 +4724,8 @@
         "Dịch nghĩa": "một lúc, lát nữa",
         "exampleHanzi": "等一会儿。",
         "examplePinyin": "Děng yīhuìr.",
-        "exampleMeaning": "Chờ một lát."
+        "exampleMeaning": "Chờ một lát.",
+        "topicId": 21
     },
     {
         "STT": "433",
@@ -4303,7 +4735,8 @@
         "Dịch nghĩa": "cùng nơi\ncùng, cùng nhau",
         "exampleHanzi": "我们一块儿。",
         "examplePinyin": "Wǒmen yīkuàir.",
-        "exampleMeaning": "Chúng ta cùng nhau."
+        "exampleMeaning": "Chúng ta cùng nhau.",
+        "topicId": 21
     },
     {
         "STT": "434",
@@ -4313,7 +4746,8 @@
         "Dịch nghĩa": "một chút, một xíu (thời gian ngắn)",
         "exampleHanzi": "看一下儿。",
         "examplePinyin": "Kàn yīxiàr.",
-        "exampleMeaning": "Xem một chút."
+        "exampleMeaning": "Xem một chút.",
+        "topicId": 21
     },
     {
         "STT": "435",
@@ -4323,7 +4757,8 @@
         "Dịch nghĩa": "giống nhau",
         "exampleHanzi": "一样大。",
         "examplePinyin": "Yīyàng dà.",
-        "exampleMeaning": "Giống nhau lớn."
+        "exampleMeaning": "Giống nhau lớn.",
+        "topicId": 21
     },
     {
         "STT": "436",
@@ -4333,7 +4768,8 @@
         "Dịch nghĩa": "mặt bên, một mặt, bên cạnh",
         "exampleHanzi": "我一边吃饭一边看书。",
         "examplePinyin": "Wǒ yībiān chīfàn yībiān kàn shū.",
-        "exampleMeaning": "Tôi vừa ăn cơm vừa đọc sách."
+        "exampleMeaning": "Tôi vừa ăn cơm vừa đọc sách.",
+        "topicId": 21
     },
     {
         "STT": "437",
@@ -4343,7 +4779,8 @@
         "Dịch nghĩa": "vừa, vừa ... vừa\nchút xíu, chút ít",
         "exampleHanzi": "请给我一点儿水。",
         "examplePinyin": "Qǐng gěi wǒ yīdiǎnr shuǐ.",
-        "exampleMeaning": "Làm ơn cho tôi một chút nước."
+        "exampleMeaning": "Làm ơn cho tôi một chút nước.",
+        "topicId": 21
     },
     {
         "STT": "438",
@@ -4353,7 +4790,8 @@
         "Dịch nghĩa": "cùng, cùng nhau làm gì / tổng cộng\nở cùng một nơi, một chỗ",
         "exampleHanzi": "我们一起学习。",
         "examplePinyin": "Wǒmen yīqǐ xuéxí.",
-        "exampleMeaning": "Chúng tôi cùng học."
+        "exampleMeaning": "Chúng tôi cùng học.",
+        "topicId": 21
     },
     {
         "STT": "439",
@@ -4363,7 +4801,8 @@
         "Dịch nghĩa": "mấy, một vài, một số",
         "exampleHanzi": "我买了一些苹果。",
         "examplePinyin": "Wǒ mǎi le yīxiē píngguǒ.",
-        "exampleMeaning": "Tôi đã mua một ít táo."
+        "exampleMeaning": "Tôi đã mua một ít táo.",
+        "topicId": 21
     },
     {
         "STT": "440",
@@ -4373,7 +4812,8 @@
         "Dịch nghĩa": "dùng",
         "exampleHanzi": "我用笔写字。",
         "examplePinyin": "Wǒ yòng bǐ xiě zì.",
-        "exampleMeaning": "Tôi dùng bút viết chữ."
+        "exampleMeaning": "Tôi dùng bút viết chữ.",
+        "topicId": 6
     },
     {
         "STT": "441",
@@ -4383,7 +4823,8 @@
         "Dịch nghĩa": "có",
         "exampleHanzi": "他有一个朋友。",
         "examplePinyin": "Tā yǒu yī gè péngyou.",
-        "exampleMeaning": "Anh ấy có một người bạn."
+        "exampleMeaning": "Anh ấy có một người bạn.",
+        "topicId": 6
     },
     {
         "STT": "442",
@@ -4393,7 +4834,8 @@
         "Dịch nghĩa": "có loại, có người, có cái, một số, có những",
         "exampleHanzi": "有的学生喜欢看书。",
         "examplePinyin": "Yǒu de xuéshēng xǐhuān kàn shū.",
-        "exampleMeaning": "Có học sinh thích đọc sách."
+        "exampleMeaning": "Có học sinh thích đọc sách.",
+        "topicId": 6
     },
     {
         "STT": "443",
@@ -4403,14 +4845,16 @@
         "Dịch nghĩa": "nổi tiếng",
         "exampleHanzi": "这个老师很有名。",
         "examplePinyin": "Zhège lǎoshī hěn yǒumíng.",
-        "exampleMeaning": "Giáo viên này rất nổi tiếng."
+        "exampleMeaning": "Giáo viên này rất nổi tiếng.",
+        "topicId": 6
     },
     {
         "STT": "444",
         "Tiếng Trung": "有时候\n有时",
         "Pinyin": "yǒushíhou\nyǒushí",
         "Từ loại": "phó từ",
-        "Dịch nghĩa": "có lúc, có thời gian\nđôi khi, có lúc, thỉnh thoảng"
+        "Dịch nghĩa": "có lúc, có thời gian\nđôi khi, có lúc, thỉnh thoảng",
+        "topicId": 6
     },
     {
         "STT": "445",
@@ -4420,7 +4864,8 @@
         "Dịch nghĩa": "có một số",
         "exampleHanzi": "我有一些书。",
         "examplePinyin": "Wǒ yǒu yīxiē shū.",
-        "exampleMeaning": "Tôi có một số sách."
+        "exampleMeaning": "Tôi có một số sách.",
+        "topicId": 6
     },
     {
         "STT": "446",
@@ -4430,7 +4875,8 @@
         "Dịch nghĩa": "có ích",
         "exampleHanzi": "这本书很有用。",
         "examplePinyin": "Zhè běn shū hěn yǒuyòng.",
-        "exampleMeaning": "Cuốn sách này rất có ích."
+        "exampleMeaning": "Cuốn sách này rất có ích.",
+        "topicId": 6
     },
     {
         "STT": "447",
@@ -4440,7 +4886,8 @@
         "Dịch nghĩa": "bên phải",
         "exampleHanzi": "请往右走。",
         "examplePinyin": "Qǐng wǎng yòu zǒu.",
-        "exampleMeaning": "Làm ơn đi về bên phải."
+        "exampleMeaning": "Làm ơn đi về bên phải.",
+        "topicId": 9
     },
     {
         "STT": "448",
@@ -4450,7 +4897,8 @@
         "Dịch nghĩa": "phía bên phải",
         "exampleHanzi": "学校在右边。",
         "examplePinyin": "Xuéxiào zài yòubiān.",
-        "exampleMeaning": "Trường học ở bên phải."
+        "exampleMeaning": "Trường học ở bên phải.",
+        "topicId": 9
     },
     {
         "STT": "449",
@@ -4460,7 +4908,8 @@
         "Dịch nghĩa": "mưa",
         "exampleHanzi": "今天下雨。",
         "examplePinyin": "Jīntiān xià yǔ.",
-        "exampleMeaning": "Hôm nay trời mưa."
+        "exampleMeaning": "Hôm nay trời mưa.",
+        "topicId": 10
     },
     {
         "STT": "450",
@@ -4470,7 +4919,8 @@
         "Dịch nghĩa": "đồng (đơn vị tiền tệ)",
         "exampleHanzi": "这本书十元。",
         "examplePinyin": "Zhè běn shū shí yuán.",
-        "exampleMeaning": "Cuốn sách này mười đồng."
+        "exampleMeaning": "Cuốn sách này mười đồng.",
+        "topicId": 13
     },
     {
         "STT": "451",
@@ -4480,7 +4930,8 @@
         "Dịch nghĩa": "xa",
         "exampleHanzi": "学校很远。",
         "examplePinyin": "Xuéxiào hěn yuǎn.",
-        "exampleMeaning": "Trường học rất xa."
+        "exampleMeaning": "Trường học rất xa.",
+        "topicId": 9
     },
     {
         "STT": "452",
@@ -4490,7 +4941,8 @@
         "Dịch nghĩa": "tháng",
         "exampleHanzi": "一月很冷。",
         "examplePinyin": "Yī yuè hěn lěng.",
-        "exampleMeaning": "Tháng một rất lạnh."
+        "exampleMeaning": "Tháng một rất lạnh.",
+        "topicId": 21
     },
     {
         "STT": "453",
@@ -4500,7 +4952,8 @@
         "Dịch nghĩa": "lại, nữa",
         "exampleHanzi": "请再说一次。",
         "examplePinyin": "Qǐng zài shuō yī cì.",
-        "exampleMeaning": "Xin hãy nói lại một lần."
+        "exampleMeaning": "Xin hãy nói lại một lần.",
+        "topicId": 6
     },
     {
         "STT": "454",
@@ -4510,7 +4963,8 @@
         "Dịch nghĩa": "tạm biệt",
         "exampleHanzi": "老师再见。",
         "examplePinyin": "Lǎoshī zàijiàn.",
-        "exampleMeaning": "Tạm biệt thầy giáo."
+        "exampleMeaning": "Tạm biệt thầy giáo.",
+        "topicId": 6
     },
     {
         "STT": "455",
@@ -4520,7 +4974,8 @@
         "Dịch nghĩa": "đang, ở, vào (ở đâu, thời gian nào, điều kiện\nnào)",
         "exampleHanzi": "我在家。",
         "examplePinyin": "Wǒ zài jiā.",
-        "exampleMeaning": "Tôi ở nhà."
+        "exampleMeaning": "Tôi ở nhà.",
+        "topicId": 6
     },
     {
         "STT": "456",
@@ -4530,7 +4985,8 @@
         "Dịch nghĩa": "ở nhà",
         "exampleHanzi": "妈妈在家。",
         "examplePinyin": "Māma zài jiā.",
-        "exampleMeaning": "Mẹ ở nhà."
+        "exampleMeaning": "Mẹ ở nhà.",
+        "topicId": 5
     },
     {
         "STT": "457",
@@ -4540,7 +4996,8 @@
         "Dịch nghĩa": "sớm (so với thời gian quy định)",
         "exampleHanzi": "他来得早。",
         "examplePinyin": "Tā lái de zǎo.",
-        "exampleMeaning": "Anh ấy đến sớm."
+        "exampleMeaning": "Anh ấy đến sớm.",
+        "topicId": 21
     },
     {
         "STT": "458",
@@ -4550,7 +5007,8 @@
         "Dịch nghĩa": "bữa sáng",
         "exampleHanzi": "我吃早饭。",
         "examplePinyin": "Wǒ chī zǎofàn.",
-        "exampleMeaning": "Tôi ăn bữa sáng."
+        "exampleMeaning": "Tôi ăn bữa sáng.",
+        "topicId": 18
     },
     {
         "STT": "459",
@@ -4560,7 +5018,8 @@
         "Dịch nghĩa": "buổi sáng",
         "exampleHanzi": "早上好。",
         "examplePinyin": "Zǎoshang hǎo.",
-        "exampleMeaning": "Chào buổi sáng."
+        "exampleMeaning": "Chào buổi sáng.",
+        "topicId": 21
     },
     {
         "STT": "460",
@@ -4570,7 +5029,8 @@
         "Dịch nghĩa": "như thế nào",
         "exampleHanzi": "你怎么去？",
         "examplePinyin": "Nǐ zěnme qù?",
-        "exampleMeaning": "Bạn đi như thế nào?"
+        "exampleMeaning": "Bạn đi như thế nào?",
+        "topicId": 6
     },
     {
         "STT": "461",
@@ -4580,7 +5040,8 @@
         "Dịch nghĩa": "trạm, ga",
         "exampleHanzi": "车站在这里。",
         "examplePinyin": "Chēzhàn zài zhèlǐ.",
-        "exampleMeaning": "Trạm xe ở đây."
+        "exampleMeaning": "Trạm xe ở đây.",
+        "topicId": 20
     },
     {
         "STT": "462",
@@ -4590,7 +5051,8 @@
         "Dịch nghĩa": "tìm",
         "exampleHanzi": "我找书。",
         "examplePinyin": "Wǒ zhǎo shū.",
-        "exampleMeaning": "Tôi tìm sách."
+        "exampleMeaning": "Tôi tìm sách.",
+        "topicId": 6
     },
     {
         "STT": "463",
@@ -4600,7 +5062,8 @@
         "Dịch nghĩa": "tìm thấy",
         "exampleHanzi": "我找到了。",
         "examplePinyin": "Wǒ zhǎodào le.",
-        "exampleMeaning": "Tôi tìm thấy rồi."
+        "exampleMeaning": "Tôi tìm thấy rồi.",
+        "topicId": 6
     },
     {
         "STT": "464",
@@ -4610,7 +5073,8 @@
         "Dịch nghĩa": "này",
         "exampleHanzi": "这是书。",
         "examplePinyin": "Zhè shì shū.",
-        "exampleMeaning": "Đây là sách."
+        "exampleMeaning": "Đây là sách.",
+        "topicId": 6
     },
     {
         "STT": "465",
@@ -4620,7 +5084,8 @@
         "Dịch nghĩa": "bên này",
         "exampleHanzi": "请来这边。",
         "examplePinyin": "Qǐng lái zhèbiān.",
-        "exampleMeaning": "Xin hãy đến bên này."
+        "exampleMeaning": "Xin hãy đến bên này.",
+        "topicId": 9
     },
     {
         "STT": "466",
@@ -4630,7 +5095,8 @@
         "Dịch nghĩa": "ở đây, chỗ này",
         "exampleHanzi": "我在这里。",
         "examplePinyin": "Wǒ zài zhèlǐ.",
-        "exampleMeaning": "Tôi ở đây."
+        "exampleMeaning": "Tôi ở đây.",
+        "topicId": 9
     },
     {
         "STT": "467",
@@ -4640,7 +5106,8 @@
         "Dịch nghĩa": "ở đây, chỗ này",
         "exampleHanzi": "他在这儿。",
         "examplePinyin": "Tā zài zhèr.",
-        "exampleMeaning": "Anh ấy ở đây."
+        "exampleMeaning": "Anh ấy ở đây.",
+        "topicId": 9
     },
     {
         "STT": "468",
@@ -4650,7 +5117,8 @@
         "Dịch nghĩa": "những cái này",
         "exampleHanzi": "这些是书。",
         "examplePinyin": "Zhèxiē shì shū.",
-        "exampleMeaning": "Những cái này là sách."
+        "exampleMeaning": "Những cái này là sách.",
+        "topicId": 6
     },
     {
         "STT": "469",
@@ -4660,7 +5128,8 @@
         "Dịch nghĩa": "đang (đặt sau động từ chỉ sự việc đang tiến\nhành/biểu thị sự tiếp tục của trạng thái)",
         "exampleHanzi": "他坐着。",
         "examplePinyin": "Tā zuòzhe.",
-        "exampleMeaning": "Anh ấy đang ngồi."
+        "exampleMeaning": "Anh ấy đang ngồi.",
+        "topicId": 6
     },
     {
         "STT": "470",
@@ -4670,7 +5139,8 @@
         "Dịch nghĩa": "quá, thật, thực sự\nthật, thật sự, chính xác",
         "exampleHanzi": "这个真好。",
         "examplePinyin": "Zhège zhēn hǎo.",
-        "exampleMeaning": "Cái này tốt quá."
+        "exampleMeaning": "Cái này tốt quá.",
+        "topicId": 3
     },
     {
         "STT": "471",
@@ -4680,7 +5150,8 @@
         "Dịch nghĩa": "thật sự",
         "exampleHanzi": "真的吗？",
         "examplePinyin": "Zhēn de ma?",
-        "exampleMeaning": "Thật sao?"
+        "exampleMeaning": "Thật sao?",
+        "topicId": 3
     },
     {
         "STT": "472",
@@ -4690,7 +5161,8 @@
         "Dịch nghĩa": "đang, vừa, đúng, chính",
         "exampleHanzi": "我正忙。",
         "examplePinyin": "Wǒ zhèng máng.",
-        "exampleMeaning": "Tôi đang bận."
+        "exampleMeaning": "Tôi đang bận.",
+        "topicId": 6
     },
     {
         "STT": "473",
@@ -4700,7 +5172,8 @@
         "Dịch nghĩa": "đang, vẫn đang",
         "exampleHanzi": "他正在吃。",
         "examplePinyin": "Tā zhèngzài chī.",
-        "exampleMeaning": "Anh ấy đang ăn."
+        "exampleMeaning": "Anh ấy đang ăn.",
+        "topicId": 6
     },
     {
         "STT": "474",
@@ -4710,7 +5183,8 @@
         "Dịch nghĩa": "biết, hiểu, hiểu rõ",
         "exampleHanzi": "我知道他。",
         "examplePinyin": "Wǒ zhīdào tā.",
-        "exampleMeaning": "Tôi biết anh ấy."
+        "exampleMeaning": "Tôi biết anh ấy.",
+        "topicId": 3
     },
     {
         "STT": "475",
@@ -4720,7 +5194,8 @@
         "Dịch nghĩa": "tri thức, kiến thức, sự hiểu biết",
         "exampleHanzi": "知识重要。",
         "examplePinyin": "Zhīshi zhòngyào.",
-        "exampleMeaning": "Kiến thức quan trọng."
+        "exampleMeaning": "Kiến thức quan trọng.",
+        "topicId": 7
     },
     {
         "STT": "476",
@@ -4730,7 +5205,8 @@
         "Dịch nghĩa": "giữa, trung tâm",
         "exampleHanzi": "他在中。",
         "examplePinyin": "Tā zài zhōng.",
-        "exampleMeaning": "Anh ấy ở giữa."
+        "exampleMeaning": "Anh ấy ở giữa.",
+        "topicId": 9
     },
     {
         "STT": "477",
@@ -4740,7 +5216,8 @@
         "Dịch nghĩa": "Trung Quốc",
         "exampleHanzi": "我在中国。",
         "examplePinyin": "Wǒ zài Zhōngguó.",
-        "exampleMeaning": "Tôi ở Trung Quốc."
+        "exampleMeaning": "Tôi ở Trung Quốc.",
+        "topicId": 9
     },
     {
         "STT": "478",
@@ -4750,7 +5227,8 @@
         "Dịch nghĩa": "trong, trong số, trung tâm",
         "exampleHanzi": "他在中间。",
         "examplePinyin": "Tā zài zhōngjiān.",
-        "exampleMeaning": "Anh ấy ở giữa."
+        "exampleMeaning": "Anh ấy ở giữa.",
+        "topicId": 9
     },
     {
         "STT": "479",
@@ -4760,7 +5238,8 @@
         "Dịch nghĩa": "tiếng Trung",
         "exampleHanzi": "我学中文。",
         "examplePinyin": "Wǒ xué Zhōngwén.",
-        "exampleMeaning": "Tôi học tiếng Trung."
+        "exampleMeaning": "Tôi học tiếng Trung.",
+        "topicId": 7
     },
     {
         "STT": "480",
@@ -4770,7 +5249,8 @@
         "Dịch nghĩa": "buổi trưa",
         "exampleHanzi": "中午好。",
         "examplePinyin": "Zhōngwǔ hǎo.",
-        "exampleMeaning": "Buổi trưa tốt."
+        "exampleMeaning": "Buổi trưa tốt.",
+        "topicId": 21
     },
     {
         "STT": "481",
@@ -4780,7 +5260,8 @@
         "Dịch nghĩa": "trường trung học",
         "exampleHanzi": "我在中学学习。",
         "examplePinyin": "Wǒ zài zhōngxué xuéxí.",
-        "exampleMeaning": "Tôi học ở trường trung học."
+        "exampleMeaning": "Tôi học ở trường trung học.",
+        "topicId": 7
     },
     {
         "STT": "482",
@@ -4790,7 +5271,8 @@
         "Dịch nghĩa": "học sinh trung học",
         "exampleHanzi": "他是中学生。",
         "examplePinyin": "Tā shì zhōngxuéshēng.",
-        "exampleMeaning": "Anh ấy là học sinh trung học."
+        "exampleMeaning": "Anh ấy là học sinh trung học.",
+        "topicId": 7
     },
     {
         "STT": "483",
@@ -4800,7 +5282,8 @@
         "Dịch nghĩa": "nặng, quan trọng, thận trọng",
         "exampleHanzi": "这个包很重。",
         "examplePinyin": "Zhège bāo hěn zhòng.",
-        "exampleMeaning": "Cái túi này rất nặng."
+        "exampleMeaning": "Cái túi này rất nặng.",
+        "topicId": 21
     },
     {
         "STT": "484",
@@ -4810,7 +5293,8 @@
         "Dịch nghĩa": "quan trọng, trọng yếu",
         "exampleHanzi": "学习很重要。",
         "examplePinyin": "Xuéxí hěn zhòngyào.",
-        "exampleMeaning": "Học tập rất quan trọng."
+        "exampleMeaning": "Học tập rất quan trọng.",
+        "topicId": 3
     },
     {
         "STT": "485",
@@ -4820,7 +5304,8 @@
         "Dịch nghĩa": "ở / dừng / đủ sức / chắc",
         "exampleHanzi": "我住在这里。",
         "examplePinyin": "Wǒ zhù zài zhèlǐ.",
-        "exampleMeaning": "Tôi ở đây."
+        "exampleMeaning": "Tôi ở đây.",
+        "topicId": 5
     },
     {
         "STT": "486",
@@ -4830,7 +5315,8 @@
         "Dịch nghĩa": "chuẩn bị",
         "exampleHanzi": "我准备去学校。",
         "examplePinyin": "Wǒ zhǔnbèi qù xuéxiào.",
-        "exampleMeaning": "Tôi chuẩn bị đi học."
+        "exampleMeaning": "Tôi chuẩn bị đi học.",
+        "topicId": 6
     },
     {
         "STT": "487",
@@ -4840,7 +5326,8 @@
         "Dịch nghĩa": "bàn",
         "exampleHanzi": "桌子上有书。",
         "examplePinyin": "Zhuōzi shàng yǒu shū.",
-        "exampleMeaning": "Trên bàn có sách."
+        "exampleMeaning": "Trên bàn có sách.",
+        "topicId": 4
     },
     {
         "STT": "488",
@@ -4850,7 +5337,8 @@
         "Dịch nghĩa": "từ, chữ, văn tự",
         "exampleHanzi": "这个字很大。",
         "examplePinyin": "Zhège zì hěn dà.",
-        "exampleMeaning": "Chữ này rất to."
+        "exampleMeaning": "Chữ này rất to.",
+        "topicId": 7
     },
     {
         "STT": "489",
@@ -4860,7 +5348,8 @@
         "Dịch nghĩa": "thêm vào sau danh từ, động từ, tính từ khác\nđể tạo thành một danh từ",
         "exampleHanzi": "这是桌子。",
         "examplePinyin": "Zhè shì zhuōzi.",
-        "exampleMeaning": "Đây là cái bàn."
+        "exampleMeaning": "Đây là cái bàn.",
+        "topicId": 7
     },
     {
         "STT": "490",
@@ -4870,7 +5359,8 @@
         "Dịch nghĩa": "đi, đi bộ, rời khỏi",
         "exampleHanzi": "我走了。",
         "examplePinyin": "Wǒ zǒu le.",
-        "exampleMeaning": "Tôi đi đây."
+        "exampleMeaning": "Tôi đi đây.",
+        "topicId": 6
     },
     {
         "STT": "491",
@@ -4880,7 +5370,8 @@
         "Dịch nghĩa": "đi bộ",
         "exampleHanzi": "我喜欢走路。",
         "examplePinyin": "Wǒ xǐhuān zǒulù.",
-        "exampleMeaning": "Tôi thích đi bộ."
+        "exampleMeaning": "Tôi thích đi bộ.",
+        "topicId": 19
     },
     {
         "STT": "492",
@@ -4890,7 +5381,8 @@
         "Dịch nghĩa": "nhất",
         "exampleHanzi": "这个最大。",
         "examplePinyin": "Zhège zuì dà.",
-        "exampleMeaning": "Cái này lớn nhất."
+        "exampleMeaning": "Cái này lớn nhất.",
+        "topicId": 3
     },
     {
         "STT": "493",
@@ -4900,7 +5392,8 @@
         "Dịch nghĩa": "tốt nhất",
         "exampleHanzi": "这是最好的。",
         "examplePinyin": "Zhè shì zuì hǎo de.",
-        "exampleMeaning": "Đây là cái tốt nhất."
+        "exampleMeaning": "Đây là cái tốt nhất.",
+        "topicId": 3
     },
     {
         "STT": "494",
@@ -4910,7 +5403,8 @@
         "Dịch nghĩa": "cuối cùng, sau cùng",
         "exampleHanzi": "他最后来了。",
         "examplePinyin": "Tā zuìhòu lái le.",
-        "exampleMeaning": "Cuối cùng anh ấy đã đến."
+        "exampleMeaning": "Cuối cùng anh ấy đã đến.",
+        "topicId": 21
     },
     {
         "STT": "495",
@@ -4920,7 +5414,8 @@
         "Dịch nghĩa": "hôm qua",
         "exampleHanzi": "昨天我去了学校。",
         "examplePinyin": "Zuótiān wǒ qù le xuéxiào.",
-        "exampleMeaning": "Hôm qua tôi đã đi học."
+        "exampleMeaning": "Hôm qua tôi đã đi học.",
+        "topicId": 21
     },
     {
         "STT": "496",
@@ -4930,7 +5425,8 @@
         "Dịch nghĩa": "bên trái",
         "exampleHanzi": "左手写字。",
         "examplePinyin": "Zuǒ shǒu xiě zì.",
-        "exampleMeaning": "Viết chữ bằng tay trái."
+        "exampleMeaning": "Viết chữ bằng tay trái.",
+        "topicId": 9
     },
     {
         "STT": "497",
@@ -4940,7 +5436,8 @@
         "Dịch nghĩa": "phía bên trái",
         "exampleHanzi": "他在左边。",
         "examplePinyin": "Tā zài zuǒbiān.",
-        "exampleMeaning": "Anh ấy ở bên trái."
+        "exampleMeaning": "Anh ấy ở bên trái.",
+        "topicId": 9
     },
     {
         "STT": "498",
@@ -4950,7 +5447,8 @@
         "Dịch nghĩa": "ngồi",
         "exampleHanzi": "我坐椅子。",
         "examplePinyin": "Wǒ zuò yǐzi.",
-        "exampleMeaning": "Tôi ngồi ghế."
+        "exampleMeaning": "Tôi ngồi ghế.",
+        "topicId": 6
     },
     {
         "STT": "499",
@@ -4960,7 +5458,8 @@
         "Dịch nghĩa": "ngồi xuống",
         "exampleHanzi": "请坐下。",
         "examplePinyin": "Qǐng zuòxià.",
-        "exampleMeaning": "Mời ngồi xuống."
+        "exampleMeaning": "Mời ngồi xuống.",
+        "topicId": 6
     },
     {
         "STT": "500",
@@ -4970,6 +5469,7 @@
         "Dịch nghĩa": "làm / chế tạo / trở thành",
         "exampleHanzi": "他做工作。",
         "examplePinyin": "Tā zuò gōngzuò.",
-        "exampleMeaning": "Anh ấy làm việc."
+        "exampleMeaning": "Anh ấy làm việc.",
+        "topicId": 6
     }
 ]

@@ -606,6 +606,7 @@ export default function StudyScreen() {
     }
   };
   const [allCards, setAllCards] = useState([]);
+  const [totalCardsCount, setTotalCardsCount] = useState(0);
   const [_isAllCardsLoading, setIsAllCardsLoading] = useState(false);
   const [isStudyStarted, setIsStudyStarted] = useState(false);
   
@@ -777,16 +778,30 @@ export default function StudyScreen() {
     const loadAllCards = async () => {
       if (selectedDeckId === 'favorites') {
         setAllCards([]);
+        setTotalCardsCount(0);
         return;
       }
       try {
         setIsAllCardsLoading(true);
         const deckIdParam = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
-        const res = await studyApi.getAllCards(deckIdParam);
-        const cards = res.data || [];
-        setAllCards(cards);
-        // Cache asynchronously in IndexedDB
-        setItem('chongzi_offline_all_cards', cards).catch(e => console.warn(e));
+        
+        // 1. Fetch first 100 cards and total count instantly (takes ~50ms)
+        const res = await studyApi.getAllCards(deckIdParam, 100);
+        
+        let initialCards = [];
+        let totalCount = 0;
+        
+        if (res.data && res.data.cards) {
+          initialCards = res.data.cards;
+          totalCount = res.data.totalCount;
+        } else {
+          initialCards = res.data || [];
+          totalCount = initialCards.length;
+        }
+        
+        setAllCards(initialCards);
+        setTotalCardsCount(totalCount);
+        setItem('chongzi_offline_all_cards', initialCards).catch(e => console.warn(e));
       } catch (e) {
         console.error('Failed to load all cards:', e);
         // Fallback to IndexedDB
@@ -794,6 +809,7 @@ export default function StudyScreen() {
           const cached = await getItem('chongzi_offline_all_cards');
           if (cached) {
             setAllCards(cached);
+            setTotalCardsCount(cached.length);
           }
         } catch (dbErr) {
           console.error('Failed to load all cards from IndexedDB:', dbErr);
@@ -804,6 +820,47 @@ export default function StudyScreen() {
     };
     loadAllCards();
   }, [selectedDeckId]);
+
+  // Lazy load more cards in Classic mode as the user approaches the end of the queue
+  useEffect(() => {
+    if (studyMode !== 'classic' || selectedDeckId === 'favorites' || !isStudyStarted) return;
+    if (isAllCardsLoading) return;
+    
+    const threshold = activeQueue.length - 20;
+    if (currentIndex >= threshold && activeQueue.length < totalCardsCount) {
+      const loadNextPage = async () => {
+        try {
+          setIsAllCardsLoading(true);
+          const deckIdParam = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
+          const offset = allCards.length;
+          
+          const res = await studyApi.getAllCards(deckIdParam, 100, offset);
+          
+          let nextCards = [];
+          if (res.data && res.data.cards) {
+            nextCards = res.data.cards;
+          } else {
+            nextCards = res.data || [];
+          }
+          
+          if (nextCards.length > 0) {
+            setAllCards(prev => {
+              const merged = [...prev, ...nextCards];
+              setItem('chongzi_offline_all_cards', merged).catch(e => console.warn(e));
+              return merged;
+            });
+            
+            setActiveQueue(prev => [...prev, ...nextCards]);
+          }
+        } catch (e) {
+          console.error('Failed to lazy load next page of cards:', e);
+        } finally {
+          setIsAllCardsLoading(false);
+        }
+      };
+      loadNextPage();
+    }
+  }, [currentIndex, activeQueue.length, totalCardsCount, studyMode, selectedDeckId, isStudyStarted, isAllCardsLoading, allCards.length]);
 
   // Cache todayCards in IndexedDB asynchronously
   useEffect(() => {
@@ -879,6 +936,12 @@ export default function StudyScreen() {
     }
     return list;
   }, [studyMode, todayCards, allCards, selectedDeckId, favorites]);
+
+  // Compute display count dynamically to show total count instantly
+  const displayCount = useMemo(() => {
+    if (selectedDeckId === 'favorites') return favorites.length;
+    return studyMode === 'srs' ? srsDueCount : totalCardsCount;
+  }, [selectedDeckId, favorites.length, studyMode, srsDueCount, totalCardsCount]);
 
   const handleExampleUpdated = (cardId, exampleData) => {
     setActiveQueue((prevQueue) =>
@@ -1008,7 +1071,7 @@ export default function StudyScreen() {
 
       // Step 5: Next card
       if (!checkState()) return;
-      runPassiveLoop(index + 1, queue);
+      runPassiveLoop(index + 1, activeQueueRef.current);
     } catch (err) {
       console.error('Error in passive loop:', err);
     }
@@ -1861,7 +1924,7 @@ export default function StudyScreen() {
           <div className="flex flex-col">
             <span className="text-mute dark:text-on-dark-mute text-[10px] font-mono font-bold uppercase tracking-wider">Trạng thái lựa chọn</span>
             <span className="text-ink dark:text-on-dark text-lg font-extrabold mt-0.5 font-mono">
-              {filteredQueue.length} từ đã chọn
+              {displayCount} từ đã chọn
             </span>
           </div>
 
