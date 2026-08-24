@@ -607,7 +607,7 @@ export default function StudyScreen() {
   };
   const [allCards, setAllCards] = useState([]);
   const [totalCardsCount, setTotalCardsCount] = useState(0);
-  const [_isAllCardsLoading, setIsAllCardsLoading] = useState(false);
+  const [isAllCardsLoading, setIsAllCardsLoading] = useState(false);
   const [isStudyStarted, setIsStudyStarted] = useState(false);
   
   // Configurator preferences
