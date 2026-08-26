@@ -57,8 +57,8 @@ export default function DictationScreen() {
           }));
         } else if (id) {
           dispatch(fetchDeckDetails(id));
-          const res = await studyApi.getAllCards();
-          const deckCards = (res.data || []).filter((c) => c.deckId === Number(id));
+          const res = await studyApi.getAllCards(Number(id));
+          const deckCards = res.data || [];
           wordList = deckCards.map((c) => ({
             id: c.id,
             hanzi: c.character || c.hanzi,
