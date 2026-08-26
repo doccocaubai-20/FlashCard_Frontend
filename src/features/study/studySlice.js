@@ -13,7 +13,8 @@ export const fetchTodayStudy = createAsyncThunk('study/fetchTodayStudy', async (
   try {
     const deckId = params && typeof params === 'object' ? params.deckId : params;
     const extra = params && typeof params === 'object' ? params.extra : undefined;
-    const response = await studyApi.getToday(deckId, extra);
+    const topicId = params && typeof params === 'object' ? params.topicId : undefined;
+    const response = await studyApi.getToday(deckId, extra, topicId);
     return response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message);

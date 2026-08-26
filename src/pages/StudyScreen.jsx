@@ -25,6 +25,33 @@ import { speakChinese, getBestVoice } from '../utils/tts';
 import { flashcardApi } from '../services/flashcardApi';
 import { dictionaryHistoryApi } from '../services/dictionaryHistoryApi';
 
+const TOPICS = {
+  1: { name: 'Cơ thể & Sinh học' },
+  2: { name: 'Sức khỏe & Y tế' },
+  3: { name: 'Tâm lý & Nhận thức' },
+  4: { name: 'Thời trang & Chăm sóc' },
+  5: { name: 'Gia đình & Vòng đời' },
+  6: { name: 'Giao tiếp & Tương tác' },
+  7: { name: 'Giáo dục & Học thuật' },
+  8: { name: 'Tôn giáo & Triết học' },
+  9: { name: 'Địa lý & Cảnh quan' },
+  10: { name: 'Khí hậu & Thời tiết' },
+  11: { name: 'Hệ sinh thái Động - Thực vật' },
+  12: { name: 'Vũ trụ & Thiên văn' },
+  13: { name: 'Thương mại & Tài chính' },
+  14: { name: 'Nghề nghiệp & Việc làm' },
+  15: { name: 'Chính trị & Pháp luật' },
+  16: { name: 'Quân sự & Quốc phòng' },
+  17: { name: 'Nghệ thuật & Biểu diễn' },
+  18: { name: 'Ẩm thực & Đồ uống' },
+  19: { name: 'Thể thao & Trò chơi' },
+  20: { name: 'Du lịch & Khách sạn' },
+  21: { name: 'Khoa học tự nhiên & Đo lường' },
+  22: { name: 'Công nghệ thông tin & Viễn thông' },
+  23: { name: 'Kỹ thuật & Sản xuất' },
+  24: { name: 'Giao thông & Hạ tầng' },
+};
+
 // SVG blossom logo
 function BlossomIcon({ className }) {
   return (
@@ -494,10 +521,11 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function StudyScreen() {
   const dispatch = useDispatch();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { showToast } = useToast();
   const { t } = useTranslation();
   const deckIdParam = searchParams.get('deckId');
+  const topicIdParam = searchParams.get('topicId');
   
   // Redux study state
   const todayCards = useSelector((state) => state.study.todayCards);
@@ -612,6 +640,13 @@ export default function StudyScreen() {
   
   // Configurator preferences
   const [selectedDeckId, setSelectedDeckId] = useState(deckIdParam || 'all');
+  const currentTopicId = useMemo(() => {
+    if (selectedDeckId && deckIdParam && String(selectedDeckId) === String(deckIdParam)) {
+      return topicIdParam ? Number(topicIdParam) : undefined;
+    }
+    return undefined;
+  }, [selectedDeckId, deckIdParam, topicIdParam]);
+
   const [studyMode, setStudyMode] = useState('srs'); // srs, classic
   const [frontFaceMode, setFrontFaceMode] = useState('hanzi'); // hanzi, meaning
   const [showPinyinOnFront, setShowPinyinOnFront] = useState(false);
@@ -786,7 +821,7 @@ export default function StudyScreen() {
         const deckIdParam = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
         
         // 1. Fetch first 100 cards and total count instantly (takes ~50ms)
-        const res = await studyApi.getAllCards(deckIdParam, 100);
+        const res = await studyApi.getAllCards(deckIdParam, 100, undefined, currentTopicId);
         
         let initialCards = [];
         let totalCount = 0;
@@ -834,7 +869,7 @@ export default function StudyScreen() {
           const deckIdParam = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
           const offset = allCards.length;
           
-          const res = await studyApi.getAllCards(deckIdParam, 100, offset);
+          const res = await studyApi.getAllCards(deckIdParam, 100, offset, currentTopicId);
           
           let nextCards = [];
           if (res.data && res.data.cards) {
@@ -883,7 +918,7 @@ export default function StudyScreen() {
       const loadToday = async () => {
         try {
           const deckIdParam = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
-          await dispatch(fetchTodayStudy({ deckId: deckIdParam })).unwrap();
+          await dispatch(fetchTodayStudy({ deckId: deckIdParam, topicId: currentTopicId })).unwrap();
         } catch (err) {
           console.error('Failed to load today cards:', err);
           // Fallback to IndexedDB
@@ -908,8 +943,15 @@ export default function StudyScreen() {
       return todayCards ? todayCards.length : 0;
     }
     if (!todayCards) return 0;
-    return todayCards.filter(c => c.deckId === Number(selectedDeckId)).length;
-  }, [todayCards, selectedDeckId]);
+    let list = todayCards;
+    if (selectedDeckId !== 'all') {
+      list = list.filter(c => c.deckId === Number(selectedDeckId));
+    }
+    if (currentTopicId) {
+      list = list.filter(c => Number(c.topicId) === Number(currentTopicId));
+    }
+    return list.length;
+  }, [todayCards, selectedDeckId, currentTopicId]);
 
   // Compute filtered queue dynamically based on selected deck and study mode
   const filteredQueue = useMemo(() => {
@@ -934,8 +976,11 @@ export default function StudyScreen() {
     if (selectedDeckId !== 'all') {
       list = list.filter((c) => c.deckId === Number(selectedDeckId));
     }
+    if (currentTopicId) {
+      list = list.filter((c) => Number(c.topicId) === Number(currentTopicId));
+    }
     return list;
-  }, [studyMode, todayCards, allCards, selectedDeckId, favorites]);
+  }, [studyMode, todayCards, allCards, selectedDeckId, favorites, currentTopicId]);
 
   // Compute display count dynamically to show total count instantly
   const displayCount = useMemo(() => {
@@ -983,7 +1028,7 @@ export default function StudyScreen() {
   const handleLoadExtraCards = async (count) => {
     const deckId = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
     try {
-      const result = await dispatch(fetchTodayStudy({ deckId, extra: count })).unwrap();
+      const result = await dispatch(fetchTodayStudy({ deckId, extra: count, topicId: currentTopicId })).unwrap();
       if (result && result.length > 0) {
         showToast(`Đã nạp thêm ${result.length} từ mới vào hàng đợi ôn tập!`, 'success');
       } else {
@@ -1328,7 +1373,7 @@ export default function StudyScreen() {
             Thoát
           </button>
           <div className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute flex items-center gap-1.5">
-            THẺ {currentIndex + 1} / {activeQueue.length}
+            THẺ {currentIndex + 1} / {displayCount}
             {!navigator.onLine && (
               <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" title="Ngoại tuyến" />
             )}
@@ -1523,7 +1568,7 @@ export default function StudyScreen() {
             Thoát Nghe Thụ Động
           </button>
           <div className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute">
-            THẺ {currentIndex + 1} / {activeQueue.length}
+            THẺ {currentIndex + 1} / {displayCount}
           </div>
           <div className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-mono font-bold rounded-full animate-pulse">
             🎧 TỰ ĐỘNG CHẠY
@@ -1686,7 +1731,15 @@ export default function StudyScreen() {
         <div className="relative max-w-md">
           <select
             value={selectedDeckId}
-            onChange={(e) => setSelectedDeckId(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setSelectedDeckId(val);
+              if (val === 'all') {
+                setSearchParams({});
+              } else {
+                setSearchParams({ deckId: val });
+              }
+            }}
             className="w-full px-5 py-3 bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-full shadow-sm text-sm text-ink dark:text-on-dark font-semibold outline-none cursor-pointer hover:bg-surface-bone dark:hover:bg-black transition-all"
           >
             <option value="all">{t('study.all_decks')}</option>
@@ -1697,6 +1750,11 @@ export default function StudyScreen() {
               </option>
             ))}
           </select>
+          {currentTopicId && TOPICS[currentTopicId] && (
+            <div className="mt-2.5 inline-flex items-center gap-1.5 bg-primary/10 text-primary border border-primary/20 text-xs font-semibold px-4.5 py-2 rounded-full">
+              🏷️ Chỉ học chủ đề: <strong>{TOPICS[currentTopicId].name}</strong>
+            </div>
+          )}
         </div>
       </div>
 
