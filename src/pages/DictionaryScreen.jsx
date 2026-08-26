@@ -1546,15 +1546,15 @@ ${isSingleChar ? '' : `3. Phần Giải nghĩa tổng hợp (Đặt tiêu đề:
                             className="bg-surface-bone/35 dark:bg-black/10 p-3 rounded-xl border border-hairline dark:border-divider-dark/50 flex justify-between items-start gap-4 hover:border-primary/20 transition-all"
                           >
                             <div className="flex-1 min-w-0 space-y-0.5 text-left">
-                              <div className="text-sm font-display font-bold text-ink dark:text-on-dark">
+                              <div className="text-[15px] font-display font-bold text-ink dark:text-on-dark">
                                 <HoverableText text={ex.hanzi} />
                               </div>
                               {ex.pinyin && (
-                                <div className="text-[10px] font-mono font-semibold text-primary dark:text-link">
+                                <div className="text-[11px] font-mono font-semibold text-primary dark:text-link">
                                   {ex.pinyin}
                                 </div>
                               )}
-                              <div className="text-xs text-body dark:text-on-dark-mute italic font-medium">
+                              <div className="text-[13px] text-body dark:text-on-dark-mute italic font-medium">
                                 {ex.meaning}
                               </div>
                               <div className="pt-1">

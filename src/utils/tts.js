@@ -11,14 +11,10 @@
 // Detect backend API base URL (same origin in production, localhost:3000 in dev)
 const getApiBase = () => {
   if (typeof window === 'undefined') return '';
-  const loc = window.location;
-  // In dev mode (Vite), frontend runs on 5173, backend on 3000
-  if (loc.port === '5173' || loc.port === '5174') {
-    return 'http://localhost:3000';
-  }
-  // In production, same origin
-  return '';
+  const url = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  return url.endsWith('/') ? url.slice(0, -1) : url;
 };
+
 
 // Client-side audio cache to avoid re-fetching the same word
 const audioCache = new Map();

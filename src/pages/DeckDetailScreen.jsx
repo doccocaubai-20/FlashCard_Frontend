@@ -541,9 +541,9 @@ export default function DeckDetailScreen() {
                             {/* Example sentences */}
                             {exampleHanzi && (
                               <div className="border-l-2 border-primary/30 pl-2.5 mt-2 py-0.5 space-y-1">
-                                <p className="text-xs font-bold text-mute dark:text-on-dark-mute/90 leading-relaxed">{exampleHanzi}</p>
+                                <p className="text-[13.5px] md:text-sm font-semibold text-mute dark:text-on-dark-mute leading-relaxed">{exampleHanzi}</p>
                                 {exampleMeaning && (
-                                  <p className="text-[11px] font-semibold text-mute/80 dark:text-on-dark-mute/70 leading-relaxed">{exampleMeaning}</p>
+                                  <p className="text-xs text-mute/80 dark:text-on-dark-mute/70 leading-relaxed">{exampleMeaning}</p>
                                 )}
                               </div>
                             )}
