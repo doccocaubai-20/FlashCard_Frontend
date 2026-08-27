@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchDeckDetails, fetchFlashcardsByDeck, importFlashcards, deleteFlashcard, clearCurrentDeck, updateFlashcard } from '../features/deck/deckSlice';
-import { Upload, Star, X, Trash2, Volume2, Copy, Check, Pencil, Plus, Search } from 'lucide-react';
+import { Upload, Star, X, Trash2, Volume2, Copy, Check, Pencil, Plus, Search, Play, Gamepad2, CheckSquare, FileText, Sparkles, HelpCircle } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { deckApi } from '../services/deckApi';
 import { speakChinese } from '../utils/tts';
@@ -371,8 +371,8 @@ export default function DeckDetailScreen() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/50 p-6 shadow-sm transition-colors">
-        <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="rounded-2xl border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/40 p-6 shadow-sm transition-colors">
+        <div className="mb-5 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <h1 className="text-2xl font-extrabold text-ink dark:text-on-dark font-display tracking-tight flex items-center gap-2">
               {isVirtual && <Star className="text-amber-500 fill-amber-500 shrink-0" size={24} />}
@@ -404,85 +404,88 @@ export default function DeckDetailScreen() {
             </div>
           </div>
           {/* Action Buttons Panel */}
-          <div className="mt-6 w-full flex flex-col gap-4">
+          <div className="mt-6 w-full lg:mt-0 lg:w-[360px] lg:shrink-0 bg-surface-bone/20 dark:bg-zinc-900/10 lg:bg-surface-bone/45 lg:dark:bg-zinc-900/25 border border-hairline dark:border-divider-dark/50 rounded-2xl p-4 lg:p-5 flex flex-col gap-4 shadow-xs">
             {/* Primary Study Action */}
             <button
               type="button"
               onClick={() => navigate(`/study?deckId=${id}${selectedTopicId ? `&topicId=${selectedTopicId}` : ''}`)}
-              className="w-full rounded-xl bg-primary hover:bg-primary-deep text-white py-3.5 text-sm font-bold shadow-md hover:shadow-lg transition cursor-pointer active:scale-95 flex items-center justify-center gap-2"
+              className="w-full rounded-xl bg-primary hover:bg-primary-deep text-white py-3.5 text-sm font-extrabold shadow-md hover:shadow-lg hover:scale-[1.01] active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-2"
             >
-              Học ngay
+              <Play size={16} className="fill-white" />
+              <span>Học ngay</span>
             </button>
 
-            {/* Study & Game Modes Grid (2 columns on mobile, flex-wrap on desktop) */}
-            <div className="grid grid-cols-2 md:flex md:flex-wrap items-center gap-3 w-full">
+            {/* Study & Game Modes Grid (2 columns on all viewports for tight grid alignment) */}
+            <div className="grid grid-cols-2 gap-2.5 w-full">
               {!isVirtual && (
                 <button
                   type="button"
                   onClick={() => navigate(`/decks/${id}/game`)}
-                  className="rounded-xl md:rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs"
+                  className="rounded-xl border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-3 py-2.5 text-xs font-bold transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs hover:border-primary/50"
                 >
-                  Chơi Game
+                  <Gamepad2 size={13} className="text-primary" />
+                  <span>Chơi Game</span>
                 </button>
               )}
               <button
                 type="button"
                 onClick={() => navigate(`/decks/${id}/quiz`)}
-                className="rounded-xl md:rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs"
+                className="rounded-xl border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-3 py-2.5 text-xs font-bold transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs hover:border-primary/50"
               >
-                Trắc nghiệm
+                <CheckSquare size={13} className="text-primary" />
+                <span>Trắc nghiệm</span>
               </button>
               <button
                 type="button"
                 onClick={() => navigate(`/decks/${id}/dictation`)}
-                className="rounded-xl md:rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs"
+                className="rounded-xl border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-3 py-2.5 text-xs font-bold transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs hover:border-primary/50"
               >
-                Nghe viết
+                <FileText size={13} className="text-primary" />
+                <span>Nghe viết</span>
               </button>
               {!isVirtual && (
                 <button
                   type="button"
                   onClick={() => setIsAiParagraphModalOpen(true)}
-                  className="rounded-xl md:rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs"
+                  className="rounded-xl border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-3 py-2.5 text-xs font-bold transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs hover:border-primary/50"
                 >
-                  Đoạn văn AI
+                  <Sparkles size={13} className="text-primary" />
+                  <span>Đoạn văn AI</span>
                 </button>
               )}
             </div>
 
             {/* Utilities Row (File Imports, Manual Card Creation) */}
-            <div className="flex flex-wrap items-center gap-3 border-t border-hairline dark:border-divider-dark/30 pt-4 w-full">
-              {!isVirtual && (
+            {!isVirtual && (
+              <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-hairline dark:border-divider-dark/30 pt-4 w-full">
                 <button
                   type="button"
                   onClick={() => navigate(`/flashcards/new?deckId=${id}`)}
-                  className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2 text-xs font-bold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-xs"
+                  className="flex-1 rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-3 py-2 text-xs font-bold transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs hover:border-primary/50"
                 >
                   <Plus className="w-3.5 h-3.5 text-primary" />
-                  Thêm thẻ
+                  <span>Thêm thẻ</span>
                 </button>
-              )}
-              {!isVirtual && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-1">
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2 text-xs font-bold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-xs"
+                    className="w-full rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-3 py-2 text-xs font-bold transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs hover:border-primary/50"
                   >
                     <Upload className="w-3.5 h-3.5" />
-                    Nhập file JSON
+                    <span>Nhập JSON</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsHelpModalOpen(true)}
-                    className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-mute hover:text-ink dark:hover:text-on-dark w-8 h-8 flex items-center justify-center text-xs font-bold transition cursor-pointer active:scale-95 shadow-xs"
+                    className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-mute hover:text-ink dark:hover:text-on-dark w-8 h-8 flex items-center justify-center text-xs font-bold transition-all cursor-pointer active:scale-95 shadow-xs shrink-0"
                     title="Hướng dẫn cấu trúc file JSON"
                   >
-                    ❓
+                    <HelpCircle size={14} />
                   </button>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
 

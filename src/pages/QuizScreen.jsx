@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, RefreshCw, Trophy, Clock, CheckCircle2, XCircle, HelpCircle, Eye, EyeOff } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import api from '../services/api';
+import { skillLogsApi } from '../services/learningApi';
 
 export default function QuizScreen() {
   const { id } = useParams();
@@ -19,6 +20,25 @@ export default function QuizScreen() {
   const [timeLeft, setTimeLeft] = useState(15);
   const [userAnswers, setUserAnswers] = useState([]); // Array to store user's choices
   const [showPinyin, setShowPinyin] = useState(true);
+
+  // Save quiz results to database
+  useEffect(() => {
+    if (quizFinished && questions.length > 0) {
+      const finalScore = Math.round((score / questions.length) * 100);
+      skillLogsApi.save({
+        skillType: 'QUIZ',
+        targetId: id,
+        level: isVirtual ? 'FAVORITES' : 'DECK',
+        score: finalScore,
+        accuracy: parseFloat((score / questions.length).toFixed(2)),
+        details: {
+          totalQuestions: questions.length,
+          correctCount: score,
+          userAnswers: userAnswers,
+        }
+      }).catch(err => console.error('Error saving quiz skill log:', err));
+    }
+  }, [quizFinished, score, questions.length, id, isVirtual, userAnswers]);
 
   const isVirtual = id === 'favorites';
 

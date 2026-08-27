@@ -1,5 +1,6 @@
-import React, { useState, useMemo, navigate } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { grammarData } from '../data/grammarData';
+import { skillLogsApi, grammarProgressApi } from '../services/learningApi';
 import {
   BookOpenText,
   Volume2,
@@ -166,9 +167,8 @@ function ParsedFormula({ formula }) {
     return (
       <span
         title={hoverTitle}
-        className={`inline-flex items-center px-3 py-1.5 text-sm border cursor-help transition-all hover:scale-105 select-all ${badgeStyle} ${
-          isOptional ? 'border-dashed opacity-75' : ''
-        }`}
+        className={`inline-flex items-center px-3 py-1.5 text-sm border cursor-help transition-all hover:scale-105 select-all ${badgeStyle} ${isOptional ? 'border-dashed opacity-75' : ''
+          }`}
       >
         {displayText}
       </span>
@@ -190,6 +190,21 @@ function ParsedFormula({ formula }) {
 export default function GrammarScreen() {
   const navigate = useNavigate()
   const [filterLevel, setFilterLevel] = useState('All');
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageInput, setPageInput] = useState('1');
+  const LIMIT = 10;
+
+  // Reset page when filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterLevel]);
+
+  // Synchronize pageInput with currentPage
+  useEffect(() => {
+    setPageInput(currentPage.toString());
+  }, [currentPage]);
 
   // Grouping by title to resolve duplication at runtime
   const groupedGrammar = useMemo(() => {
@@ -216,10 +231,17 @@ export default function GrammarScreen() {
     return groups;
   }, [filterLevel]);
 
+  const totalCount = groupedGrammar.length;
+  const totalPages = Math.ceil(totalCount / LIMIT) || 1;
+
+  const paginatedGrammar = useMemo(() => {
+    const startIndex = (currentPage - 1) * LIMIT;
+    return groupedGrammar.slice(startIndex, startIndex + LIMIT);
+  }, [groupedGrammar, currentPage, LIMIT]);
+
   const [expandedId, setExpandedId] = useState(groupedGrammar[0]?.id || null);
   const [activeTabs, setActiveTabs] = useState({}); // Tracking active sub-structure tab index per group ID
   const [showLegend, setShowLegend] = useState(false); // Collapsible glossary guide for beginners
-
   // Grammar practice states
   const [practiceId, setPracticeId] = useState(null);
   const [quizIndex, setQuizIndex] = useState(0);
@@ -230,9 +252,55 @@ export default function GrammarScreen() {
   const [correctCount, setCorrectCount] = useState(0);
   const [isQuizFinished, setIsQuizFinished] = useState(false);
 
+  const [grammarProgress, setGrammarProgress] = useState([]);
+
+  // Fetch grammar progress from database on mount or when returning from practice
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        const res = await grammarProgressApi.getAll();
+        setGrammarProgress(res.data || []);
+      } catch (err) {
+        console.error('Failed to fetch grammar progress:', err);
+      }
+    };
+    if (!practiceId) {
+      fetchProgress();
+    }
+  }, [practiceId]);
+
   const currentQuizQuestions = useMemo(() => {
     return grammarQuestionBank[practiceId] || [];
   }, [practiceId]);
+
+  // Save results when quiz finishes
+  useEffect(() => {
+    if (isQuizFinished && practiceId && currentQuizQuestions.length > 0) {
+      const currentGrammar = grammarData.find(g => g.id === practiceId);
+      const score = Math.round((correctCount / currentQuizQuestions.length) * 100);
+
+      // Save to general skill logs
+      skillLogsApi.save({
+        skillType: 'GRAMMAR',
+        targetId: practiceId,
+        level: currentGrammar?.level || 'Ngữ pháp',
+        score: score,
+        accuracy: parseFloat((correctCount / currentQuizQuestions.length).toFixed(2)),
+        details: {
+          totalQuestions: currentQuizQuestions.length,
+          correctCount: correctCount,
+        }
+      }).catch(err => console.error('Error saving grammar skill log:', err));
+
+      // Save to grammar progress (upsert mastery score)
+      grammarProgressApi.save({
+        grammarId: practiceId,
+        level: currentGrammar?.level || 'Ngữ pháp',
+        score: score,
+        correct: score >= 80 // If score >= 80% it's counted as a correct attempt for mastery increment
+      }).catch(err => console.error('Error saving grammar progress:', err));
+    }
+  }, [isQuizFinished, practiceId, correctCount, currentQuizQuestions.length]);
 
   const currentQuestion = currentQuizQuestions[quizIndex];
 
@@ -316,7 +384,7 @@ export default function GrammarScreen() {
     const currentGrammar = grammarData.find(g => g.id === practiceId);
 
     return (
-      <div className="max-w-2xl mx-auto space-y-6 text-left pb-12 select-none">
+      <div className="max-w-3xl lg:max-w-4xl mx-auto space-y-6 text-left pb-12 select-none">
         {/* Progress header & exit */}
         <div className="flex justify-between items-center border-b border-hairline dark:border-divider-dark pb-4">
           <button
@@ -370,7 +438,7 @@ export default function GrammarScreen() {
                 onClick={() => startPractice(practiceId)}
                 className="flex-1 py-3 bg-primary hover:bg-primary-deep text-white font-mono font-bold text-xs rounded-full transition-all cursor-pointer shadow-sm"
               >
-                🔄 Luyện tập lại
+                Luyện tập lại
               </button>
               <button
                 onClick={() => setPracticeId(null)}
@@ -382,19 +450,19 @@ export default function GrammarScreen() {
           </div>
         ) : (
           /* Active Question Board */
-          <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl p-6 sm:p-8 shadow-sm space-y-6 relative overflow-hidden text-left">
-            <div className="space-y-1.5">
-              <span className="text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-widest block">
+          <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-2xl p-7 sm:p-10 shadow-md space-y-8 relative overflow-hidden text-left">
+            <div className="space-y-2 border-b border-hairline dark:border-divider-dark pb-4">
+              <span className="text-[10px] sm:text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-widest block">
                 {currentQuestion.type === 'mcq' ? 'TRẮC NGHIỆM - CHỌN ĐÁP ÁN ĐÚNG' : 'DỊCH CÂU - TỰ LUYỆN TẬP'}
               </span>
-              <h2 className="text-lg font-bold text-ink dark:text-on-dark leading-relaxed font-display">
+              <h2 className="text-xl sm:text-2xl font-black text-ink dark:text-on-dark leading-relaxed font-display">
                 {currentGrammar?.title}
               </h2>
             </div>
 
             {/* Prompt */}
-            <div className="bg-surface-bone/35 dark:bg-black/25 border border-hairline dark:border-zinc-800/80 rounded-xl p-5 sm:p-6 text-center space-y-2">
-              <p className="text-2xl font-display font-extrabold text-ink dark:text-on-dark tracking-wide leading-relaxed">
+            <div className="bg-surface-bone/45 dark:bg-black/35 border border-hairline dark:border-zinc-800/80 rounded-2xl p-8 sm:p-12 text-center space-y-4">
+              <p className="text-3xl sm:text-4xl lg:text-5xl font-display font-black text-ink dark:text-on-dark tracking-wider leading-relaxed">
                 {currentQuestion.type === 'translate_zh_vi' ? (
                   <HoverableText text={currentQuestion.prompt} />
                 ) : (
@@ -402,7 +470,7 @@ export default function GrammarScreen() {
                 )}
               </p>
               {currentQuestion.pinyin && (
-                <p className="text-sm font-mono font-semibold text-primary/80">
+                <p className="text-lg sm:text-2xl font-mono font-bold text-primary/80 tracking-wide">
                   {currentQuestion.pinyin}
                 </p>
               )}
@@ -410,7 +478,7 @@ export default function GrammarScreen() {
 
             {/* MCQ Option Choices */}
             {currentQuestion.type === 'mcq' ? (
-              <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 {currentQuestion.options.map((option) => {
                   const isSelected = selectedOption === option.id;
                   const isCorrectAnswer = option.id === currentQuestion.answer;
@@ -418,14 +486,14 @@ export default function GrammarScreen() {
                   let cardStyle = 'bg-surface-card border-hairline hover:bg-surface-bone dark:hover:bg-black/30 text-ink dark:text-on-dark';
                   if (isChecked) {
                     if (isCorrectAnswer) {
-                      cardStyle = 'bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-extrabold shadow-sm';
+                      cardStyle = 'bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-black shadow-sm';
                     } else if (isSelected) {
-                      cardStyle = 'bg-red-500/10 border-red-500 text-red-600 dark:text-red-400 font-extrabold shadow-sm';
+                      cardStyle = 'bg-red-500/10 border-red-500 text-red-600 dark:text-red-400 font-black shadow-sm';
                     } else {
                       cardStyle = 'bg-surface-card border-hairline opacity-60 text-ink dark:text-on-dark';
                     }
                   } else if (isSelected) {
-                    cardStyle = 'border-primary ring-2 ring-primary bg-primary/5 text-primary font-bold';
+                    cardStyle = 'border-primary ring-2 ring-primary bg-primary/5 text-primary font-black';
                   }
 
                   return (
@@ -434,9 +502,9 @@ export default function GrammarScreen() {
                       type="button"
                       disabled={isChecked}
                       onClick={() => setSelectedOption(option.id)}
-                      className={`p-4 rounded-xl border-2 text-left text-base transition-all flex items-center gap-3 cursor-pointer ${cardStyle}`}
+                      className={`p-5 sm:p-6 rounded-2xl border-2 text-left text-lg sm:text-2xl transition-all flex items-center gap-4 cursor-pointer shadow-xs ${cardStyle}`}
                     >
-                      <span className={`h-6 w-6 shrink-0 rounded-full flex items-center justify-center text-xs font-mono font-bold ${isSelected
+                      <span className={`h-8 w-8 shrink-0 rounded-full flex items-center justify-center text-sm font-mono font-black ${isSelected
                         ? 'bg-primary text-white'
                         : isChecked && isCorrectAnswer
                           ? 'bg-emerald-500 text-white'
@@ -444,7 +512,7 @@ export default function GrammarScreen() {
                         }`}>
                         {option.id}
                       </span>
-                      <span className="font-display font-bold leading-normal hanzi-text">{option.text}</span>
+                      <span className="font-display font-extrabold leading-normal hanzi-text tracking-wide">{option.text}</span>
                     </button>
                   );
                 })}
@@ -452,7 +520,7 @@ export default function GrammarScreen() {
             ) : (
               /* Translation Text Input */
               <div className="space-y-3 pt-2">
-                <span className="text-[10px] font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-widest block">
+                <span className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-widest block">
                   Nhập bản dịch của bạn:
                 </span>
                 <textarea
@@ -465,7 +533,7 @@ export default function GrammarScreen() {
                   value={translationInput}
                   onChange={(e) => setTranslationInput(e.target.value)}
                   rows={3}
-                  className="w-full p-4 bg-surface-card dark:bg-surface-dark border-2 border-hairline dark:border-divider-dark rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-semibold text-ink dark:text-on-dark placeholder:opacity-40 leading-relaxed"
+                  className="w-full p-5 bg-surface-card dark:bg-surface-dark border-2 border-hairline dark:border-divider-dark rounded-2xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-lg sm:text-xl font-bold text-ink dark:text-on-dark placeholder:opacity-40 leading-relaxed"
                 />
               </div>
             )}
@@ -704,9 +772,12 @@ export default function GrammarScreen() {
 
       {/* Grammar Points Accordion List */}
       <div className="space-y-4">
-        {groupedGrammar.length > 0 ? (
-          groupedGrammar.map((group) => {
+        {paginatedGrammar.length > 0 ? (
+          paginatedGrammar.map((group) => {
             const isExpanded = expandedId === group.id;
+            const progressItems = group.items.map(item => grammarProgress.find(p => p.grammarId === item.id)).filter(Boolean);
+            const hasProgress = progressItems.length > 0;
+            const maxMastery = hasProgress ? Math.max(...progressItems.map(p => p.masteryScore)) : 0;
             const itemsCount = group.items.length;
             const activeIdx = getActiveTab(group.id);
             const activeItem = group.items[activeIdx] || group.items[0];
@@ -720,10 +791,10 @@ export default function GrammarScreen() {
                 {/* Header Row */}
                 <div
                   onClick={() => toggleExpand(group.id)}
-                  className="p-5 flex items-center justify-between gap-4 cursor-pointer hover:bg-surface-bone/35 dark:hover:bg-black/20 select-none text-left"
+                  className="p-5 flex items-center justify-between gap-4 cursor-pointer hover:bg-surface-bone/35 dark:hover:bg-black/20 select-none text-left transition-colors"
                 >
                   <div className="space-y-1.5 flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="text-[9px] font-extrabold uppercase bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 rounded flex-shrink-0">
                         {group.level}
                       </span>
@@ -741,8 +812,33 @@ export default function GrammarScreen() {
                     </h3>
                   </div>
 
-                  <div className="text-mute dark:text-on-dark-mute flex-shrink-0">
-                    {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    {hasProgress && (
+                      <div className={`hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold border transition-all shadow-xs ${
+                        maxMastery >= 90
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30'
+                          : maxMastery >= 70
+                            ? 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/20 dark:text-teal-400 dark:border-teal-900/30'
+                            : 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30'
+                      }`}>
+                        <Award size={12} className="text-current shrink-0" />
+                        <span>Độ thông thạo: {maxMastery}%</span>
+                      </div>
+                    )}
+                    {hasProgress && (
+                      <div className={`flex sm:hidden h-5 w-5 items-center justify-center rounded-full text-[8px] font-black border ${
+                        maxMastery >= 90
+                          ? 'bg-emerald-500 text-white border-emerald-600'
+                          : maxMastery >= 70
+                            ? 'bg-teal-500 text-white border-teal-600'
+                            : 'bg-amber-500 text-white border-amber-600'
+                      }`} title={`Độ thông thạo: ${maxMastery}%`}>
+                        {maxMastery}
+                      </div>
+                    )}
+                    <div className="text-mute dark:text-on-dark-mute">
+                      {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                    </div>
                   </div>
                 </div>
 
@@ -881,6 +977,74 @@ export default function GrammarScreen() {
           </div>
         )}
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="mt-6 flex items-center justify-center gap-2 sm:gap-4 pb-6 select-none">
+          {/* Prev Button */}
+          <button
+            type="button"
+            onClick={() => {
+              if (currentPage > 1) {
+                setCurrentPage(prev => prev - 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            disabled={currentPage === 1}
+            className="px-3 py-2 sm:px-4 sm:py-2 rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-mute hover:text-ink dark:hover:text-on-dark text-[11px] sm:text-xs font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
+          >
+            &larr; <span className="hidden sm:inline">Trang</span> trước
+          </button>
+
+          {/* Page Number Manual Input */}
+          <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-bold text-mute shrink-0">
+            <span className="hidden sm:inline">Trang</span>
+            <input
+              type="text"
+              value={pageInput}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (/^\d*$/.test(val)) {
+                  setPageInput(val);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.target.blur();
+                }
+              }}
+              onBlur={() => {
+                let val = parseInt(pageInput, 10);
+                if (isNaN(val) || val < 1) {
+                  val = 1;
+                } else if (val > totalPages) {
+                  val = totalPages;
+                }
+                setPageInput(val.toString());
+                setCurrentPage(val);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="w-10 sm:w-12 px-1.5 py-0.5 sm:py-1 text-center border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark text-ink dark:text-on-dark rounded font-mono font-bold text-[11px] sm:text-xs focus:ring-1 focus:ring-primary outline-none"
+            />
+            <span>/ {totalPages}</span>
+          </div>
+
+          {/* Next Button */}
+          <button
+            type="button"
+            onClick={() => {
+              if (currentPage < totalPages) {
+                setCurrentPage(prev => prev + 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            disabled={currentPage === totalPages}
+            className="px-3 py-2 sm:px-4 sm:py-2 rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-mute hover:text-ink dark:hover:text-on-dark text-[11px] sm:text-xs font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
+          >
+            Trang sau &rarr;
+          </button>
+        </div>
+      )}
     </div>
   );
 }

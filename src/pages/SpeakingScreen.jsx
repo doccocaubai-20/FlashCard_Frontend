@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { translationData } from '../data/translationData';
 import { statsApi } from '../services/statsApi';
+import { skillLogsApi } from '../services/learningApi';
 import HoverableText from '../components/common/HoverableText';
 import {
   Mic,
@@ -19,7 +20,10 @@ import {
   Info,
   CheckCircle2,
   XCircle,
-  HelpCircle
+  HelpCircle,
+  BookOpen,
+  ArrowRight,
+  History
 } from 'lucide-react';
 
 export default function SpeakingScreen() {
@@ -46,8 +50,40 @@ export default function SpeakingScreen() {
   const [showMeaning, setShowMeaning] = useState(true); // Toggle for translation box
   const [checked, setChecked] = useState(false);
   const [browserSupported, setBrowserSupported] = useState(true);
+  const [recentHistory, setRecentHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [sessionAudios, setSessionAudios] = useState({});
 
   const recognitionRef = useRef(null);
+
+  // Fetch speaking history
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await skillLogsApi.getAll({ skillType: 'SPEAKING', limit: 10 });
+        setRecentHistory(res.data || []);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchHistory();
+  }, [checked]);
+
+  const getSentenceNumber = (targetId) => {
+    if (targetId && targetId.startsWith('t')) {
+      const num = targetId.substring(1);
+      if (!isNaN(num)) {
+        return `Câu ${num}`;
+      }
+    }
+    return '';
+  };
+
+  const playAudio = (url) => {
+    if (!url) return;
+    const audio = new Audio(url);
+    audio.play().catch(e => console.error('Failed to play session audio:', e));
+  };
 
   // Audio recording states and refs for self playback
   const [audioUrl, setAudioUrl] = useState(null);
@@ -97,6 +133,20 @@ export default function SpeakingScreen() {
     setScore(finalScore);
     setChecked(true);
     statsApi.incrementQuestProgress('SPEAK_PRACTICE', 1).catch(err => console.error(err));
+
+    // Save speaking attempt to database
+    skillLogsApi.save({
+      skillType: 'SPEAKING',
+      targetId: currentSentence?.id?.toString() || currentSentence?.hanzi,
+      level: currentSentence?.level || filterLevel,
+      score: finalScore,
+      accuracy: targetChars.length > 0 ? parseFloat((correctCount / targetChars.length).toFixed(2)) : 0,
+      details: {
+        sentence: currentSentence?.hanzi,
+        spokenText: spokenStr,
+        charBreakdown: results,
+      }
+    }).catch(err => console.error('Error saving speaking skill log:', err));
   };
 
   const stopRecording = () => {
@@ -156,6 +206,13 @@ export default function SpeakingScreen() {
             const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
             const url = URL.createObjectURL(blob);
             setAudioUrl(url);
+
+            if (currentSentence) {
+              setSessionAudios(prev => ({
+                ...prev,
+                [currentSentence.id]: url
+              }));
+            }
           };
           
           mediaRecorder.start();
@@ -727,6 +784,92 @@ export default function SpeakingScreen() {
           </div>
         </div>
       )}
+
+      {/* Collapsible History Feed */}
+      <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl p-5 shadow-sm space-y-4 text-left">
+        <button
+          type="button"
+          onClick={() => setShowHistory(!showHistory)}
+          className="w-full flex items-center justify-between text-left cursor-pointer select-none"
+        >
+          <div className="flex items-center gap-2">
+            <History size={16} className="text-primary" />
+            <h3 className="text-sm font-extrabold text-ink dark:text-on-dark uppercase tracking-wider">
+              Lịch sử phát âm gần đây
+            </h3>
+          </div>
+          <span className="text-xs text-primary font-bold underline">
+            {showHistory ? 'Ẩn lịch sử' : 'Xem lịch sử'}
+          </span>
+        </button>
+
+        {showHistory && (
+          <div className="space-y-2.5 pt-2 border-t border-hairline dark:border-divider-dark animate-fade-in">
+            {recentHistory.length > 0 ? (
+              recentHistory.map((log) => {
+                const sentenceNum = getSentenceNumber(log.targetId);
+                return (
+                  <div
+                    key={log.id}
+                    className="flex items-center justify-between p-3 rounded-lg bg-surface-bone/35 dark:bg-black/20 border border-hairline/50 dark:border-zinc-800/80 gap-3"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-primary/10 border border-primary/20 text-primary">
+                          {log.level || 'HSK'}
+                        </span>
+                        {sentenceNum && (
+                          <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400">
+                            {sentenceNum}
+                          </span>
+                        )}
+                        <span className="text-xs font-semibold text-ink dark:text-on-dark truncate max-w-[200px] sm:max-w-xs block">
+                          {log.details?.sentence || log.targetId}
+                        </span>
+                      </div>
+                      {log.details?.spokenText && (
+                        <p className="text-[10px] text-mute italic mt-1 truncate max-w-[200px] sm:max-w-xs">
+                          Bạn đọc: "{log.details.spokenText}"
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2.5 shrink-0">
+                      {sessionAudios[log.targetId] && (
+                        <button
+                          type="button"
+                          onClick={() => playAudio(sessionAudios[log.targetId])}
+                          className="flex items-center gap-1 px-2.5 py-1 bg-primary/10 hover:bg-primary/20 text-primary text-[10px] font-bold rounded-lg cursor-pointer transition-all active:scale-95 shrink-0 border border-primary/20"
+                          title="Nghe lại giọng ghi âm của bạn trong lượt này"
+                        >
+                          🔊 Nghe lại
+                        </button>
+                      )}
+                      <div className="text-right">
+                        <span className={`text-xs font-black border px-2 py-0.5 rounded-md ${
+                          log.score >= 90
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400'
+                            : log.score >= 70
+                              ? 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/20 dark:text-teal-400'
+                              : 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/20 dark:text-amber-400'
+                        }`}>
+                          {log.score}%
+                        </span>
+                        <span className="block text-[8px] text-mute mt-1 font-mono">
+                          {new Date(log.createdAt).toLocaleDateString([], { month: 'numeric', day: 'numeric' })}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="text-center py-6 text-xs text-mute">
+                Chưa có lượt phát âm nào được ghi lại.
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

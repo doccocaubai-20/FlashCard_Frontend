@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { translationData } from '../data/translationData';
+import { skillLogsApi } from '../services/learningApi';
 import { 
   Sparkles, 
   Languages, 
@@ -14,7 +15,8 @@ import {
   EyeOff,
   Shuffle,
   ListOrdered,
-  Dices
+  Dices,
+  History
 } from 'lucide-react';
 
 export default function TranslationPlaygroundScreen() {
@@ -29,6 +31,21 @@ export default function TranslationPlaygroundScreen() {
   const [playMode, setPlayMode] = useState('sequential'); // 'sequential' | 'random'
   const [hoveredTokenIndex, setHoveredTokenIndex] = useState(null);
   const writersRef = useRef({}); // Store active HanziWriter instances for cleanup
+  const [recentHistory, setRecentHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
+
+  // Fetch translation history
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await skillLogsApi.getAll({ skillType: 'TRANSLATION', limit: 10 });
+        setRecentHistory(res.data || []);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchHistory();
+  }, [checked]);
 
   // Filter sentences by level
   const filteredSentences = useMemo(() => {
@@ -163,6 +180,26 @@ export default function TranslationPlaygroundScreen() {
 
     return { matches, score };
   }, [checked, userTranslation, currentSentence]);
+
+  // Save translation results to database
+  useEffect(() => {
+    if (checked && currentSentence && gradingResult) {
+      skillLogsApi.save({
+        skillType: 'TRANSLATION',
+        targetId: currentSentence.id?.toString() || currentSentence.hanzi,
+        level: currentSentence.level || filterLevel,
+        score: gradingResult.score,
+        accuracy: currentSentence.keywords.length > 0
+          ? parseFloat((gradingResult.matches.filter(m => m.found).length / currentSentence.keywords.length).toFixed(2))
+          : 0,
+        details: {
+          sentence: currentSentence.hanzi,
+          userTranslation: userTranslation,
+          matches: gradingResult.matches,
+        }
+      }).catch(err => console.error('Error saving translation log:', err));
+    }
+  }, [checked, currentSentence, gradingResult, userTranslation, filterLevel]);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -474,6 +511,71 @@ export default function TranslationPlaygroundScreen() {
         </div>
       )}
 
+      {/* Collapsible History Feed */}
+      <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl p-5 shadow-sm space-y-4 text-left">
+        <button
+          type="button"
+          onClick={() => setShowHistory(!showHistory)}
+          className="w-full flex items-center justify-between text-left cursor-pointer select-none"
+        >
+          <div className="flex items-center gap-2">
+            <History size={16} className="text-primary" />
+            <h3 className="text-sm font-extrabold text-ink dark:text-on-dark uppercase tracking-wider">
+              Lịch sử dịch câu gần đây
+            </h3>
+          </div>
+          <span className="text-xs text-primary font-bold underline">
+            {showHistory ? 'Ẩn lịch sử' : 'Xem lịch sử'}
+          </span>
+        </button>
+
+        {showHistory && (
+          <div className="space-y-2.5 pt-2 border-t border-hairline dark:border-divider-dark animate-fade-in">
+            {recentHistory.length > 0 ? (
+              recentHistory.map((log) => (
+                <div
+                  key={log.id}
+                  className="flex items-center justify-between p-3 rounded-lg bg-surface-bone/35 dark:bg-black/20 border border-hairline/50 dark:border-zinc-800/80"
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-primary/10 border border-primary/20 text-primary">
+                        {log.level || 'HSK'}
+                      </span>
+                      <span className="text-xs font-semibold text-ink dark:text-on-dark truncate max-w-[200px] sm:max-w-xs block">
+                        {log.details?.sentence || log.targetId}
+                      </span>
+                    </div>
+                    {log.details?.userTranslation && (
+                      <p className="text-[10px] text-mute italic mt-1 truncate max-w-[200px] sm:max-w-xs">
+                        Bạn dịch: "{log.details.userTranslation}"
+                      </p>
+                    )}
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className={`text-xs font-black border px-2 py-0.5 rounded-md ${
+                      log.score >= 90
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400'
+                        : log.score >= 70
+                          ? 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/20 dark:text-teal-400'
+                          : 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/20 dark:text-amber-400'
+                    }`}>
+                      {log.score}%
+                    </span>
+                    <span className="block text-[8px] text-mute mt-1 font-mono">
+                      {new Date(log.createdAt).toLocaleDateString([], { month: 'numeric', day: 'numeric' })}
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-6 text-xs text-mute">
+                Chưa có lượt dịch câu nào được ghi lại.
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

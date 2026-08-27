@@ -343,27 +343,27 @@ export default function DeckListScreen() {
             Tạo, sửa đổi và quản lý các bộ bài flashcard học tiếng Trung của bạn.
           </p>
         </div>
-        <div className="flex items-center gap-3 self-start sm:self-center">
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto sm:justify-end">
           <button
             onClick={() => setIsImportModalOpen(true)}
-            className="flex items-center gap-2 border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark font-bold px-4 py-3 rounded-full transition-all shadow-xs cursor-pointer bg-surface-card dark:bg-surface-dark"
+            className="flex items-center gap-1.5 border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark font-bold px-4 py-2.5 rounded-full transition-all shadow-xs cursor-pointer bg-surface-card dark:bg-surface-dark text-xs sm:text-sm shrink-0"
           >
-            <Globe size={16} />
+            <Globe size={15} />
             <span>Bộ bài chia sẻ</span>
           </button>
           <button
             onClick={() => setIsAiModalOpen(true)}
-            className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold px-5 py-3 rounded-full transition-all shadow-sm hover:shadow-md cursor-pointer active:scale-[0.98]"
+            className="flex items-center gap-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold px-4 py-2.5 rounded-full transition-all shadow-sm hover:shadow-md cursor-pointer active:scale-[0.98] text-xs sm:text-sm shrink-0"
           >
-            <Sparkles size={16} />
+            <Sparkles size={14} />
             <span>Tạo bằng AI</span>
           </button>
           <button
             onClick={handleOpenCreate}
-            className="flex items-center gap-2 bg-primary hover:bg-primary-deep text-white font-bold px-5 py-3 rounded-full transition-all shadow-sm hover:shadow-md cursor-pointer active:scale-[0.98]"
+            className="flex items-center gap-1.5 bg-primary hover:bg-primary-deep text-white font-bold px-4 py-2.5 rounded-full transition-all shadow-sm hover:shadow-md cursor-pointer active:scale-[0.98] text-xs sm:text-sm shrink-0"
           >
-            <Plus size={18} />
-            Tạo bộ bài mới
+            <Plus size={16} />
+            <span>Tạo bộ bài mới</span>
           </button>
         </div>
       </div>

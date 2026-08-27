@@ -4,7 +4,9 @@ import HandwritingCanvas from '../components/common/HandwritingCanvas';
 import { useDictionary } from '../hooks/useDictionary';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { statsApi } from '../services/statsApi';
-import { BookOpen, Star, Volume2, ArrowRight } from 'lucide-react';
+import api from '../services/api';
+import { skillLogsApi } from '../services/learningApi';
+import { BookOpen, Star, Volume2, ArrowRight, History } from 'lucide-react';
 
 export default function FreeWriteScreen() {
   const { lookupMultiple } = useDictionary();
@@ -33,6 +35,21 @@ export default function FreeWriteScreen() {
   const [quizTotalStrokes, setQuizTotalStrokes] = useState(0);
   const [quizCurrentStroke, setQuizCurrentStroke] = useState(0);
   const [quizReport, setQuizReport] = useState(null); // { score, mistakes, grade, feedback }
+  const [recentHistory, setRecentHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
+
+  // Fetch writing history
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await skillLogsApi.getAll({ skillType: 'WRITING', limit: 10 });
+        setRecentHistory(res.data || []);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchHistory();
+  }, [quizReport]);
 
   async function loadFavorites() {
     try {
@@ -479,6 +496,8 @@ export default function FreeWriteScreen() {
           feedback = 'Đạt yêu cầu. Bạn cần chú ý thêm thứ tự nét.';
         }
 
+        const currentChar = selectedWord?.s?.[activeCharIndex] || '';
+
         setQuizReport({
           score: finalScore,
           mistakes: finalMistakes,
@@ -488,6 +507,21 @@ export default function FreeWriteScreen() {
         });
         setMode('idle');
         statsApi.incrementQuestProgress('WRITE_PRACTICE', 1).catch(err => console.error(err));
+
+        // Save writing score to database
+        skillLogsApi.save({
+          skillType: 'WRITING',
+          targetId: currentChar,
+          level: selectedWord?.hsk ? `HSK ${selectedWord.hsk}` : 'Tự do',
+          score: finalScore,
+          accuracy: parseFloat((finalScore / 100).toFixed(2)),
+          details: {
+            word: selectedWord?.s,
+            charIndex: activeCharIndex,
+            mistakes: finalMistakes,
+            grade,
+          }
+        }).catch(err => console.error('Error saving writing skill log:', err));
       }
     });
   }
@@ -864,6 +898,72 @@ export default function FreeWriteScreen() {
           </div>
         </div>
       )}
+
+      {/* Collapsible History Feed */}
+      <div className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-xl p-5 shadow-sm space-y-4 text-left mt-6">
+        <button
+          type="button"
+          onClick={() => setShowHistory(!showHistory)}
+          className="w-full flex items-center justify-between text-left cursor-pointer select-none"
+        >
+          <div className="flex items-center gap-2">
+            <History size={16} className="text-primary" />
+            <h3 className="text-sm font-extrabold text-ink dark:text-on-dark uppercase tracking-wider">
+              Lịch sử viết nét gần đây
+            </h3>
+          </div>
+          <span className="text-xs text-primary font-bold underline">
+            {showHistory ? 'Ẩn lịch sử' : 'Xem lịch sử'}
+          </span>
+        </button>
+
+        {showHistory && (
+          <div className="space-y-2.5 pt-2 border-t border-hairline dark:border-divider-dark animate-fade-in">
+            {recentHistory.length > 0 ? (
+              recentHistory.map((log) => (
+                <div
+                  key={log.id}
+                  className="flex items-center justify-between p-3 rounded-lg bg-surface-bone/35 dark:bg-black/20 border border-hairline/50 dark:border-zinc-800/80"
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-primary/10 border border-primary/20 text-primary">
+                        {log.level || 'Tự do'}
+                      </span>
+                      <span className="text-xs font-semibold text-ink dark:text-on-dark truncate max-w-[200px] sm:max-w-xs block">
+                        Chữ viết: "{log.targetId}" {log.details?.word ? `(trong từ: ${log.details.word})` : ''}
+                      </span>
+                    </div>
+                    {log.details?.grade && (
+                      <p className="text-[10px] text-mute italic mt-1">
+                        Xếp loại nét vẽ: {log.details.grade} ({log.details.mistakes} lỗi)
+                      </p>
+                    )}
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className={`text-xs font-black border px-2 py-0.5 rounded-md ${
+                      log.score >= 90
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400'
+                        : log.score >= 70
+                          ? 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/20 dark:text-teal-400'
+                          : 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/20 dark:text-amber-400'
+                    }`}>
+                      {log.score}%
+                    </span>
+                    <span className="block text-[8px] text-mute mt-1 font-mono">
+                      {new Date(log.createdAt).toLocaleDateString([], { month: 'numeric', day: 'numeric' })}
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-6 text-xs text-mute">
+                Chưa có lượt tập viết chữ nào được ghi lại.
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

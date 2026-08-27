@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import unscrambleQuestionBank from '../data/unscrambleQuestionBank.json';
 import { useToast } from '../context/ToastContext';
+import { gameRecordsApi } from '../services/learningApi';
 import { 
   Puzzle, 
   Timer, 
@@ -56,6 +57,29 @@ export default function UnscrambleGameScreen() {
     }
     return () => clearInterval(timerRef.current);
   }, [gameStarted, gameWon]);
+
+  // Save game record when game is won
+  useEffect(() => {
+    if (gameWon && gameStarted && sentences.length > 0) {
+      const finalScore = Math.round((correctCount / sentences.length) * 100);
+      gameRecordsApi.save({
+        gameType: 'UNSCRAMBLE',
+        level: selectedLevel,
+        score: finalScore,
+        accuracy: parseFloat((correctCount / sentences.length).toFixed(2)),
+        duration: seconds,
+        details: {
+          totalSentences: sentences.length,
+          correctCount,
+          seconds,
+          roundHistory: roundHistory.map(h => ({
+            hanzi: h.sentence.hanzi,
+            firstTryCorrect: h.firstTryCorrect
+          })),
+        }
+      }).catch(err => console.error('Error saving unscramble game record:', err));
+    }
+  }, [gameWon, gameStarted, correctCount, sentences.length, selectedLevel, seconds, roundHistory]);
 
   // Start game round
   const startGame = () => {

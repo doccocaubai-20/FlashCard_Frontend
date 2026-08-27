@@ -6,6 +6,7 @@ import { dictionaryApi } from '../services/dictionaryApi';
 import { cleanDefinition } from '../utils/formatters';
 import { useToast } from '../context/ToastContext';
 import { statsApi } from '../services/statsApi';
+import { gameRecordsApi } from '../services/learningApi';
 import { 
   Gamepad2, 
   Timer, 
@@ -43,6 +44,25 @@ export default function MatchingGameScreen() {
   const [seconds, setSeconds] = useState(0);
 
   const timerRef = useRef(null);
+
+  // Save game records when game is won
+  useEffect(() => {
+    if (gameWon && gameStarted) {
+      const finalScore = Math.max(0, 100 - mistakes * 10);
+      gameRecordsApi.save({
+        gameType: 'MATCHING',
+        level: selectedSource,
+        score: finalScore,
+        accuracy: moves > 0 ? parseFloat(((moves - mistakes) / moves).toFixed(2)) : 0,
+        duration: seconds,
+        details: {
+          moves,
+          mistakes,
+          seconds,
+        }
+      }).catch(err => console.error('Error saving matching game record:', err));
+    }
+  }, [gameWon, gameStarted, score, selectedSource, moves, mistakes, seconds]);
 
   // Fetch all decks on mount
   useEffect(() => {

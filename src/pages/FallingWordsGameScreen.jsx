@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllDecks, fetchFlashcardsByDeck } from '../features/deck/deckSlice';
 import { dictionaryApi } from '../services/dictionaryApi';
+import api from '../services/api';
+import { gameRecordsApi, weakWordsApi } from '../services/learningApi';
 import { cleanDefinition } from '../utils/formatters';
 import { 
   Zap, 
@@ -278,6 +280,44 @@ export default function FallingWordsGameScreen() {
 
     return () => clearInterval(gameTick);
   }, [gameStarted, gameOver, isPaused, score, wordPool]);
+
+  // Save game records and weak words when game is over
+  useEffect(() => {
+    if (gameOver && gameStarted) {
+      gameRecordsApi.save({
+        gameType: 'FALLING_WORDS',
+        level: selectedSource,
+        score: score,
+        details: {
+          destroyedCount: destroyedWords.length,
+          missedCount: missedWords.length,
+          missedWords: missedWords.map(w => w.s),
+        }
+      }).catch(err => console.error('Error saving game record:', err));
+
+      if (missedWords.length > 0) {
+        const uniqueMissed = [];
+        const seen = new Set();
+        missedWords.forEach(w => {
+          if (w && w.s && !seen.has(w.s)) {
+            seen.add(w.s);
+            uniqueMissed.push(w);
+          }
+        });
+
+        Promise.all(
+          uniqueMissed.map(w =>
+            weakWordsApi.save({
+              hanzi: w.s,
+              pinyin: w.p || '',
+              meaning: w.vi || '',
+              source: 'FALLING_GAME'
+            })
+          )
+        ).catch(err => console.error('Error saving weak words from falling game:', err));
+      }
+    }
+  }, [gameOver, gameStarted, score, selectedSource, destroyedWords.length, missedWords]);
 
   // Input check on keystroke
   const handleInputChange = (e) => {
