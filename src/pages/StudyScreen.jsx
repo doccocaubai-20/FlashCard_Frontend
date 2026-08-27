@@ -10,12 +10,12 @@ import { getItem, setItem } from '../utils/indexedDB';
 import Flashcard from '../components/flashcard/Flashcard';
 import HoverableText from '../components/common/HoverableText';
 import SRSButtons from '../components/study/SRSButtons';
-import { 
-  Layers, 
-  Clock, 
-  Play, 
-  ArrowLeft, 
-  ArrowRight, 
+import {
+  Layers,
+  Clock,
+  Play,
+  ArrowLeft,
+  ArrowRight,
   CheckCircle,
   HelpCircle,
   Star
@@ -133,7 +133,7 @@ function WritingPractice({ character }) {
   return (
     <div className="flex flex-col items-center gap-4 bg-surface-bone dark:bg-black/20 border border-hairline dark:border-divider-dark rounded-md p-5 w-full max-w-sm mx-auto shadow-sm">
       <span className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">Luyện Viết Chữ Hán</span>
-      
+
       {chars.length > 1 && (
         <div className="flex gap-2 mb-2 select-none">
           {chars.map((c, i) => (
@@ -141,11 +141,10 @@ function WritingPractice({ character }) {
               key={i}
               type="button"
               onClick={() => setActiveCharIndex(i)}
-              className={`px-3 py-1 rounded-full text-xs font-bold font-mono transition-all cursor-pointer ${
-                activeCharIndex === i
+              className={`px-3 py-1 rounded-full text-xs font-bold font-mono transition-all cursor-pointer ${activeCharIndex === i
                   ? 'bg-primary text-white shadow-sm'
                   : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark border border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-              }`}
+                }`}
             >
               Cố {i + 1}: {c}
             </button>
@@ -154,7 +153,7 @@ function WritingPractice({ character }) {
       )}
 
       {/* Target Canvas Container */}
-      <div 
+      <div
         className="relative bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-md p-2 aspect-square w-[220px] h-[220px] flex items-center justify-center"
       >
         <div ref={containerRef} id="hanzi-writer-canvas" className="w-[200px] h-[200px]" />
@@ -171,9 +170,8 @@ function WritingPractice({ character }) {
         <button
           type="button"
           onClick={handleQuiz}
-          className={`px-3.5 py-2 text-white text-xs font-mono font-semibold rounded-full shadow transition-all cursor-pointer ${
-            mode === 'quiz' ? 'bg-primary/50' : 'bg-primary hover:bg-primary-deep'
-          }`}
+          className={`px-3.5 py-2 text-white text-xs font-mono font-semibold rounded-full shadow transition-all cursor-pointer ${mode === 'quiz' ? 'bg-primary/50' : 'bg-primary hover:bg-primary-deep'
+            }`}
         >
           {mode === 'quiz' ? 'Đang viết...' : 'Luyện viết'}
         </button>
@@ -197,8 +195,8 @@ function WritingPractice({ character }) {
       </label>
 
       <p className="text-[10px] text-mute dark:text-on-dark-mute leading-relaxed text-center max-w-[240px]">
-        {mode === 'quiz' 
-          ? 'Hãy vẽ các nét theo đúng thứ tự hiển thị. Thư viện sẽ tự động chấm điểm nét vẽ của bạn.' 
+        {mode === 'quiz'
+          ? 'Hãy vẽ các nét theo đúng thứ tự hiển thị. Thư viện sẽ tự động chấm điểm nét vẽ của bạn.'
           : 'Nhấn "Luyện viết" để bắt đầu thử viết, hoặc "Xem nét" để xem thứ tự các nét.'}
       </p>
     </div>
@@ -211,7 +209,7 @@ function SpeakingPractice({ character, pinyin, lang = 'zh-CN' }) {
   const [transcript, setTranscript] = useState('');
   const [result, setResult] = useState(null); // 'success', 'fail', null
   const [audioUrl, setAudioUrl] = useState(null);
-  
+
   const recognitionRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
@@ -345,11 +343,10 @@ function SpeakingPractice({ character, pinyin, lang = 'zh-CN' }) {
         <button
           type="button"
           onClick={handleStartListening}
-          className={`flex px-5 py-2.5 rounded-full text-xs font-mono font-bold transition-all shadow-sm active:scale-95 cursor-pointer items-center gap-2 ${
-            isListening 
-              ? 'bg-red-650 hover:bg-red-700 text-white animate-pulse' 
+          className={`flex px-5 py-2.5 rounded-full text-xs font-mono font-bold transition-all shadow-sm active:scale-95 cursor-pointer items-center gap-2 ${isListening
+              ? 'bg-red-650 hover:bg-red-700 text-white animate-pulse'
               : 'bg-primary hover:bg-primary-deep text-white'
-          }`}
+            }`}
         >
           🎙️ {isListening ? 'Đang nghe...' : 'Nói ngay'}
         </button>
@@ -446,7 +443,7 @@ function AIExampleBox({ card, onExampleUpdated, lang = 'zh-CN', aiLimit, loadAiL
           >
             🔊
           </button>
-          
+
           <div className="space-y-2">
             <p className="text-2xl font-display font-bold text-ink dark:text-on-dark leading-relaxed">
               {isEnglish ? <span>{card.exampleHanzi}</span> : <HoverableText text={card.exampleHanzi} />}
@@ -526,11 +523,11 @@ export default function StudyScreen() {
   const { t } = useTranslation();
   const deckIdParam = searchParams.get('deckId');
   const topicIdParam = searchParams.get('topicId');
-  
+
   // Redux study state
   const todayCards = useSelector((state) => state.study.todayCards);
   const _isLoadingToday = useSelector((state) => state.study.isLoading);
-  
+
   // Redux decks list
   const decks = useSelector((state) => state.deck.decks);
 
@@ -539,7 +536,7 @@ export default function StudyScreen() {
     return [...decks].sort((a, b) => {
       if (a.isSystem && !b.isSystem) return 1; // Put custom decks first, then system decks
       if (!a.isSystem && b.isSystem) return -1;
-      
+
       if (a.isSystem && b.isSystem) {
         const getHskLevel = (name) => {
           const match = (name || '').match(/HSK\s*(\d+)/i);
@@ -637,7 +634,7 @@ export default function StudyScreen() {
   const [totalCardsCount, setTotalCardsCount] = useState(0);
   const [isAllCardsLoading, setIsAllCardsLoading] = useState(false);
   const [isStudyStarted, setIsStudyStarted] = useState(false);
-  
+
   // Configurator preferences
   const [selectedDeckId, setSelectedDeckId] = useState(deckIdParam || 'all');
   const currentTopicId = useMemo(() => {
@@ -666,7 +663,7 @@ export default function StudyScreen() {
   const [passiveRate, setPassiveRate] = useState(0.8);
   const [isPassiveLoopEnabled, setIsPassiveLoopEnabled] = useState(true);
   const [passiveStatus, setPassiveStatus] = useState('idle'); // speaking_hanzi, pause_between, speaking_meaning, pause_next, paused, completed
-  
+
   const passivePlayingRef = useRef(false);
   const passiveSeqIdRef = useRef(0);
   const passiveRateRef = useRef(passiveRate);
@@ -705,11 +702,11 @@ export default function StudyScreen() {
       const pending = JSON.parse(pendingStr);
       if (pending.length === 0) return;
       console.log(`Syncing ${pending.length} offline reviews...`);
-      
+
       for (const review of pending) {
         await dispatch(submitReview({ cardId: review.cardId, rating: review.rating })).unwrap();
       }
-      
+
       localStorage.removeItem('chongzi_pending_reviews');
       setPendingSyncCount(0);
       console.log('Successfully synced offline reviews.');
@@ -736,13 +733,13 @@ export default function StudyScreen() {
   useEffect(() => {
     checkPendingSync();
     const interval = setInterval(checkPendingSync, 3000);
-    
+
     // Register online listener
     window.addEventListener('online', syncOfflineReviews);
     if (navigator.onLine) {
       syncOfflineReviews();
     }
-    
+
     return () => {
       clearInterval(interval);
       window.removeEventListener('online', syncOfflineReviews);
@@ -819,13 +816,13 @@ export default function StudyScreen() {
       try {
         setIsAllCardsLoading(true);
         const deckIdParam = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
-        
+
         // 1. Fetch first 100 cards and total count instantly (takes ~50ms)
         const res = await studyApi.getAllCards(deckIdParam, 100, undefined, currentTopicId);
-        
+
         let initialCards = [];
         let totalCount = 0;
-        
+
         if (res.data && res.data.cards) {
           initialCards = res.data.cards;
           totalCount = res.data.totalCount;
@@ -833,7 +830,7 @@ export default function StudyScreen() {
           initialCards = res.data || [];
           totalCount = initialCards.length;
         }
-        
+
         setAllCards(initialCards);
         setTotalCardsCount(totalCount);
         setItem('chongzi_offline_all_cards', initialCards).catch(e => console.warn(e));
@@ -860,7 +857,7 @@ export default function StudyScreen() {
   useEffect(() => {
     if (studyMode !== 'classic' || selectedDeckId === 'favorites' || !isStudyStarted) return;
     if (isAllCardsLoading) return;
-    
+
     const threshold = activeQueue.length - 20;
     if (currentIndex >= threshold && activeQueue.length < totalCardsCount) {
       const loadNextPage = async () => {
@@ -868,23 +865,23 @@ export default function StudyScreen() {
           setIsAllCardsLoading(true);
           const deckIdParam = selectedDeckId === 'all' ? undefined : Number(selectedDeckId);
           const offset = allCards.length;
-          
+
           const res = await studyApi.getAllCards(deckIdParam, 100, offset, currentTopicId);
-          
+
           let nextCards = [];
           if (res.data && res.data.cards) {
             nextCards = res.data.cards;
           } else {
             nextCards = res.data || [];
           }
-          
+
           if (nextCards.length > 0) {
             setAllCards(prev => {
               const merged = [...prev, ...nextCards];
               setItem('chongzi_offline_all_cards', merged).catch(e => console.warn(e));
               return merged;
             });
-            
+
             setActiveQueue(prev => [...prev, ...nextCards]);
           }
         } catch (e) {
@@ -970,9 +967,9 @@ export default function StudyScreen() {
         deckName: 'Từ vựng yêu thích'
       }));
     }
-    
+
     let list = studyMode === 'srs' ? todayCards : allCards;
-    
+
     if (selectedDeckId !== 'all') {
       list = list.filter((c) => c.deckId === Number(selectedDeckId));
     }
@@ -993,12 +990,12 @@ export default function StudyScreen() {
       prevQueue.map((c) =>
         c.id === cardId
           ? {
-              ...c,
-              exampleHanzi: exampleData.exampleHanzi,
-              examplePinyin: exampleData.examplePinyin,
-              exampleMeaning: exampleData.exampleMeaning,
-              example: `${exampleData.exampleHanzi} (${exampleData.examplePinyin}) - ${exampleData.exampleMeaning}`
-            }
+            ...c,
+            exampleHanzi: exampleData.exampleHanzi,
+            examplePinyin: exampleData.examplePinyin,
+            exampleMeaning: exampleData.exampleMeaning,
+            example: `${exampleData.exampleHanzi} (${exampleData.examplePinyin}) - ${exampleData.exampleMeaning}`
+          }
           : c
       )
     );
@@ -1007,12 +1004,12 @@ export default function StudyScreen() {
       prevCards.map((c) =>
         c.id === cardId
           ? {
-              ...c,
-              exampleHanzi: exampleData.exampleHanzi,
-              examplePinyin: exampleData.examplePinyin,
-              exampleMeaning: exampleData.exampleMeaning,
-              example: `${exampleData.exampleHanzi} (${exampleData.examplePinyin}) - ${exampleData.exampleMeaning}`
-            }
+            ...c,
+            exampleHanzi: exampleData.exampleHanzi,
+            examplePinyin: exampleData.examplePinyin,
+            exampleMeaning: exampleData.exampleMeaning,
+            example: `${exampleData.exampleHanzi} (${exampleData.examplePinyin}) - ${exampleData.exampleMeaning}`
+          }
           : c
       )
     );
@@ -1067,7 +1064,7 @@ export default function StudyScreen() {
 
   const runPassiveLoop = async (index, queue = activeQueueRef.current) => {
     const seqId = ++passiveSeqIdRef.current;
-    
+
     const checkState = () => {
       return seqId === passiveSeqIdRef.current && passivePlayingRef.current;
     };
@@ -1090,7 +1087,7 @@ export default function StudyScreen() {
     if (!card) return;
 
     setCurrentIndex(index);
-    
+
     try {
       // Step 1: Speak Hanzi
       if (!checkState()) return;
@@ -1098,7 +1095,7 @@ export default function StudyScreen() {
       const cardDeck = decks.find(d => d.id === card.deckId);
       const cardLang = cardDeck?.language === 'EN' ? 'en-US' : 'zh-CN';
       await speakUtterance(card.hanzi, cardLang, passiveRateRef.current);
-      
+
       // Step 2: Pause 1.5 seconds
       if (!checkState()) return;
       setPassiveStatus('pause_between');
@@ -1141,7 +1138,7 @@ export default function StudyScreen() {
     setIsPassiveStarted(true);
     setIsPassivePlaying(true);
     passivePlayingRef.current = true;
-    
+
     setTimeout(() => {
       runPassiveLoop(0, cardsToStudy);
     }, 100);
@@ -1166,7 +1163,7 @@ export default function StudyScreen() {
     passiveSeqIdRef.current++;
     const nextIdx = (currentIndex + 1) % activeQueue.length;
     setCurrentIndex(nextIdx);
-    
+
     if (isPassivePlaying) {
       runPassiveLoop(nextIdx);
     } else {
@@ -1179,7 +1176,7 @@ export default function StudyScreen() {
     passiveSeqIdRef.current++;
     const prevIdx = (currentIndex - 1 + activeQueue.length) % activeQueue.length;
     setCurrentIndex(prevIdx);
-    
+
     if (isPassivePlaying) {
       runPassiveLoop(prevIdx);
     } else {
@@ -1243,7 +1240,7 @@ export default function StudyScreen() {
           console.log('Saved review offline:', currentCard.id, rating);
         }
       }
-      
+
       // Move next
       setIsFlipped(false);
       if (currentIndex < activeQueue.length - 1) {
@@ -1401,20 +1398,20 @@ export default function StudyScreen() {
 
         {/* Main Content Area: Responsive Grid (Side-by-side on desktop, vertical on mobile) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-4">
-          
+
           {/* Left Column (5 cols): Flashcard, SRS Ratings, and Navigation */}
           <div className="lg:col-span-5 flex flex-col items-center space-y-6 w-full">
             {currentCard ? (
               <div className="relative w-full max-w-xl mx-auto flex-shrink-0 mb-2">
-                <Flashcard 
-                  cardData={currentCard} 
-                  isFlipped={isFlipped} 
-                  onFlip={handleFlip} 
+                <Flashcard
+                  cardData={currentCard}
+                  isFlipped={isFlipped}
+                  onFlip={handleFlip}
                   frontFaceMode={frontFaceMode}
                   showPinyinOnFront={showPinyinOnFront}
                   onTogglePinyinOnFront={() => setShowPinyinOnFront((prev) => !prev)}
                 />
-                
+
                 <button
                   type="button"
                   onClick={(e) => {
@@ -1428,11 +1425,10 @@ export default function StudyScreen() {
                       currentCard.exampleMeaning
                     );
                   }}
-                  className={`absolute top-5 left-5 z-30 p-2 rounded-full border transition-all cursor-pointer ${
-                    isFavorite(currentCard.hanzi)
+                  className={`absolute top-5 left-5 z-30 p-2 rounded-full border transition-all cursor-pointer ${isFavorite(currentCard.hanzi)
                       ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
                       : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
-                  }`}
+                    }`}
                   title={isFavorite(currentCard.hanzi) ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
                 >
                   <Star size={16} fill={isFavorite(currentCard.hanzi) ? 'currentColor' : 'none'} />
@@ -1468,7 +1464,7 @@ export default function StudyScreen() {
                 <ArrowLeft size={14} />
                 Quay lại
               </button>
-              
+
               <button
                 type="button"
                 onClick={studyMode === 'srs' ? handleSkip : handleNextClassic}
@@ -1484,18 +1480,17 @@ export default function StudyScreen() {
           <div className="lg:col-span-7 w-full space-y-6">
             {currentCard && isFlipped ? (
               <div className="w-full space-y-6 bg-surface-card dark:bg-surface-dark/20 border border-hairline dark:border-divider-dark rounded-xl p-6 shadow-sm">
-                
+
                 {/* Practice Mode Toggle Buttons */}
                 <div className="flex gap-4 w-full">
                   {!isEnglish && (
                     <button
                       type="button"
                       onClick={() => setShowWriting((prev) => !prev)}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 border rounded-full transition-all cursor-pointer text-xs font-mono font-bold shadow-sm ${
-                        showWriting
+                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 border rounded-full transition-all cursor-pointer text-xs font-mono font-bold shadow-sm ${showWriting
                           ? 'bg-primary text-white border-transparent'
                           : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-                      }`}
+                        }`}
                     >
                       ✍️ {showWriting ? 'Ẩn luyện viết' : 'Luyện viết'}
                     </button>
@@ -1503,11 +1498,10 @@ export default function StudyScreen() {
                   <button
                     type="button"
                     onClick={() => setShowSpeaking((prev) => !prev)}
-                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 border rounded-full transition-all cursor-pointer text-xs font-mono font-bold shadow-sm ${
-                      showSpeaking
+                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 border rounded-full transition-all cursor-pointer text-xs font-mono font-bold shadow-sm ${showSpeaking
                         ? 'bg-primary text-white border-transparent'
                         : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-                    }`}
+                      }`}
                   >
                     🎙️ {showSpeaking ? 'Ẩn luyện nói' : 'Luyện nói'}
                   </button>
@@ -1528,10 +1522,10 @@ export default function StudyScreen() {
 
                 {/* AI Example Sentence Generator & Reader */}
                 <div className="w-full">
-                  <AIExampleBox 
-                    card={currentCard} 
-                    onExampleUpdated={handleExampleUpdated} 
-                    lang={isEnglish ? 'en-US' : 'zh-CN'} 
+                  <AIExampleBox
+                    card={currentCard}
+                    onExampleUpdated={handleExampleUpdated}
+                    lang={isEnglish ? 'en-US' : 'zh-CN'}
                     aiLimit={aiLimit}
                     loadAiLimit={loadAiLimit}
                   />
@@ -1690,12 +1684,10 @@ export default function StudyScreen() {
   // Study Configurator View (Default)
   return (
     <div className="max-w-4xl mx-auto space-y-8 p-6 pb-32">
-      
+
       {/* Brand & Title Header */}
       <div className="flex flex-col md:flex-row md:items-center gap-4">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-sm shrink-0">
-          <BlossomIcon className="h-8 w-8" />
-        </div>
+
         <div>
           <h1 className="font-display text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight flex items-center gap-2">
             <span>Flashcard Study</span>
@@ -1777,24 +1769,22 @@ export default function StudyScreen() {
                 setStudyMode('srs');
               }
             }}
-            className={`p-6 rounded-xl border-2 transition-all text-left flex items-start gap-4 hover:shadow-md relative select-none outline-none focus:ring-2 focus:ring-primary/50 ${
-              selectedDeckId === 'favorites'
+            className={`p-6 rounded-xl border-2 transition-all text-left flex items-start gap-4 hover:shadow-md relative select-none outline-none focus:ring-2 focus:ring-primary/50 ${selectedDeckId === 'favorites'
                 ? 'opacity-40 cursor-not-allowed bg-surface-card border-hairline dark:bg-surface-dark text-ink dark:text-on-dark'
                 : studyMode === 'srs'
                   ? 'bg-surface-card dark:bg-surface-dark border-primary shadow-lg shadow-primary/15 scale-[1.01] cursor-pointer'
                   : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark cursor-pointer'
-            }`}
+              }`}
           >
             {studyMode === 'srs' && selectedDeckId !== 'favorites' && (
               <div className="absolute top-4 right-4 text-primary animate-in fade-in zoom-in-75 duration-200">
                 <CheckCircle size={20} className="fill-primary/10" />
               </div>
             )}
-            <div className={`p-3 rounded-full ${
-              studyMode === 'srs' 
-                ? 'bg-primary/10 text-primary' 
+            <div className={`p-3 rounded-full ${studyMode === 'srs'
+                ? 'bg-primary/10 text-primary'
                 : 'bg-surface-bone dark:bg-black/35 text-mute dark:text-on-dark-mute'
-            }`}>
+              }`}>
               <Clock size={24} />
             </div>
             <div>
@@ -1803,11 +1793,10 @@ export default function StudyScreen() {
                 {t('study.srs_desc')}
               </p>
               <div className="flex flex-wrap items-center gap-2 mt-3">
-                <div className={`inline-flex items-center px-2.5 py-1 text-[10px] font-mono font-bold rounded-full uppercase ${
-                  studyMode === 'srs'
+                <div className={`inline-flex items-center px-2.5 py-1 text-[10px] font-mono font-bold rounded-full uppercase ${studyMode === 'srs'
                     ? 'bg-primary/15 text-primary'
                     : 'bg-surface-bone text-mute dark:bg-black/30 dark:text-on-dark-mute'
-                }`}>
+                  }`}>
                   {t('study.due_today', { count: srsDueCount })}
                 </div>
 
@@ -1819,11 +1808,10 @@ export default function StudyScreen() {
                         e.stopPropagation();
                         handleLoadExtraCards(10);
                       }}
-                      className={`px-2 py-0.5 text-[9px] font-mono font-bold rounded shadow-sm border transition-all cursor-pointer ${
-                        studyMode === 'srs'
+                      className={`px-2 py-0.5 text-[9px] font-mono font-bold rounded shadow-sm border transition-all cursor-pointer ${studyMode === 'srs'
                           ? 'bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-semibold'
                           : 'bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-semibold'
-                      }`}
+                        }`}
                       title={t('study.load_extra_title_10', 'Nạp thêm 10 từ mới để học')}
                     >
                       {t('study.extra_words', { count: 10 })}
@@ -1834,11 +1822,10 @@ export default function StudyScreen() {
                         e.stopPropagation();
                         handleLoadExtraCards(20);
                       }}
-                      className={`px-2 py-0.5 text-[9px] font-mono font-bold rounded shadow-sm border transition-all cursor-pointer ${
-                        studyMode === 'srs'
+                      className={`px-2 py-0.5 text-[9px] font-mono font-bold rounded shadow-sm border transition-all cursor-pointer ${studyMode === 'srs'
                           ? 'bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-semibold'
                           : 'bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-semibold'
-                      }`}
+                        }`}
                       title={t('study.load_extra_title_20', 'Nạp thêm 20 từ mới để học')}
                     >
                       {t('study.extra_words', { count: 20 })}
@@ -1860,22 +1847,20 @@ export default function StudyScreen() {
                 setStudyMode('classic');
               }
             }}
-            className={`p-6 rounded-xl border-2 transition-all text-left flex items-start gap-4 hover:shadow-md relative select-none outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer ${
-              studyMode === 'classic'
+            className={`p-6 rounded-xl border-2 transition-all text-left flex items-start gap-4 hover:shadow-md relative select-none outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer ${studyMode === 'classic'
                 ? 'bg-surface-card dark:bg-surface-dark border-primary shadow-lg shadow-primary/15 scale-[1.01]'
                 : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-            }`}
+              }`}
           >
             {studyMode === 'classic' && (
               <div className="absolute top-4 right-4 text-primary animate-in fade-in zoom-in-75 duration-200">
                 <CheckCircle size={20} className="fill-primary/10" />
               </div>
             )}
-            <div className={`p-3 rounded-full ${
-              studyMode === 'classic' 
-                ? 'bg-primary/10 text-primary' 
+            <div className={`p-3 rounded-full ${studyMode === 'classic'
+                ? 'bg-primary/10 text-primary'
                 : 'bg-surface-bone dark:bg-black/35 text-mute dark:text-on-dark-mute'
-            }`}>
+              }`}>
               <Layers size={24} />
             </div>
             <div>
@@ -1883,11 +1868,10 @@ export default function StudyScreen() {
               <p className="text-xs mt-1 leading-5 text-mute dark:text-on-dark-mute">
                 {t('study.classic_desc')}
               </p>
-              <div className={`mt-3 inline-flex items-center px-2.5 py-1 text-[10px] font-mono font-bold rounded-full uppercase ${
-                studyMode === 'classic'
+              <div className={`mt-3 inline-flex items-center px-2.5 py-1 text-[10px] font-mono font-bold rounded-full uppercase ${studyMode === 'classic'
                   ? 'bg-primary/15 text-primary'
                   : 'bg-surface-bone text-mute dark:bg-black/30 dark:text-on-dark-mute'
-              }`}>
+                }`}>
                 {t('study.free_order')}
               </div>
             </div>
@@ -1901,21 +1885,19 @@ export default function StudyScreen() {
         <div className="flex flex-wrap gap-4">
           <button
             onClick={() => setFrontFaceMode('hanzi')}
-            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${
-              frontFaceMode === 'hanzi'
+            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${frontFaceMode === 'hanzi'
                 ? 'bg-primary border-transparent text-white shadow-sm'
                 : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-            }`}
+              }`}
           >
             {t('study.show_hanzi_first')}
           </button>
           <button
             onClick={() => setFrontFaceMode('meaning')}
-            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${
-              frontFaceMode === 'meaning'
+            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${frontFaceMode === 'meaning'
                 ? 'bg-primary border-transparent text-white shadow-sm'
                 : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-            }`}
+              }`}
           >
             {t('study.show_meaning_first')}
           </button>
@@ -1928,31 +1910,28 @@ export default function StudyScreen() {
         <div className="flex flex-wrap gap-4">
           <button
             onClick={() => handleUpdateTtsTrigger('change')}
-            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${
-              ttsTrigger === 'change'
+            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${ttsTrigger === 'change'
                 ? 'bg-primary border-transparent text-white shadow-sm'
                 : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-            }`}
+              }`}
           >
             Chuyển thẻ là phát âm ngay
           </button>
           <button
             onClick={() => handleUpdateTtsTrigger('flip')}
-            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${
-              ttsTrigger === 'flip'
+            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${ttsTrigger === 'flip'
                 ? 'bg-primary border-transparent text-white shadow-sm'
                 : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-            }`}
+              }`}
           >
             Lật thẻ mới phát âm
           </button>
           <button
             onClick={() => handleUpdateTtsTrigger('none')}
-            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${
-              ttsTrigger === 'none'
+            className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold cursor-pointer transition-all border ${ttsTrigger === 'none'
                 ? 'bg-primary border-transparent text-white shadow-sm'
                 : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-ink dark:text-on-dark'
-            }`}
+              }`}
           >
             Tắt phát âm tự động
           </button>
@@ -1993,7 +1972,7 @@ export default function StudyScreen() {
             >
               <span>🎧 Nghe thụ động</span>
             </button>
-            
+
             <button
               onClick={handleStartStudy}
               className="px-6 py-3 bg-primary hover:bg-primary-deep text-white font-mono font-bold rounded-full transition-all shadow-sm cursor-pointer flex items-center gap-2"

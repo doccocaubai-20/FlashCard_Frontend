@@ -54,9 +54,14 @@ export default function DeckDetailScreen() {
   const { id } = useParams();
   const currentDeck = useSelector((state) => state.deck.currentDeck);
   const flashcards = useSelector((state) => state.deck.flashcards);
+  const totalCount = useSelector((state) => state.deck.totalCount);
   const fileInputRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
+  const [cardsLoading, setCardsLoading] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const LIMIT = 50;
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [virtualDeck, setVirtualDeck] = useState(null);
   const [virtualCards, setVirtualCards] = useState([]);
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
@@ -118,15 +123,27 @@ export default function DeckDetailScreen() {
     }
   };
 
+  // Search debouncing effect
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 400);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery]);
+
   useEffect(() => {
     setLoading(true);
     setSavedParagraphs([]);
     setSelectedTopicId(null);
+    setSearchQuery('');
 
     if (isVirtual) {
       setVirtualDeck({
         title: 'Từ vựng yêu thích',
-        description: 'Tất cả các từ vựng bạn đã đánh dấu sao khi tra cứu từ điển hoặc trong khi học.',
+        description: 'Tập hợp tất cả các từ vựng bạn đã đánh dấu sao khi tra cứu từ điển hoặc trong khi học.',
         createdAt: new Date().toISOString(),
       });
       favoriteWordsApi.getFavorites()
@@ -145,16 +162,15 @@ export default function DeckDetailScreen() {
         });
     } else if (id) {
       dispatch(clearCurrentDeck());
-      
+
       const fetchDeckPromise = dispatch(fetchDeckDetails(id)).unwrap();
-      const fetchCardsPromise = dispatch(fetchFlashcardsByDeck(id)).unwrap();
       const fetchParagraphsPromise = deckApi.getSavedParagraphs(id)
         .then((res) => {
           setSavedParagraphs(res.data || []);
         })
         .catch((err) => console.error('Failed to fetch saved paragraphs:', err));
 
-      Promise.all([fetchDeckPromise, fetchCardsPromise, fetchParagraphsPromise])
+      Promise.all([fetchDeckPromise, fetchParagraphsPromise])
         .then(() => {
           setLoading(false);
         })
@@ -164,6 +180,40 @@ export default function DeckDetailScreen() {
         });
     }
   }, [dispatch, id, isVirtual]);
+
+  // Reset offset to 0 when search queries or topics change
+  useEffect(() => {
+    setOffset(0);
+  }, [selectedTopicId, debouncedSearch]);
+
+  // Load flashcards when deck, filters or offset changes
+  useEffect(() => {
+    if (isVirtual) return;
+    if (!id) return;
+
+    setCardsLoading(true);
+
+    dispatch(fetchFlashcardsByDeck({
+      deckId: id,
+      limit: LIMIT,
+      offset: offset,
+      topicId: selectedTopicId || undefined,
+      search: debouncedSearch || undefined,
+    }))
+      .unwrap()
+      .then(() => setCardsLoading(false))
+      .catch((err) => {
+        console.error(err);
+        setCardsLoading(false);
+      });
+  }, [dispatch, id, isVirtual, selectedTopicId, debouncedSearch, offset]);
+
+  // Keep pageInput synchronized with current page number
+  const [pageInput, setPageInput] = useState('1');
+  useEffect(() => {
+    const pageNum = Math.floor(offset / LIMIT) + 1;
+    setPageInput(pageNum.toString());
+  }, [offset]);
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -198,7 +248,7 @@ export default function DeckDetailScreen() {
       }
     };
     reader.readAsText(file);
-    event.target.value = ''; // Reset input
+    event.target.value = '';
   };
 
 
@@ -206,17 +256,17 @@ export default function DeckDetailScreen() {
   const displayDeck = isVirtual ? virtualDeck : currentDeck;
   const displayCards = isVirtual ? virtualCards : flashcards;
 
-  // Get unique topics in displayCards
-  const availableTopics = [
-    ...new Set(
-      (displayCards || [])
-        .map((card) => {
-          const details = getCardDetails(card);
-          return details.topicId;
-        })
-        .filter((topicId) => !!topicId && TOPICS[topicId])
-    )
-  ].sort((a, b) => a - b);
+  const availableTopics = isVirtual
+    ? [
+      ...new Set(
+        (virtualCards || [])
+          .map((card) => getCardDetails(card).topicId)
+          .filter((topicId) => !!topicId && TOPICS[topicId])
+      )
+    ].sort((a, b) => a - b)
+    : (displayDeck?.topicIds || []);
+
+  const totalPages = Math.ceil((isVirtual ? virtualCards.length : totalCount) / LIMIT) || 1;
 
   const canDelete = isVirtual || (displayDeck && (!displayDeck.isSystem || user?.role === 'ADMIN'));
 
@@ -329,7 +379,7 @@ export default function DeckDetailScreen() {
               {displayDeck?.title || displayDeck?.name || 'Chi tiết bộ bài'}
             </h1>
             <p className="mt-2 text-sm text-body dark:text-on-dark-mute">{displayDeck?.description || 'Xem lại các thẻ bài và nhập thêm nếu cần thiết.'}</p>
-            
+
             <div className="mt-4 flex flex-wrap items-center gap-2.5 text-xs font-semibold text-mute dark:text-on-dark-mute">
               <div className="flex items-center gap-1.5 bg-surface-bone dark:bg-white/5 border border-hairline dark:border-white/5 rounded-full px-3 py-1.5 shadow-xs">
                 <span className="text-body dark:text-on-dark/60 font-medium">Số lượng:</span>
@@ -337,7 +387,7 @@ export default function DeckDetailScreen() {
                   {loading ? (
                     <span className="inline-block bg-surface-bone dark:bg-surface-dark/60 h-3.5 w-10 rounded animate-pulse"></span>
                   ) : (
-                    `${displayCards?.length ?? 0} thẻ`
+                    `${isVirtual ? virtualCards.length : totalCount} thẻ`
                   )}
                 </span>
               </div>
@@ -353,83 +403,86 @@ export default function DeckDetailScreen() {
               )}
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept=".json"
-              style={{ display: 'none' }}
-            />
-            {!isVirtual && (
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5"
-                >
-                  <Upload className="w-4 h-4" />
-                  Nhập file JSON
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setIsHelpModalOpen(true)}
-                  className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-mute hover:text-ink dark:hover:text-on-dark w-9 h-9 flex items-center justify-center text-sm font-semibold transition cursor-pointer active:scale-95 shadow-sm"
-                  title="Hướng dẫn cấu trúc file JSON"
-                >
-                  ❓
-                </button>
-              </div>
-            )}
-            {!isVirtual && (
-              <button
-                type="button"
-                onClick={() => navigate(`/decks/${id}/game`)}
-                className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
-              >
-                Chơi Game
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={() => navigate(`/decks/${id}/quiz`)}
-              className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
-            >
-              Trắc nghiệm
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate(`/decks/${id}/dictation`)}
-              className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
-            >
-              Nghe viết
-            </button>
-            {!isVirtual && (
-              <button
-                type="button"
-                onClick={() => setIsAiParagraphModalOpen(true)}
-                className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
-              >
-                Đoạn văn AI
-              </button>
-            )}
-            {!isVirtual && (
-              <button
-                type="button"
-                onClick={() => navigate(`/flashcards/new?deckId=${id}`)}
-                className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-sm"
-              >
-                <Plus className="w-4 h-4 text-primary" />
-                Thêm thẻ
-              </button>
-            )}
+          {/* Action Buttons Panel */}
+          <div className="mt-6 w-full flex flex-col gap-4">
+            {/* Primary Study Action */}
             <button
               type="button"
               onClick={() => navigate(`/study?deckId=${id}${selectedTopicId ? `&topicId=${selectedTopicId}` : ''}`)}
-              className="rounded-full bg-primary hover:bg-primary-deep text-white px-5 py-2.5 text-sm font-bold shadow-sm hover:shadow-md transition cursor-pointer active:scale-95"
+              className="w-full rounded-xl bg-primary hover:bg-primary-deep text-white py-3.5 text-sm font-bold shadow-md hover:shadow-lg transition cursor-pointer active:scale-95 flex items-center justify-center gap-2"
             >
               Học ngay
             </button>
+
+            {/* Study & Game Modes Grid (2 columns on mobile, flex-wrap on desktop) */}
+            <div className="grid grid-cols-2 md:flex md:flex-wrap items-center gap-3 w-full">
+              {!isVirtual && (
+                <button
+                  type="button"
+                  onClick={() => navigate(`/decks/${id}/game`)}
+                  className="rounded-xl md:rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs"
+                >
+                  Chơi Game
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => navigate(`/decks/${id}/quiz`)}
+                className="rounded-xl md:rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs"
+              >
+                Trắc nghiệm
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate(`/decks/${id}/dictation`)}
+                className="rounded-xl md:rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs"
+              >
+                Nghe viết
+              </button>
+              {!isVirtual && (
+                <button
+                  type="button"
+                  onClick={() => setIsAiParagraphModalOpen(true)}
+                  className="rounded-xl md:rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2.5 text-sm font-semibold transition cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 shadow-xs"
+                >
+                  Đoạn văn AI
+                </button>
+              )}
+            </div>
+
+            {/* Utilities Row (File Imports, Manual Card Creation) */}
+            <div className="flex flex-wrap items-center gap-3 border-t border-hairline dark:border-divider-dark/30 pt-4 w-full">
+              {!isVirtual && (
+                <button
+                  type="button"
+                  onClick={() => navigate(`/flashcards/new?deckId=${id}`)}
+                  className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2 text-xs font-bold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-xs"
+                >
+                  <Plus className="w-3.5 h-3.5 text-primary" />
+                  Thêm thẻ
+                </button>
+              )}
+              {!isVirtual && (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-ink dark:text-on-dark px-4 py-2 text-xs font-bold transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-xs"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    Nhập file JSON
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsHelpModalOpen(true)}
+                    className="rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-mute hover:text-ink dark:hover:text-on-dark w-8 h-8 flex items-center justify-center text-xs font-bold transition cursor-pointer active:scale-95 shadow-xs"
+                    title="Hướng dẫn cấu trúc file JSON"
+                  >
+                    ❓
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -437,8 +490,7 @@ export default function DeckDetailScreen() {
           <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/30 p-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <h2 className="text-base font-bold text-ink dark:text-on-dark font-display tracking-tight shrink-0">Danh sách thẻ bài</h2>
-              
-              {/* Search input field */}
+
               <div className="relative flex-1 max-w-md w-full sm:ml-auto">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-mute dark:text-on-dark-mute w-4 h-4" />
                 <input
@@ -460,73 +512,55 @@ export default function DeckDetailScreen() {
               </div>
             </div>
 
-            {/* Topic Filter Bar */}
-            {loading ? (
-              <div className="mt-4 pb-2 flex items-center gap-2 overflow-x-auto scrollbar-thin select-none border-b border-hairline dark:border-divider-dark/30 animate-pulse">
+            {availableTopics.length > 0 && (
+              <div className="mt-4 pb-2 flex items-center gap-2 overflow-x-auto scrollbar-thin select-none border-b border-hairline dark:border-divider-dark/30">
                 <span className="text-xs font-extrabold text-mute shrink-0 mr-1">Chủ đề:</span>
-                <div className="h-6 bg-surface-bone dark:bg-surface-dark/60 rounded-full w-16 shrink-0" />
-                <div className="h-6 bg-surface-bone dark:bg-surface-dark/60 rounded-full w-24 shrink-0" />
-                <div className="h-6 bg-surface-bone dark:bg-surface-dark/60 rounded-full w-20 shrink-0" />
-              </div>
-            ) : (
-              availableTopics.length > 0 && (
-                <div className="mt-4 pb-2 flex items-center gap-2 overflow-x-auto scrollbar-thin select-none border-b border-hairline dark:border-divider-dark/30">
-                  <span className="text-xs font-extrabold text-mute shrink-0 mr-1">Chủ đề:</span>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedTopicId(null)}
-                    className={`rounded-full px-3 py-1.5 text-xs font-bold transition-all cursor-pointer border active:scale-95 shrink-0 ${
-                      selectedTopicId === null
+                <button
+                  type="button"
+                  onClick={() => setSelectedTopicId(null)}
+                  className={`rounded-full px-3 py-1.5 text-xs font-bold transition-all cursor-pointer border active:scale-95 shrink-0 ${selectedTopicId === null
+                    ? 'bg-primary text-white border-primary shadow-xs'
+                    : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-mute border-hairline hover:border-primary/20'
+                    }`}
+                >
+                  Tất cả ({isVirtual ? virtualCards.length : (displayDeck?.cardsCount || 0)})
+                </button>
+                {availableTopics.map((topicId) => {
+                  const topic = TOPICS[topicId];
+                  const displayLabel = isVirtual
+                    ? `${topic.name} (${virtualCards.filter(c => Number(getCardDetails(c).topicId) === Number(topicId)).length})`
+                    : `${topic.name} (${displayDeck?.topicCounts?.[topicId] || 0})`;
+                  return (
+                    <button
+                      key={topicId}
+                      type="button"
+                      onClick={() => setSelectedTopicId(topicId)}
+                      className={`rounded-full px-3 py-1.5 text-xs font-bold transition-all cursor-pointer border active:scale-95 shrink-0 ${selectedTopicId === topicId
                         ? 'bg-primary text-white border-primary shadow-xs'
                         : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-mute border-hairline hover:border-primary/20'
-                    }`}
-                  >
-                    Tất cả ({displayCards.length})
-                  </button>
-                  {availableTopics.map((topicId) => {
-                    const topic = TOPICS[topicId];
-                    const topicCount = displayCards.filter(
-                      (c) => Number(getCardDetails(c).topicId) === Number(topicId)
-                    ).length;
-                    return (
-                      <button
-                        key={topicId}
-                        type="button"
-                        onClick={() => setSelectedTopicId(topicId)}
-                        className={`rounded-full px-3 py-1.5 text-xs font-bold transition-all cursor-pointer border active:scale-95 shrink-0 ${
-                          selectedTopicId === topicId
-                            ? 'bg-primary text-white border-primary shadow-xs'
-                            : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-mute border-hairline hover:border-primary/20'
                         }`}
-                      >
-                        {topic.name} ({topicCount})
-                      </button>
-                    );
-                  })}
-                </div>
-              )
+                    >
+                      {displayLabel}
+                    </button>
+                  );
+                })}
+              </div>
             )}
 
             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 pr-2 max-h-[650px] overflow-y-auto pt-1">
-              {loading ? (
-                // Pulse loading skeletons for cards
+              {cardsLoading && offset === 0 ? (
                 [1, 2, 3, 4, 5, 6].map((i) => (
                   <div
                     key={i}
                     className="bg-surface-bone/30 dark:bg-surface-dark/10 border border-hairline dark:border-divider-dark/50 p-4 rounded-xl flex gap-3 shadow-xs justify-between items-start animate-pulse"
                   >
                     <div className="flex gap-3 min-w-0 w-full">
-                      {/* Audio speaker circle placeholder */}
                       <div className="h-8 w-8 rounded-full bg-surface-bone dark:bg-surface-dark/60 shrink-0" />
-                      
                       <div className="space-y-3 min-w-0 w-full flex-1">
                         <div className="flex flex-wrap items-baseline gap-2">
-                          {/* Word Hanzi placeholder */}
                           <div className="h-5 bg-surface-bone dark:bg-surface-dark/60 rounded w-1/4" />
-                          {/* Pinyin placeholder */}
                           <div className="h-4 bg-surface-bone dark:bg-surface-dark/60 rounded w-1/5" />
                         </div>
-                        {/* Meaning placeholder */}
                         <div className="h-4 bg-surface-bone dark:bg-surface-dark/60 rounded w-2/3" />
                       </div>
                     </div>
@@ -534,35 +568,36 @@ export default function DeckDetailScreen() {
                 ))
               ) : displayCards?.length > 0 ? (
                 (() => {
-                  const filteredCards = displayCards.filter(card => {
-                    const { word, pinyin, meaning, sinoVietnamese, topicId } = getCardDetails(card);
-                    
-                    // Filter by topic
-                    if (selectedTopicId !== null && Number(topicId) !== Number(selectedTopicId)) {
-                      return false;
-                    }
+                  const filteredCards = isVirtual
+                    ? displayCards.filter(card => {
+                      const { word, pinyin, meaning, sinoVietnamese, topicId } = getCardDetails(card);
 
-                    const q = removeDiacritics(searchQuery).trim();
-                    if (!q) return true;
+                      if (selectedTopicId !== null && Number(topicId) !== Number(selectedTopicId)) {
+                        return false;
+                      }
 
-                    const cleanWord = removeDiacritics(word);
-                    const cleanPinyin = removeDiacritics(pinyin);
-                    const cleanMeaning = removeDiacritics(meaning);
-                    const cleanSino = removeDiacritics(sinoVietnamese);
+                      const q = removeDiacritics(searchQuery).trim();
+                      if (!q) return true;
 
-                    return (
-                      cleanWord.includes(q) ||
-                      cleanPinyin.includes(q) ||
-                      cleanMeaning.includes(q) ||
-                      cleanSino.includes(q)
-                    );
-                  });
+                      const cleanWord = removeDiacritics(word);
+                      const cleanPinyin = removeDiacritics(pinyin);
+                      const cleanMeaning = removeDiacritics(meaning);
+                      const cleanSino = removeDiacritics(sinoVietnamese);
+
+                      return (
+                        cleanWord.includes(q) ||
+                        cleanPinyin.includes(q) ||
+                        cleanMeaning.includes(q) ||
+                        cleanSino.includes(q)
+                      );
+                    })
+                    : displayCards;
 
                   if (filteredCards.length === 0) {
                     const topicText = selectedTopicId ? `trong chủ đề "${TOPICS[selectedTopicId]?.name}" ` : '';
                     return (
                       <div className="rounded-md border border-dashed border-hairline dark:border-divider-dark bg-surface-bone/30 dark:bg-surface-dark/20 p-5 text-sm text-mute dark:text-on-dark-mute text-center col-span-full py-8">
-                        {searchQuery 
+                        {searchQuery
                           ? `Không tìm thấy thẻ từ vựng nào ${topicText}khớp với từ khóa "${searchQuery}".`
                           : `Không có thẻ từ vựng nào ${topicText}trong bộ bài này.`
                         }
@@ -573,14 +608,13 @@ export default function DeckDetailScreen() {
                   return filteredCards.map((card) => {
                     const { word, pinyin, meaning, sinoVietnamese, exampleHanzi, exampleMeaning, topicId } = getCardDetails(card);
                     const isEnglish = displayDeck?.language === 'EN';
-                    
+
                     return (
                       <div
                         key={card.id || card.front}
                         className="bg-surface-bone/50 dark:bg-surface-dark/20 border border-hairline dark:border-divider-dark p-4 rounded-xl flex gap-3 shadow-xs justify-between group hover:border-primary/30 transition-colors relative"
                       >
                         <div className="flex gap-3 min-w-0">
-                          {/* Audio speaker button */}
                           <button
                             type="button"
                             onClick={() => speakChinese(word, isEnglish ? 'en-US' : 'zh-CN')}
@@ -589,51 +623,41 @@ export default function DeckDetailScreen() {
                           >
                             <Volume2 size={13} />
                           </button>
-                          
+
                           <div className="space-y-2 min-w-0">
                             <div className="flex flex-wrap items-baseline gap-2">
-                              {/* Word in Hanzi styled */}
                               <span className="font-display font-extrabold text-lg text-ink dark:text-on-dark leading-tight">
                                 <HoverableText text={word} />
                               </span>
-                              
-                              {/* Pinyin/IPA */}
                               {pinyin && (
                                 <span className="text-sm font-mono font-bold text-primary">{pinyin}</span>
                               )}
-                              
-                              {/* Sino-Vietnamese (Hán Việt) */}
                               {!isEnglish && sinoVietnamese && (
                                 <span className="text-[10px] font-extrabold text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800/80 px-1.5 py-0.5 rounded-sm uppercase tracking-wider select-none" title="Hán Việt">
                                   {sinoVietnamese}
                                 </span>
                               )}
-
-                              {/* Topic Pill */}
                               {topicId && TOPICS[topicId] && (
                                 <span className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-md border ${TOPICS[topicId].color}`} title="Chủ đề từ vựng">
                                   🏷️ {TOPICS[topicId].name}
                                 </span>
                               )}
                             </div>
-                            
-                            {/* Meaning */}
-                            <p className="text-sm font-bold text-body dark:text-on-dark-mute leading-relaxed">{meaning}</p>
-                            
-                            {/* Example sentences */}
+
+                            <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed">
+                              {meaning}
+                            </p>
+
                             {exampleHanzi && (
-                              <div className="border-l-2 border-primary/30 pl-2.5 mt-2 py-0.5 space-y-1">
-                                <p className="text-[13.5px] md:text-sm font-semibold text-mute dark:text-on-dark-mute leading-relaxed">{exampleHanzi}</p>
-                                {exampleMeaning && (
-                                  <p className="text-xs text-mute/80 dark:text-on-dark-mute/70 leading-relaxed">{exampleMeaning}</p>
-                                )}
-                              </div>
+                              <p className="text-[10.5px] leading-relaxed text-mute dark:text-on-dark-mute border-l-2 border-primary/20 pl-2 mt-1">
+                                <span className="text-ink dark:text-on-dark font-medium">{exampleHanzi}</span>
+                                {exampleMeaning && <span className="text-mute block sm:inline sm:ml-1">— {exampleMeaning}</span>}
+                              </p>
                             )}
                           </div>
                         </div>
-                        
-                        {/* Action buttons (pencil, trash) visible on hover */}
-                        <div className="flex flex-col items-center gap-1.5 self-start opacity-0 group-hover:opacity-100 transition-opacity">
+
+                        <div className="flex flex-col gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                           {canEdit && (
                             <button
                               type="button"
@@ -665,11 +689,83 @@ export default function DeckDetailScreen() {
                 </div>
               )}
             </div>
+
+            {/* Pagination Controls */}
+            {!isVirtual && totalPages > 1 && (
+              <div className="mt-6 flex items-center justify-center gap-2 sm:gap-4 pb-6 select-none">
+                {/* Prev Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (offset > 0) {
+                      const nextOffset = offset - LIMIT;
+                      setOffset(nextOffset);
+                      const listEl = document.querySelector('.max-h-\\[650px\\]');
+                      if (listEl) listEl.scrollTop = 0;
+                    }
+                  }}
+                  disabled={offset === 0 || cardsLoading}
+                  className="px-3 py-2 sm:px-4 sm:py-2 rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-mute hover:text-ink dark:hover:text-on-dark text-[11px] sm:text-xs font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
+                >
+                  &larr; <span className="hidden sm:inline">Trang</span> trước
+                </button>
+
+                {/* Page Number Manual Input */}
+                <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-bold text-mute shrink-0">
+                  <span className="hidden sm:inline">Trang</span>
+                  <input
+                    type="text"
+                    value={pageInput}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (/^\d*$/.test(val)) {
+                        setPageInput(val);
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.target.blur();
+                      }
+                    }}
+                    onBlur={() => {
+                      let val = parseInt(pageInput, 10);
+                      if (isNaN(val) || val < 1) {
+                        val = 1;
+                      } else if (val > totalPages) {
+                        val = totalPages;
+                      }
+                      setPageInput(val.toString());
+                      setOffset((val - 1) * LIMIT);
+                      const listEl = document.querySelector('.max-h-\\[650px\\]');
+                      if (listEl) listEl.scrollTop = 0;
+                    }}
+                    className="w-10 sm:w-12 px-1.5 py-0.5 sm:py-1 text-center border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark text-ink dark:text-on-dark rounded font-mono font-bold text-[11px] sm:text-xs focus:ring-1 focus:ring-primary outline-none"
+                  />
+                  <span>/ {totalPages}</span>
+                </div>
+
+                {/* Next Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (offset + LIMIT < totalCount) {
+                      const nextOffset = offset + LIMIT;
+                      setOffset(nextOffset);
+                      const listEl = document.querySelector('.max-h-\\[650px\\]');
+                      if (listEl) listEl.scrollTop = 0;
+                    }
+                  }}
+                  disabled={offset + LIMIT >= totalCount || cardsLoading}
+                  className="px-3 py-2 sm:px-4 sm:py-2 rounded-full border border-hairline dark:border-divider-dark bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black text-mute hover:text-ink dark:hover:text-on-dark text-[11px] sm:text-xs font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
+                >
+                  Trang sau &rarr;
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Đoạn văn ôn tập đã lưu */}
       {!isVirtual && savedParagraphs.length > 0 && (
         <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/50 p-6 shadow-sm mt-6">
           <h3 className="text-lg font-bold text-ink dark:text-on-dark font-display flex items-center gap-2">
@@ -736,10 +832,10 @@ function EditFlashcardModal({ card, formData, setFormData, onClose, onSave }) {
             <X size={18} />
           </button>
         </div>
-        
+
         <form onSubmit={onSave}>
           <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto text-sm text-body dark:text-on-dark-mute leading-relaxed font-sans">
-            
+
             {/* Row 1: Hanzi & Pinyin */}
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -788,7 +884,7 @@ function EditFlashcardModal({ card, formData, setFormData, onClose, onSave }) {
               <h4 className="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider">
                 Ví dụ minh họa (Tùy chọn)
               </h4>
-              
+
               <div>
                 <label className="block text-xs font-semibold text-mute mb-1">
                   Hán tự ví dụ
@@ -828,7 +924,7 @@ function EditFlashcardModal({ card, formData, setFormData, onClose, onSave }) {
             </div>
 
           </div>
-          
+
           <div className="px-6 py-4 border-t border-hairline dark:border-divider-dark flex justify-end gap-3">
             <button
               type="button"

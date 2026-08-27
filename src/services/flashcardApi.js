@@ -1,7 +1,7 @@
 import api from './api';
 
 export const flashcardApi = {
-    getByDeck: (deckId) => api.get(`/api/decks/${deckId}/flashcards`),
+    getByDeck: (deckId, params) => api.get(`/api/decks/${deckId}/flashcards`, { params }),
     create: (data) => api.post('/api/flashcards', data),
     update: (id, data) => api.patch(`/api/flashcards/${id}`, data),
     delete: (id) => api.delete(`/api/flashcards/${id}`),

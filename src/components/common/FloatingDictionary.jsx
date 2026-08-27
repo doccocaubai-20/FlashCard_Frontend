@@ -51,6 +51,7 @@ export default function FloatingDictionary() {
   });
 
   const bubbleRef = useRef(null);
+  const containerRef = useRef(null);
   const dragStartRef = useRef({ x: 0, y: 0, posX: 0, posY: 0, moved: false });
   const positionRef = useRef(position);
 
@@ -58,6 +59,41 @@ export default function FloatingDictionary() {
   useEffect(() => {
     positionRef.current = position;
   }, [position]);
+
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Click outside to close dictionary panel (desktop only)
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (isMobile) return;
+
+      // Don't close if clicking floating bubble launcher
+      if (bubbleRef.current && bubbleRef.current.contains(event.target)) {
+        return;
+      }
+      // Don't close if clicking inside the dictionary card container
+      if (containerRef.current && containerRef.current.contains(event.target)) {
+        return;
+      }
+
+      setIsOpen(false);
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isOpen, isMobile]);
 
   // Load favorites list for star toggling
   const loadFavorites = async () => {
@@ -74,6 +110,22 @@ export default function FloatingDictionary() {
       loadFavorites();
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    const handleOpen = (e) => {
+      if (e?.detail?.query) {
+        setQuery(e.detail.query);
+        setActiveTab('results');
+        setIsOpen(true);
+      } else {
+        setIsOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('chongzi-open-dictionary', handleOpen);
+    return () => {
+      window.removeEventListener('chongzi-open-dictionary', handleOpen);
+    };
+  }, []);
 
   // Perform search on query change
   useEffect(() => {
@@ -255,6 +307,249 @@ export default function FloatingDictionary() {
   const handleMouseUp = () => endDrag();
   const handleTouchEnd = () => endDrag();
 
+  if (isMobile) {
+    return (
+      <div className="fixed inset-0 pointer-events-none z-[99999]">
+        {isOpen && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-[99998] flex items-center justify-center p-4 pointer-events-auto" onClick={() => setIsOpen(false)}>
+            <div ref={containerRef} className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-2xl w-full max-w-sm max-h-[75vh] flex flex-col overflow-hidden text-ink dark:text-on-dark font-sans shadow-2xl animate-in fade-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between p-3.5 border-b border-hairline dark:border-divider-dark/30 bg-surface-bone/30 dark:bg-black/20">
+                <div className="flex items-center gap-2">
+                  <BookOpen size={16} className="text-primary" />
+                  <span className="text-xs font-extrabold tracking-tight text-mute dark:text-on-dark-mute">TRA TỪ ĐIỂN</span>
+                </div>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-1 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg text-mute dark:text-on-dark-mute transition-colors cursor-pointer"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {!selectedWord && (
+                <div className="p-3 border-b border-hairline dark:border-divider-dark/30 space-y-2.5">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Nhập bính âm, chữ Hán, nghĩa Việt..."
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      className="w-full h-10 bg-surface-bone dark:bg-black/40 border border-hairline dark:border-divider-dark/50 rounded-xl px-3 pl-9 pr-8 text-xs text-ink dark:text-on-dark focus:outline-none focus:ring-1 focus:ring-primary transition-all font-sans"
+                    />
+                    <Search size={14} className="absolute left-3 top-3.5 text-mute" />
+                    {query && (
+                      <button
+                        onClick={() => setQuery('')}
+                        className="absolute right-3 top-3 text-mute hover:text-ink dark:hover:text-on-dark cursor-pointer text-xs font-bold"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex gap-4 text-[11px] font-bold border-b border-hairline dark:border-divider-dark/30 pb-1">
+                    <button
+                      onClick={() => setActiveTab('results')}
+                      className={`pb-1 px-1 transition-all cursor-pointer ${
+                        activeTab === 'results'
+                          ? 'text-primary border-b-2 border-primary'
+                          : 'text-mute hover:text-ink dark:hover:text-on-dark-mute'
+                      }`}
+                    >
+                      Kết quả ({results.length})
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('history')}
+                      className={`pb-1 px-1 transition-all flex items-center gap-1 cursor-pointer ${
+                        activeTab === 'history'
+                          ? 'text-primary border-b-2 border-primary'
+                          : 'text-mute hover:text-ink dark:hover:text-on-dark-mute'
+                      }`}
+                    >
+                      <History size={11} />
+                      Lịch sử ({history.length})
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex-1 overflow-y-auto p-4 min-h-0">
+                {selectedWord ? (
+                  <div className="space-y-4 font-sans text-ink dark:text-on-dark">
+                    <button
+                      onClick={() => setSelectedWord(null)}
+                      className="flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary-deep transition-colors cursor-pointer"
+                    >
+                      <ArrowLeft size={14} />
+                      <span>Quay lại danh sách</span>
+                    </button>
+
+                    <div className="flex justify-between items-start border-b border-hairline dark:border-divider-dark/30 pb-3">
+                      <div>
+                        <h3 className="text-3xl font-extrabold text-ink dark:text-on-dark tracking-wide font-display">
+                          <HoverableText text={selectedWord.s} />
+                        </h3>
+                        <div className="text-xs font-bold text-mute mt-1.5 font-mono">
+                          <span>{selectedWord.p}</span>
+                          {selectedWord.sv && (
+                            <span className="ml-2 text-primary font-sans uppercase">[{selectedWord.sv}]</span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => speakChinese(selectedWord.s)}
+                          className="p-2 bg-primary/10 border border-primary/20 hover:bg-primary/25 rounded-xl text-primary cursor-pointer transition-all"
+                          title="Phát âm"
+                        >
+                          <Volume2 size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleToggleFavorite(selectedWord)}
+                          className={`p-2 border rounded-xl cursor-pointer transition-all ${
+                            isFavorite(selectedWord.s)
+                              ? 'bg-amber-500/10 border-amber-500/30 text-amber-500'
+                              : 'bg-surface-bone border-hairline text-mute hover:text-ink dark:bg-white/5 dark:border-white/10 dark:text-on-dark-mute'
+                          }`}
+                          title="Lưu yêu thích"
+                        >
+                          <Star size={16} className={isFavorite(selectedWord.s) ? 'fill-current' : ''} />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="bg-surface-bone/50 dark:bg-black/35 border border-hairline dark:border-divider-dark/50 p-3 rounded-xl">
+                      <span className="text-[9px] font-bold text-mute uppercase block mb-1">Nghĩa tiếng Việt</span>
+                      <p className="text-xs leading-relaxed text-body dark:text-on-dark-mute">
+                        {selectedWord.vi}
+                      </p>
+                    </div>
+
+                    {selectedWord.hsk && (
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg w-fit">
+                        <span>Cấp độ: HSK {selectedWord.hsk}</span>
+                      </div>
+                    )}
+
+                    <Link
+                      to={`/dictionary?word=${encodeURIComponent(selectedWord.s)}`}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center justify-center gap-1.5 w-full py-2.5 bg-primary/10 border border-primary/25 hover:bg-primary/20 rounded-xl text-xs font-bold text-primary transition-all mt-4 cursor-pointer"
+                    >
+                      <Link2 size={12} />
+                      <span>Xem chi tiết đầy đủ (Ví dụ & AI)</span>
+                    </Link>
+                  </div>
+                ) : activeTab === 'results' ? (
+                  query.trim() === '' ? (
+                    <div className="flex flex-col items-center justify-center py-14 text-center text-mute space-y-2">
+                      <Search size={22} className="opacity-40" />
+                      <span className="text-xs font-semibold">Nhập từ để tra cứu trực tuyến</span>
+                    </div>
+                  ) : loading ? (
+                    <div className="flex flex-col items-center justify-center py-14 space-y-2 text-mute">
+                      <Loader2 size={20} className="animate-spin text-primary" />
+                      <span className="text-xs font-bold">Đang tra cứu từ điển...</span>
+                    </div>
+                  ) : results.length > 0 ? (
+                    <div className="space-y-2">
+                      <div className="text-[10px] font-extrabold text-mute dark:text-on-dark-mute pb-1.5 border-b border-hairline dark:border-divider-dark/30 uppercase tracking-wider">
+                        CHỮ ({results.length})
+                      </div>
+                      {results.map((item) => (
+                        <div
+                          key={item.id || item.s}
+                          onClick={() => handleSelectWord(item)}
+                          className="flex items-center justify-between p-3 bg-surface-bone/30 dark:bg-white/2 hover:bg-surface-bone/80 dark:hover:bg-white/5 border border-hairline dark:border-divider-dark/30 rounded-xl cursor-pointer transition-all active:scale-[0.99]"
+                        >
+                          <div className="flex-1 min-w-0 pr-3">
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-base font-extrabold text-ink dark:text-on-dark font-display">
+                                <HoverableText text={item.s} />
+                              </span>
+                              <span className="text-xs text-primary font-semibold font-mono">{item.p}</span>
+                            </div>
+                            <p className="text-xs text-body dark:text-on-dark-mute truncate mt-1">{item.vi}</p>
+                          </div>
+
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                speakChinese(item.s);
+                              }}
+                              className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg text-mute hover:text-ink dark:hover:text-on-dark transition-colors cursor-pointer"
+                            >
+                              <Volume2 size={14} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleToggleFavorite(item);
+                              }}
+                              className={`p-2 rounded-lg cursor-pointer transition-all ${
+                                isFavorite(item.s) ? 'text-amber-500' : 'text-mute hover:text-ink'
+                              }`}
+                            >
+                              <Star size={14} className={isFavorite(item.s) ? 'fill-current' : ''} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="py-14 text-center text-xs text-mute font-semibold">
+                      Không tìm thấy kết quả phù hợp.
+                    </div>
+                  )
+                ) : (
+                  history.length > 0 ? (
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center pb-2 border-b border-hairline dark:border-divider-dark/30 mb-2">
+                        <span className="text-[10px] font-extrabold text-mute dark:text-on-dark-mute uppercase tracking-wider">Lịch sử tra cứu</span>
+                        <button
+                          onClick={() => setHistory([])}
+                          className="text-[10px] font-bold text-red-500 hover:text-red-600 transition-colors cursor-pointer"
+                        >
+                          Xóa tất cả
+                        </button>
+                      </div>
+                      {history.map((item) => (
+                        <div
+                          key={`hist-${item.s}`}
+                          onClick={() => handleSelectWord(item)}
+                          className="flex items-center justify-between p-2.5 bg-surface-bone/20 dark:bg-white/2 hover:bg-surface-bone/60 dark:hover:bg-white/5 border border-hairline dark:border-divider-dark/30 rounded-xl cursor-pointer transition-colors"
+                        >
+                          <div className="flex-1 min-w-0 pr-3">
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-sm font-bold text-ink dark:text-on-dark font-display">
+                                <HoverableText text={item.s} />
+                              </span>
+                              <span className="text-xs text-mute truncate font-mono">{item.p}</span>
+                            </div>
+                          </div>
+                          <span className="text-[10px] text-primary font-bold">Xem</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-14 text-center text-mute space-y-2">
+                      <History size={22} className="opacity-40" />
+                      <span className="text-xs font-semibold">Lịch sử tra cứu của bạn đang trống</span>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 pointer-events-none z-[99999]">
       
@@ -281,10 +576,7 @@ export default function FloatingDictionary() {
       {/* Dictionary Card Panel */}
       {isOpen && (
         <div
-          style={{
-            right: `${Math.min(window.innerWidth - 370, position.x)}px`,
-            bottom: `${Math.min(window.innerHeight - 520, position.y + 64)}px`
-          }}
+          ref={containerRef}
           style={{
             right: `${Math.min(window.innerWidth - 370, position.x)}px`,
             bottom: `${Math.min(window.innerHeight - 520, position.y + 64)}px`,

@@ -6,6 +6,7 @@ const initialState = {
   decks: [],
   currentDeck: null,
   flashcards: [],
+  totalCount: 0,
   isLoading: false,
   error: null,
 };
@@ -28,10 +29,11 @@ export const fetchDeckDetails = createAsyncThunk('deck/fetchDeckDetails', async 
   }
 });
 
-export const fetchFlashcardsByDeck = createAsyncThunk('deck/fetchFlashcardsByDeck', async (deckId, { rejectWithValue }) => {
+export const fetchFlashcardsByDeck = createAsyncThunk('deck/fetchFlashcardsByDeck', async (params, { rejectWithValue }) => {
   try {
-    const response = await flashcardApi.getByDeck(deckId);
-    return response.data;
+    const { deckId, limit, offset, topicId, search } = params;
+    const response = await flashcardApi.getByDeck(deckId, { limit, offset, topicId, search });
+    return { data: response.data, offset: offset || 0 };
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message);
   }
@@ -110,6 +112,7 @@ const deckSlice = createSlice({
     clearCurrentDeck(state) {
       state.currentDeck = null;
       state.flashcards = [];
+      state.totalCount = 0;
       state.error = null;
       state.isLoading = true; // Set isLoading to true immediately when starting to fetch a new deck details
     },
@@ -117,6 +120,7 @@ const deckSlice = createSlice({
       state.decks = [];
       state.currentDeck = null;
       state.flashcards = [];
+      state.totalCount = 0;
       state.isLoading = false;
       state.error = null;
     },
@@ -153,7 +157,21 @@ const deckSlice = createSlice({
       })
       .addCase(fetchFlashcardsByDeck.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.flashcards = action.payload;
+        const payloadData = action.payload.data;
+        
+        let newCards = [];
+        let totalCount = 0;
+        
+        if (payloadData && payloadData.cards) {
+          newCards = payloadData.cards;
+          totalCount = payloadData.totalCount;
+        } else {
+          newCards = payloadData || [];
+          totalCount = newCards.length;
+        }
+
+        state.flashcards = newCards;
+        state.totalCount = totalCount;
       })
       .addCase(fetchFlashcardsByDeck.rejected, (state, action) => {
         state.isLoading = false;
@@ -222,6 +240,7 @@ const deckSlice = createSlice({
       .addCase(deleteFlashcard.fulfilled, (state, action) => {
         state.isLoading = false;
         state.flashcards = state.flashcards.filter((c) => c.id !== action.payload);
+        state.totalCount = Math.max(0, state.totalCount - 1);
       })
       .addCase(deleteFlashcard.rejected, (state, action) => {
         state.isLoading = false;
@@ -240,6 +259,7 @@ const deckSlice = createSlice({
             ? `${action.payload.pinyin} | ${action.payload.meaning}`
             : (action.payload.meaning || action.payload.pinyin || '')
         });
+        state.totalCount += 1;
       })
       .addCase(createFlashcard.rejected, (state, action) => {
         state.isLoading = false;

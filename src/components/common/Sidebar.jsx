@@ -18,10 +18,11 @@ import {
   MessageSquare,
   ClipboardList,
   Languages,
-  Printer
+  Printer,
+  X
 } from 'lucide-react';
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }) {
   const [avatarBroken, setAvatarBroken] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -118,18 +119,31 @@ export default function Sidebar() {
 
       <div>
         {/* Brand Section */}
-        <div className="sidebar-brand flex items-center gap-3 px-5 pb-5 border-b border-hairline dark:border-divider-dark">
-          <div className="h-12 w-12 rounded-lg overflow-hidden shadow-sm">
-            <img src="/ap2.png" alt="ChongZi" className="h-full w-full object-cover" />
+        <div className="sidebar-brand flex items-center justify-between px-5 pb-5 border-b border-hairline dark:border-divider-dark">
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-lg overflow-hidden shadow-sm">
+              <img src="/ap2.png" alt="ChongZi" className="h-full w-full object-cover" />
+            </div>
+            <div>
+              <span className="font-display font-bold text-xl text-ink dark:text-on-dark tracking-tight">
+                ChongZi
+              </span>
+              <span className="text-sm font-sans font-medium text-mute dark:text-on-dark-mute block leading-none tracking-widest uppercase">
+                Tiếng Trung
+              </span>
+            </div>
           </div>
-          <div>
-            <span className="font-display font-bold text-xl text-ink dark:text-on-dark tracking-tight">
-              ChongZi
-            </span>
-            <span className="text-sm font-sans font-medium text-mute dark:text-on-dark-mute block leading-none tracking-widest uppercase">
-              Tiếng Trung
-            </span>
-          </div>
+
+          {/* Mobile Close Button */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="pr-0 md:hidden p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-mute dark:text-on-dark-mute cursor-pointer transition-colors"
+              aria-label="Đóng Menu"
+            >
+              <X size={16} />
+            </button>
+          )}
         </div>
 
         {/* Quick Action Button */}

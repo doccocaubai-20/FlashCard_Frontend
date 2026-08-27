@@ -147,10 +147,18 @@
     position: fixed;
     top: 0;
     bottom: 0;
-    left: 0;
-    z-index: 50;
-    transform: translateX(-100%);
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+    right: 0;
+    left: auto;
+    z-index: 1000001; /* Make sure sidebar is on the very top of all modals/overlays */
+    transform: translateX(100%);
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+    border-left: 1px solid rgba(26, 35, 50, 0.09);
+    border-right: none;
+  }
+
+  .dark .app-sidebar {
+    border-left: 1px solid rgba(240, 244, 248, 0.08);
+    border-right: none;
   }
 
   .app-sidebar.sidebar-open {
@@ -185,7 +193,7 @@
     inset: 0;
     background-color: rgba(15, 25, 35, 0.5);
     backdrop-filter: blur(3px);
-    z-index: 40;
+    z-index: 1000000; /* Backdrop sits just below the sidebar menu drawer */
     animation: fadeIn 0.2s ease-out;
   }
 }
