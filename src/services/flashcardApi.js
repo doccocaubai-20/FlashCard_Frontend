@@ -6,5 +6,5 @@ export const flashcardApi = {
     update: (id, data) => api.patch(`/api/flashcards/${id}`, data),
     delete: (id) => api.delete(`/api/flashcards/${id}`),
     bulkImport: (data) => api.post('/api/flashcards/bulk-import', data),
-    generateAIExample: (id) => api.post(`/api/flashcards/${id}/ai-example`),
+    generateAIExample: (id, refresh) => api.post(`/api/flashcards/${id}/ai-example${refresh ? '?refresh=true' : ''}`),
 };

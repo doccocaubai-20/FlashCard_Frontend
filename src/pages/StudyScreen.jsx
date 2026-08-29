@@ -405,7 +405,7 @@ function AIExampleBox({ card, onExampleUpdated, lang = 'zh-CN', aiLimit, loadAiL
     if (isGenerating) return;
     setIsGenerating(true);
     try {
-      const res = await flashcardApi.generateAIExample(card.id);
+      const res = await flashcardApi.generateAIExample(card.id, hasExample);
       if (res.data) {
         onExampleUpdated?.(card.id, res.data);
         showToast('Đoạn câu ví dụ đã được tạo bằng AI thành công!', 'success');
@@ -694,6 +694,8 @@ export default function StudyScreen() {
   const [showSpeaking, setShowSpeaking] = useState(false);
   const [pendingSyncCount, setPendingSyncCount] = useState(0);
 
+  const activeCardId = activeQueue[currentIndex]?.id;
+
   // Sync offline queued reviews to backend
   const syncOfflineReviews = async () => {
     const pendingStr = localStorage.getItem('chongzi_pending_reviews');
@@ -777,7 +779,7 @@ export default function StudyScreen() {
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [currentIndex, activeQueue, isStudyStarted, isStudyFinished, decks, ttsTrigger]);
+  }, [currentIndex, activeCardId, isStudyStarted, isStudyFinished, decks, ttsTrigger]);
 
   // Auto-play TTS pronunciation when card is flipped
   useEffect(() => {
@@ -796,7 +798,7 @@ export default function StudyScreen() {
     if (word) {
       speakChinese(word, lang);
     }
-  }, [isFlipped, currentIndex, activeQueue, isStudyStarted, isStudyFinished, decks, ttsTrigger]);
+  }, [isFlipped, currentIndex, activeCardId, isStudyStarted, isStudyFinished, decks, ttsTrigger]);
 
   // Fetch decks and favorites once on mount
   useEffect(() => {

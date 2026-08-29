@@ -31,7 +31,19 @@ export const fetchDeckDetails = createAsyncThunk('deck/fetchDeckDetails', async 
 
 export const fetchFlashcardsByDeck = createAsyncThunk('deck/fetchFlashcardsByDeck', async (params, { rejectWithValue }) => {
   try {
-    const { deckId, limit, offset, topicId, search } = params;
+    let deckId;
+    let limit, offset, topicId, search;
+    
+    if (params && typeof params === 'object') {
+      deckId = params.deckId;
+      limit = params.limit;
+      offset = params.offset;
+      topicId = params.topicId;
+      search = params.search;
+    } else {
+      deckId = params;
+    }
+
     const response = await flashcardApi.getByDeck(deckId, { limit, offset, topicId, search });
     return { data: response.data, offset: offset || 0 };
   } catch (error) {

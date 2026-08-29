@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useDictionary } from '../../hooks/useDictionary';
+import { speakChinese } from '../../utils/tts';
 
 const cleanDefinition = (vi) => {
   if (!vi) return '';
@@ -120,12 +121,7 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
 
   const handleSpeak = (e) => {
     e.stopPropagation();
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(char);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.8;
-    window.speechSynthesis.speak(utterance);
+    speakChinese(char);
   };
 
   const handleMouseEnter = () => {

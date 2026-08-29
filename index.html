@@ -12,6 +12,49 @@
   <meta name="apple-mobile-web-app-title" content="ChongZi" />
   <link rel="apple-touch-icon" href="/log.png" />
   <script>
+    // Global fallback for script/style load failures (e.g., after new deployments with new hashes)
+    (function () {
+      function forceFreshReload() {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            for (let reg of registrations) {
+              reg.unregister();
+            }
+          });
+        }
+        if (window.caches) {
+          caches.keys().then(function (keys) {
+            keys.forEach(function (key) {
+              caches.delete(key);
+            });
+          });
+        }
+        setTimeout(function () {
+          window.location.reload(true);
+        }, 250);
+      }
+
+      window.addEventListener('error', function (e) {
+        if (e.target && (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK')) {
+          console.warn('Resource load failed. Clearing cache and reloading...', e.target.src || e.target.href);
+          forceFreshReload();
+        }
+      }, true);
+
+      window.addEventListener('unhandledrejection', function (e) {
+        const message = e.reason && e.reason.message || '';
+        if (
+          message.indexOf('Failed to fetch dynamically imported module') > -1 ||
+          message.indexOf('Importing a module script failed') > -1 ||
+          message.indexOf('error loading dynamically imported module') > -1
+        ) {
+          console.warn('Dynamic chunk load failure. Clearing cache and reloading...', message);
+          forceFreshReload();
+        }
+      });
+    })();
+  </script>
+  <script>
     (function () {
       const savedTheme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

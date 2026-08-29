@@ -44,16 +44,32 @@ self.addEventListener('fetch', (event) => {
         // Fetch new version in background to update cache (stale-while-revalidate)
         fetch(event.request).then((networkResponse) => {
           if (networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, networkResponse);
-            });
+            const contentType = networkResponse.headers.get('content-type') || '';
+            const isAsset = event.request.url.match(/\.(js|css)$/);
+            // Skip caching if server returned SPA fallback page for JS/CSS
+            if (!(isAsset && contentType.includes('text/html'))) {
+              caches.open(CACHE_NAME).then((cache) => {
+                cache.put(event.request, networkResponse);
+              });
+            }
           }
         }).catch(() => {});
         return cachedResponse;
       }
 
       return fetch(event.request).then((networkResponse) => {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+        if (!networkResponse || networkResponse.status !== 200) {
+          return networkResponse;
+        }
+
+        const contentType = networkResponse.headers.get('content-type') || '';
+        const isAsset = event.request.url.match(/\.(js|css)$/);
+        // If requesting a JS/CSS file but server returns HTML (SPA fallback), reject it to trigger client error handler
+        if (isAsset && contentType.includes('text/html')) {
+          return new Response('Asset not found', { status: 404, statusText: 'Not Found' });
+        }
+
+        if (networkResponse.type !== 'basic') {
           return networkResponse;
         }
 
