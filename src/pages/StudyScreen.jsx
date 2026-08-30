@@ -1214,44 +1214,51 @@ export default function StudyScreen() {
     }
   };
 
-  const handleRate = async (rating) => {
+  const saveReviewOffline = (cardId, rating) => {
+    const pendingStr = localStorage.getItem('chongzi_pending_reviews') || '[]';
+    let pending = [];
+    try {
+      pending = JSON.parse(pendingStr);
+    } catch {
+      pending = [];
+    }
+    if (!pending.some(r => r.cardId === cardId)) {
+      pending.push({ cardId, rating, timestamp: Date.now() });
+      try {
+        localStorage.setItem('chongzi_pending_reviews', JSON.stringify(pending));
+      } catch (e) {
+        console.warn('Failed to save pending reviews offline (quota exceeded):', e);
+      }
+    }
+    setPendingSyncCount(pending.length);
+    console.log('Saved review offline:', cardId, rating);
+  };
+
+  const handleRate = (rating) => {
     const currentCard = activeQueue[currentIndex];
     if (!currentCard) return;
 
-    try {
-      if (studyMode === 'srs') {
-        if (navigator.onLine) {
-          // Dispatch to backend database
-          await dispatch(submitReview({ cardId: currentCard.id, rating })).unwrap();
-        } else {
-          // Offline: Queue review
-          const pendingStr = localStorage.getItem('chongzi_pending_reviews') || '[]';
-          let pending = [];
-          try {
-            pending = JSON.parse(pendingStr);
-          } catch {
-            pending = [];
-          }
-          pending.push({ cardId: currentCard.id, rating, timestamp: Date.now() });
-          try {
-            localStorage.setItem('chongzi_pending_reviews', JSON.stringify(pending));
-          } catch (e) {
-            console.warn('Failed to save pending reviews offline (quota exceeded):', e);
-          }
-          setPendingSyncCount(pending.length);
-          console.log('Saved review offline:', currentCard.id, rating);
-        }
-      }
-
-      // Move next
-      setIsFlipped(false);
-      if (currentIndex < activeQueue.length - 1) {
-        setCurrentIndex((prev) => prev + 1);
+    if (studyMode === 'srs') {
+      if (navigator.onLine) {
+        // Dispatch to backend database in background (optimistic update)
+        dispatch(submitReview({ cardId: currentCard.id, rating }))
+          .unwrap()
+          .catch((err) => {
+            console.error('Failed to submit review online, queuing offline:', err);
+            saveReviewOffline(currentCard.id, rating);
+          });
       } else {
-        setIsStudyFinished(true);
+        // Offline: Queue review
+        saveReviewOffline(currentCard.id, rating);
       }
-    } catch (error) {
-      console.error(error);
+    }
+
+    // Move next immediately (no UI lag or freezes)
+    setIsFlipped(false);
+    if (currentIndex < activeQueue.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    } else {
+      setIsStudyFinished(true);
     }
   };
 
