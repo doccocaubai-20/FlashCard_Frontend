@@ -251,7 +251,11 @@ export default function CreateFlashcardScreen() {
       navigate(`/decks/${formData.deckId}`);
     } catch (err) {
       console.error(err);
-      setErrorMsg('Tạo thẻ mới thất bại. Vui lòng kiểm tra lại thông tin.');
+      if (err && (err.statusCode === 409 || err.error === 'Conflict' || err.message === 'Flashcard already exists')) {
+        setErrorMsg('Thẻ bài này đã tồn tại trong bộ bài này!');
+      } else {
+        setErrorMsg(err?.message || 'Tạo thẻ mới thất bại. Vui lòng kiểm tra lại thông tin.');
+      }
     }
   };
 

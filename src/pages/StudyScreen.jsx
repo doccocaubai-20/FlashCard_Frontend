@@ -702,18 +702,33 @@ export default function StudyScreen() {
     if (!pendingStr) return;
     try {
       const pending = JSON.parse(pendingStr);
-      if (pending.length === 0) return;
+      if (!Array.isArray(pending) || pending.length === 0) return;
       console.log(`Syncing ${pending.length} offline reviews...`);
 
+      const remaining = [];
       for (const review of pending) {
-        await dispatch(submitReview({ cardId: review.cardId, rating: review.rating })).unwrap();
+        try {
+          await dispatch(submitReview({ cardId: review.cardId, rating: review.rating })).unwrap();
+        } catch (err) {
+          console.warn(`Review for card ${review.cardId} failed sync:`, err);
+          const isNetworkError = !err?.response || err?.code === 'ERR_NETWORK' || !navigator.onLine;
+          if (isNetworkError) {
+            remaining.push(review);
+          }
+        }
       }
 
-      localStorage.removeItem('chongzi_pending_reviews');
-      setPendingSyncCount(0);
-      console.log('Successfully synced offline reviews.');
+      if (remaining.length > 0) {
+        localStorage.setItem('chongzi_pending_reviews', JSON.stringify(remaining));
+      } else {
+        localStorage.removeItem('chongzi_pending_reviews');
+      }
+      setPendingSyncCount(remaining.length);
+      if (remaining.length === 0) {
+        console.log('Successfully synced all offline reviews.');
+      }
     } catch (err) {
-      console.error('Failed to sync offline reviews:', err);
+      console.error('Failed to parse or sync offline reviews:', err);
     }
   };
 

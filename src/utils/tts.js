@@ -20,6 +20,28 @@ const getApiBase = () => {
 const audioCache = new Map();
 const MAX_AUDIO_CACHE = 300;
 
+// Global audio reference to ensure only 1 audio stream plays at a time
+let currentAudio = null;
+
+/**
+ * Stop any ongoing audio playback and browser speech synthesis.
+ */
+export const stopSpeech = () => {
+  if (currentAudio) {
+    try {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      currentAudio.src = '';
+    } catch {
+      // ignore
+    }
+    currentAudio = null;
+  }
+  if (typeof window !== 'undefined' && window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+};
+
 /**
  * Main TTS function. Plays high-quality audio from backend API.
  * Falls back to browser SpeechSynthesis if backend is unavailable.
@@ -27,10 +49,8 @@ const MAX_AUDIO_CACHE = 300;
 export const speakChinese = (text, lang = 'zh-CN', gender = null) => {
   if (!text) return;
 
-  // Cancel any active browser speech synthesis
-  if (typeof window !== 'undefined' && window.speechSynthesis) {
-    window.speechSynthesis.cancel();
-  }
+  // Stop any currently playing audio or speech synthesis
+  stopSpeech();
 
   const cacheKey = `${text}|${lang}|${gender || 'female'}`;
 
@@ -38,6 +58,7 @@ export const speakChinese = (text, lang = 'zh-CN', gender = null) => {
   if (audioCache.has(cacheKey)) {
     const cachedUrl = audioCache.get(cacheKey);
     const audio = new Audio(cachedUrl);
+    currentAudio = audio;
     audio.play().catch(() => {
       // If cached URL fails, fall back to browser TTS
       speakWithBrowserTTS(text, lang, gender);
@@ -52,6 +73,7 @@ export const speakChinese = (text, lang = 'zh-CN', gender = null) => {
   const ttsUrl = `${apiBase}/api/tts/speak?${params.toString()}`;
 
   const audio = new Audio(ttsUrl);
+  currentAudio = audio;
 
   let fallbackTriggered = false;
 
@@ -64,8 +86,10 @@ export const speakChinese = (text, lang = 'zh-CN', gender = null) => {
   // Set a timeout — if audio doesn't start playing within 8s, use fallback
   const timeoutId = setTimeout(() => {
     if (!fallbackTriggered) {
-      audio.pause();
-      audio.src = '';
+      if (currentAudio === audio) {
+        audio.pause();
+        audio.src = '';
+      }
       triggerFallback();
     }
   }, 8000);

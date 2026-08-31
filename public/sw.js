@@ -1,7 +1,5 @@
-const CACHE_NAME = 'chongzi-cache-v1';
-const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
+const CACHE_NAME = 'chongzi-cache-v2';
+const STATIC_ASSETS = [
   '/ap2.png',
   '/log.png',
   '/manifest.json',
@@ -13,7 +11,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      return cache.addAll(STATIC_ASSETS);
     }).then(() => self.skipWaiting())
   );
 });
@@ -33,20 +31,47 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Only cache GET requests and ignore API calls
+  // Only handle GET requests and ignore API calls
   if (event.request.method !== 'GET' || event.request.url.includes('/api/')) {
     return;
   }
 
+  const isNavigation = event.request.mode === 'navigate' || 
+    (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html'));
+
+  // 1. For HTML navigation: NETWORK-FIRST to prevent white-screen on deploy
+  if (isNavigation) {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(async () => {
+          // Offline fallback
+          const cached = await caches.match(event.request);
+          if (cached) return cached;
+          return caches.match('/index.html') || caches.match('/');
+        })
+    );
+    return;
+  }
+
+  // 2. For static assets & JS/CSS chunks: CACHE-FIRST with Stale-While-Revalidate
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Fetch new version in background to update cache (stale-while-revalidate)
+        // Fetch new version in background to update cache
         fetch(event.request).then((networkResponse) => {
-          if (networkResponse.status === 200) {
+          if (networkResponse && networkResponse.status === 200) {
             const contentType = networkResponse.headers.get('content-type') || '';
             const isAsset = event.request.url.match(/\.(js|css)$/);
-            // Skip caching if server returned SPA fallback page for JS/CSS
+            // Skip caching if server returned SPA fallback page for missing JS/CSS
             if (!(isAsset && contentType.includes('text/html'))) {
               caches.open(CACHE_NAME).then((cache) => {
                 cache.put(event.request, networkResponse);
@@ -69,21 +94,14 @@ self.addEventListener('fetch', (event) => {
           return new Response('Asset not found', { status: 404, statusText: 'Not Found' });
         }
 
-        if (networkResponse.type !== 'basic') {
-          return networkResponse;
+        if (networkResponse.type === 'basic' || networkResponse.type === 'cors') {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
         }
-
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
 
         return networkResponse;
-      }).catch(() => {
-        // Fallback for document navigation when offline
-        if (event.request.mode === 'navigate') {
-          return caches.match('/');
-        }
       });
     })
   );
