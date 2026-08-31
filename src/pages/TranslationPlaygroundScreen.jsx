@@ -125,13 +125,15 @@ export default function TranslationPlaygroundScreen() {
     const isDark = document.documentElement.classList.contains('dark');
     const outlineColor = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(32, 32, 32, 0.08)';
     const strokeColor = '#0d9488'; // primary teal
+    let isMounted = true;
 
     // Small delay to ensure React renders the DOM container divs
     const timer = setTimeout(() => {
+      if (!isMounted) return;
       chars.forEach((char, charIdx) => {
         const containerId = `hover-writer-${hoveredTokenIndex}-${charIdx}`;
         const container = document.getElementById(containerId);
-        if (!container) return;
+        if (!container || !isMounted) return;
 
         container.innerHTML = '';
         try {
@@ -146,8 +148,12 @@ export default function TranslationPlaygroundScreen() {
             strokeAnimationSpeed: 1.5,
             delayBetweenStrokes: 150
           });
-          writersRef.current[containerId] = writer;
-          writer.animateCharacter(); // Start drawing animation immediately
+          if (isMounted) {
+            writersRef.current[containerId] = writer;
+            writer.animateCharacter(); // Start drawing animation immediately
+          } else {
+            try { writer.destroy(); } catch (e) {}
+          }
         } catch (e) {
           console.error("Failed to load HanziWriter for tooltip character", char, e);
         }
@@ -155,6 +161,7 @@ export default function TranslationPlaygroundScreen() {
     }, 60);
 
     return () => {
+      isMounted = false;
       clearTimeout(timer);
       Object.values(writersRef.current).forEach(w => {
         try { w.destroy(); } catch (e) {}

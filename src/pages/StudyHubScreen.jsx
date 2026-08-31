@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   GraduationCap,
@@ -7,11 +7,27 @@ import {
   MessageSquare,
   Languages,
   ArrowRight,
-  BookOpenText
+  BookOpenText,
+  Flame,
+  Zap,
+  Sparkles,
+  Award
 } from 'lucide-react';
+import { statsApi } from '../services/statsApi';
 
 export default function StudyHubScreen() {
   const navigate = useNavigate();
+  const [stats, setStats] = useState(null);
+
+  useEffect(() => {
+    statsApi.getUserStats()
+      .then((res) => {
+        setStats(res.data);
+      })
+      .catch((err) => {
+        console.warn('Failed to load study hub stats:', err);
+      });
+  }, []);
 
   const activities = [
     {
@@ -93,6 +109,49 @@ export default function StudyHubScreen() {
           Tổng hợp các công cụ luyện tập chuyên sâu 4 kỹ năng Nghe - Nói - Đọc - Viết dành cho người học tiếng Trung.
         </p>
       </div>
+
+      {/* Progress & Motivation Summary Widget */}
+      {stats && (
+        <div className="bg-gradient-to-r from-primary/10 via-teal-500/5 to-transparent border border-primary/20 dark:border-primary/30 rounded-2xl p-5 shadow-xs text-left">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary/20 text-primary flex items-center justify-center font-black">
+                <Sparkles size={20} />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-ink dark:text-on-dark font-display">Tiến trình học tập cá nhân</h3>
+                <p className="text-xs text-mute">Duy trì thói quen học mỗi ngày để đạt điểm số cao nhất!</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <Flame size={18} className="text-orange-500 fill-orange-500" />
+                <div>
+                  <span className="text-[10px] font-mono text-mute block leading-tight">Chuỗi ngày</span>
+                  <span className="text-sm font-bold text-ink dark:text-on-dark font-mono">{stats.streak || 0} ngày</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Zap size={18} className="text-amber-500 fill-amber-500" />
+                <div>
+                  <span className="text-[10px] font-mono text-mute block leading-tight">Tổng XP</span>
+                  <span className="text-sm font-bold text-ink dark:text-on-dark font-mono">{stats.xp || 0}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Award size={18} className="text-purple-500" />
+                <div>
+                  <span className="text-[10px] font-mono text-mute block leading-tight">Level</span>
+                  <span className="text-sm font-bold text-ink dark:text-on-dark font-mono">Lv. {stats.level || 1}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Grid activities */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -693,6 +693,7 @@ export default function StudyScreen() {
   const [showWriting, setShowWriting] = useState(false);
   const [showSpeaking, setShowSpeaking] = useState(false);
   const [pendingSyncCount, setPendingSyncCount] = useState(0);
+  const lastKeyTimeRef = useRef(0);
 
   const activeCardId = activeQueue[currentIndex]?.id;
 
@@ -1302,11 +1303,20 @@ export default function StudyScreen() {
       // Ignore if writing text
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
+      // Anti-spam key debounce (minimum 250ms between actions to prevent double-skipping)
+      const now = Date.now();
+      if (now - lastKeyTimeRef.current < 250) {
+        e.preventDefault();
+        return;
+      }
+
       if (e.code === 'Space' || e.code === 'Enter') {
         e.preventDefault();
+        lastKeyTimeRef.current = now;
         handleFlip();
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
+        lastKeyTimeRef.current = now;
         if (studyMode === 'srs') {
           handleSkip();
         } else {
@@ -1314,20 +1324,13 @@ export default function StudyScreen() {
         }
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
+        lastKeyTimeRef.current = now;
         handlePrevClassic();
       } else if (studyMode === 'srs') {
-        if (e.key === '1') {
+        if (['1', '2', '3', '4'].includes(e.key)) {
           e.preventDefault();
-          handleRate(1);
-        } else if (e.key === '2') {
-          e.preventDefault();
-          handleRate(2);
-        } else if (e.key === '3') {
-          e.preventDefault();
-          handleRate(3);
-        } else if (e.key === '4') {
-          e.preventDefault();
-          handleRate(4);
+          lastKeyTimeRef.current = now;
+          handleRate(Number(e.key));
         }
       }
     };

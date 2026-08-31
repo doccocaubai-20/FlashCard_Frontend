@@ -606,14 +606,14 @@ export default function GrammarScreen() {
               {!isChecked ? (
                 <button
                   type="button"
-                  disabled={currentQuestion.type === 'mcq' ? !selectedOption : !translationInput.trim()}
+                  disabled={currentQuestion.type === 'mcq' ? !selectedOption : false}
                   onClick={handleCheckQuestion}
-                  className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer shadow-sm ${(currentQuestion.type === 'mcq' ? selectedOption : translationInput.trim())
+                  className={`px-6 py-2.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer shadow-sm ${(currentQuestion.type === 'mcq' ? selectedOption : true)
                     ? 'bg-primary hover:bg-primary-deep text-white hover:scale-[1.02] active:scale-98'
                     : 'bg-primary/30 text-white/60 cursor-not-allowed'
                     }`}
                 >
-                  Kiểm tra kết quả
+                  {currentQuestion.type === 'translation' && !translationInput.trim() ? 'Xem đáp án mẫu' : 'Kiểm tra kết quả'}
                 </button>
               ) : currentQuestion.type === 'mcq' ? (
                 <button
