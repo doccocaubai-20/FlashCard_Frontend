@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useDictionary } from '../hooks/useDictionary';
 import { useToast } from '../context/ToastContext';
+import { speakChinese } from '../utils/tts';
 
 export default function ScribbleWriteScreen() {
   const navigate = useNavigate();
@@ -21,11 +22,32 @@ export default function ScribbleWriteScreen() {
 
   // Blackboard / whiteboard drawing states
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [strokes, setStrokes] = useState([]);
   const [currentStroke, setCurrentStroke] = useState({ x: [], y: [], t: [] });
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // Resize canvas to match actual container width
+  useEffect(() => {
+    const handleResize = () => {
+      const canvas = canvasRef.current;
+      const container = containerRef.current;
+      if (canvas && container) {
+        const rect = container.getBoundingClientRect();
+        if (rect.width > 0) {
+          canvas.width = Math.round(rect.width);
+          canvas.height = 220;
+          redrawCanvas();
+        }
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Brush settings
   const [brushColor, setBrushColor] = useState('#54cbd4'); // default primary teal
@@ -285,8 +307,8 @@ export default function ScribbleWriteScreen() {
             requests: [
               {
                 writing_guide: {
-                  writing_area_width: 1200,
-                  writing_area_height: 220
+                  writing_area_width: canvasRef.current?.width || 1200,
+                  writing_area_height: canvasRef.current?.height || 220
                 },
                 pre_segments: [],
                 max_num_results: 12,
@@ -326,12 +348,8 @@ export default function ScribbleWriteScreen() {
 
   // Text to Speech
   const handleSpeakText = () => {
-    if (!notepadText || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(notepadText);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.8;
-    window.speechSynthesis.speak(utterance);
+    if (!notepadText) return;
+    speakChinese(notepadText, 'zh-CN');
   };
 
   // Colors available for the brush
@@ -393,7 +411,7 @@ export default function ScribbleWriteScreen() {
         </div>
 
         {/* Wide Whiteboard Canvas Wrapper */}
-        <div className="relative w-full border-2 border-hairline dark:border-divider-dark rounded-xl bg-canvas dark:bg-black/45 shadow-inner overflow-hidden cursor-crosshair h-[240px]">
+        <div ref={containerRef} className="relative w-full border-2 border-hairline dark:border-divider-dark rounded-xl bg-canvas dark:bg-black/45 shadow-inner overflow-hidden cursor-crosshair h-[240px]">
           <canvas
             ref={canvasRef}
             width={1200}

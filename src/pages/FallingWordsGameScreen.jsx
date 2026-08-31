@@ -183,6 +183,11 @@ export default function FallingWordsGameScreen() {
   };
 
   // Main game loop (Y coordinate update & auto spawn)
+  const scoreRef = useRef(score);
+  useEffect(() => {
+    scoreRef.current = score;
+  }, [score]);
+
   useEffect(() => {
     if (!gameStarted || gameOver || isPaused) return;
 
@@ -233,7 +238,8 @@ export default function FallingWordsGameScreen() {
 
         // Spawn check (maintain at least 3 active falling words or trigger on spawn interval)
         const now = Date.now();
-        const spawnInterval = Math.max(1000, 2600 - Math.min(1600, score * 70));
+        const currentScore = scoreRef.current;
+        const spawnInterval = Math.max(1000, 2600 - Math.min(1600, currentScore * 70));
         
         if (now - lastSpawnRef.current >= spawnInterval || nextWords.length < 3) {
           if (wordPool.length > 0) {
@@ -256,7 +262,7 @@ export default function FallingWordsGameScreen() {
               }
 
               const x = 5 + Math.random() * 80;
-              const speed = 0.35 + Math.random() * 0.3 + Math.min(1.2, score * 0.015);
+              const speed = 0.35 + Math.random() * 0.3 + Math.min(1.2, currentScore * 0.015);
 
               nextWords.push({
                 id: `word_${Date.now()}_${Math.random()}`,
@@ -279,7 +285,7 @@ export default function FallingWordsGameScreen() {
     }, 30);
 
     return () => clearInterval(gameTick);
-  }, [gameStarted, gameOver, isPaused, score, wordPool]);
+  }, [gameStarted, gameOver, isPaused, wordPool]);
 
   // Save game records and weak words when game is over
   useEffect(() => {

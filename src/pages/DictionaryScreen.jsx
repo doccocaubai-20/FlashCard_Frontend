@@ -233,6 +233,9 @@ const searchRelatedSentences = (q) => {
 
     if (matches) {
       matched.push(item);
+      if (matched.length >= 50) {
+        break; // Early break for instant search responsiveness
+      }
     }
   }
 

@@ -5,6 +5,8 @@ import { studyApi } from '../services/studyApi';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { fetchDeckDetails } from '../features/deck/deckSlice';
 import { useDispatch } from 'react-redux';
+import { skillLogsApi, weakWordsApi } from '../services/learningApi';
+import { speakChinese } from '../utils/tts';
 import hsk1Data from '../data/tu_vung_hsk1.json';
 
 export default function DictationScreen() {
@@ -30,6 +32,40 @@ export default function DictationScreen() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
+  // Auto-save skill logs and weak words on finish
+  useEffect(() => {
+    if (isFinished && cards.length > 0) {
+      const accuracy = Math.round((correctCount / cards.length) * 100);
+      const targetDeckId = !isNaN(Number(id)) ? Number(id) : null;
+
+      // 1. Save skill log
+      skillLogsApi.save({
+        skillType: 'DICTATION',
+        targetId: targetDeckId,
+        score: accuracy,
+        accuracy,
+        duration: elapsedTime,
+        details: {
+          totalCards: cards.length,
+          correctCount,
+          incorrectCount: incorrectWords.length,
+          gameMode,
+        },
+      }).catch((err) => console.warn('Failed to save dictation skill log:', err));
+
+      // 2. Save weak words for mistakes
+      incorrectWords.forEach((word) => {
+        if (word && word.hanzi) {
+          weakWordsApi.save({
+            hanzi: word.hanzi,
+            pinyin: word.pinyin || '',
+            meaning: word.meaning || '',
+            source: 'Dictation',
+          }).catch((err) => console.warn('Failed to save weak word:', err));
+        }
+      });
+    }
+  }, [isFinished]);
 
   // Timer Effect
   useEffect(() => {
@@ -100,12 +136,8 @@ export default function DictationScreen() {
   const activeCard = cards[currentIndex];
 
   const handleSpeak = (text) => {
-    if (!window.speechSynthesis || !text) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.75;
-    window.speechSynthesis.speak(utterance);
+    if (!text) return;
+    speakChinese(text, 'zh-CN');
   };
 
   // Play sound when card activates

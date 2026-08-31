@@ -4,6 +4,7 @@ import { translationData } from '../data/translationData';
 import { statsApi } from '../services/statsApi';
 import { skillLogsApi } from '../services/learningApi';
 import HoverableText from '../components/common/HoverableText';
+import { speakChinese } from '../utils/tts';
 import {
   Mic,
   MicOff,
@@ -271,12 +272,8 @@ export default function SpeakingScreen() {
   };
 
   const handleSpeakSample = () => {
-    if (!currentSentence || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(currentSentence.hanzi);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.8;
-    window.speechSynthesis.speak(utterance);
+    if (!currentSentence || !currentSentence.hanzi) return;
+    speakChinese(currentSentence.hanzi, 'zh-CN');
   };
 
   const handlePlaySelfAudio = () => {

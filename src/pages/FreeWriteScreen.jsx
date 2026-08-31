@@ -6,6 +6,7 @@ import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { statsApi } from '../services/statsApi';
 import api from '../services/api';
 import { skillLogsApi } from '../services/learningApi';
+import { speakChinese } from '../utils/tts';
 import { BookOpen, Star, Volume2, ArrowRight, History } from 'lucide-react';
 
 export default function FreeWriteScreen() {
@@ -387,11 +388,8 @@ export default function FreeWriteScreen() {
   }
 
   const handleSpeak = () => {
-    if (!selectedWord || !window.speechSynthesis) return;
-    const utterance = new SpeechSynthesisUtterance(selectedWord.s);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.8;
-    window.speechSynthesis.speak(utterance);
+    if (!selectedWord || !selectedWord.s) return;
+    speakChinese(selectedWord.s, 'zh-CN');
   };
 
   const handleKeyDown = (e) => {
