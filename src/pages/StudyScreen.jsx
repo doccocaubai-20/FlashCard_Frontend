@@ -1437,12 +1437,8 @@ export default function StudyScreen() {
                   frontFaceMode={frontFaceMode}
                   showPinyinOnFront={showPinyinOnFront}
                   onTogglePinyinOnFront={() => setShowPinyinOnFront((prev) => !prev)}
-                />
-
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
+                  isFavorite={isFavorite(currentCard.hanzi)}
+                  onToggleFavorite={() =>
                     handleToggleFavorite(
                       currentCard.hanzi,
                       currentCard.pinyin,
@@ -1450,16 +1446,9 @@ export default function StudyScreen() {
                       currentCard.exampleHanzi,
                       currentCard.examplePinyin,
                       currentCard.exampleMeaning
-                    );
-                  }}
-                  className={`absolute top-5 left-5 z-30 p-2 rounded-full border transition-all cursor-pointer ${isFavorite(currentCard.hanzi)
-                      ? 'bg-amber-500/10 border-amber-500/30 text-amber-500 hover:bg-amber-500/20'
-                      : 'bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
-                    }`}
-                  title={isFavorite(currentCard.hanzi) ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
-                >
-                  <Star size={16} fill={isFavorite(currentCard.hanzi) ? 'currentColor' : 'none'} />
-                </button>
+                    )
+                  }
+                />
               </div>
             ) : (
               <div className="text-mute dark:text-on-dark-mute font-mono text-center">Lỗi: Không tìm thấy thẻ bài.</div>

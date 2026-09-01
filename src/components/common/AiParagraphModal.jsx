@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { X, Sparkles, Volume2, Copy, Check, Loader2, BookOpen, Save } from 'lucide-react';
 import { deckApi } from '../../services/deckApi';
+import { flashcardApi } from '../../services/flashcardApi';
 import { speakChinese } from '../../utils/tts';
 import HoverableText from './HoverableText';
 
 export default function AiParagraphModal({ deckId, flashcards = [], onClose, onSaveSuccess }) {
+  const [allFlashcards, setAllFlashcards] = useState(flashcards || []);
+  const [isLoadingCards, setIsLoadingCards] = useState(false);
   const [selectedWords, setSelectedWords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -14,12 +17,40 @@ export default function AiParagraphModal({ deckId, flashcards = [], onClose, onS
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
-  // Mặc định chọn tất cả từ vựng khi mở modal
+  // Tải toàn bộ thẻ từ vựng của bộ bài thay vì chỉ giới hạn trong trang hiện tại (50 thẻ)
   useEffect(() => {
-    if (flashcards && flashcards.length > 0) {
+    let isMounted = true;
+    if (deckId && deckId !== 'favorites') {
+      setIsLoadingCards(true);
+      flashcardApi
+        .getByDeck(deckId, { limit: 10000 })
+        .then((res) => {
+          if (!isMounted) return;
+          const loadedCards = res.data?.cards || res.data || [];
+          if (Array.isArray(loadedCards) && loadedCards.length > 0) {
+            setAllFlashcards(loadedCards);
+            setSelectedWords(loadedCards.map((c) => c.front || c.hanzi));
+          }
+        })
+        .catch((err) => {
+          console.error('Failed to load all deck cards for AI paragraph:', err);
+          if (flashcards && flashcards.length > 0) {
+            setAllFlashcards(flashcards);
+            setSelectedWords(flashcards.map((c) => c.front || c.hanzi));
+          }
+        })
+        .finally(() => {
+          if (isMounted) setIsLoadingCards(false);
+        });
+    } else if (flashcards && flashcards.length > 0) {
+      setAllFlashcards(flashcards);
       setSelectedWords(flashcards.map((c) => c.front || c.hanzi));
     }
-  }, [flashcards]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [deckId]);
 
   const handleToggleWord = (word) => {
     setSelectedWords((prev) => {
@@ -30,7 +61,7 @@ export default function AiParagraphModal({ deckId, flashcards = [], onClose, onS
   };
 
   const handleSelectAll = () => {
-    setSelectedWords(flashcards.map((c) => c.front || c.hanzi));
+    setSelectedWords(allFlashcards.map((c) => c.front || c.hanzi));
     setError('');
   };
 
@@ -40,7 +71,7 @@ export default function AiParagraphModal({ deckId, flashcards = [], onClose, onS
   };
 
   const handleSelectFirst30 = () => {
-    setSelectedWords(flashcards.slice(0, 30).map((c) => c.front || c.hanzi));
+    setSelectedWords(allFlashcards.slice(0, 30).map((c) => c.front || c.hanzi));
     setError('');
   };
 
@@ -106,7 +137,7 @@ export default function AiParagraphModal({ deckId, flashcards = [], onClose, onS
   };
 
   // Lọc từ hiển thị trong danh sách chọn dựa vào từ khóa tìm kiếm
-  const filteredCards = flashcards.filter(
+  const filteredCards = allFlashcards.filter(
     (card) =>
       (card.front || card.hanzi || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (card.back || card.meaning || '').toLowerCase().includes(searchTerm.toLowerCase())
@@ -188,7 +219,12 @@ export default function AiParagraphModal({ deckId, flashcards = [], onClose, onS
 
               {/* Grid danh sách từ */}
               <div className="border border-hairline dark:border-divider-dark rounded-lg p-4 bg-surface-bone/10 dark:bg-black/5 max-h-[30vh] overflow-y-auto">
-                {filteredCards.length > 0 ? (
+                {isLoadingCards ? (
+                  <div className="py-10 flex flex-col items-center justify-center space-y-2 text-mute dark:text-on-dark-mute">
+                    <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                    <span className="text-xs font-semibold">Đang tải toàn bộ từ vựng trong bộ bài...</span>
+                  </div>
+                ) : filteredCards.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                     {filteredCards.map((card) => {
                       const word = card.front || card.hanzi;
@@ -219,7 +255,7 @@ export default function AiParagraphModal({ deckId, flashcards = [], onClose, onS
               </div>
 
               <div className="text-xs font-semibold text-right text-mute dark:text-on-dark-mute">
-                Đã chọn: <span className="text-primary font-bold">{selectedWords.length}</span> / {flashcards.length} từ
+                Đã chọn: <span className="text-primary font-bold">{selectedWords.length}</span> / {allFlashcards.length} từ
               </div>
             </div>
           )}

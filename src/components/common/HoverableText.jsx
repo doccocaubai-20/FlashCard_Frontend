@@ -17,7 +17,7 @@ const cleanDefinition = (vi) => {
   return trimmed;
 };
 
-export function HanziTooltip({ char, children, hideMeaning = false, className = "" }) {
+export function HanziTooltip({ char, children, hideMeaning = false, className = "", noUnderline = false }) {
   const [isHovered, setIsHovered] = useState(false);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -75,13 +75,20 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
           const exactMatches = matches.filter((m) => m.s === char || m.t === char);
           if (exactMatches.length > 0) {
             exactMatches.sort((a, b) => {
-              const aHsk = a.hsk ? 1 : 0;
-              const bHsk = b.hsk ? 1 : 0;
-              if (aHsk !== bHsk) return bHsk - aHsk;
-
-              const aIsSurname = /^(họ\b|họ\s*\[)/i.test(a.vi || '');
-              const bIsSurname = /^(họ\b|họ\s*\[)/i.test(b.vi || '');
+              // 1. Prioritize non-surname definitions first
+              const aIsSurname = /^(họ\b|họ\s*\[)/i.test(a.vi || '') || (Array.isArray(a.en) && a.en.every(e => e.toLowerCase().startsWith('surname')));
+              const bIsSurname = /^(họ\b|họ\s*\[)/i.test(b.vi || '') || (Array.isArray(b.en) && b.en.every(e => e.toLowerCase().startsWith('surname')));
               if (aIsSurname !== bIsSurname) return aIsSurname ? 1 : -1;
+
+              // 2. Prioritize common lowercase pinyin over capitalized surname/proper noun pinyin
+              const aIsCapitalized = a.p && a.p[0] === a.p[0].toUpperCase() && a.p[0] !== a.p[0].toLowerCase();
+              const bIsCapitalized = b.p && b.p[0] === b.p[0].toUpperCase() && b.p[0] !== b.p[0].toLowerCase();
+              if (aIsCapitalized !== bIsCapitalized) return aIsCapitalized ? 1 : -1;
+
+              // 3. Prioritize HSK words
+              const aHsk = a.hsk ? a.hsk : 99;
+              const bHsk = b.hsk ? b.hsk : 99;
+              if (aHsk !== bHsk) return aHsk - bHsk;
 
               return (b.vi || '').length - (a.vi || '').length;
             });
@@ -108,16 +115,13 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
         padding: 2,
         showOutline: true,
         strokeColor: '#54cbd4',
-        outlineColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(32, 32, 32, 0.12)',
-        drawingColor: '#87ecf2',
-        highlightColor: '#ff6a3d',
-        showCharacter: true,
-        strokeAnimationSpeed: 1.25,
-        delayBetweenStrokes: 180,
+        outlineColor: isDark ? '#333' : '#ddd',
+        drawingColor: '#54cbd4',
+        radicalColor: '#2b9a66'
       });
       writer.animateCharacter();
     }
-  }, [isHovered, char, data, coords]);
+  }, [isHovered, char]);
 
   const handleSpeak = (e) => {
     e.stopPropagation();
@@ -139,7 +143,7 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
     }, 150); // 150ms debounce window
   };
 
-    const triggerClass = className || "relative group/tooltip inline-block cursor-help border-b border-dashed border-primary/40 hover:text-primary transition-colors px-[1px]";
+    const triggerClass = className || `relative group/tooltip inline-block cursor-help ${noUnderline ? '' : 'border-b border-dashed border-primary/40'} hover:text-primary transition-colors px-[1px]`;
     return (
       <span 
         ref={triggerRef}
@@ -191,15 +195,15 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
                     🔊 Đọc
                   </button>
                   {data?.hsk && (
-                    <span className="text-[9px] bg-amber-500/10 border border-amber-500/20 text-amber-500 px-2 py-0.5 rounded font-mono font-bold">
+                    <span className="text-[9px] bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded font-mono font-bold">
                       HSK {data.hsk}
                     </span>
                   )}
                 </span>
               </span>
 
-              {/* Handwriting practice box */}
-              <span className="w-[74px] h-[74px] shrink-0 border border-hairline dark:border-divider-dark bg-surface-bone/35 dark:bg-black/25 rounded-lg flex items-center justify-center p-0.5 relative overflow-hidden select-none">
+              {/* HanziWriter animated stroke order stroke box */}
+              <span className="w-[70px] h-[70px] bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
                 <span ref={writerContainerRef} className="w-[70px] h-[70px]" />
               </span>
             </span>
@@ -210,16 +214,15 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
     );
 }
 
-export default function HoverableText({ text, hideMeaning = false, className = "" }) {
+export default function HoverableText({ text, hideMeaning = false, className = "", noUnderline = false }) {
   if (!text) return null;
   const chars = Array.from(text);
   return (
     <span>
       {chars.map((char, index) => {
-        const isChinese = /[\u4e00-\u9fa5]/.test(char);
-        if (isChinese) {
+        if (/[\u4e00-\u9fa5]/.test(char)) {
           return (
-            <HanziTooltip key={`${char}_${index}`} char={char} hideMeaning={hideMeaning} className={className}>
+            <HanziTooltip key={`${char}_${index}`} char={char} hideMeaning={hideMeaning} className={className} noUnderline={noUnderline}>
               <span className="hanzi-char">{char}</span>
             </HanziTooltip>
           );
