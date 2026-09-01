@@ -803,73 +803,82 @@ export default function DictionaryScreen() {
 
         // 1. Exact Hanzi match
         if (s === qLower || t === qLower) {
-          score += 10000;
+          score += 100000;
+        } else if (s.startsWith(qLower) || t.startsWith(qLower)) {
+          score += 40000;
+        } else if (s.includes(qLower) || t.includes(qLower)) {
+          score += 20000;
         }
 
         // 2. Exact Pinyin match
-        if (p === qLower || pt === qLower || sp === qLower) {
-          score += 5000;
+        if (p === qLower || pt === qLower) {
+          score += 80000; // Exact tonal Pinyin e.g. "hái"
+        } else if (sp === qLower) {
+          score += 60000; // Tone-stripped Pinyin e.g. "hai"
+        } else if (p.startsWith(qLower) || pt.startsWith(qLower)) {
+          score += 30000;
+        } else if (sp.startsWith(qLower)) {
+          score += 20000;
         }
 
-        // 3. Exact Hán-Việt match (only if syllable count matches Chinese character length to avoid incomplete database readings)
-        const svSyllables = sv.split(/[\s·-]+/).filter(Boolean).length;
-        if (sv === qLower && s.length === svSyllables) {
-          score += 2000;
+        // 3. Exact Hán-Việt match
+        if (sv === qLower) {
+          score += 50000;
+        } else if (sv.startsWith(qLower)) {
+          score += 25000;
+        } else if (sv.split(/[\s·-]+/).includes(qLower)) {
+          score += 15000;
         }
 
-        // 4. Exact meaning match (first translation before / or full match)
-        const firstVi = vi.split('/')[0].trim();
+        // 4. Exact meaning match (word boundary / first translation before /)
+        const firstVi = vi.split(/[/;,()]/)[0].trim();
         if (firstVi === qLower || vi.trim() === qLower) {
-          score += 1000;
+          score += 40000;
+        } else if (firstVi.startsWith(qLower) || vi.startsWith(qLower)) {
+          score += 25000;
+        } else {
+          const escapedQ = qLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const wordBoundaryRegex = new RegExp(`(^|[^a-zà-ỹ0-9])${escapedQ}([^a-zà-ỹ0-9]|$)`, 'i');
+          if (wordBoundaryRegex.test(vi)) {
+            score += 10000;
+          }
         }
 
-        // 5. Starts with Hanzi
-        if (s.startsWith(qLower) || t.startsWith(qLower)) {
-          score += 500;
+        // If no match was found across Hanzi, Pinyin, SV, or word-boundary Vi, score remains 0
+        if (score === 0) {
+          return 0;
         }
 
-        // 6. Starts with Hán-Việt
-        if (sv.startsWith(qLower)) {
-          score += 300;
-        }
-
-        // 7. Proper Noun & Transliteration Penalty
+        // 5. Proper Noun & Transliteration Penalty
         const itemP = item.p || '';
         const pSyllables = itemP.split(/[\s·’']+/);
         const isProper = pSyllables.some(syll => syll && syll[0] === syll[0].toUpperCase() && syll[0] !== syll[0].toLowerCase());
         if (isProper) {
-          score -= 3000;
+          score -= 15000;
         }
 
         const isTransliteration =
           en.includes('transliteration') ||
           en.includes('surname') ||
+          vi.includes('họ [') ||
           vi.includes('họ ') ||
           vi.includes('tập đoàn') ||
           vi.includes('diễn viên');
         if (isTransliteration) {
-          score -= 5000;
+          score -= 15000;
         }
 
-        // 8. Common Word Boost & Rank Penalty
-        if (item.hsk) {
-          score += (10 - item.hsk) * 200; // HSK 1 gets +1800, HSK 7 gets +600
-        }
-        if (item.b) {
-          score += item.b * 10; // e.g. b 76.3 gets +763
-        }
-        if (item.bwr) {
-          score -= item.bwr * 0.1; // e.g. rank 8 subtracts 0.8, rank 75159 subtracts 7515.9
-        } else {
-          score -= 10000; // default maximum penalty for unranked/obscure words
-        }
-        if (item.mwr) {
-          score -= item.mwr * 0.1;
+        // 6. Common Word Boost (HSK 1-6)
+        if (item.hsk && item.hsk >= 1 && item.hsk <= 6) {
+          score += (7 - item.hsk) * 250;
         }
 
-        // 9. Archaic/Rare Variant Penalty
+        // 7. Shorter words boost
+        score += Math.max(0, (5 - (s.length || 1)) * 100);
+
+        // 8. Archaic/Rare Variant Penalty
         const isVariant =
-          vi.includes('biến thể cổ của') ||
+          vi.includes('biến thể cổ') ||
           vi.includes('biến thể của') ||
           vi.includes('biến thể cũ của') ||
           vi.includes('cổ của') ||
@@ -878,18 +887,19 @@ export default function DictionaryScreen() {
           en.includes('old variant');
 
         if (isVariant) {
-          score -= 8000;
+          score -= 20000;
         }
-
-        // 10. Shorter words are more fundamental (tie-breaker)
-        score -= s.length * 10;
 
         return score;
       };
 
-      searchResults.sort((a, b) => getSortScore(b) - getSortScore(a));
+      const sortedResults = searchResults
+        .map(item => ({ item, score: getSortScore(item) }))
+        .filter(({ score }) => score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(({ item }) => item);
 
-      let finalResults = searchResults.slice(0, 30);
+      let finalResults = sortedResults.slice(0, 30);
 
       if (finalResults.length === 0) {
         const isHanzi = /[\u4e00-\u9fa5]/.test(trimmedQuery);

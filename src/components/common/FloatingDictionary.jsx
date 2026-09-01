@@ -142,16 +142,7 @@ export default function FloatingDictionary() {
       }
 
       const matches = await lookupMultiple('all', trimmed);
-      
-      // Sort results by similarity
-      const sorted = [...(matches || [])].sort((a, b) => {
-        const qLower = trimmed.toLowerCase();
-        if ((a.s || '').toLowerCase() === qLower) return -1;
-        if ((b.s || '').toLowerCase() === qLower) return 1;
-        return (a.s || '').length - (b.s || '').length;
-      });
-
-      setResults(sorted.slice(0, 15));
+      setResults((matches || []).slice(0, 20));
     }, 450);
 
     return () => clearTimeout(delayDebounce);
