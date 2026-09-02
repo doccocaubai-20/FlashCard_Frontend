@@ -216,16 +216,25 @@ const searchRelatedSentences = (q) => {
         }
       }
     } else {
-      // Pinyin substring check
-      const sentPinyinClean = cleanPinyin(item.pinyin);
-      if (qPinyinClean && sentPinyinClean.includes(qPinyinClean)) {
-        matches = true;
+      // Pinyin syllable matching: MUST match as a whole syllable, NOT inside other syllables!
+      // e.g. "he" should match "hē", "hé", "hè", but NEVER inside "shénme" or "chē"!
+      if (qPinyinClean) {
+        const sentSyllables = (item.pinyin || '')
+          .toLowerCase()
+          .replace(/[.,/#!$%^&*;:{}=\\-_`~()?？。！，、；：]/g, ' ')
+          .split(/\s+/)
+          .map(s => cleanPinyin(s));
+        if (sentSyllables.includes(qPinyinClean)) {
+          matches = true;
+        }
       }
 
-      // Vietnamese meaning substring check
+      // Vietnamese meaning word-boundary check
       if (!matches && item.meaning) {
         const meaningLower = item.meaning.toLowerCase();
-        if (meaningLower.includes(qLower)) {
+        const escapedQ = qLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const wordBoundaryRegex = new RegExp(`(^|[^a-zà-ỹ0-9])${escapedQ}([^a-zà-ỹ0-9]|$)`, 'i');
+        if (wordBoundaryRegex.test(meaningLower)) {
           matches = true;
         }
       }
@@ -830,26 +839,36 @@ export default function DictionaryScreen() {
           score += 15000;
         }
 
-        // 4. Exact meaning match (word boundary / first translation before /)
+        // 4. Meaning matching (Vietnamese)
         const firstVi = vi.split(/[/;,()]/)[0].trim();
         if (firstVi === qLower || vi.trim() === qLower) {
-          score += 40000;
+          score += 50000;
         } else if (firstVi.startsWith(qLower) || vi.startsWith(qLower)) {
-          score += 25000;
+          score += 35000;
         } else {
           const escapedQ = qLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
           const wordBoundaryRegex = new RegExp(`(^|[^a-zà-ỹ0-9])${escapedQ}([^a-zà-ỹ0-9]|$)`, 'i');
           if (wordBoundaryRegex.test(vi)) {
-            score += 10000;
+            score += 20000;
           }
         }
 
-        // If no match was found across Hanzi, Pinyin, SV, or word-boundary Vi, score remains 0
+        // 5. English translation match
+        const enLower = Array.isArray(item.en) ? item.en.map(e => e.toLowerCase()) : [];
+        if (enLower.includes(qLower) || enLower.includes(`to ${qLower}`)) {
+          score += 50000;
+        } else if (enLower.some(e => e.startsWith(qLower) || e.startsWith(`to ${qLower}`))) {
+          score += 30000;
+        } else if (en.includes(qLower)) {
+          score += 15000;
+        }
+
+        // If no match was found across Hanzi, Pinyin, SV, Vi, or English, drop it
         if (score === 0) {
           return 0;
         }
 
-        // 5. Proper Noun & Transliteration Penalty
+        // 6. Proper Noun & Transliteration Penalty
         const itemP = item.p || '';
         const pSyllables = itemP.split(/[\s·’']+/);
         const isProper = pSyllables.some(syll => syll && syll[0] === syll[0].toUpperCase() && syll[0] !== syll[0].toLowerCase());
@@ -857,37 +876,19 @@ export default function DictionaryScreen() {
           score -= 15000;
         }
 
-        const isTransliteration =
-          en.includes('transliteration') ||
-          en.includes('surname') ||
-          vi.includes('họ [') ||
-          vi.includes('họ ') ||
-          vi.includes('tập đoàn') ||
-          vi.includes('diễn viên');
-        if (isTransliteration) {
-          score -= 15000;
+        // 7. Common HSK Boost (HSK 1-7 gets significant boost)
+        if (item.hsk && item.hsk >= 1 && item.hsk <= 7) {
+          score += (8 - item.hsk) * 2000; // HSK 1 gets +14,000, HSK 2 gets +12,000, etc.
         }
 
-        // 6. Common Word Boost (HSK 1-6)
-        if (item.hsk && item.hsk >= 1 && item.hsk <= 6) {
-          score += (7 - item.hsk) * 250;
-        }
+        // 8. Shorter words boost
+        score += Math.max(0, (5 - (s.length || 1)) * 500);
 
-        // 7. Shorter words boost
-        score += Math.max(0, (5 - (s.length || 1)) * 100);
-
-        // 8. Archaic/Rare Variant Penalty
-        const isVariant =
-          vi.includes('biến thể cổ') ||
-          vi.includes('biến thể của') ||
-          vi.includes('biến thể cũ của') ||
-          vi.includes('cổ của') ||
-          en.includes('variant of') ||
-          en.includes('archaic variant') ||
-          en.includes('old variant');
-
-        if (isVariant) {
-          score -= 20000;
+        // 9. Penalties ONLY for pure surnames or pure variants
+        const isPureSurname = /^họ\s*\[/i.test(vi) || /^họ\s+[a-zà-ỹ]+/i.test(vi);
+        const isPureVariant = /^biến thể (của|cổ của)\b/i.test(vi);
+        if (isPureSurname || isPureVariant) {
+          score -= 25000;
         }
 
         return score;
@@ -903,11 +904,15 @@ export default function DictionaryScreen() {
 
       if (finalResults.length === 0) {
         const isHanzi = /[\u4e00-\u9fa5]/.test(trimmedQuery);
-        let decomposedResults;
+        let decomposedResults = [];
         if (isHanzi) {
           decomposedResults = await segmentHanziSentence(trimmedQuery);
         } else {
-          decomposedResults = await resolvePinyinSentence(trimmedQuery);
+          // Only attempt Pinyin sentence segmentation if it looks like spaced pinyin words (not common English words)
+          const isPinyinFormat = /^[a-zA-Z\s1-5]+$/.test(trimmedQuery) && trimmedQuery.includes(' ');
+          if (isPinyinFormat) {
+            decomposedResults = await resolvePinyinSentence(trimmedQuery);
+          }
         }
 
         if (decomposedResults.length > 0) {
