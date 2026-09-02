@@ -106,22 +106,50 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
   }, [isHovered, char, data, loading, lookupMultiple]);
 
   useEffect(() => {
-    if (isHovered && writerContainerRef.current && window.HanziWriter) {
-      writerContainerRef.current.innerHTML = '';
-      const isDark = document.documentElement.classList.contains('dark');
-      const writer = window.HanziWriter.create(writerContainerRef.current, char, {
-        width: 70,
-        height: 70,
-        padding: 2,
-        showOutline: true,
-        strokeColor: '#54cbd4',
-        outlineColor: isDark ? '#333' : '#ddd',
-        drawingColor: '#54cbd4',
-        radicalColor: '#2b9a66'
-      });
-      writer.animateCharacter();
-    }
-  }, [isHovered, char]);
+    let active = true;
+    let writerInstance = null;
+
+    const initWriter = () => {
+      if (!active) return;
+      if (isHovered && coords && writerContainerRef.current && window.HanziWriter) {
+        writerContainerRef.current.innerHTML = '';
+        const isDark = document.documentElement.classList.contains('dark');
+        try {
+          writerInstance = window.HanziWriter.create(writerContainerRef.current, char, {
+            width: 70,
+            height: 70,
+            padding: 4,
+            showOutline: true,
+            strokeColor: '#54cbd4',
+            outlineColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(32, 32, 32, 0.12)',
+            drawingColor: '#87ecf2',
+            highlightColor: '#ff6a3d',
+            showCharacter: true,
+            strokeAnimationSpeed: 1.25,
+            delayBetweenStrokes: 180,
+          });
+          writerInstance.animateCharacter();
+        } catch (e) {
+          console.warn('HanziWriter error for char:', char, e);
+        }
+      } else if (isHovered && coords && !window.HanziWriter) {
+        const timer = setTimeout(initWriter, 150);
+        return () => clearTimeout(timer);
+      }
+    };
+
+    const cleanup = initWriter();
+
+    return () => {
+      active = false;
+      if (cleanup) cleanup();
+      if (writerInstance) {
+        try {
+          writerInstance.cancelQuiz();
+        } catch {}
+      }
+    };
+  }, [isHovered, char, coords]);
 
   const handleSpeak = (e) => {
     e.stopPropagation();
@@ -203,7 +231,7 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
               </span>
 
               {/* HanziWriter animated stroke order stroke box */}
-              <span className="w-[70px] h-[70px] bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+              <span className="w-[74px] h-[74px] shrink-0 border border-hairline dark:border-divider-dark bg-surface-bone/35 dark:bg-black/25 rounded-lg flex items-center justify-center p-0.5 relative overflow-hidden select-none">
                 <span ref={writerContainerRef} className="w-[70px] h-[70px]" />
               </span>
             </span>
