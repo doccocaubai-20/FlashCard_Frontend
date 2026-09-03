@@ -20,7 +20,8 @@ import {
   Languages,
   Printer,
   X,
-  BarChart3
+  BarChart3,
+  Video
 } from 'lucide-react';
 
 export default function Sidebar({ onClose }) {
@@ -54,6 +55,7 @@ export default function Sidebar({ onClose }) {
         { to: '/study-hub', label: t('nav.study_hub'), icon: GraduationCap },
         { to: '/game-arcade', label: t('nav.game_arcade'), icon: Gamepad2 },
         { to: '/hsk-exams', label: t('nav.hsk_exams'), icon: ClipboardList },
+        { to: '/video', label: 'Học qua video', icon: Video },
         { to: '/chat', label: 'AI Chatbot', icon: MessageSquare },
         { to: '/writing-notebook', label: 'Vở tập viết', icon: BookOpen },
       ]

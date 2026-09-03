@@ -41,6 +41,8 @@ const UnscrambleGameScreen = React.lazy(() => import('./pages/UnscrambleGameScre
 const EnglishHubScreen = React.lazy(() => import('./pages/EnglishHubScreen'));
 const WritingNotebookScreen = React.lazy(() => import('./pages/WritingNotebookScreen'));
 const PrintFlashcardScreen = React.lazy(() => import('./pages/PrintFlashcardScreen'));
+const VideoListScreen = React.lazy(() => import('./pages/VideoListScreen'));
+const VideoPlayerScreen = React.lazy(() => import('./pages/VideoPlayerScreen'));
 
 // Loading spinner for lazy pages
 function LazyFallback() {
@@ -124,6 +126,8 @@ function App() {
         <Route path="/english-hub" element={<Suspense fallback={<LazyFallback />}><EnglishHubScreen /></Suspense>} />
         <Route path="/writing-notebook" element={<Suspense fallback={<LazyFallback />}><WritingNotebookScreen /></Suspense>} />
         <Route path="/print-cards" element={<Suspense fallback={<LazyFallback />}><PrintFlashcardScreen /></Suspense>} />
+        <Route path="/video" element={<Suspense fallback={<LazyFallback />}><VideoListScreen /></Suspense>} />
+        <Route path="/video/:id" element={<Suspense fallback={<LazyFallback />}><VideoPlayerScreen /></Suspense>} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

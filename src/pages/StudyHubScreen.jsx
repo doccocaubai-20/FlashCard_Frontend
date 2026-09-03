@@ -11,7 +11,8 @@ import {
   Flame,
   Zap,
   Sparkles,
-  Award
+  Award,
+  Video
 } from 'lucide-react';
 import { statsApi } from '../services/statsApi';
 
@@ -37,6 +38,14 @@ export default function StudyHubScreen() {
       path: '/study',
       color: 'from-blue-500/10 to-indigo-500/10 border-blue-500/30 text-blue-500',
       badge: 'Cơ bản & Từ vựng'
+    },
+    {
+      title: 'Học qua Video YouTube',
+      description: 'Xem hoạt hình & podcast tiếng Trung có phụ đề song ngữ đồng bộ, bấm câu tua lại và luyện nói shadowing.',
+      icon: Video,
+      path: '/video',
+      color: 'from-rose-500/10 to-amber-500/10 border-rose-500/30 text-rose-500',
+      badge: 'Video & Podcast'
     },
     {
       title: 'Luyện tập Ngữ pháp HSK',
