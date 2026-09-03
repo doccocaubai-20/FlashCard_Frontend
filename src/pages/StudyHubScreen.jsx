@@ -21,13 +21,23 @@ export default function StudyHubScreen() {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    statsApi.getUserStats()
-      .then((res) => {
-        setStats(res.data);
-      })
-      .catch((err) => {
+    const fetchStats = async () => {
+      try {
+        const res = typeof statsApi?.getUserStats === 'function' 
+          ? await statsApi.getUserStats() 
+          : (typeof statsApi?.getSummary === 'function' ? await statsApi.getSummary() : null);
+        if (res && res.data) {
+          setStats({
+            streak: res.data.currentStreak ?? res.data.streak ?? 0,
+            xp: res.data.xp ?? 0,
+            level: res.data.level ?? (Math.floor((res.data.xp || 0) / 100) + 1)
+          });
+        }
+      } catch (err) {
         console.warn('Failed to load study hub stats:', err);
-      });
+      }
+    };
+    fetchStats();
   }, []);
 
   const activities = [
