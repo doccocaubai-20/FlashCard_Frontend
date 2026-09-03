@@ -2,14 +2,14 @@
 export const videoLessonsData = [
   {
     "id": "f-THLbSEZ4Y",
-    "youtubeId": "THLbSEZ4Y",
+    "youtubeId": "f-THLbSEZ4Y",
     "title": "Cách gọi trà sữa bằng tiếng Trung",
     "titleHanzi": "怎么点奶茶",
     "level": 1,
     "topic": "Podcast",
     "channel": "Chinese Podcast Station",
     "durationSec": 657,
-    "thumbnailUrl": "https://i.ytimg.com/vi/THLbSEZ4Y/hqdefault.jpg",
+    "thumbnailUrl": "https://i.ytimg.com/vi/f-THLbSEZ4Y/hqdefault.jpg",
     "totalSentences": 224,
     "segments": [
       {

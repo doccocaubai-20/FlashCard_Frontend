@@ -52,7 +52,7 @@ export default function VideoPlayerScreen() {
   // Active Segment
   const [activeSegmentIndex, setActiveSegmentIndex] = useState(0);
   const transcriptListRef = useRef(null);
-  const activeCardRef = useRef(null);
+  const lastPausedSegRef = useRef(-1);
 
   // Ghi âm / Luyện nói (Shadowing)
   const [isRecording, setIsRecording] = useState(false);
@@ -61,6 +61,26 @@ export default function VideoPlayerScreen() {
   const mediaRecorderRef = useRef(null);
   const recordedAudioRef = useRef(null);
   const recordedChunksRef = useRef([]);
+
+  // Hàm cuộn mượt mà bản chép tới câu được chỉ định, luôn giữ câu ở khoảng 1/3 khung nhìn
+  const scrollToSegment = (index, behavior = 'smooth') => {
+    const container = transcriptListRef.current;
+    if (!container) return;
+    const card = container.querySelector(`[data-segment-index="${index}"]`);
+    if (!card) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const offsetFromContainerTop = cardRect.top - containerRect.top;
+
+    // Giữ thẻ đang phát luôn nằm cách đỉnh container khoảng 100px
+    const targetScroll = container.scrollTop + offsetFromContainerTop - 110;
+
+    container.scrollTo({
+      top: Math.max(0, targetScroll),
+      behavior: behavior
+    });
+  };
 
   // 1. Tải và khởi tạo YouTube IFrame API
   useEffect(() => {
@@ -88,6 +108,7 @@ export default function VideoPlayerScreen() {
             // 1: PLAYING, 2: PAUSED, 0: ENDED
             if (event.data === 1) {
               setIsPlaying(true);
+              lastPausedSegRef.current = -1; // Reset để có thể tự dừng ở câu tiếp
             } else {
               setIsPlaying(false);
             }
@@ -106,7 +127,7 @@ export default function VideoPlayerScreen() {
       initPlayer();
     }
 
-    // Interval tracking currentTime mỗi 100ms
+    // Interval tracking currentTime mỗi 120ms
     checkInterval = setInterval(() => {
       if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
         try {
@@ -114,7 +135,7 @@ export default function VideoPlayerScreen() {
           setCurrentTime(time);
         } catch (e) {}
       }
-    }, 150);
+    }, 120);
 
     return () => {
       if (checkInterval) clearInterval(checkInterval);
@@ -125,34 +146,39 @@ export default function VideoPlayerScreen() {
     };
   }, [lesson.youtubeId]);
 
-  // 2. Tìm câu active dựa theo currentTime
+  // 2. Tìm câu active dựa theo currentTime & xử lý tự dừng / lặp câu
   useEffect(() => {
     if (!lesson.segments || lesson.segments.length === 0) return;
 
     const segIndex = lesson.segments.findIndex(
-      (s) => currentTime >= s.start && currentTime <= s.end
+      (s) => currentTime >= s.start && currentTime < s.end
     );
 
     if (segIndex !== -1 && segIndex !== activeSegmentIndex) {
       setActiveSegmentIndex(segIndex);
-
-      // Auto scroll transcript to active card
-      if (activeCardRef.current) {
-        activeCardRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest'
-        });
-      }
+      scrollToSegment(segIndex, 'smooth');
     }
 
-    // Xử lý Lặp câu (Loop) hoặc Tự động dừng (Auto-pause) khi hết câu
+    // Xử lý Lặp câu (Loop) hoặc Tự động dừng (Auto-pause) ở đầu câu tiếp theo
     const currentSeg = lesson.segments[activeSegmentIndex];
     if (currentSeg && isPlaying) {
-      if (currentTime >= currentSeg.end - 0.15) {
-        if (isLooping) {
+      if (isLooping) {
+        if (currentTime >= currentSeg.end - 0.1) {
           playerRef.current?.seekTo(currentSeg.start, true);
-        } else if (isAutoPause) {
+        }
+      } else if (isAutoPause) {
+        // Tự động dừng ở ngay ĐẦU TIÊN của câu tiếp theo
+        if (currentTime >= currentSeg.end - 0.08 && lastPausedSegRef.current !== activeSegmentIndex) {
+          lastPausedSegRef.current = activeSegmentIndex;
+          const nextIndex = activeSegmentIndex + 1;
+          const nextSeg = lesson.segments[nextIndex];
+
           playerRef.current?.pauseVideo();
+          if (nextSeg) {
+            playerRef.current?.seekTo(nextSeg.start, true);
+            setActiveSegmentIndex(nextIndex);
+            scrollToSegment(nextIndex, 'smooth');
+          }
         }
       }
     }
@@ -165,7 +191,9 @@ export default function VideoPlayerScreen() {
 
   // Điều khiển tua câu
   const seekToSegment = (seg, index) => {
+    lastPausedSegRef.current = -1;
     setActiveSegmentIndex(index);
+    scrollToSegment(index, 'smooth');
     if (playerRef.current && typeof playerRef.current.seekTo === 'function') {
       playerRef.current.seekTo(seg.start, true);
       playerRef.current.playVideo();
@@ -173,9 +201,11 @@ export default function VideoPlayerScreen() {
   };
 
   const replayCurrentSegment = () => {
+    lastPausedSegRef.current = -1;
     if (activeSegment && playerRef.current) {
       playerRef.current.seekTo(activeSegment.start, true);
       playerRef.current.playVideo();
+      scrollToSegment(activeSegmentIndex, 'smooth');
     }
   };
 
@@ -279,7 +309,7 @@ export default function VideoPlayerScreen() {
           </div>
 
           {/* Hộp Phụ đề đồng bộ 3 tầng (Khớp chính xác câu đang phát) */}
-          <div className="bg-white dark:bg-card-dark rounded-2xl p-5 border border-hairline dark:border-divider-dark shadow-sm space-y-3 relative overflow-hidden">
+          <div className="bg-white dark:bg-card-dark rounded-2xl p-4 sm:p-5 border border-hairline dark:border-divider-dark shadow-sm space-y-2.5 relative min-h-[125px] max-h-[160px] sm:max-h-[185px] overflow-y-auto custom-scrollbar">
             <div className="flex items-center justify-between text-xs text-mute pb-2 border-b border-hairline/60 dark:border-divider-dark/60">
               <span className="font-bold flex items-center gap-1.5 text-primary">
                 <Sparkles size={14} />
@@ -512,7 +542,7 @@ export default function VideoPlayerScreen() {
                 return (
                   <div
                     key={seg.id || idx}
-                    ref={isActive ? activeCardRef : null}
+                    data-segment-index={idx}
                     onClick={() => seekToSegment(seg, idx)}
                     className={`p-3.5 rounded-xl transition-all cursor-pointer select-text ${
                       isActive
