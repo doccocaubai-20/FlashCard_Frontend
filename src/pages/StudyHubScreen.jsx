@@ -23,8 +23,8 @@ export default function StudyHubScreen() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = typeof statsApi?.getUserStats === 'function' 
-          ? await statsApi.getUserStats() 
+        const res = typeof statsApi?.getUserStats === 'function'
+          ? await statsApi.getUserStats()
           : (typeof statsApi?.getSummary === 'function' ? await statsApi.getSummary() : null);
         if (res && res.data) {
           setStats({
@@ -134,12 +134,10 @@ export default function StudyHubScreen() {
         <div className="bg-gradient-to-r from-primary/10 via-teal-500/5 to-transparent border border-primary/20 dark:border-primary/30 rounded-2xl p-5 shadow-xs text-left">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-primary/20 text-primary flex items-center justify-center font-black">
-                <Sparkles size={20} />
-              </div>
+
               <div>
                 <h3 className="text-sm font-bold text-ink dark:text-on-dark font-display">Tiến trình học tập cá nhân</h3>
-                <p className="text-xs text-mute">Duy trì thói quen học mỗi ngày để đạt điểm số cao nhất!</p>
+                <p className="text-xs text-mute">Duy trì thói quen học mỗi ngày để đạt điểm số cao!</p>
               </div>
             </div>
 

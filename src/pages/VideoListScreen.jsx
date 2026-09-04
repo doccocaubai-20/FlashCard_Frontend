@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Play, 
-  Search, 
-  Clock, 
-  Sparkles, 
-  Video as VideoIcon, 
+import {
+  Play,
+  Search,
+  Clock,
+  Sparkles,
+  Video as VideoIcon,
   Tv
 } from 'lucide-react';
 import videoLessonsData from '../data/videoLessonsData';
@@ -29,9 +29,9 @@ export default function VideoListScreen() {
     return videoLessonsData.filter(v => {
       const matchLevel = selectedLevel === 'ALL' || v.level === Number(selectedLevel);
       const q = searchQuery.toLowerCase().trim();
-      const matchSearch = !q || 
-        v.title.toLowerCase().includes(q) || 
-        v.titleHanzi.toLowerCase().includes(q) || 
+      const matchSearch = !q ||
+        v.title.toLowerCase().includes(q) ||
+        v.titleHanzi.toLowerCase().includes(q) ||
         v.topic.toLowerCase().includes(q) ||
         v.channel.toLowerCase().includes(q);
       return matchLevel && matchSearch;
@@ -54,40 +54,27 @@ export default function VideoListScreen() {
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-bold uppercase tracking-wider">
-              <Sparkles size={14} className="text-amber-300" />
               <span>Học tiếng Trung qua Video YouTube</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
               Xem hoạt hình & podcast có phụ đề đồng bộ
             </h1>
-            <p className="text-white/80 text-sm sm:text-base leading-relaxed">
-              Mỗi câu nói đều có chữ Hán, Pinyin và bản dịch tiếng Việt. Bấm vào bất kỳ câu nào để tua lại, nghe kỹ và luyện nói phản xạ (Shadowing).
-            </p>
+
           </div>
 
-          <div className="flex items-center gap-3 bg-black/20 backdrop-blur-md p-4 rounded-2xl border border-white/10 shrink-0">
-            <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-amber-300">
-              <Tv size={26} />
-            </div>
-            <div>
-              <div className="text-2xl font-black">{videoLessonsData.length}</div>
-              <div className="text-xs text-white/70 font-medium">Video tuyển chọn</div>
-            </div>
-          </div>
         </div>
       </div>
 
       {/* Thanh Bộ lọc & Tìm kiếm */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white dark:bg-card-dark p-3 rounded-2xl border border-hairline dark:border-divider-dark shadow-sm">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white dark:bg-surface-dark p-3 rounded-2xl border border-hairline dark:border-divider-dark shadow-sm">
         {/* HSK Level Tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
           <button
             onClick={() => setSelectedLevel('ALL')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-              selectedLevel === 'ALL'
-                ? 'bg-primary text-white shadow-sm shadow-primary/30'
-                : 'text-sub dark:text-on-dark-mute hover:bg-black/5 dark:hover:bg-white/5'
-            }`}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${selectedLevel === 'ALL'
+              ? 'bg-primary text-white shadow-sm shadow-primary/30'
+              : 'text-sub dark:text-on-dark-mute hover:bg-black/5 dark:hover:bg-white/5'
+              }`}
           >
             Tất cả ({levelCounts.ALL})
           </button>
@@ -95,11 +82,10 @@ export default function VideoListScreen() {
             <button
               key={lvl}
               onClick={() => setSelectedLevel(lvl)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-                selectedLevel === lvl
-                  ? 'bg-primary text-white shadow-sm shadow-primary/30'
-                  : 'text-sub dark:text-on-dark-mute hover:bg-black/5 dark:hover:bg-white/5'
-              }`}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${selectedLevel === lvl
+                ? 'bg-primary text-white shadow-sm shadow-primary/30'
+                : 'text-sub dark:text-on-dark-mute hover:bg-black/5 dark:hover:bg-white/5'
+                }`}
             >
               HSK {lvl} ({levelCounts[lvl] || 0})
             </button>
@@ -114,14 +100,14 @@ export default function VideoListScreen() {
             placeholder="Tìm theo chủ đề, tiêu đề..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3.5 py-1.5 text-xs font-medium rounded-xl border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-black/20 focus:outline-none focus:border-primary transition"
+            className="w-full pl-9 pr-3.5 py-1.5 text-xs font-medium rounded-xl border border-hairline dark:border-divider-dark bg-surface-bone/50 dark:bg-surface-deep/60 text-ink dark:text-on-dark placeholder:text-mute focus:outline-none focus:border-primary transition"
           />
         </div>
       </div>
 
       {/* Danh sách Thẻ Video */}
       {filteredVideos.length === 0 ? (
-        <div className="text-center py-16 bg-white dark:bg-card-dark rounded-3xl border border-hairline dark:border-divider-dark space-y-3">
+        <div className="text-center py-16 bg-white dark:bg-surface-dark rounded-3xl border border-hairline dark:border-divider-dark space-y-3">
           <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
             <VideoIcon size={28} />
           </div>
@@ -140,7 +126,7 @@ export default function VideoListScreen() {
               <div
                 key={video.id}
                 onClick={() => navigate(`/video/${video.id}`)}
-                className="group flex flex-col bg-white dark:bg-card-dark rounded-2xl overflow-hidden border border-hairline dark:border-divider-dark shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                className="group flex flex-col bg-white dark:bg-surface-dark rounded-2xl overflow-hidden border border-hairline dark:border-divider-dark shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
               >
                 {/* Thumbnail YouTube */}
                 <div className="relative aspect-video w-full bg-black overflow-hidden">

@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Play, 
-  Pause, 
-  RotateCcw, 
-  SkipBack, 
-  SkipForward, 
-  Volume2, 
-  Mic, 
-  MicOff, 
-  Square, 
-  Eye, 
-  EyeOff, 
-  Repeat, 
-  Maximize2, 
+import {
+  ArrowLeft,
+  Play,
+  Pause,
+  RotateCcw,
+  SkipBack,
+  SkipForward,
+  Volume2,
+  Mic,
+  MicOff,
+  Square,
+  Eye,
+  EyeOff,
+  Repeat,
+  Maximize2,
   Sparkles,
   ChevronRight,
   Tv,
@@ -133,7 +133,7 @@ export default function VideoPlayerScreen() {
         try {
           const time = playerRef.current.getCurrentTime();
           setCurrentTime(time);
-        } catch (e) {}
+        } catch (e) { }
       }
     }, 120);
 
@@ -167,17 +167,22 @@ export default function VideoPlayerScreen() {
           playerRef.current?.seekTo(currentSeg.start, true);
         }
       } else if (isAutoPause) {
-        // Tự động dừng ở ngay ĐẦU TIÊN của câu tiếp theo
-        if (currentTime >= currentSeg.end - 0.08 && lastPausedSegRef.current !== activeSegmentIndex) {
-          lastPausedSegRef.current = activeSegmentIndex;
-          const nextIndex = activeSegmentIndex + 1;
-          const nextSeg = lesson.segments[nextIndex];
+        // Video chạy hết câu này và hết cả đoạn ngắt (nếu có).
+        // Đến đúng đầu câu tiếp theo (nextSeg.start) thì dừng luôn không phát.
+        const nextIndex = activeSegmentIndex + 1;
+        const nextSeg = lesson.segments[nextIndex];
 
-          playerRef.current?.pauseVideo();
-          if (nextSeg) {
+        if (nextSeg) {
+          if (currentTime >= nextSeg.start - 0.04 && lastPausedSegRef.current !== activeSegmentIndex) {
+            lastPausedSegRef.current = activeSegmentIndex;
+            playerRef.current?.pauseVideo();
             playerRef.current?.seekTo(nextSeg.start, true);
-            setActiveSegmentIndex(nextIndex);
-            scrollToSegment(nextIndex, 'smooth');
+          }
+        } else {
+          // Câu cuối cùng của video
+          if (currentTime >= currentSeg.end && lastPausedSegRef.current !== activeSegmentIndex) {
+            lastPausedSegRef.current = activeSegmentIndex;
+            playerRef.current?.pauseVideo();
           }
         }
       }
@@ -185,8 +190,8 @@ export default function VideoPlayerScreen() {
   }, [currentTime, lesson.segments, activeSegmentIndex, isLooping, isAutoPause, isPlaying]);
 
   const activeSegment = lesson.segments[activeSegmentIndex] || lesson.segments[0] || {};
-  const progressPercent = lesson.segments.length > 0 
-    ? Math.round(((activeSegmentIndex + 1) / lesson.segments.length) * 100) 
+  const progressPercent = lesson.segments.length > 0
+    ? Math.round(((activeSegmentIndex + 1) / lesson.segments.length) * 100)
     : 0;
 
   // Điều khiển tua câu
@@ -300,7 +305,7 @@ export default function VideoPlayerScreen() {
 
       {/* Main 2-Column Grid */}
       <div className={`grid gap-5 ${isLargeVideo ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-12'}`}>
-        
+
         {/* CỘT TRÁI: Video Player + Subtitle Box + Controls + Shadowing (Chiếm 7 hoặc 8 cột) */}
         <div className={`space-y-4 ${isLargeVideo ? 'col-span-1' : 'lg:col-span-7 xl:col-span-8'}`}>
           {/* Container Trình phát YouTube */}
@@ -309,11 +314,10 @@ export default function VideoPlayerScreen() {
           </div>
 
           {/* Hộp Phụ đề đồng bộ 3 tầng (Khớp chính xác câu đang phát) */}
-          <div className="bg-white dark:bg-card-dark rounded-2xl p-4 sm:p-5 border border-hairline dark:border-divider-dark shadow-sm space-y-2.5 relative min-h-[125px] max-h-[160px] sm:max-h-[185px] overflow-y-auto custom-scrollbar">
+          <div className="bg-white dark:bg-surface-dark rounded-2xl p-4 sm:p-5 border border-hairline dark:border-divider-dark shadow-sm space-y-2.5 relative min-h-[125px] max-h-[160px] sm:max-h-[185px] overflow-y-auto custom-scrollbar">
             <div className="flex items-center justify-between text-xs text-mute pb-2 border-b border-hairline/60 dark:border-divider-dark/60">
               <span className="font-bold flex items-center gap-1.5 text-primary">
-                <Sparkles size={14} />
-                <span>Câu #{activeSegment.id || activeSegmentIndex + 1} / {lesson.segments.length}</span>
+                <span>Câu {activeSegment.id || activeSegmentIndex + 1} / {lesson.segments.length}</span>
               </span>
               <span className="font-mono text-[11px]">
                 {Math.floor(activeSegment.start || 0)}s - {Math.floor(activeSegment.end || 0)}s
@@ -341,7 +345,7 @@ export default function VideoPlayerScreen() {
           </div>
 
           {/* Thanh công cụ điều khiển thông minh */}
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-card-dark p-3.5 rounded-2xl border border-hairline dark:border-divider-dark shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-surface-dark p-3.5 rounded-2xl border border-hairline dark:border-divider-dark shadow-sm">
             {/* Tua câu & Lặp */}
             <div className="flex items-center gap-1.5">
               <button
@@ -376,11 +380,10 @@ export default function VideoPlayerScreen() {
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => setShowPinyin(!showPinyin)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                  showPinyin 
-                    ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30' 
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${showPinyin
+                    ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'
                     : 'text-mute hover:bg-black/5 dark:hover:bg-white/10 border border-transparent'
-                }`}
+                  }`}
               >
                 {showPinyin ? <Eye size={14} /> : <EyeOff size={14} />}
                 <span>Pinyin</span>
@@ -388,11 +391,10 @@ export default function VideoPlayerScreen() {
 
               <button
                 onClick={() => setShowTranslation(!showTranslation)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                  showTranslation 
-                    ? 'bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30' 
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${showTranslation
+                    ? 'bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30'
                     : 'text-mute hover:bg-black/5 dark:hover:bg-white/10 border border-transparent'
-                }`}
+                  }`}
               >
                 {showTranslation ? <Eye size={14} /> : <EyeOff size={14} />}
                 <span>Dịch</span>
@@ -400,11 +402,10 @@ export default function VideoPlayerScreen() {
 
               <button
                 onClick={() => setIsLooping(!isLooping)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                  isLooping 
-                    ? 'bg-primary text-white shadow-sm' 
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${isLooping
+                    ? 'bg-primary text-white shadow-sm'
                     : 'text-mute hover:bg-black/5 dark:hover:bg-white/10 border border-transparent'
-                }`}
+                  }`}
                 title="Lặp lại câu này liên tục"
               >
                 <Repeat size={14} />
@@ -413,11 +414,10 @@ export default function VideoPlayerScreen() {
 
               <button
                 onClick={() => setIsAutoPause(!isAutoPause)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                  isAutoPause 
-                    ? 'bg-rose-500 text-white shadow-sm' 
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${isAutoPause
+                    ? 'bg-rose-500 text-white shadow-sm'
                     : 'text-mute hover:bg-black/5 dark:hover:bg-white/10 border border-transparent'
-                }`}
+                  }`}
                 title="Tự dừng khi hết câu để luyện đọc"
               >
                 <span>Tự dừng</span>
@@ -434,16 +434,15 @@ export default function VideoPlayerScreen() {
           </div>
 
           {/* Phần Luyện Nói Theo Câu (Shadowing & Recording) */}
-          <div className="bg-white dark:bg-card-dark rounded-2xl p-5 border border-hairline dark:border-divider-dark shadow-sm space-y-3">
+          <div className="bg-white dark:bg-surface-dark rounded-2xl p-5 border border-hairline dark:border-divider-dark shadow-sm space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-ink dark:text-on-dark flex items-center gap-1.5">
                 <Mic size={15} className="text-primary" />
                 <span>Luyện nói theo câu (Shadowing)</span>
               </h4>
-              <span className="text-[11px] text-mute">Nguồn: {lesson.channel}</span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-surface-bone/40 dark:bg-black/20 border border-hairline/60 dark:border-divider-dark/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="p-3.5 rounded-xl bg-surface-bone/40 dark:bg-surface-deep/60 border border-hairline/60 dark:border-divider-dark/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="space-y-1">
                 <div className="text-sm font-bold text-ink dark:text-on-dark font-display">
                   {activeSegment.hanzi}
@@ -484,11 +483,10 @@ export default function VideoPlayerScreen() {
                 {audioBlobUrl && (
                   <button
                     onClick={playRecordedAudio}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-bold transition cursor-pointer ${
-                      isPlayingRecorded
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-bold transition cursor-pointer ${isPlayingRecorded
                         ? 'bg-emerald-500 text-white border-emerald-600'
                         : 'border-emerald-500/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10'
-                    }`}
+                      }`}
                   >
                     <Play size={14} className="fill-current" />
                     <span>{isPlayingRecorded ? 'Đang phát...' : 'Phát lại ghi âm'}</span>
@@ -501,9 +499,9 @@ export default function VideoPlayerScreen() {
 
         {/* CỘT PHẢI: BẢN CHÉP TƯƠNG TÁC (Synchronized Interactive Transcript) */}
         <div className={`${isLargeVideo ? 'col-span-1' : 'lg:col-span-5 xl:col-span-4'}`}>
-          <div className="bg-white dark:bg-card-dark rounded-2xl border border-hairline dark:border-divider-dark shadow-sm flex flex-col h-[680px]">
+          <div className="bg-white dark:bg-surface-dark rounded-2xl border border-hairline dark:border-divider-dark shadow-sm flex flex-col h-[680px]">
             {/* Header Bản chép */}
-            <div className="p-4 border-b border-hairline dark:border-divider-dark flex items-center justify-between shrink-0 bg-surface-bone/20 dark:bg-black/10 rounded-t-2xl">
+            <div className="p-4 border-b border-hairline dark:border-divider-dark flex items-center justify-between shrink-0 bg-surface-bone/20 dark:bg-surface-deep/40 rounded-t-2xl">
               <div>
                 <h3 className="text-sm font-extrabold text-ink dark:text-on-dark flex items-center gap-2">
                   <span>BẢN CHÉP</span>
@@ -511,7 +509,6 @@ export default function VideoPlayerScreen() {
                     {progressPercent}%
                   </span>
                 </h3>
-                <p className="text-[11px] text-mute mt-0.5">Bấm vào câu bất kỳ để tua video</p>
               </div>
 
               <div className="flex items-center gap-1">
@@ -520,7 +517,7 @@ export default function VideoPlayerScreen() {
                   className={`p-1.5 rounded-lg text-xs font-bold transition ${showPinyin ? 'text-primary bg-primary/10' : 'text-mute'}`}
                   title="Ẩn/hiện Pinyin trong bản chép"
                 >
-                  Pīn
+                  Pinyin
                 </button>
                 <button
                   onClick={() => setShowTranslation(!showTranslation)}
@@ -533,7 +530,7 @@ export default function VideoPlayerScreen() {
             </div>
 
             {/* Danh sách câu có cuộn đồng bộ */}
-            <div 
+            <div
               ref={transcriptListRef}
               className="flex-1 overflow-y-auto p-3 space-y-2.5 divide-y-0 custom-scrollbar"
             >
@@ -544,11 +541,10 @@ export default function VideoPlayerScreen() {
                     key={seg.id || idx}
                     data-segment-index={idx}
                     onClick={() => seekToSegment(seg, idx)}
-                    className={`p-3.5 rounded-xl transition-all cursor-pointer select-text ${
-                      isActive
+                    className={`p-3.5 rounded-xl transition-all cursor-pointer select-text ${isActive
                         ? 'bg-primary/5 dark:bg-primary/15 border-2 border-primary shadow-sm shadow-primary/10 scale-[1.01]'
                         : 'bg-transparent hover:bg-black/5 dark:hover:bg-white/5 border border-transparent'
-                    }`}
+                      }`}
                   >
                     {/* Header câu: Số thứ tự & Thời gian */}
                     <div className="flex items-center justify-between text-[10px] font-bold mb-1">
