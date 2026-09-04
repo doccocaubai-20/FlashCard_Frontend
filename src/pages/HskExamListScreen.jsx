@@ -1,268 +1,354 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
+import { 
+  Clock, 
+  Headphones, 
+  BookOpen, 
+  PenTool, 
+  X, 
+  Award, 
+  History, 
   ChevronRight,
-  Sparkles,
-  BarChart2,
-  Award,
-  BookOpen
+  ArrowRight,
+  Calendar,
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import { hskExamApi } from '../services/hskExamApi';
 
+// Subtitle mapping for HSK levels
+const LEVEL_SUBTITLES = {
+  1: 'Sơ cấp',
+  2: 'Sơ cấp',
+  3: 'Sơ trung cấp',
+  4: 'Trung cấp',
+  5: 'Trung cao cấp',
+  6: 'Cao cấp'
+};
+
 export default function HskExamListScreen() {
   const navigate = useNavigate();
+
+  // State
+  const [levels, setLevels] = useState([]);
+  const [activeLevel, setActiveLevel] = useState(1);
   const [exams, setExams] = useState([]);
-  const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [examsLoading, setExamsLoading] = useState(false);
+
+  // Modal State
+  const [selectedExam, setSelectedExam] = useState(null);
+  const [customDuration, setCustomDuration] = useState(35);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // User History State
+  const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
 
+  // Load levels on mount
   useEffect(() => {
-    const loadData = async () => {
+    async function init() {
       try {
         setLoading(true);
-        const [examsRes, historyRes] = await Promise.all([
-          hskExamApi.getExams(),
+        const [levelsData, historyRes] = await Promise.allSettled([
+          hskExamApi.getLevels(),
           hskExamApi.getResults()
         ]);
-        setExams(examsRes.data || []);
-        setHistory(historyRes.data || []);
+        
+        if (levelsData.status === 'fulfilled' && levelsData.value) {
+          setLevels(levelsData.value);
+        }
+        if (historyRes.status === 'fulfilled' && historyRes.value?.data) {
+          setHistory(historyRes.value.data);
+        }
       } catch (err) {
-        console.error('Failed to load HSK exam data:', err);
+        console.error('Failed to load HSK levels:', err);
       } finally {
         setLoading(false);
       }
-    };
-    loadData();
+    }
+    init();
   }, []);
 
-  const getHskColorClass = (level) => {
-    switch (level) {
-      case 1: return 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5 hover:border-emerald-500/60';
-      case 2: return 'border-cyan-500/30 text-cyan-400 bg-cyan-500/5 hover:border-cyan-500/60';
-      case 3: return 'border-red-500/30 text-red-400 bg-red-500/5 hover:border-red-500/60';
-      case 4: return 'border-amber-500/30 text-amber-400 bg-amber-500/5 hover:border-amber-500/60';
-      case 5: return 'border-blue-500/30 text-blue-400 bg-blue-500/5 hover:border-blue-500/60';
-      case 6: return 'border-purple-500/30 text-purple-400 bg-purple-500/5 hover:border-purple-500/60';
-      default: return 'border-hairline text-mute bg-surface-bone';
+  // Load exams when activeLevel changes
+  useEffect(() => {
+    async function loadLevelExams() {
+      try {
+        setExamsLoading(true);
+        const items = await hskExamApi.getExamsByLevel(activeLevel);
+        setExams(items || []);
+      } catch (err) {
+        console.error(`Failed to load exams for level ${activeLevel}:`, err);
+        setExams([]);
+      } finally {
+        setExamsLoading(false);
+      }
     }
+    loadLevelExams();
+  }, [activeLevel]);
+
+  // Calculate total tests count
+  const totalExamsCount = levels.reduce((acc, curr) => acc + (curr.count || 0), 0) || 79;
+
+  // Open modal
+  const handleOpenConfigModal = (exam, index) => {
+    setSelectedExam({
+      ...exam,
+      indexNumber: index + 1
+    });
+    setCustomDuration(exam.durationMinutes || (activeLevel === 1 ? 35 : activeLevel === 2 ? 50 : 85));
+    setIsModalOpen(true);
   };
 
-  const getLevelBadgeColor = (level) => {
-    switch (level) {
-      case 1: return 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
-      case 2: return 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30';
-      case 3: return 'bg-red-500/20 text-red-400 border border-red-500/30';
-      case 4: return 'bg-amber-500/20 text-amber-400 border border-amber-500/30';
-      case 5: return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
-      case 6: return 'bg-purple-500/20 text-purple-400 border border-purple-500/30';
-      default: return 'bg-surface-bone text-mute';
-    }
+  // Start exam
+  const handleStartExam = () => {
+    if (!selectedExam) return;
+    const duration = Math.max(1, Math.min(180, parseInt(customDuration, 10) || 35));
+    navigate(`/hsk-exams/${selectedExam.testId}/play?duration=${duration}`);
   };
-
-  const getHskIconColor = (level) => {
-    switch (level) {
-      case 1: return 'bg-emerald-500/10 text-emerald-400';
-      case 2: return 'bg-cyan-500/10 text-cyan-400';
-      case 3: return 'bg-amber-500/10 text-amber-400';
-      case 6: return 'bg-red-500/10 text-red-400';
-      default: return 'bg-primary/10 text-primary';
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-mute">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        <span className="text-sm font-medium">Đang tải danh sách đề thi HSK...</span>
-      </div>
-    );
-  }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-16 select-none animate-fade-in">
-
-      {/* Header Info */}
-      <div className="space-y-2">
-
-        <h1 className="font-display text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight">
-
-          Luyện đề tổng hợp
-        </h1>
-        <p className="text-sm text-mute dark:text-on-dark-mute max-w-2xl leading-relaxed">
-          Chọn đáp án và nhận chấm chữa tức thì. Kết quả tự động lưu để AI gợi ý đề ôn điểm yếu.
-        </p>
-      </div>
-
-      {/* Main Standard Mock Exams */}
-      <div className="space-y-4">
-        {exams.map((exam) => (
-          <div
-            key={exam.id}
-            onClick={() => navigate(`/hsk-exams/${exam.id}/play`)}
-            className="flex items-center justify-between p-4 bg-surface-card dark:bg-surface-dark/40 border border-hairline dark:border-divider-dark rounded-md hover:border-primary transition-all duration-300 cursor-pointer shadow-xs hover:shadow-md hover:-translate-y-0.5"
-          >
-            <div className="flex items-center gap-4">
-              <div className={`h-11 w-11 rounded-full flex items-center justify-center shrink-0 ${getHskIconColor(exam.hskLevel)}`}>
-                <span className="font-bold text-sm font-mono">HSK {exam.hskLevel}</span>
-              </div>
-              <div className="space-y-0.5">
-                <h3 className="text-sm font-bold text-ink dark:text-on-dark flex items-center gap-2">
-                  {exam.title}
-                </h3>
-                <p className="text-xs text-mute dark:text-on-dark-mute">
-                  {exam.description}
-                </p>
-              </div>
+    <div className="min-h-screen pb-20 animate-fade-in text-ink dark:text-on-dark select-none">
+      <div className="max-w-7xl mx-auto space-y-8 px-4 sm:px-6">
+        
+        {/* TOP STATS CARDS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+          {/* Total Tests Ready */}
+          <div className="bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-2xl p-6 shadow-xs flex flex-col justify-center">
+            <div className="text-4xl sm:text-5xl font-extrabold font-display tracking-tight text-ink dark:text-on-dark">
+              {totalExamsCount}
             </div>
-            <div className="flex items-center gap-2 text-mute hover:text-primary transition-colors">
-              <span className="text-[10px] font-mono font-bold">Làm đề</span>
-              <ChevronRight size={16} />
+            <div className="text-xs sm:text-sm font-medium text-mute dark:text-on-dark-mute mt-1">
+              Đề thi sẵn sàng
             </div>
           </div>
-        ))}
-      </div>
 
-      {/* Level-based practice grid */}
-      <div className="space-y-4">
-        <h2 className="text-sm font-mono font-bold text-mute uppercase tracking-widest">
-          Luyện đề theo cấp độ
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {[
-            { level: 1, questions: '~150 câu', templates: '7 mẫu' },
-            { level: 2, questions: '~200 câu', templates: '108 mẫu' },
-            { level: 3, questions: '~250 câu', templates: '213 mẫu' },
-            { level: 4, questions: '~300 câu', templates: '232 mẫu' },
-            { level: 5, questions: '~350 câu', templates: '200 mẫu' },
-            { level: 6, questions: '~400 câu', templates: '176 mẫu' }
-          ].map((item) => (
-            <div
-              key={item.level}
-              onClick={() => navigate(`/hsk-exams/hsk${item.level}-mock-1/play`)}
-              className={`p-4 border rounded-md cursor-pointer transition-all duration-300 flex flex-col justify-between h-28 ${getHskColorClass(item.level)}`}
-            >
-              <div>
-                <span className={`inline-block px-2 py-0.5 text-[10px] font-mono font-bold rounded-md ${getLevelBadgeColor(item.level)}`}>
-                  HSK {item.level}
-                </span>
-              </div>
-              <div className="space-y-0.5 text-left">
-                <div className="text-xs font-semibold text-ink dark:text-on-dark">{item.questions}</div>
-                <div className="text-[10px] text-mute dark:text-on-dark-mute">{item.templates}</div>
-              </div>
+          {/* HSK Levels */}
+          <div className="bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-2xl p-6 shadow-xs flex flex-col justify-center">
+            <div className="text-4xl sm:text-5xl font-extrabold font-display tracking-tight text-ink dark:text-on-dark">
+              {levels.length || 6}
             </div>
-          ))}
+            <div className="text-xs sm:text-sm font-medium text-mute dark:text-on-dark-mute mt-1">
+              Cấp độ HSK
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Stats and Adaptive buttons */}
-      <div className="flex flex-wrap gap-4 pt-2">
-        <button className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary text-xs font-mono font-bold transition-all cursor-pointer">
-          <Sparkles size={14} />
-          Ôn điểm yếu (adaptive)
-        </button>
-        <button
-          onClick={() => setShowHistory(!showHistory)}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-full border text-xs font-mono font-bold transition-all cursor-pointer ${showHistory
-            ? 'bg-ink text-white border-ink dark:bg-on-dark dark:text-ink dark:border-on-dark'
-            : 'border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark'
-            }`}
-        >
-          <BarChart2 size={14} />
-          {showHistory ? 'Ẩn tiến độ' : 'Xem tiến độ'}
-        </button>
-      </div>
+        {/* CHOOSE LEVEL SECTION */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-base sm:text-lg font-bold tracking-tight text-ink dark:text-on-dark">
+              Chọn cấp độ
+            </h2>
+            {history.length > 0 && (
+              <button
+                onClick={() => setShowHistory(!showHistory)}
+                className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-deep transition-colors cursor-pointer"
+              >
+                <History size={15} />
+                <span>{showHistory ? 'Ẩn lịch sử thi' : `Lịch sử thi (${history.length})`}</span>
+              </button>
+            )}
+          </div>
 
-      {/* History panel */}
-      {showHistory && (
-        <div className="p-6 bg-surface-card dark:bg-surface-dark/30 border border-hairline dark:border-divider-dark rounded-md space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
-          <h3 className="text-sm font-bold text-ink dark:text-on-dark flex items-center gap-2">
-            <Award size={16} className="text-primary" />
-            Lịch sử làm bài thi HSK
-          </h3>
+          {/* LEVEL TABS */}
+          <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
+            {[1, 2, 3, 4, 5, 6].map((lvl) => {
+              const lvlInfo = levels.find((l) => l.level === lvl) || { count: 0 };
+              const isActive = activeLevel === lvl;
 
-          {history.length === 0 ? (
-            <p className="text-xs text-mute leading-relaxed text-center py-6">
-              Bạn chưa tham gia bài thi mô phỏng nào. Hãy hoàn thành đề thi đầu tiên để ghi nhận tiến độ!
-            </p>
+              return (
+                <button
+                  key={lvl}
+                  onClick={() => setActiveLevel(lvl)}
+                  className={`flex items-center justify-between gap-4 px-4 py-3 rounded-2xl border transition-all duration-200 shrink-0 min-w-[130px] cursor-pointer text-left ${
+                    isActive
+                      ? 'bg-[#c53030] dark:bg-[#b91c1c] border-[#c53030] text-white shadow-sm'
+                      : 'bg-white dark:bg-surface-dark border-hairline dark:border-divider-dark hover:border-hairline-dark text-ink dark:text-on-dark'
+                  }`}
+                >
+                  <div>
+                    <div className={`font-bold text-sm leading-tight ${isActive ? 'text-white' : 'text-ink dark:text-on-dark'}`}>
+                      HSK {lvl}
+                    </div>
+                    <div className={`text-[11px] font-medium leading-tight mt-0.5 ${isActive ? 'text-white/80' : 'text-mute dark:text-on-dark-mute'}`}>
+                      {LEVEL_SUBTITLES[lvl]}
+                    </div>
+                  </div>
+                  <span
+                    className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                      isActive
+                        ? 'bg-white/20 text-white'
+                        : 'text-[#c53030] dark:text-red-400 bg-red-50 dark:bg-red-950/40'
+                    }`}
+                  >
+                    {lvlInfo.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* EXAM LIST GRID */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-ink dark:text-on-dark">
+              Đề thi thử HSK {activeLevel}
+            </h3>
+            <span className="text-xs font-medium text-mute dark:text-on-dark-mute">
+              {exams.length} đề thi
+            </span>
+          </div>
+
+          {examsLoading ? (
+            <div className="py-20 flex flex-col items-center justify-center gap-3 text-mute">
+              <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+              <p className="text-xs font-medium">Đang tải danh sách đề thi HSK {activeLevel}...</p>
+            </div>
+          ) : exams.length === 0 ? (
+            <div className="py-16 text-center text-mute dark:text-on-dark-mute border border-dashed border-hairline dark:border-divider-dark rounded-2xl">
+              Chưa có đề thi nào cho cấp độ này.
+            </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="border-b border-hairline dark:border-divider-dark text-mute font-mono">
-                    <th className="py-2">Tên Đề Thi</th>
-                    <th className="py-2">Cấp Độ</th>
-                    <th className="py-2 text-center">Đúng/Tổng</th>
-                    <th className="py-2 text-center">Điểm Số</th>
-                    <th className="py-2 text-center">Thời Gian</th>
-                    <th className="py-2 text-right">Ngày Thi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {history.map((res) => (
-                    <tr key={res.id} className="border-b border-hairline/40 dark:border-divider-dark/40 font-mono">
-                      <td className="py-2.5 font-sans font-bold text-ink dark:text-on-dark">{res.examTitle}</td>
-                      <td className="py-2.5">
-                        <span className={`px-1.5 py-0.5 rounded-sm text-[9px] font-bold ${getLevelBadgeColor(res.hskLevel)}`}>
-                          HSK {res.hskLevel}
-                        </span>
-                      </td>
-                      <td className="py-2.5 text-center">{res.correctAnswers}/{res.totalQuestions}</td>
-                      <td className="py-2.5 text-center font-extrabold text-primary">
-                        {res.score}/{res.maxScore}
-                      </td>
-                      <td className="py-2.5 text-center">
-                        {Math.floor(res.duration / 60)}m {res.duration % 60}s
-                      </td>
-                      <td className="py-2.5 text-right text-mute">
-                        {new Date(res.completedAt).toLocaleDateString('vi-VN')}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {exams.map((exam, index) => {
+                const padIndex = String(index + 1).padStart(2, '0');
+                const duration = exam.durationMinutes || (activeLevel === 1 ? 35 : activeLevel === 2 ? 50 : 85);
+                const listeningCount = exam.listeningQuestionCount || (activeLevel === 1 ? 20 : activeLevel === 2 ? 35 : 40);
+                const readingCount = exam.readingQuestionCount || (activeLevel === 1 ? 20 : activeLevel === 2 ? 25 : 30);
+                const writingCount = exam.writingQuestionCount || 0;
+
+                return (
+                  <div
+                    key={exam.testId}
+                    onClick={() => handleOpenConfigModal(exam, index)}
+                    className="relative overflow-hidden bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-2xl p-5 hover:shadow-md hover:border-[#c53030]/40 dark:hover:border-red-500/40 transition-all duration-200 cursor-pointer flex flex-col justify-between min-h-[175px] group"
+                  >
+                    {/* Watermark Number */}
+                    <div className="absolute right-3 bottom-0 text-7xl font-extrabold font-sans text-red-500/5 dark:text-red-400/5 select-none pointer-events-none transition-transform group-hover:scale-105">
+                      {padIndex}
+                    </div>
+
+                    {/* Card Header: Title & Duration */}
+                    <div className="flex items-start justify-between gap-2 z-10">
+                      <div>
+                        <h4 className="font-bold text-base text-ink dark:text-on-dark leading-snug group-hover:text-[#c53030] dark:group-hover:text-red-400 transition-colors">
+                          HSK {activeLevel} – Đề {index + 1}
+                        </h4>
+                        <div className="text-[11px] text-mute dark:text-on-dark-mute font-mono mt-0.5">
+                          {exam.title.replace(`HSK ${activeLevel} Test `, '')}
+                        </div>
+                      </div>
+                      <span className="flex items-center gap-1 text-[11px] font-semibold text-[#c53030] dark:text-red-400 shrink-0">
+                        {duration} phút
+                        <Clock size={13} className="text-[#c53030] dark:text-red-400" />
+                      </span>
+                    </div>
+
+                    {/* Card Body: Question Breakdown */}
+                    <div className="space-y-1.5 pt-6 z-10">
+                      <div className="flex items-center gap-2 text-xs font-medium text-ink/80 dark:text-on-dark/80">
+                        <Headphones size={14} className="text-red-500/80 dark:text-red-400/80 shrink-0" />
+                        <span>{listeningCount} câu nghe</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs font-medium text-ink/80 dark:text-on-dark/80">
+                        <BookOpen size={14} className="text-red-500/80 dark:text-red-400/80 shrink-0" />
+                        <span>{readingCount} câu đọc</span>
+                      </div>
+                      {writingCount > 0 && (
+                        <div className="flex items-center gap-2 text-xs font-medium text-ink/80 dark:text-on-dark/80">
+                          <PenTool size={14} className="text-red-500/80 dark:text-red-400/80 shrink-0" />
+                          <span>{writingCount} câu viết</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
-      )}
 
-      {/* Quick Test banner card */}
-      <div className="space-y-4">
-        <h2 className="text-sm font-mono font-bold text-mute uppercase tracking-widest">
-          Bài thi HSK 1 chính thức (Đề chuẩn)
-        </h2>
-        <div
-          onClick={() => navigate('/hsk-exams/hsk1-mock-1/play')}
-          className="bg-red-600 rounded-md overflow-hidden text-white cursor-pointer hover:shadow-lg transition-shadow duration-300 relative flex flex-col justify-between"
-        >
-          {/* Header Banner */}
-          <div className="p-6 bg-linear-to-r from-red-600 to-red-500 space-y-1">
-            <span className="text-[9px] font-mono font-bold uppercase tracking-widest opacity-80">汉语水平考试 • Chinese Proficiency Test</span>
-            <h3 className="font-display text-2xl font-extrabold tracking-wide uppercase">HSK 1 模拟试卷</h3>
-            <p className="text-xs opacity-90 font-medium">Đề thi mô phỏng HSK 1 — Hoa Ngữ 360</p>
+        {/* RECENT HISTORY DRAWER / ACCORDION */}
+        {showHistory && history.length > 0 && (
+          <div className="bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-2xl p-6 space-y-4">
+            <h3 className="text-base font-bold tracking-tight text-ink dark:text-on-dark flex items-center gap-2">
+              <History size={18} className="text-primary" />
+              Lịch sử các lần làm bài
+            </h3>
+            <div className="divide-y divide-hairline dark:divide-divider-dark">
+              {history.map((item) => (
+                <div key={item.id} className="py-3 flex items-center justify-between">
+                  <div className="space-y-1">
+                    <div className="text-sm font-semibold text-ink dark:text-on-dark">
+                      {item.examTitle || `HSK ${item.hskLevel}`}
+                    </div>
+                    <div className="text-xs text-mute flex items-center gap-3">
+                      <span>{new Date(item.completedAt).toLocaleDateString('vi-VN')}</span>
+                      <span>Thời gian: {Math.round(item.duration / 60)} phút</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                      {item.correctAnswers}/{item.totalQuestions} ({item.score}%)
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+        )}
 
-          {/* Stats table info */}
-          <div className="px-6 pb-6 bg-red-700/40 border-t border-white/10 grid grid-cols-4 gap-4 py-4 text-center">
-            <div className="space-y-0.5">
-              <div className="text-[9px] font-mono uppercase opacity-75">Cấp độ</div>
-              <div className="text-xs font-bold font-mono">HSK 1</div>
+      </div>
+
+      {/* EXAM CONFIGURATION MODAL (Screenshot 2) */}
+      {isModalOpen && selectedExam && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
+          <div className="relative w-full max-w-sm bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-2xl p-6 shadow-xl space-y-5 animate-scale-up">
+            
+            {/* Modal Header */}
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold text-ink dark:text-on-dark">
+                HSK {activeLevel} – Đề {selectedExam.indexNumber}
+              </h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="p-1 rounded-lg text-mute hover:text-ink dark:hover:text-on-dark hover:bg-surface-bone dark:hover:bg-black/20 transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
             </div>
-            <div className="space-y-0.5">
-              <div className="text-[9px] font-mono uppercase opacity-75">Số câu</div>
-              <div className="text-xs font-bold font-mono">40 Câu</div>
+
+            {/* Time Input Field */}
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-ink/80 dark:text-on-dark/80 block">
+                Thời gian (phút)
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="180"
+                value={customDuration}
+                onChange={(e) => setCustomDuration(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-hairline dark:border-divider-dark bg-white dark:bg-black/20 text-ink dark:text-on-dark text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/40 transition-all"
+              />
+              <p className="text-[11px] text-mute dark:text-on-dark-mute">
+                Từ 1 đến 180 phút
+              </p>
             </div>
-            <div className="space-y-0.5">
-              <div className="text-[9px] font-mono uppercase opacity-75">Thời gian</div>
-              <div className="text-xs font-bold font-mono">35 phút</div>
-            </div>
-            <div className="space-y-0.5">
-              <div className="text-[9px] font-mono uppercase opacity-75">Tổng điểm</div>
-              <div className="text-xs font-bold font-mono">200 分</div>
-            </div>
+
+            {/* Action CTA Button */}
+            <button
+              onClick={handleStartExam}
+              className="w-full py-3 px-4 rounded-xl bg-[#1e3a5f] hover:bg-[#162c48] text-white font-bold text-sm transition-all duration-200 cursor-pointer shadow-sm active:scale-[0.98]"
+            >
+              Bắt đầu làm bài
+            </button>
+
           </div>
         </div>
-      </div>
+      )}
 
     </div>
   );

@@ -1,4 +1,3 @@
-// Dữ liệu tuyển chọn bài học tiếng Trung qua video YouTube có phụ đề đồng bộ
 export const videoLessonsData = [
   {
     "id": "f-THLbSEZ4Y",
@@ -46215,5 +46214,4 @@ export const videoLessonsData = [
     ]
   }
 ];
-
 export default videoLessonsData;
