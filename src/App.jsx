@@ -14,7 +14,6 @@ import QuizScreen from './pages/QuizScreen';
 import GameScreen from './pages/GameScreen';
 import RadicalScreen from './pages/RadicalScreen';
 import PinyinScreen from './pages/PinyinScreen';
-import GrammarScreen from './pages/GrammarScreen';
 import DictationScreen from './pages/DictationScreen';
 import MatchingGameScreen from './pages/MatchingGameScreen';
 import VocabularyNotebookScreen from './pages/VocabularyNotebookScreen';
@@ -32,6 +31,7 @@ import HskExamListScreen from './pages/HskExamListScreen';
 import HskExamPlayerScreen from './pages/HskExamPlayerScreen';
 
 // Lazy-loaded pages (heavy data files — only download when user visits)
+const GrammarScreen = React.lazy(() => import('./pages/GrammarScreen'));
 const DialogueScreen = React.lazy(() => import('./pages/DialogueScreen'));
 const TranslationPlaygroundScreen = React.lazy(() => import('./pages/TranslationPlaygroundScreen'));
 const SpeakingScreen = React.lazy(() => import('./pages/SpeakingScreen'));
@@ -97,7 +97,6 @@ function App() {
         <Route path="/scribble-write" element={<ScribbleWriteScreen />} />
         <Route path="/radicals" element={<RadicalScreen />} />
         <Route path="/pinyin" element={<PinyinScreen />} />
-        <Route path="/grammar" element={<GrammarScreen />} />
         <Route path="/games/falling" element={<FallingWordsGameScreen />} />
         <Route path="/games/matching" element={<MatchingGameScreen />} />
         <Route path="/study-hub" element={<StudyHubScreen />} />
@@ -117,6 +116,7 @@ function App() {
         <Route path="/settings" element={<SettingsScreen />} />
 
         {/* Lazy-loaded routes (heavy data) */}
+        <Route path="/grammar" element={<Suspense fallback={<LazyFallback />}><GrammarScreen /></Suspense>} />
         <Route path="/dictionary" element={<Suspense fallback={<LazyFallback />}><DictionaryScreen /></Suspense>} />
         <Route path="/dialogues" element={<Suspense fallback={<LazyFallback />}><DialogueScreen /></Suspense>} />
         <Route path="/speaking" element={<Suspense fallback={<LazyFallback />}><SpeakingScreen /></Suspense>} />

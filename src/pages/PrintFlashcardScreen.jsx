@@ -19,7 +19,6 @@ import { deckApi } from '../services/deckApi';
 import { flashcardApi } from '../services/flashcardApi';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
 import { useToast } from '../context/ToastContext';
-import HoverableText from '../components/common/HoverableText';
 
 // SVG Mi-character grid for writing practice
 function PracticeGrid({ char }) {

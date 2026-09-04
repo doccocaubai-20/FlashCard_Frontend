@@ -37,31 +37,10 @@ export const fetchBadges = createAsyncThunk('stats/fetchBadges', async (_, { rej
   }
 });
 
-export const updateDailyGoals = createAsyncThunk('stats/updateDailyGoals', async (goalData, { rejectWithValue }) => {
-  try {
-    const response = await statsApi.updateGoals(goalData);
-    return response.data;
-  } catch (error) {
-    return rejectWithValue(error.response?.data || error.message);
-  }
-});
-
 const statsSlice = createSlice({
   name: 'stats',
   initialState,
-  reducers: {
-    clearStatsError(state) {
-      state.error = null;
-    },
-    resetStatsState(state) {
-      state.summary = null;
-      state.heatmapData = [];
-      state.badges = [];
-      state.goals = null;
-      state.isLoading = false;
-      state.error = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchSummary.pending, (state) => {
@@ -99,21 +78,8 @@ const statsSlice = createSlice({
       .addCase(fetchBadges.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
-      })
-      .addCase(updateDailyGoals.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(updateDailyGoals.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.goals = action.payload;
-      })
-      .addCase(updateDailyGoals.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload || action.error.message;
       });
   },
 });
 
-export const { clearStatsError, resetStatsState } = statsSlice.actions;
 export default statsSlice.reducer;

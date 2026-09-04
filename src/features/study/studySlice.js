@@ -34,23 +34,6 @@ const studySlice = createSlice({
   name: 'study',
   initialState,
   reducers: {
-    nextCard(state) {
-      if (state.currentIndex < state.todayCards.length - 1) {
-        state.currentIndex += 1;
-      } else {
-        state.isFinished = true;
-      }
-    },
-    resetStudyState(state) {
-      state.todayCards = [];
-      state.currentIndex = 0;
-      state.isFinished = false;
-      state.isLoading = false;
-      state.error = null;
-    },
-    clearStudyError(state) {
-      state.error = null;
-    },
     setTodayCards(state, action) {
       state.todayCards = action.payload || [];
       state.currentIndex = 0;
@@ -92,5 +75,5 @@ const studySlice = createSlice({
   },
 });
 
-export const { nextCard, resetStudyState, clearStudyError, setTodayCards } = studySlice.actions;
+export const { setTodayCards } = studySlice.actions;
 export default studySlice.reducer;

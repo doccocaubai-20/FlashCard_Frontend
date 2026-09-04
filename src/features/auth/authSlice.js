@@ -62,15 +62,6 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (credent
   }
 });
 
-export const fetchMe = createAsyncThunk('auth/fetchMe', async (_, { rejectWithValue }) => {
-  try {
-    const response = await authApi.getMe();
-    return response.data;
-  } catch (error) {
-    return rejectWithValue(error.response?.data || error.message);
-  }
-});
-
 export const updateProfile = createAsyncThunk('auth/updateProfile', async ({ id, data }, { rejectWithValue }) => {
   try {
     const response = await authApi.updateUser(id, data);
@@ -164,22 +155,6 @@ const authSlice = createSlice({
         }
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload || action.error.message;
-      })
-      .addCase(fetchMe.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(fetchMe.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
-        state.isAuthenticated = true;
-        state.error = null;
-        localStorage.setItem('user', JSON.stringify(action.payload));
-        syncLanguage(action.payload);
-      })
-      .addCase(fetchMe.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       })
