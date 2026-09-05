@@ -13,6 +13,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { statsApi } from '../../services/statsApi';
 import { safeLocalGet, safeLocalSet } from '../../utils/storage';
+import { getTodayQuestCount } from '../../utils/questTracker';
 
 const getQuestIcon = (type) => {
   switch (type) {
@@ -69,7 +70,29 @@ export default function DailyQuests({
     try {
       const res = await statsApi.getQuests();
       if (Array.isArray(res?.data) && res.data.length > 0) {
-        setQuestsList(res.data);
+        const mergedQuests = res.data.map((q) => {
+          let localCount = 0;
+          if (q.questType === 'DICTIONARY_LOOKUP') {
+            localCount = getTodayQuestCount('chongzi_dict_lookups_today');
+          } else if (q.questType === 'WRITE_PRACTICE') {
+            localCount = getTodayQuestCount('chongzi_write_count_today');
+          } else if (q.questType === 'PLAY_GAME') {
+            localCount = getTodayQuestCount('chongzi_games_played_today');
+          } else if (q.questType === 'STUDY_CARDS') {
+            localCount = studiedCards;
+          }
+          return {
+            ...q,
+            progress: Math.max(q.progress || 0, localCount),
+          };
+        });
+        setQuestsList(mergedQuests);
+
+        // Sync claimed quests from Database so all devices and environments stay in sync
+        const dbClaimed = res.data.filter((q) => q.completed).map((q) => q.id);
+        if (dbClaimed.length > 0) {
+          setClaimedQuests((prev) => Array.from(new Set([...prev, ...dbClaimed])));
+        }
         return;
       }
     } catch (err) {
@@ -94,7 +117,7 @@ export default function DailyQuests({
         title: 'Tra cứu 3 từ vựng mới',
         description: 'Tìm hiểu từ mới và xem chiết tự chữ Hán',
         target: 3,
-        progress: Math.min(3, safeLocalGet('chongzi_dict_lookups_today', 0)),
+        progress: Math.min(3, getTodayQuestCount('chongzi_dict_lookups_today')),
         xpReward: 15,
         coinReward: 5,
       },
@@ -104,7 +127,7 @@ export default function DailyQuests({
         title: 'Luyện viết 5 chữ Hán',
         description: 'Tập viết đúng quy tắc bút thuận trên canvas',
         target: 5,
-        progress: Math.min(5, safeLocalGet('chongzi_write_count_today', 0)),
+        progress: Math.min(5, getTodayQuestCount('chongzi_write_count_today')),
         xpReward: 25,
         coinReward: 10,
       },
@@ -114,7 +137,7 @@ export default function DailyQuests({
         title: 'Thử thách 1 ván Đấu trường',
         description: 'Rèn luyện phản xạ với Falling Words hoặc Quiz',
         target: 1,
-        progress: Math.min(1, safeLocalGet('chongzi_games_played_today', 0)),
+        progress: Math.min(1, getTodayQuestCount('chongzi_games_played_today')),
         xpReward: 20,
         coinReward: 5,
       },
@@ -160,7 +183,11 @@ export default function DailyQuests({
 
     setClaimLoadingId(quest.id);
     try {
-      await statsApi.addXpCoins(quest.xpReward || 20, quest.coinReward || 5);
+      if (typeof quest.id === 'number') {
+        await statsApi.claimQuest(quest.id);
+      } else {
+        await statsApi.addXpCoins(quest.xpReward || 20, quest.coinReward || 5);
+      }
       const updated = [...claimedQuests, quest.id];
       setClaimedQuests(updated);
       safeLocalSet(`chongzi_claimed_quests_${todayStr}`, updated);

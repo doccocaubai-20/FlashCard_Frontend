@@ -7,6 +7,7 @@ import { cleanDefinition } from '../utils/formatters';
 import { useToast } from '../context/ToastContext';
 import { statsApi } from '../services/statsApi';
 import { gameRecordsApi } from '../services/learningApi';
+import { trackQuestProgress } from '../utils/questTracker';
 import { 
   Gamepad2, 
   Timer, 
@@ -49,6 +50,7 @@ export default function MatchingGameScreen() {
   useEffect(() => {
     if (gameWon && gameStarted) {
       const finalScore = Math.max(0, 100 - mistakes * 10);
+      trackQuestProgress('PLAY_GAME', 1);
       gameRecordsApi.save({
         gameType: 'MATCHING',
         level: selectedSource,
@@ -62,7 +64,7 @@ export default function MatchingGameScreen() {
         }
       }).catch(err => console.error('Error saving matching game record:', err));
     }
-  }, [gameWon, gameStarted, score, selectedSource, moves, mistakes, seconds]);
+  }, [gameWon, gameStarted, selectedSource, moves, mistakes, seconds]);
 
   // Fetch all decks on mount
   useEffect(() => {

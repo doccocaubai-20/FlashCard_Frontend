@@ -10,6 +10,7 @@ export const statsApi = {
     buyItem: (price, itemType) => api.post('/api/stats/buy-item', { price, itemType }),
     useXpBoost: () => api.post('/api/stats/use-xp-boost'),
     getQuests: (tzOffset = 420) => api.get('/api/stats/quests', { params: { tzOffset } }),
+    claimQuest: (questId) => api.post(`/api/stats/quests/${questId}/claim`),
     incrementQuestProgress: (questType, amount, tzOffset = 420) => api.put('/api/stats/quests/progress', { questType, amount, tzOffset }),
     getDailyQuiz: (tzOffset = 420) => api.get('/api/stats/daily-quiz', { params: { tzOffset } }),
     getGardenState: (tzOffset = 420, all = false) => api.get('/api/stats/garden', { params: { tzOffset, all } }),

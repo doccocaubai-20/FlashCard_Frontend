@@ -7,6 +7,7 @@ import { statsApi } from '../services/statsApi';
 import api from '../services/api';
 import { skillLogsApi } from '../services/learningApi';
 import { speakChinese } from '../utils/tts';
+import { trackQuestProgress } from '../utils/questTracker';
 import { BookOpen, Star, Volume2, ArrowRight, History } from 'lucide-react';
 
 export default function FreeWriteScreen() {
@@ -480,6 +481,7 @@ export default function FreeWriteScreen() {
       onComplete: (summary) => {
         const finalMistakes = summary.totalMistakes || 0;
         const finalScore = Math.max(0, 100 - finalMistakes * 10);
+        trackQuestProgress('WRITE_PRACTICE', 1);
 
         let grade = 'C';
         let feedback = 'Hãy cố gắng luyện tập thêm nhiều lần!';

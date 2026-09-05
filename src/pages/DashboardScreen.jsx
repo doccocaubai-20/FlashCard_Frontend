@@ -74,8 +74,8 @@ function MiniWeekStrip({ data = [] }) {
               className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-xs font-bold transition-all ${getCellIntensity(
                 d.count
               )} ${d.isToday
-                  ? 'ring-2 ring-primary/40 ring-offset-2 ring-offset-surface-card dark:ring-offset-surface-card'
-                  : ''
+                ? 'ring-2 ring-primary/40 ring-offset-2 ring-offset-surface-card dark:ring-offset-surface-card'
+                : ''
                 }`}
               title={`${d.count} lượt học`}
             >
@@ -410,7 +410,7 @@ export default function DashboardScreen() {
             <div className="space-y-2.5">
               <div className="p-3 rounded-xl bg-surface-bone/60 dark:bg-white/5 border border-hairline dark:border-white/5 space-y-1">
                 <h4 className="text-xs font-bold text-primary dark:text-hero-glow">
-                  📝 Nhiệm vụ ôn tập hôm nay
+                  Nhiệm vụ ôn tập hôm nay
                 </h4>
                 <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed">
                   Bạn có các thẻ đến hạn ôn tập. Hãy học ít nhất {dailyTarget} thẻ để duy trì chuỗi
@@ -429,11 +429,10 @@ export default function DashboardScreen() {
 
               <div className="p-3 rounded-xl bg-surface-bone/60 dark:bg-white/5 border border-hairline dark:border-white/5 space-y-1">
                 <h4 className="text-xs font-bold text-primary dark:text-hero-glow">
-                  ✍️ Luyện viết chữ Hán
+                  Luyện viết chữ Hán
                 </h4>
                 <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed">
-                  Tập viết từ vựng trên canvas Mễ tự ô giúp ghi nhớ mặt chữ và quy tắc bút thuận sâu
-                  hơn.
+                  Tập viết từ vựng trên canvas giúp ghi nhớ mặt chữ và quy tắc bút thuận.
                 </p>
                 <button
                   onClick={() => {

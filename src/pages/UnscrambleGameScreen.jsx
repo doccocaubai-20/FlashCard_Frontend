@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import unscrambleQuestionBank from '../data/unscrambleQuestionBank.json';
 import { useToast } from '../context/ToastContext';
 import { gameRecordsApi } from '../services/learningApi';
+import { speakChinese } from '../utils/tts';
+import { trackQuestProgress } from '../utils/questTracker';
 import { 
   Puzzle, 
   Timer, 
@@ -61,6 +63,7 @@ export default function UnscrambleGameScreen() {
   // Save game record when game is won
   useEffect(() => {
     if (gameWon && gameStarted && sentences.length > 0) {
+      trackQuestProgress('PLAY_GAME', 1);
       const finalScore = Math.round((correctCount / sentences.length) * 100);
       gameRecordsApi.save({
         gameType: 'UNSCRAMBLE',
@@ -166,12 +169,7 @@ export default function UnscrambleGameScreen() {
 
   // Play audio via TTS
   const speakSentence = (text) => {
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.85;
-    window.speechSynthesis.speak(utterance);
+    speakChinese(text);
   };
 
   // Verify assembled order
@@ -298,18 +296,18 @@ export default function UnscrambleGameScreen() {
           <div className="lg:col-span-8 space-y-6 flex flex-col justify-between">
             
             {/* Top status */}
-            <div className="flex justify-between items-center bg-surface-bone/35 dark:bg-black/15 border border-hairline dark:border-divider-dark p-3 rounded-md px-4">
-              <span className="text-xs font-bold text-ink dark:text-on-dark font-mono">
+            <div className="flex justify-between items-center bg-surface-bone/40 dark:bg-black/20 border border-hairline dark:border-divider-dark p-3.5 sm:p-4 rounded-xl px-5">
+              <span className="text-sm sm:text-base font-bold text-ink dark:text-on-dark font-mono">
                 Câu {currentIndex + 1} / {sentences.length}
               </span>
               
-              <div className="flex items-center gap-4">
-                <span className="text-xs text-mute flex items-center gap-1 font-mono">
-                  <Timer size={13} className="text-primary" />
+              <div className="flex items-center gap-5">
+                <span className="text-sm sm:text-base text-mute flex items-center gap-1.5 font-mono font-semibold">
+                  <Timer size={16} className="text-primary" />
                   {formatTime(seconds)}
                 </span>
                 
-                <div className="w-24 bg-surface-bone dark:bg-black/40 h-2 rounded-full overflow-hidden border border-hairline dark:border-divider-dark">
+                <div className="w-28 sm:w-36 bg-surface-bone dark:bg-black/40 h-2.5 rounded-full overflow-hidden border border-hairline dark:border-divider-dark">
                   <div 
                     className="bg-primary h-full transition-all duration-300"
                     style={{ width: `${((currentIndex + 1) / sentences.length) * 100}%` }}
@@ -319,18 +317,18 @@ export default function UnscrambleGameScreen() {
             </div>
 
             {/* Prompt card */}
-            <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/40 p-6 text-center space-y-4 shadow-sm min-h-[140px] flex flex-col justify-center">
-              <span className="text-[9px] font-mono font-bold text-mute uppercase tracking-widest block">Dịch nghĩa tiếng Việt:</span>
-              <p className="text-lg font-bold text-ink dark:text-on-dark italic font-serif leading-relaxed px-4">
-                "{currentSentence?.meaning}"
+            <div className="rounded-xl border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/40 p-6 sm:p-7 text-center space-y-4 shadow-sm min-h-[140px] flex flex-col justify-center">
+              <span className="text-xs font-bold text-primary dark:text-hero-glow uppercase tracking-wider block">Dịch nghĩa tiếng Việt:</span>
+              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-ink dark:text-on-dark leading-snug px-4">
+                "{currentSentence?.meaning?.normalize('NFC')}"
               </p>
             </div>
 
             {/* Workspace (Answer selection) */}
-            <div className="rounded-md border-2 border-dashed border-primary/30 dark:border-divider-dark bg-surface-bone/10 p-5 min-h-[120px] flex flex-wrap items-center justify-center gap-3 relative">
+            <div className="rounded-xl border-2 border-dashed border-primary/40 dark:border-divider-dark bg-surface-bone/15 dark:bg-surface-dark/20 p-6 min-h-[140px] flex flex-wrap items-center justify-center gap-3.5 relative">
               {workspace.length === 0 ? (
-                <div className="text-xs text-mute/50 font-semibold flex items-center gap-1.5 pointer-events-none select-none">
-                  <HelpCircle size={14} />
+                <div className="text-sm text-mute/60 font-medium flex items-center gap-2 pointer-events-none select-none">
+                  <HelpCircle size={16} />
                   Nhấp các mảnh ghép từ vựng bên dưới để xếp câu...
                 </div>
               ) : (
@@ -339,12 +337,12 @@ export default function UnscrambleGameScreen() {
                     key={token.id}
                     onClick={() => handleTokenReturn(token)}
                     disabled={checked}
-                    className={`px-4 py-2 bg-surface-card dark:bg-surface-dark border rounded-md shadow-xs text-base font-bold font-display hanzi-text cursor-pointer transition-all active:scale-95 ${
+                    className={`px-5 sm:px-6 py-3 sm:py-3.5 bg-surface-card dark:bg-surface-dark border-2 rounded-xl shadow-xs text-xl sm:text-2xl font-bold font-display hanzi-text cursor-pointer transition-all active:scale-95 ${
                       checked
                         ? isCorrect
-                          ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-emerald-50/25'
-                          : 'border-red-500 text-red-600 dark:text-red-400 bg-red-50/25'
-                        : 'border-hairline dark:border-divider-dark text-ink dark:text-on-dark hover:border-primary/50'
+                          ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-emerald-50/30'
+                          : 'border-red-500 text-red-600 dark:text-red-400 bg-red-50/30'
+                        : 'border-hairline dark:border-divider-dark text-ink dark:text-on-dark hover:border-primary'
                     }`}
                   >
                     {token.word}
@@ -354,20 +352,20 @@ export default function UnscrambleGameScreen() {
             </div>
 
             {/* Shuffled Word Pool */}
-            <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/30 p-5 min-h-[120px] flex flex-wrap items-center justify-center gap-3">
+            <div className="rounded-xl border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/30 p-6 min-h-[140px] flex flex-wrap items-center justify-center gap-3.5">
               {pool.length === 0 && workspace.length > 0 && !checked ? (
-                <div className="text-xs text-mute italic font-medium">Đã chọn hết mảnh ghép. Hãy bấm Kiểm tra đáp án!</div>
+                <div className="text-sm text-mute italic font-medium">Đã chọn hết mảnh ghép. Hãy bấm Kiểm tra đáp án!</div>
               ) : (
                 pool.map((token) => (
                   <button
                     key={token.id}
                     onClick={() => handleTokenSelect(token)}
                     disabled={checked}
-                    className="px-4 py-2.5 bg-surface-bone/50 hover:bg-surface-bone dark:bg-black/25 dark:hover:bg-black/50 border border-hairline dark:border-divider-dark rounded-md text-base font-bold font-display hanzi-text cursor-pointer transition-all active:scale-95 text-ink dark:text-on-dark hover:border-primary/50"
+                    className="px-5 sm:px-6 py-3 sm:py-3.5 bg-surface-bone/60 hover:bg-surface-bone dark:bg-black/30 dark:hover:bg-black/50 border border-hairline dark:border-divider-dark hover:border-primary rounded-xl text-xl sm:text-2xl font-bold font-display hanzi-text cursor-pointer transition-all active:scale-95 text-ink dark:text-on-dark shadow-xs"
                   >
                     {token.word}
                     {token.pinyin && (
-                      <span className="block text-[8px] font-mono font-medium text-primary/70 tracking-normal mt-0.5">
+                      <span className="block text-xs sm:text-sm font-sans font-medium text-primary dark:text-hero-glow tracking-normal mt-1">
                         {token.pinyin}
                       </span>
                     )}
@@ -381,7 +379,7 @@ export default function UnscrambleGameScreen() {
               <button
                 onClick={handleClearWorkspace}
                 disabled={workspace.length === 0 || checked}
-                className="px-4 py-2 border border-hairline dark:border-divider-dark rounded-full text-xs font-semibold text-mute hover:text-ink hover:bg-surface-bone dark:hover:bg-black cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
+                className="px-5 py-2.5 border border-hairline dark:border-divider-dark rounded-xl text-sm font-semibold text-mute hover:text-ink hover:bg-surface-bone dark:hover:bg-black cursor-pointer disabled:opacity-30 disabled:pointer-events-none transition-colors"
               >
                 Xóa làm lại
               </button>
@@ -391,17 +389,17 @@ export default function UnscrambleGameScreen() {
                   <button
                     onClick={handleCheck}
                     disabled={workspace.length === 0}
-                    className="px-6 py-2 bg-primary hover:bg-primary-deep disabled:bg-primary/40 text-white text-xs font-bold rounded-full cursor-pointer transition-all active:scale-95 disabled:pointer-events-none shadow-sm"
+                    className="px-7 py-2.5 bg-primary hover:bg-primary-deep disabled:bg-primary/40 text-white text-sm sm:text-base font-bold rounded-xl cursor-pointer transition-all active:scale-95 disabled:pointer-events-none shadow-sm"
                   >
                     Kiểm tra đáp án
                   </button>
                 ) : (
                   <button
                     onClick={handleNext}
-                    className="flex items-center gap-1 px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-full cursor-pointer transition-all active:scale-95 shadow-sm"
+                    className="flex items-center gap-1.5 px-7 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-sm sm:text-base font-bold rounded-xl cursor-pointer transition-all active:scale-95 shadow-sm"
                   >
                     {currentIndex === sentences.length - 1 ? 'Xem kết quả' : 'Câu tiếp theo'}
-                    <ArrowRight size={13} />
+                    <ArrowRight size={16} />
                   </button>
                 )}
               </div>
@@ -411,10 +409,10 @@ export default function UnscrambleGameScreen() {
 
           {/* Right panel: Feedback & Correct Answer */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="rounded-md border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/40 p-5 shadow-sm min-h-[420px] flex flex-col justify-between">
+            <div className="rounded-xl border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark/40 p-5 sm:p-6 shadow-sm min-h-[440px] flex flex-col justify-between">
               
               <div className="space-y-6 text-left">
-                <h3 className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider border-b border-hairline dark:border-divider-dark pb-3">
+                <h3 className="text-xs sm:text-sm font-mono font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider border-b border-hairline dark:border-divider-dark pb-3">
                   Trạng thái đáp án
                 </h3>
 
@@ -423,21 +421,21 @@ export default function UnscrambleGameScreen() {
                     
                     {/* Correct / Incorrect alert */}
                     {isCorrect ? (
-                      <div className="flex items-start gap-2.5 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/40 rounded p-4 text-emerald-600 dark:text-emerald-400">
-                        <CheckCircle2 size={16} className="shrink-0 mt-0.5" />
+                      <div className="flex items-start gap-3 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/40 rounded-xl p-4 text-emerald-600 dark:text-emerald-400">
+                        <CheckCircle2 size={18} className="shrink-0 mt-0.5" />
                         <div className="space-y-0.5">
-                          <h4 className="text-xs font-bold">Chính xác!</h4>
-                          <p className="text-[10px] text-emerald-700/80 dark:text-emerald-400/80 leading-relaxed">
+                          <h4 className="text-sm font-bold">Chính xác!</h4>
+                          <p className="text-xs text-emerald-700/80 dark:text-emerald-400/80 leading-relaxed">
                             Cú pháp và trật tự từ của bạn hoàn toàn chính xác.
                           </p>
                         </div>
                       </div>
                     ) : (
-                      <div className="flex items-start gap-2.5 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/40 rounded p-4 text-red-600 dark:text-red-400">
-                        <XCircle size={16} className="shrink-0 mt-0.5" />
+                      <div className="flex items-start gap-3 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/40 rounded-xl p-4 text-red-600 dark:text-red-400">
+                        <XCircle size={18} className="shrink-0 mt-0.5" />
                         <div className="space-y-0.5">
-                          <h4 className="text-xs font-bold">Chưa chính xác</h4>
-                          <p className="text-[10px] text-red-700/80 dark:text-red-400/80 leading-relaxed">
+                          <h4 className="text-sm font-bold">Chưa chính xác</h4>
+                          <p className="text-xs text-red-700/80 dark:text-red-400/80 leading-relaxed">
                             Trật tự từ chưa đúng. Xem đáp án chuẩn bên dưới.
                           </p>
                         </div>
@@ -446,37 +444,37 @@ export default function UnscrambleGameScreen() {
 
                     {/* Speech sample button */}
                     <div className="space-y-2 border-t border-hairline dark:border-divider-dark pt-4">
-                      <span className="text-[9px] font-mono font-bold text-mute uppercase">Đáp án đúng chuẩn:</span>
+                      <span className="text-xs font-mono font-bold text-mute uppercase">Đáp án đúng chuẩn:</span>
                       
-                      <div className="bg-surface-bone/50 dark:bg-black/25 p-3.5 rounded border border-hairline dark:border-divider-dark space-y-2 relative">
-                        <p className="text-lg font-bold font-display text-ink dark:text-on-dark select-all pr-8">
+                      <div className="bg-surface-bone/50 dark:bg-black/25 p-4 rounded-xl border border-hairline dark:border-divider-dark space-y-2 relative">
+                        <p className="text-xl sm:text-2xl font-bold font-display text-ink dark:text-on-dark select-all pr-10">
                           <span className="hanzi-char">{currentSentence.hanzi}</span>
                         </p>
-                        <p className="text-xs font-mono font-bold text-primary/80">
+                        <p className="text-sm font-mono font-bold text-primary/90 dark:text-hero-glow">
                           {currentSentence.pinyin}
                         </p>
 
                         <button
                           onClick={() => speakSentence(currentSentence.hanzi)}
-                          className="absolute right-2 top-2 p-1.5 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark rounded-full text-primary shadow-xs cursor-pointer"
+                          className="absolute right-2.5 top-2.5 p-2 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark rounded-full text-primary shadow-xs cursor-pointer"
                           title="Nghe phát âm"
                         >
-                          <Volume2 size={13} />
+                          <Volume2 size={16} />
                         </button>
                       </div>
                     </div>
 
                     {/* Word explanation details */}
                     <div className="space-y-1.5">
-                      <span className="text-[9px] font-mono font-bold text-mute uppercase">Từ vựng cấu thành:</span>
-                      <div className="max-h-[140px] overflow-y-auto space-y-1.5 border border-hairline dark:border-divider-dark p-2.5 rounded bg-surface-bone/20 dark:bg-black/15">
+                      <span className="text-xs font-mono font-bold text-mute uppercase">Từ vựng cấu thành:</span>
+                      <div className="max-h-[160px] overflow-y-auto space-y-1.5 border border-hairline dark:border-divider-dark p-3 rounded-xl bg-surface-bone/20 dark:bg-black/15">
                         {currentSentence.tokens.map((t, idx) => (
-                          <div key={idx} className="flex justify-between items-start text-[10px] border-b border-hairline/40 dark:border-divider-dark/40 pb-1 last:border-0 last:pb-0">
+                          <div key={idx} className="flex justify-between items-start text-xs sm:text-sm border-b border-hairline/40 dark:border-divider-dark/40 pb-1.5 last:border-0 last:pb-0">
                             <div>
                               <span className="font-bold text-ink dark:text-on-dark font-display">{t.word}</span>
                               <span className="text-mute font-mono ml-1.5">({t.pinyin})</span>
                             </div>
-                            <span className="text-mute italic text-right max-w-[120px] truncate">{t.meaning}</span>
+                            <span className="text-mute text-right max-w-[140px] truncate">{t.meaning}</span>
                           </div>
                         ))}
                       </div>
@@ -485,8 +483,8 @@ export default function UnscrambleGameScreen() {
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-20 text-center flex-1">
-                    <Puzzle size={40} className="text-mute/30 stroke-1 mb-2 animate-pulse" />
-                    <p className="text-xs text-mute max-w-[180px] leading-relaxed">
+                    <Puzzle size={44} className="text-mute/30 stroke-1 mb-3 animate-pulse" />
+                    <p className="text-sm text-mute max-w-[200px] leading-relaxed">
                       Sắp xếp tất cả mảnh ghép rồi nhấn nút để kiểm tra câu trả lời của bạn.
                     </p>
                   </div>
@@ -497,10 +495,10 @@ export default function UnscrambleGameScreen() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-primary text-white text-xs font-bold rounded-md transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-primary hover:bg-primary-deep text-white text-sm font-bold rounded-xl transition-colors cursor-pointer mt-4"
                 >
                   Bỏ qua & Tiếp tục
-                  <ArrowRight size={13} />
+                  <ArrowRight size={15} />
                 </button>
               )}
 
@@ -535,17 +533,17 @@ export default function UnscrambleGameScreen() {
 
             {/* Bento Grid Stats */}
             <div className="grid grid-cols-3 gap-4">
-              <div className="p-4 rounded bg-surface-bone/50 dark:bg-black/25 border border-hairline dark:border-divider-dark text-center">
-                <span className="text-[9px] font-mono font-bold text-mute uppercase tracking-widest block">Thời gian ôn</span>
-                <span className="text-xl font-mono font-bold text-primary dark:text-primary-deep mt-1 block">{formatTime(seconds)}</span>
+              <div className="p-4 rounded-xl bg-surface-bone/50 dark:bg-black/25 border border-hairline dark:border-divider-dark text-center">
+                <span className="text-xs font-mono font-bold text-mute uppercase tracking-wider block">Thời gian ôn</span>
+                <span className="text-2xl font-mono font-bold text-primary dark:text-primary-deep mt-1 block">{formatTime(seconds)}</span>
               </div>
-              <div className="p-4 rounded bg-surface-bone/50 dark:bg-black/25 border border-hairline dark:border-divider-dark text-center">
-                <span className="text-[9px] font-mono font-bold text-mute uppercase tracking-widest block">Lần đầu đúng</span>
-                <span className="text-xl font-mono font-bold text-emerald-500 mt-1 block">{correctCount} / {sentences.length}</span>
+              <div className="p-4 rounded-xl bg-surface-bone/50 dark:bg-black/25 border border-hairline dark:border-divider-dark text-center">
+                <span className="text-xs font-mono font-bold text-mute uppercase tracking-wider block">Lần đầu đúng</span>
+                <span className="text-2xl font-mono font-bold text-emerald-500 mt-1 block">{correctCount} / {sentences.length}</span>
               </div>
-              <div className="p-4 rounded bg-surface-bone/50 dark:bg-black/25 border border-hairline dark:border-divider-dark text-center">
-                <span className="text-[9px] font-mono font-bold text-mute uppercase tracking-widest block">Độ chính xác</span>
-                <span className="text-xl font-mono font-bold text-ink dark:text-on-dark mt-1 block">
+              <div className="p-4 rounded-xl bg-surface-bone/50 dark:bg-black/25 border border-hairline dark:border-divider-dark text-center">
+                <span className="text-xs font-mono font-bold text-mute uppercase tracking-wider block">Độ chính xác</span>
+                <span className="text-2xl font-mono font-bold text-ink dark:text-on-dark mt-1 block">
                   {sentences.length > 0 ? Math.round((correctCount / sentences.length) * 100) : 0}%
                 </span>
               </div>
@@ -553,38 +551,39 @@ export default function UnscrambleGameScreen() {
 
             {/* Sentence List Table */}
             <div className="space-y-2 text-left">
-              <h4 className="text-xs font-mono font-bold text-mute uppercase tracking-wider">Lịch sử câu đã làm:</h4>
-              <div className="border border-hairline dark:border-divider-dark rounded-md overflow-hidden max-h-[200px] overflow-y-auto">
+              <h4 className="text-xs sm:text-sm font-mono font-bold text-mute uppercase tracking-wider">Lịch sử câu đã làm:</h4>
+              <div className="border border-hairline dark:border-divider-dark rounded-xl overflow-hidden max-h-[220px] overflow-y-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-surface-bone dark:bg-black/45 border-b border-hairline dark:border-divider-dark text-[9px] font-mono uppercase tracking-wider text-mute">
-                      <th className="p-2.5">Trạng thái</th>
-                      <th className="p-2.5">Câu chữ Hán (Target)</th>
-                      <th className="p-2.5">Ý nghĩa</th>
-                      <th className="p-2.5 text-center">Nghe</th>
+                    <tr className="bg-surface-bone dark:bg-black/45 border-b border-hairline dark:border-divider-dark text-xs font-mono uppercase tracking-wider text-mute">
+                      <th className="p-3">Trạng thái</th>
+                      <th className="p-3">Câu chữ Hán</th>
+                      <th className="p-3">Ý nghĩa</th>
+                      <th className="p-3 text-center">Nghe</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-hairline dark:divide-divider-dark text-[11px]">
+                  <tbody className="divide-y divide-hairline dark:divide-divider-dark text-xs sm:text-sm">
                     {roundHistory.map((hist, idx) => (
                       <tr key={idx} className="hover:bg-surface-bone/35 dark:hover:bg-black/20">
-                        <td className="p-2.5 font-bold">
+                        <td className="p-3 font-bold">
                           {hist.firstTryCorrect ? (
-                            <span className="text-emerald-500 flex items-center gap-0.5"><CheckCircle2 size={11} /> 1-Try</span>
+                            <span className="text-emerald-500 flex items-center gap-1"><CheckCircle2 size={14} /> 1-Try</span>
                           ) : (
-                            <span className="text-amber-500 flex items-center gap-0.5"><XCircle size={11} /> Đã sửa</span>
+                            <span className="text-amber-500 flex items-center gap-1"><XCircle size={14} /> Đã sửa</span>
                           )}
                         </td>
-                        <td className="p-2.5 font-bold font-display text-ink dark:text-on-dark">
-                          <span className="hanzi-char">{hist.sentence.hanzi}</span>
-                          <span className="block text-[9px] font-mono font-normal text-mute mt-0.5">{hist.sentence.pinyin}</span>
+                        <td className="p-3 font-bold font-display text-ink dark:text-on-dark">
+                          <span className="text-base sm:text-lg font-display">{hist.sentence.hanzi}</span>
+                          <span className="block text-xs font-mono font-normal text-primary/80 dark:text-hero-glow mt-0.5">{hist.sentence.pinyin}</span>
                         </td>
-                        <td className="p-2.5 text-mute italic">"{hist.sentence.meaning}"</td>
-                        <td className="p-2.5 text-center">
+                        <td className="p-3 text-ink/80 dark:text-on-dark/80">"{hist.sentence.meaning?.normalize('NFC')}"</td>
+                        <td className="p-3 text-center">
                           <button
                             onClick={() => speakSentence(hist.sentence.hanzi)}
-                            className="p-1 rounded hover:bg-surface-bone dark:hover:bg-black text-primary transition-colors cursor-pointer"
+                            className="p-1.5 rounded-full hover:bg-surface-bone dark:hover:bg-black text-primary transition-colors cursor-pointer"
+                            title="Nghe phát âm"
                           >
-                            <Volume2 size={12} />
+                            <Volume2 size={15} />
                           </button>
                         </td>
                       </tr>
@@ -602,9 +601,9 @@ export default function UnscrambleGameScreen() {
                   setGameWon(false);
                   setGameStarted(false);
                 }}
-                className="flex-1 py-2.5 border border-hairline dark:border-divider-dark rounded-md text-xs font-bold text-mute hover:text-ink hover:bg-surface-bone dark:hover:bg-black transition cursor-pointer flex items-center justify-center gap-1.5"
+                className="flex-1 py-3 border border-hairline dark:border-divider-dark rounded-xl text-sm font-bold text-mute hover:text-ink hover:bg-surface-bone dark:hover:bg-black transition cursor-pointer flex items-center justify-center gap-1.5"
               >
-                <ArrowLeft size={13} />
+                <ArrowLeft size={16} />
                 Đổi cấp độ
               </button>
               
@@ -614,18 +613,18 @@ export default function UnscrambleGameScreen() {
                   setGameWon(false);
                   navigate('/');
                 }}
-                className="flex-1 py-2.5 border border-hairline dark:border-divider-dark rounded-md text-xs font-bold text-mute hover:text-ink hover:bg-surface-bone dark:hover:bg-black transition cursor-pointer flex items-center justify-center gap-1.5"
+                className="flex-1 py-3 border border-hairline dark:border-divider-dark rounded-xl text-sm font-bold text-mute hover:text-ink hover:bg-surface-bone dark:hover:bg-black transition cursor-pointer flex items-center justify-center gap-1.5"
               >
-                <Home size={13} />
+                <Home size={16} />
                 Trang chủ
               </button>
 
               <button
                 type="button"
                 onClick={startGame}
-                className="flex-1 py-2.5 bg-primary hover:bg-primary-deep text-white font-bold rounded-md transition cursor-pointer shadow-sm active:scale-95 flex items-center justify-center gap-1.5"
+                className="flex-1 py-3 bg-primary hover:bg-primary-deep text-white text-sm font-bold rounded-xl transition cursor-pointer shadow-sm active:scale-95 flex items-center justify-center gap-1.5"
               >
-                <RotateCcw size={13} />
+                <RotateCcw size={16} />
                 Chơi lại
               </button>
             </div>

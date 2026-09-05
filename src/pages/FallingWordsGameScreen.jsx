@@ -5,6 +5,7 @@ import { fetchAllDecks, fetchFlashcardsByDeck } from '../features/deck/deckSlice
 import { dictionaryApi } from '../services/dictionaryApi';
 import api from '../services/api';
 import { gameRecordsApi, weakWordsApi } from '../services/learningApi';
+import { trackQuestProgress } from '../utils/questTracker';
 import { cleanDefinition } from '../utils/formatters';
 import { 
   Zap, 
@@ -290,6 +291,7 @@ export default function FallingWordsGameScreen() {
   // Save game records and weak words when game is over
   useEffect(() => {
     if (gameOver && gameStarted) {
+      trackQuestProgress('PLAY_GAME', 1);
       gameRecordsApi.save({
         gameType: 'FALLING_WORDS',
         level: selectedSource,

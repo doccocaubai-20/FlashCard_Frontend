@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { dictionaryApi } from '../services/dictionaryApi';
+import { trackQuestProgress } from '../utils/questTracker';
 
 // Client-side RAM cache to completely eliminate duplicate network requests
 const clientSearchCache = new Map();
@@ -19,6 +20,9 @@ export function useDictionary() {
     try {
       const res = await dictionaryApi.search(type, value, false);
       const data = res.data;
+      if (data) {
+        trackQuestProgress('DICTIONARY_LOOKUP', 1);
+      }
       clientSearchCache.set(cacheKey, data);
       return data;
     } catch (err) {
@@ -41,6 +45,9 @@ export function useDictionary() {
     try {
       const res = await dictionaryApi.search(type, value, true);
       const data = res.data || [];
+      if (data.length > 0) {
+        trackQuestProgress('DICTIONARY_LOOKUP', 1);
+      }
       clientSearchCache.set(cacheKey, data);
       return data;
     } catch (err) {

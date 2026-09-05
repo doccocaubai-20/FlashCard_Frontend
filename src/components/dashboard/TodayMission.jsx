@@ -70,8 +70,8 @@ export default function TodayMission({
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
                 className={`transition-all duration-700 ease-out ${isTargetAchieved
-                    ? 'text-emerald-500 dark:text-emerald-400'
-                    : 'text-primary dark:text-hero-glow'
+                  ? 'text-emerald-500 dark:text-emerald-400'
+                  : 'text-primary dark:text-hero-glow'
                   }`}
               />
             </svg>
@@ -104,7 +104,7 @@ export default function TodayMission({
               </span>
               {isTargetAchieved && (
                 <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                  Hoàn thành xuất sắc! 🎉
+                  Hoàn thành mục tiêu!
                 </span>
               )}
             </div>
