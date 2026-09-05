@@ -24,12 +24,23 @@ const MAX_AUDIO_CACHE = 300;
 let currentAudio = null;
 let currentTimeoutId = null;
 let currentSessionId = 0;
+let currentResolve = null;
 
 /**
  * Stop any ongoing audio playback and browser speech synthesis.
  */
 export const stopSpeech = () => {
   currentSessionId++; // Invalidate any pending callbacks/fallbacks from previous speech calls
+
+  if (currentResolve) {
+    const res = currentResolve;
+    currentResolve = null;
+    try {
+      res();
+    } catch {
+      // ignore
+    }
+  }
 
   if (currentTimeoutId) {
     clearTimeout(currentTimeoutId);
@@ -58,103 +69,143 @@ export const stopSpeech = () => {
 /**
  * Main TTS function. Plays high-quality audio from backend API.
  * Falls back to browser SpeechSynthesis if backend is unavailable.
+ * Returns a Promise that resolves when audio finishes playing or is aborted.
  */
 export const speakChinese = (text, lang = 'zh-CN', gender = null) => {
-  if (!text) return;
+  if (!text) return Promise.resolve();
 
-  // Stop any currently playing audio or speech synthesis and increment session ID
-  stopSpeech();
+  return new Promise((resolve) => {
+    // Stop any currently playing audio or speech synthesis and increment session ID
+    stopSpeech();
 
-  const thisSessionId = currentSessionId;
-  const cacheKey = `${text}|${lang}|${gender || 'female'}`;
+    const thisSessionId = currentSessionId;
+    const cacheKey = `${text}|${lang}|${gender || 'female'}`;
+    let isFinished = false;
 
-  // Check if we already have a cached audio URL for this text
-  if (audioCache.has(cacheKey)) {
-    const cachedUrl = audioCache.get(cacheKey);
-    const audio = new Audio(cachedUrl);
+    const finish = () => {
+      if (!isFinished) {
+        isFinished = true;
+        if (currentResolve === finish) {
+          currentResolve = null;
+        }
+        resolve();
+      }
+    };
+
+    currentResolve = finish;
+
+    const triggerFallback = () => {
+      if (currentSessionId !== thisSessionId) {
+        finish();
+        return;
+      }
+      speakWithBrowserTTS(text, lang, gender, finish);
+    };
+
+    // Check if we already have a cached audio URL for this text
+    if (audioCache.has(cacheKey)) {
+      const cachedUrl = audioCache.get(cacheKey);
+      const audio = new Audio(cachedUrl);
+      currentAudio = audio;
+
+      audio.onended = () => {
+        if (currentAudio === audio) currentAudio = null;
+        finish();
+      };
+
+      audio.onerror = () => {
+        if (currentSessionId !== thisSessionId || audio._aborted) {
+          finish();
+          return;
+        }
+        triggerFallback();
+      };
+
+      audio.play().catch((err) => {
+        // If play was aborted or replaced by a new speech request, do NOT fallback
+        if (currentSessionId !== thisSessionId || audio._aborted || err?.name === 'AbortError') {
+          finish();
+          return;
+        }
+        triggerFallback();
+      });
+      return;
+    }
+
+    // Build the backend TTS API URL
+    const apiBase = getApiBase();
+    const params = new URLSearchParams({ text, lang });
+    if (gender) params.set('gender', gender);
+    const ttsUrl = `${apiBase}/api/tts/speak?${params.toString()}`;
+
+    const audio = new Audio(ttsUrl);
     currentAudio = audio;
+
+    let fallbackTriggered = false;
+
+    const triggerFallbackOnce = () => {
+      if (fallbackTriggered || currentSessionId !== thisSessionId || audio._aborted) {
+        finish();
+        return;
+      }
+      fallbackTriggered = true;
+      triggerFallback();
+    };
+
+    // Set a timeout — if audio doesn't start playing within 8s, use fallback
+    const timeoutId = setTimeout(() => {
+      if (currentSessionId !== thisSessionId || audio._aborted) {
+        finish();
+        return;
+      }
+      if (!fallbackTriggered) {
+        if (currentAudio === audio) {
+          audio.pause();
+          audio.src = '';
+        }
+        triggerFallbackOnce();
+      }
+    }, 8000);
+    currentTimeoutId = timeoutId;
+
+    audio.oncanplaythrough = () => {
+      if (currentSessionId !== thisSessionId || audio._aborted) return;
+      clearTimeout(timeoutId);
+
+      // Cache the URL for future use
+      if (audioCache.size >= MAX_AUDIO_CACHE) {
+        const firstKey = audioCache.keys().next().value;
+        const oldUrl = audioCache.get(firstKey);
+        if (oldUrl && oldUrl.startsWith('blob:')) {
+          URL.revokeObjectURL(oldUrl);
+        }
+        audioCache.delete(firstKey);
+      }
+      audioCache.set(cacheKey, ttsUrl);
+    };
 
     audio.onended = () => {
       if (currentAudio === audio) currentAudio = null;
+      finish();
     };
 
     audio.onerror = () => {
-      if (currentSessionId !== thisSessionId || audio._aborted) return;
-      speakWithBrowserTTS(text, lang, gender);
+      clearTimeout(timeoutId);
+      if (currentSessionId !== thisSessionId || audio._aborted) {
+        finish();
+        return;
+      }
+      triggerFallbackOnce();
     };
 
     audio.play().catch((err) => {
-      // If play was aborted or replaced by a new speech request, do NOT fallback
+      clearTimeout(timeoutId);
       if (currentSessionId !== thisSessionId || audio._aborted || err?.name === 'AbortError') {
+        finish();
         return;
       }
-      speakWithBrowserTTS(text, lang, gender);
+      triggerFallbackOnce();
     });
-    return;
-  }
-
-  // Build the backend TTS API URL
-  const apiBase = getApiBase();
-  const params = new URLSearchParams({ text, lang });
-  if (gender) params.set('gender', gender);
-  const ttsUrl = `${apiBase}/api/tts/speak?${params.toString()}`;
-
-  const audio = new Audio(ttsUrl);
-  currentAudio = audio;
-
-  let fallbackTriggered = false;
-
-  const triggerFallback = () => {
-    if (fallbackTriggered || currentSessionId !== thisSessionId || audio._aborted) return;
-    fallbackTriggered = true;
-    speakWithBrowserTTS(text, lang, gender);
-  };
-
-  // Set a timeout — if audio doesn't start playing within 8s, use fallback
-  const timeoutId = setTimeout(() => {
-    if (currentSessionId !== thisSessionId || audio._aborted) return;
-    if (!fallbackTriggered) {
-      if (currentAudio === audio) {
-        audio.pause();
-        audio.src = '';
-      }
-      triggerFallback();
-    }
-  }, 8000);
-  currentTimeoutId = timeoutId;
-
-  audio.oncanplaythrough = () => {
-    if (currentSessionId !== thisSessionId || audio._aborted) return;
-    clearTimeout(timeoutId);
-
-    // Cache the URL for future use
-    if (audioCache.size >= MAX_AUDIO_CACHE) {
-      const firstKey = audioCache.keys().next().value;
-      const oldUrl = audioCache.get(firstKey);
-      if (oldUrl && oldUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(oldUrl);
-      }
-      audioCache.delete(firstKey);
-    }
-    audioCache.set(cacheKey, ttsUrl);
-  };
-
-  audio.onended = () => {
-    if (currentAudio === audio) currentAudio = null;
-  };
-
-  audio.onerror = () => {
-    if (currentSessionId !== thisSessionId || audio._aborted) return;
-    clearTimeout(timeoutId);
-    triggerFallback();
-  };
-
-  audio.play().catch((err) => {
-    if (currentSessionId !== thisSessionId || audio._aborted || err?.name === 'AbortError') {
-      return;
-    }
-    clearTimeout(timeoutId);
-    triggerFallback();
   });
 };
 
@@ -195,8 +246,11 @@ export const getBestVoice = (lang = 'zh-CN', gender = null) => {
 };
 
 /** Fallback: use browser's built-in SpeechSynthesis */
-const speakWithBrowserTTS = (text, lang = 'zh-CN', gender = null) => {
-  if (typeof window === 'undefined' || !window.speechSynthesis) return;
+const speakWithBrowserTTS = (text, lang = 'zh-CN', gender = null, onEnded = null) => {
+  if (typeof window === 'undefined' || !window.speechSynthesis) {
+    onEnded?.();
+    return;
+  }
 
   window.speechSynthesis.cancel();
 
@@ -211,6 +265,9 @@ const speakWithBrowserTTS = (text, lang = 'zh-CN', gender = null) => {
   if (voiceInfo && voiceInfo.voice) {
     utterance.voice = voiceInfo.voice;
   }
+
+  utterance.onend = () => onEnded?.();
+  utterance.onerror = () => onEnded?.();
 
   window.speechSynthesis.speak(utterance);
 };

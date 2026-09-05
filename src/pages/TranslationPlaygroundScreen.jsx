@@ -18,6 +18,7 @@ import {
   Dices,
   History
 } from 'lucide-react';
+import { speakChinese } from '../utils/tts';
 
 export default function TranslationPlaygroundScreen() {
   const navigate = useNavigate();
@@ -87,21 +88,12 @@ export default function TranslationPlaygroundScreen() {
 
   const speakWord = (e, text) => {
     e.stopPropagation();
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.8;
-    window.speechSynthesis.speak(utterance);
+    speakChinese(text);
   };
 
   const speakFullSentence = () => {
-    if (!currentSentence || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(currentSentence.hanzi);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.8;
-    window.speechSynthesis.speak(utterance);
+    if (!currentSentence?.hanzi) return;
+    speakChinese(currentSentence.hanzi);
   };
 
   // Initialize HanziWriter animation when a token is hovered

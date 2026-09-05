@@ -1,26 +1,75 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { X, CheckCircle2, AlertTriangle, AlertCircle, Info } from 'lucide-react';
+import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
+import { X, CheckCircle2, AlertTriangle, AlertCircle, Info, Loader2 } from 'lucide-react';
 
 const ToastContext = createContext(null);
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
+  const timeoutsRef = useRef({});
 
   const removeToast = useCallback((id) => {
-    setToasts((prevToasts) => prevToasts.filter((t) => t.id !== id));
+    setToasts((prevToasts) =>
+      prevToasts.map((t) => (t.id === id ? { ...t, isExiting: true } : t))
+    );
+
+    setTimeout(() => {
+      setToasts((prevToasts) => prevToasts.filter((t) => t.id !== id));
+      if (timeoutsRef.current[id]) {
+        clearTimeout(timeoutsRef.current[id]);
+        delete timeoutsRef.current[id];
+      }
+    }, 300);
   }, []);
 
-  const addToast = useCallback((message, type = 'info', duration = 4000) => {
-    const id = Date.now() + Math.random().toString(36).substring(2, 9);
-    setToasts((prevToasts) => [...prevToasts, { id, message, type, duration }]);
-    
-    setTimeout(() => {
-      removeToast(id);
-    }, duration);
-  }, [removeToast]);
+  const addToast = useCallback(
+    (message, type = 'info', duration = 4000) => {
+      const id = Date.now() + Math.random().toString(36).substring(2, 9);
+
+      setToasts((prevToasts) => {
+        const activeToasts = prevToasts.filter((t) => !t.isExiting);
+        if (activeToasts.length >= 5) {
+          setTimeout(() => removeToast(activeToasts[0].id), 0);
+        }
+        return [...prevToasts, { id, message, type, duration, isExiting: false }];
+      });
+
+      if (type !== 'loading') {
+        timeoutsRef.current[id] = setTimeout(() => {
+          removeToast(id);
+        }, duration);
+      }
+
+      return id;
+    },
+    [removeToast]
+  );
+
+  const updateToast = useCallback(
+    (id, message, type = 'info', duration = 4000) => {
+      setToasts((prevToasts) =>
+        prevToasts.map((t) =>
+          t.id === id ? { ...t, message, type, duration, isExiting: false } : t
+        )
+      );
+
+      if (timeoutsRef.current[id]) {
+        clearTimeout(timeoutsRef.current[id]);
+        delete timeoutsRef.current[id];
+      }
+
+      if (type !== 'loading') {
+        timeoutsRef.current[id] = setTimeout(() => {
+          removeToast(id);
+        }, duration);
+      }
+    },
+    [removeToast]
+  );
 
   const getIcon = (type) => {
     switch (type) {
+      case 'loading':
+        return <Loader2 size={16} className="text-ink dark:text-on-dark shrink-0 mt-0.5 animate-spin" />;
       case 'success':
         return <CheckCircle2 size={16} className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />;
       case 'error':
@@ -35,6 +84,8 @@ export function ToastProvider({ children }) {
 
   const getTypeStyles = (type) => {
     switch (type) {
+      case 'loading':
+        return 'bg-surface-bone dark:bg-surface-card border-hairline text-ink dark:text-on-dark';
       case 'success':
         return 'bg-emerald-50/95 dark:bg-emerald-950/90 border-emerald-200 dark:border-emerald-900/30 text-emerald-800 dark:text-emerald-300';
       case 'error':
@@ -48,27 +99,38 @@ export function ToastProvider({ children }) {
   };
 
   return (
-    <ToastContext.Provider value={{ showToast: addToast }}>
+    <ToastContext.Provider value={{ showToast: addToast, updateToast }}>
       {children}
+      <style>{`
+        @keyframes toast-exit {
+          from { opacity: 1; transform: translateY(0); }
+          to { opacity: 0; transform: translateY(20px); }
+        }
+        .animate-toast-exit {
+          animation: toast-exit 300ms ease-in forwards;
+        }
+      `}</style>
       {/* Toast container overlay */}
-      <div className="fixed top-5 right-5 z-[9999] flex flex-col gap-3 max-w-sm w-full pointer-events-none select-none">
+      <div className="fixed bottom-20 left-4 right-4 md:bottom-6 md:left-auto md:right-6 z-[9999] flex flex-col gap-3 sm:max-w-sm sm:w-full pointer-events-none select-none">
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-lg backdrop-blur-md transition-all duration-300 animate-slide-in ${getTypeStyles(
-              toast.type
-            )}`}
+            className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-lg backdrop-blur-md transition-all duration-300 ${
+              toast.isExiting ? 'animate-toast-exit' : 'animate-slide-in'
+            } ${getTypeStyles(toast.type)}`}
           >
             {getIcon(toast.type)}
             <div className="flex-1 text-xs font-semibold leading-relaxed">
               {toast.message}
             </div>
-            <button
-              onClick={() => removeToast(toast.id)}
-              className="text-mute hover:text-ink dark:hover:text-on-dark transition-colors cursor-pointer shrink-0 mt-0.5"
-            >
-              <X size={14} />
-            </button>
+            {toast.type !== 'loading' && (
+              <button
+                onClick={() => removeToast(toast.id)}
+                className="text-mute hover:text-ink dark:hover:text-on-dark transition-colors cursor-pointer shrink-0 mt-0.5"
+              >
+                <X size={14} />
+              </button>
+            )}
           </div>
         ))}
       </div>

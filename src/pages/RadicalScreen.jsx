@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { dictionaryApi } from '../services/dictionaryApi';
 import { radicalData } from '../data/radicalData';
 import { Search, Library, Volume2, ArrowRight, Sparkles } from 'lucide-react';
+import { speakChinese } from '../utils/tts';
 
 export default function RadicalScreen() {
   const navigate = useNavigate();
@@ -55,11 +56,9 @@ export default function RadicalScreen() {
 
   const handleSpeakRadical = (e) => {
     e.stopPropagation();
-    if (!window.speechSynthesis) return;
-    const utterance = new SpeechSynthesisUtterance(selectedRadical.char);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.8;
-    window.speechSynthesis.speak(utterance);
+    if (selectedRadical?.char) {
+      speakChinese(selectedRadical.char);
+    }
   };
 
   const handleWordClick = (word) => {

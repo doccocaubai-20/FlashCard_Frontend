@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { Menu, X, Search, Sun, Moon } from 'lucide-react';
+import { Menu, Search, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import FloatingDictionary from './FloatingDictionary';
+import BottomTabBar from '../navigation/BottomTabBar';
 import './layout.css';
 
 export default function Layout() {
@@ -82,10 +83,13 @@ export default function Layout() {
 
       {/* Main Scrollable Content Area */}
       <main className="app-content">
-        <div className="p-4 md:p-8 pt-20 md:pt-8">
+        <div className="p-4 md:p-8 pt-20 md:pt-8 pb-24 md:pb-8">
           <Outlet />
         </div>
       </main>
+
+      {/* Mobile Bottom Navigation Bar */}
+      <BottomTabBar onOpenMore={() => setIsSidebarOpen(true)} />
 
       {/* Globally Floating Dictionary Bubble */}
       <FloatingDictionary />

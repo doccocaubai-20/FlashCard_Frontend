@@ -1,20 +1,29 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { loginUser, registerUser, loginWithGoogle, clearAuthError } from '../features/auth/authSlice';
 import { LogIn, UserPlus, BookOpen } from 'lucide-react';
 
 export default function AuthScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const authState = useSelector((state) => state.auth);
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(() => !location.pathname.includes('/register'));
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+
+  useEffect(() => {
+    if (location.pathname.includes('/register')) {
+      setIsLogin(false);
+    } else if (location.pathname.includes('/login')) {
+      setIsLogin(true);
+    }
+  }, [location.pathname]);
 
   const handleGoogleCredentialResponse = useCallback(async (response) => {
     try {
       await dispatch(loginWithGoogle({ credential: response.credential })).unwrap();
-      navigate('/', { replace: true });
+      navigate('/dashboard', { replace: true });
     } catch (err) {
       console.error('Google login failed:', err);
     }
@@ -23,7 +32,7 @@ export default function AuthScreen() {
   // Auto redirect if already authenticated
   useEffect(() => {
     if (authState.isAuthenticated) {
-      navigate('/', { replace: true });
+      navigate('/dashboard', { replace: true });
     }
   }, [authState.isAuthenticated, navigate]);
 
@@ -70,7 +79,11 @@ export default function AuthScreen() {
     const action = isLogin ? loginUser(formData) : registerUser(formData);
     try {
       await dispatch(action).unwrap();
-      navigate('/', { replace: true });
+      if (isLogin) {
+        navigate('/dashboard', { replace: true });
+      } else {
+        navigate('/onboarding', { replace: true });
+      }
     } catch (error) {
       console.error('Auth failed:', error);
     }

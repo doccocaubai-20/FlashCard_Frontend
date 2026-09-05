@@ -16,6 +16,7 @@ import {
   Volume2
 } from 'lucide-react';
 import HoverableText from '../components/common/HoverableText';
+import { speakChinese } from '../utils/tts';
 
 export default function VocabularyNotebookScreen() {
   const navigate = useNavigate();
@@ -63,12 +64,7 @@ export default function VocabularyNotebookScreen() {
 
   const handleSpeak = (e, text) => {
     e.stopPropagation();
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.8;
-    window.speechSynthesis.speak(utterance);
+    speakChinese(text);
   };
 
   const handleUnstar = async (id) => {

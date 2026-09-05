@@ -2,42 +2,51 @@ import { useSelector } from 'react-redux';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import Layout from './components/common/Layout';
+// Critical entry routes (eagerly loaded)
+import LandingScreen from './pages/LandingScreen';
+import OnboardingScreen from './pages/OnboardingScreen';
 import AuthScreen from './pages/AuthScreen';
 import DashboardScreen from './pages/DashboardScreen';
 import DeckListScreen from './pages/DeckListScreen';
 import DeckDetailScreen from './pages/DeckDetailScreen';
 import StudyScreen from './pages/StudyScreen';
-import CreateFlashcardScreen from './pages/CreateFlashcardScreen';
-import SettingsScreen from './pages/SettingsScreen';
-import FreeWriteScreen from './pages/FreeWriteScreen';
-import QuizScreen from './pages/QuizScreen';
-import GameScreen from './pages/GameScreen';
-import RadicalScreen from './pages/RadicalScreen';
-import PinyinScreen from './pages/PinyinScreen';
-import DictationScreen from './pages/DictationScreen';
-import MatchingGameScreen from './pages/MatchingGameScreen';
-import VocabularyNotebookScreen from './pages/VocabularyNotebookScreen';
-import ScribbleWriteScreen from './pages/ScribbleWriteScreen';
-import FallingWordsGameScreen from './pages/FallingWordsGameScreen';
-import StudyHubScreen from './pages/StudyHubScreen';
-import GameArcadeScreen from './pages/GameArcadeScreen';
-import ReferenceHubScreen from './pages/ReferenceHubScreen';
-import LeaderboardScreen from './pages/LeaderboardScreen';
-import AdminScreen from './pages/AdminScreen';
-import StatsScreen from './pages/StatsScreen';
-import SynonymComparisonScreen from './pages/SynonymComparisonScreen';
-import ChatbotScreen from './pages/ChatbotScreen';
-import HskExamListScreen from './pages/HskExamListScreen';
-import HskExamPlayerScreen from './pages/HskExamPlayerScreen';
+import DictionaryScreen from './pages/DictionaryScreen';
 
-// Lazy-loaded pages (heavy data files — only download when user visits)
+// Lazy-loaded routes (secondary, mini-games, specialized tools, and heavy media)
+const StatsScreen = React.lazy(() => import('./pages/StatsScreen'));
+const LeaderboardScreen = React.lazy(() => import('./pages/LeaderboardScreen'));
+const AdminScreen = React.lazy(() => import('./pages/AdminScreen'));
+const SettingsScreen = React.lazy(() => import('./pages/SettingsScreen'));
+const CreateFlashcardScreen = React.lazy(() => import('./pages/CreateFlashcardScreen'));
+
+// Mini-games
+const GameScreen = React.lazy(() => import('./pages/GameScreen'));
+const GameArcadeScreen = React.lazy(() => import('./pages/GameArcadeScreen'));
+const MatchingGameScreen = React.lazy(() => import('./pages/MatchingGameScreen'));
+const FallingWordsGameScreen = React.lazy(() => import('./pages/FallingWordsGameScreen'));
+const QuizScreen = React.lazy(() => import('./pages/QuizScreen'));
+const UnscrambleGameScreen = React.lazy(() => import('./pages/UnscrambleGameScreen'));
+
+// Specialized tools & practice hubs
+const RadicalScreen = React.lazy(() => import('./pages/RadicalScreen'));
+const PinyinScreen = React.lazy(() => import('./pages/PinyinScreen'));
+const DictationScreen = React.lazy(() => import('./pages/DictationScreen'));
+const FreeWriteScreen = React.lazy(() => import('./pages/FreeWriteScreen'));
+const ScribbleWriteScreen = React.lazy(() => import('./pages/ScribbleWriteScreen'));
+const VocabularyNotebookScreen = React.lazy(() => import('./pages/VocabularyNotebookScreen'));
+const SynonymComparisonScreen = React.lazy(() => import('./pages/SynonymComparisonScreen'));
+const ChatbotScreen = React.lazy(() => import('./pages/ChatbotScreen'));
+const HskExamListScreen = React.lazy(() => import('./pages/HskExamListScreen'));
+const HskExamPlayerScreen = React.lazy(() => import('./pages/HskExamPlayerScreen'));
+const ReferenceHubScreen = React.lazy(() => import('./pages/ReferenceHubScreen'));
+const StudyHubScreen = React.lazy(() => import('./pages/StudyHubScreen'));
+
+// Heavy data & media features
 const GrammarScreen = React.lazy(() => import('./pages/GrammarScreen'));
 const DialogueScreen = React.lazy(() => import('./pages/DialogueScreen'));
 const TranslationPlaygroundScreen = React.lazy(() => import('./pages/TranslationPlaygroundScreen'));
 const SpeakingScreen = React.lazy(() => import('./pages/SpeakingScreen'));
 const FreestyleSpeakingScreen = React.lazy(() => import('./pages/FreestyleSpeakingScreen'));
-const DictionaryScreen = React.lazy(() => import('./pages/DictionaryScreen'));
-const UnscrambleGameScreen = React.lazy(() => import('./pages/UnscrambleGameScreen'));
 const EnglishHubScreen = React.lazy(() => import('./pages/EnglishHubScreen'));
 const WritingNotebookScreen = React.lazy(() => import('./pages/WritingNotebookScreen'));
 const PrintFlashcardScreen = React.lazy(() => import('./pages/PrintFlashcardScreen'));
@@ -63,19 +72,37 @@ function PrivateRoute({ children }) {
 
 function AdminRoute({ children }) {
   const user = useSelector((state) => state.auth.user);
-  return user?.role === 'ADMIN' ? children : <Navigate to="/" replace />;
+  return user?.role === 'ADMIN' ? children : <Navigate to="/dashboard" replace />;
 }
 
 function LoginRoute() {
   const token = useSelector((state) => state.auth.token);
-  return token ? <Navigate to="/" replace /> : <AuthScreen />;
+  return token ? <Navigate to="/dashboard" replace /> : <AuthScreen />;
+}
+
+function RootRoute() {
+  const token = useSelector((state) => state.auth.token);
+  return !token ? <LandingScreen /> : <Navigate to="/dashboard" replace />;
 }
 
 function App() {
   return (
     <Routes>
+      {/* Public Landing Page at / (unauthenticated) or redirect to /dashboard (authenticated) */}
+      <Route path="/" element={<RootRoute />} />
       <Route path="/login" element={<LoginRoute />} />
-      
+      <Route path="/register" element={<LoginRoute />} />
+
+      {/* Onboarding Flow: Protected by PrivateRoute */}
+      <Route
+        path="/onboarding"
+        element={
+          <PrivateRoute>
+            <OnboardingScreen />
+          </PrivateRoute>
+        }
+      />
+
       {/* Protected Routes wrapped in Layout */}
       <Route
         element={
@@ -84,40 +111,45 @@ function App() {
           </PrivateRoute>
         }
       >
-        <Route path="/" element={<DashboardScreen />} />
+        <Route path="/dashboard" element={<DashboardScreen />} />
         <Route path="/decks" element={<DeckListScreen />} />
         <Route path="/decks/:id" element={<DeckDetailScreen />} />
-        <Route path="/decks/:id/game" element={<GameScreen />} />
-        <Route path="/decks/:id/quiz" element={<QuizScreen />} />
-        <Route path="/decks/:id/dictation" element={<DictationScreen />} />
+        <Route path="/decks/:id/game" element={<Suspense fallback={<LazyFallback />}><GameScreen /></Suspense>} />
+        <Route path="/decks/:id/quiz" element={<Suspense fallback={<LazyFallback />}><QuizScreen /></Suspense>} />
+        <Route path="/decks/:id/dictation" element={<Suspense fallback={<LazyFallback />}><DictationScreen /></Suspense>} />
         <Route path="/study" element={<StudyScreen />} />
-        <Route path="/flashcards/new" element={<CreateFlashcardScreen />} />
-        <Route path="/synonyms" element={<SynonymComparisonScreen />} />
-        <Route path="/write" element={<FreeWriteScreen />} />
-        <Route path="/scribble-write" element={<ScribbleWriteScreen />} />
-        <Route path="/radicals" element={<RadicalScreen />} />
-        <Route path="/pinyin" element={<PinyinScreen />} />
-        <Route path="/games/falling" element={<FallingWordsGameScreen />} />
-        <Route path="/games/matching" element={<MatchingGameScreen />} />
-        <Route path="/study-hub" element={<StudyHubScreen />} />
-        <Route path="/game-arcade" element={<GameArcadeScreen />} />
-        <Route path="/reference-hub" element={<ReferenceHubScreen />} />
-        <Route path="/notebook" element={<VocabularyNotebookScreen />} />
-        <Route path="/leaderboard" element={<LeaderboardScreen />} />
-        <Route path="/stats" element={<StatsScreen />} />
-        <Route path="/admin" element={
-          <AdminRoute>
-            <AdminScreen />
-          </AdminRoute>
-        } />
-        <Route path="/chat" element={<ChatbotScreen />} />
-        <Route path="/hsk-exams" element={<HskExamListScreen />} />
-        <Route path="/hsk-exams/:id/play" element={<HskExamPlayerScreen />} />
-        <Route path="/settings" element={<SettingsScreen />} />
+        <Route path="/flashcards/new" element={<Suspense fallback={<LazyFallback />}><CreateFlashcardScreen /></Suspense>} />
+        <Route path="/synonyms" element={<Suspense fallback={<LazyFallback />}><SynonymComparisonScreen /></Suspense>} />
+        <Route path="/write" element={<Suspense fallback={<LazyFallback />}><FreeWriteScreen /></Suspense>} />
+        <Route path="/scribble-write" element={<Suspense fallback={<LazyFallback />}><ScribbleWriteScreen /></Suspense>} />
+        <Route path="/radicals" element={<Suspense fallback={<LazyFallback />}><RadicalScreen /></Suspense>} />
+        <Route path="/pinyin" element={<Suspense fallback={<LazyFallback />}><PinyinScreen /></Suspense>} />
+        <Route path="/games/falling" element={<Suspense fallback={<LazyFallback />}><FallingWordsGameScreen /></Suspense>} />
+        <Route path="/games/matching" element={<Suspense fallback={<LazyFallback />}><MatchingGameScreen /></Suspense>} />
+        <Route path="/study-hub" element={<Suspense fallback={<LazyFallback />}><StudyHubScreen /></Suspense>} />
+        <Route path="/game-arcade" element={<Suspense fallback={<LazyFallback />}><GameArcadeScreen /></Suspense>} />
+        <Route path="/reference-hub" element={<Suspense fallback={<LazyFallback />}><ReferenceHubScreen /></Suspense>} />
+        <Route path="/notebook" element={<Suspense fallback={<LazyFallback />}><VocabularyNotebookScreen /></Suspense>} />
+        <Route path="/leaderboard" element={<Suspense fallback={<LazyFallback />}><LeaderboardScreen /></Suspense>} />
+        <Route path="/stats" element={<Suspense fallback={<LazyFallback />}><StatsScreen /></Suspense>} />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <Suspense fallback={<LazyFallback />}>
+                <AdminScreen />
+              </Suspense>
+            </AdminRoute>
+          }
+        />
+        <Route path="/chat" element={<Suspense fallback={<LazyFallback />}><ChatbotScreen /></Suspense>} />
+        <Route path="/hsk-exams" element={<Suspense fallback={<LazyFallback />}><HskExamListScreen /></Suspense>} />
+        <Route path="/hsk-exams/:id/play" element={<Suspense fallback={<LazyFallback />}><HskExamPlayerScreen /></Suspense>} />
+        <Route path="/settings" element={<Suspense fallback={<LazyFallback />}><SettingsScreen /></Suspense>} />
 
-        {/* Lazy-loaded routes (heavy data) */}
+        {/* Lazy-loaded routes (heavy data & specialized tools) */}
         <Route path="/grammar" element={<Suspense fallback={<LazyFallback />}><GrammarScreen /></Suspense>} />
-        <Route path="/dictionary" element={<Suspense fallback={<LazyFallback />}><DictionaryScreen /></Suspense>} />
+        <Route path="/dictionary" element={<DictionaryScreen />} />
         <Route path="/dialogues" element={<Suspense fallback={<LazyFallback />}><DialogueScreen /></Suspense>} />
         <Route path="/speaking" element={<Suspense fallback={<LazyFallback />}><SpeakingScreen /></Suspense>} />
         <Route path="/speaking-sandbox" element={<Suspense fallback={<LazyFallback />}><FreestyleSpeakingScreen /></Suspense>} />

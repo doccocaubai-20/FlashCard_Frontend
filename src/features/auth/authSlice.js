@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { authApi } from '../../services/authApi';
 import i18n from '../../i18n';
+import { safeLocalGet, safeLocalSet, safeLocalRemove } from '../../utils/storage';
 
 const syncLanguage = (userData) => {
   if (userData && userData.nativeLanguage) {
@@ -9,8 +10,20 @@ const syncLanguage = (userData) => {
   }
 };
 
-const token = localStorage.getItem('token') || null;
-const user = token ? JSON.parse(localStorage.getItem('user') || 'null') : null;
+const token = safeLocalGet('token');
+let user = null;
+if (token) {
+  const storedUser = safeLocalGet('user');
+  if (storedUser && typeof storedUser === 'object') {
+    user = storedUser;
+  } else if (typeof storedUser === 'string') {
+    try {
+      user = JSON.parse(storedUser);
+    } catch {
+      user = null;
+    }
+  }
+}
 if (user) {
   syncLanguage(user);
 }
@@ -30,7 +43,7 @@ const resolveAuthResponse = (payload) => {
   }
   const data = payload.data && typeof payload.data === 'object' ? payload.data : payload;
   return {
-    token: data.access_token || null,
+    token: data.access_token || data.token || null,
     user: data.user || null,
   };
 };
@@ -80,8 +93,8 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.error = null;
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      safeLocalRemove('token');
+      safeLocalRemove('user');
     },
     clearAuthError(state) {
       state.error = null;
@@ -96,15 +109,15 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         const { token: resolvedToken, user: resolvedUser } = resolveAuthResponse(action.payload);
-        state.user = resolvedUser;
+        state.user = resolvedToken ? resolvedUser : null;
         state.token = resolvedToken;
-        state.isAuthenticated = Boolean(resolvedToken) || Boolean(action.payload);
+        state.isAuthenticated = Boolean(resolvedToken);
         state.error = null;
         if (resolvedToken) {
-          localStorage.setItem('token', resolvedToken);
+          safeLocalSet('token', resolvedToken);
         }
-        if (resolvedUser) {
-          localStorage.setItem('user', JSON.stringify(resolvedUser));
+        if (resolvedToken && resolvedUser) {
+          safeLocalSet('user', resolvedUser);
           syncLanguage(resolvedUser);
         }
       })
@@ -119,15 +132,15 @@ const authSlice = createSlice({
       .addCase(loginWithGoogle.fulfilled, (state, action) => {
         state.isLoading = false;
         const { token: resolvedToken, user: resolvedUser } = resolveAuthResponse(action.payload);
-        state.user = resolvedUser;
+        state.user = resolvedToken ? resolvedUser : null;
         state.token = resolvedToken;
-        state.isAuthenticated = Boolean(resolvedToken) || Boolean(action.payload);
+        state.isAuthenticated = Boolean(resolvedToken);
         state.error = null;
         if (resolvedToken) {
-          localStorage.setItem('token', resolvedToken);
+          safeLocalSet('token', resolvedToken);
         }
-        if (resolvedUser) {
-          localStorage.setItem('user', JSON.stringify(resolvedUser));
+        if (resolvedToken && resolvedUser) {
+          safeLocalSet('user', resolvedUser);
           syncLanguage(resolvedUser);
         }
       })
@@ -142,15 +155,15 @@ const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
         const { token: resolvedToken, user: resolvedUser } = resolveAuthResponse(action.payload);
-        state.user = resolvedUser;
+        state.user = resolvedToken ? resolvedUser : null;
         state.token = resolvedToken;
-        state.isAuthenticated = Boolean(resolvedToken) || Boolean(action.payload);
+        state.isAuthenticated = Boolean(resolvedToken);
         state.error = null;
         if (resolvedToken) {
-          localStorage.setItem('token', resolvedToken);
+          safeLocalSet('token', resolvedToken);
         }
-        if (resolvedUser) {
-          localStorage.setItem('user', JSON.stringify(resolvedUser));
+        if (resolvedToken && resolvedUser) {
+          safeLocalSet('user', resolvedUser);
           syncLanguage(resolvedUser);
         }
       })
@@ -166,7 +179,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload;
         state.error = null;
-        localStorage.setItem('user', JSON.stringify(action.payload));
+        safeLocalSet('user', action.payload);
         syncLanguage(action.payload);
       })
       .addCase(updateProfile.rejected, (state, action) => {

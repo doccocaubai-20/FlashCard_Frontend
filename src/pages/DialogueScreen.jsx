@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Play, Square, Volume2, ArrowRight, ExternalLink } from 'lucide-react';
 import { dialoguesData } from '../data/dialoguesData';
 import HoverableText from '../components/common/HoverableText';
-import { getBestVoice } from '../utils/tts';
+import { speakChinese, stopSpeech } from '../utils/tts';
 
 export default function DialogueScreen() {
   const navigate = useNavigate();
@@ -23,13 +23,14 @@ export default function DialogueScreen() {
   const timerRef = useRef(null);
   const speechRef = useRef(null);
 
+  const isPlayingAutoRef = useRef(false);
+
   const stopAutoPlay = () => {
     setIsPlayingAuto(false);
+    isPlayingAutoRef.current = false;
     setPlayingIndex(-1);
     if (timerRef.current) clearTimeout(timerRef.current);
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
+    stopSpeech();
   };
 
   // Stop TTS and auto play when switching dialogues
@@ -40,42 +41,27 @@ export default function DialogueScreen() {
     };
   }, [selectedDialogue]);
 
-  const handleSpeakLine = (text, index) => {
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-
+  const handleSpeakLine = async (text, index) => {
+    stopAutoPlay();
     setPlayingIndex(index);
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-CN';
-    utterance.rate = speechRate;
-
     const line = selectedDialogue.lines[index];
     const gender = line?.speaker.startsWith('A:') ? 'male' : 'female';
-    const voiceInfo = getBestVoice('zh-CN', gender);
-    if (voiceInfo && voiceInfo.voice) {
-      utterance.voice = voiceInfo.voice;
+    try {
+      await speakChinese(text, 'zh-CN', gender);
+    } finally {
+      setPlayingIndex(-1);
     }
-
-    utterance.onend = () => {
-      setPlayingIndex(-1);
-    };
-
-    utterance.onerror = () => {
-      setPlayingIndex(-1);
-    };
-
-    speechRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
   };
 
   const startAutoPlay = () => {
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
+    stopAutoPlay();
     setIsPlayingAuto(true);
+    isPlayingAutoRef.current = true;
     playNext(0);
   };
 
-  const playNext = (index) => {
+  const playNext = async (index) => {
+    if (!isPlayingAutoRef.current) return;
     if (index >= selectedDialogue.lines.length) {
       stopAutoPlay();
       return;
@@ -83,29 +69,20 @@ export default function DialogueScreen() {
 
     setPlayingIndex(index);
     const line = selectedDialogue.lines[index];
-    const utterance = new SpeechSynthesisUtterance(line.hanzi);
-    utterance.lang = 'zh-CN';
-    utterance.rate = speechRate;
+    const gender = line?.speaker.startsWith('A:') ? 'male' : 'female';
 
-    const gender = line.speaker.startsWith('A:') ? 'male' : 'female';
-    const voiceInfo = getBestVoice('zh-CN', gender);
-    if (voiceInfo && voiceInfo.voice) {
-      utterance.voice = voiceInfo.voice;
-    }
-
-    utterance.onend = () => {
+    try {
+      await speakChinese(line.hanzi, 'zh-CN', gender);
+      if (!isPlayingAutoRef.current) return;
       // Small pause between turns
       timerRef.current = setTimeout(() => {
-        playNext(index + 1);
-      }, 1500);
-    };
-
-    utterance.onerror = () => {
+        if (isPlayingAutoRef.current) {
+          playNext(index + 1);
+        }
+      }, 1200);
+    } catch {
       stopAutoPlay();
-    };
-
-    speechRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
+    }
   };
 
   return (

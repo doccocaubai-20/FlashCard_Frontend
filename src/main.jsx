@@ -8,6 +8,12 @@ import './i18n';
 import store from './store';
 import { ToastProvider } from './context/ToastContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { migrateLocalStorageToIDB } from './utils/storage';
+
+// Safe non-blocking migration of heavy caches from localStorage to IndexedDB
+migrateLocalStorageToIDB().catch((err) => {
+  console.warn('IDB migration skipped:', err);
+});
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -22,4 +28,3 @@ createRoot(document.getElementById('root')).render(
     </Provider>
   </StrictMode>,
 );
-

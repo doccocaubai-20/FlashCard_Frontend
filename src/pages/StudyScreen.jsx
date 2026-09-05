@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { fetchTodayStudy, submitReview, setTodayCards } from '../features/study/studySlice';
 import { fetchAllDecks } from '../features/deck/deckSlice';
@@ -10,6 +10,10 @@ import { getItem, setItem } from '../utils/indexedDB';
 import Flashcard from '../components/flashcard/Flashcard';
 import HoverableText from '../components/common/HoverableText';
 import SRSButtons from '../components/study/SRSButtons';
+import StudyProgressBar from '../components/study/StudyProgressBar';
+import PomodoroTimer from '../components/study/PomodoroTimer';
+import ShortcutsModal from '../components/study/ShortcutsModal';
+import SessionSummary from '../components/study/SessionSummary';
 import {
   Layers,
   Clock,
@@ -17,13 +21,13 @@ import {
   ArrowLeft,
   ArrowRight,
   CheckCircle,
-  HelpCircle,
-  Star
+  HelpCircle
 } from 'lucide-react';
 import { favoriteWordsApi } from '../services/favoriteWordsApi';
-import { speakChinese, getBestVoice } from '../utils/tts';
+import { speakChinese, stopSpeech, getBestVoice } from '../utils/tts';
 import { flashcardApi } from '../services/flashcardApi';
 import { dictionaryHistoryApi } from '../services/dictionaryHistoryApi';
+import { recordDeckStudy } from '../utils/storage';
 
 const TOPICS = {
   1: { name: 'Cơ thể & Sinh học' },
@@ -51,15 +55,6 @@ const TOPICS = {
   23: { name: 'Kỹ thuật & Sản xuất' },
   24: { name: 'Giao thông & Hạ tầng' },
 };
-
-// SVG blossom logo
-function BlossomIcon({ className }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C11.5 3.5 9.5 4.5 8 4.5C6.5 4.5 5.5 3.5 5 2C4 3 3 5 4 6.5C5 8 7 8.5 7.5 10C6 10.5 4.5 10 3 9.5C2 10.5 2 12.5 3.5 13C5 13.5 6.5 12.5 8 13.5C8.5 15 7.5 17 6.5 18C7.5 19 9.5 19 10.5 17.5C11.5 16 11.5 14 12.5 14.5C13.5 14 13.5 16 14.5 17.5C15.5 19 17.5 19 18.5 18C17.5 17 16.5 15 17 13.5C18.5 12.5 20 13.5 21.5 13C23 12.5 23 10.5 22 9.5C20.5 10 19 10.5 17.5 10C18 8.5 20 8 21 6.5C22 5 21 3 20 2C19.5 3.5 18.5 4.5 17 4.5C15.5 4.5 13.5 3.5 13 2H12Z" />
-    </svg>
-  );
-}
 
 // Writing Practice sub-component using hanzi-writer
 function WritingPractice({ character }) {
@@ -204,7 +199,7 @@ function WritingPractice({ character }) {
 }
 
 // Speaking Practice sub-component using native Web Speech API and MediaRecorder
-function SpeakingPractice({ character, pinyin, lang = 'zh-CN' }) {
+function SpeakingPractice({ character, _pinyin, lang = 'zh-CN' }) {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [result, setResult] = useState(null); // 'success', 'fail', null
@@ -488,36 +483,19 @@ function AIExampleBox({ card, onExampleUpdated, lang = 'zh-CN', aiLimit, loadAiL
   );
 }
 
-const speakUtterance = (text, lang, rate) => {
-  return new Promise((resolve) => {
-    if (!window.speechSynthesis) {
-      resolve();
-      return;
-    }
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = lang;
-    utterance.rate = rate;
-
-    // Apply the best neural/online voice if available
-    const voiceInfo = getBestVoice(lang);
-    if (voiceInfo && voiceInfo.voice) {
-      utterance.voice = voiceInfo.voice;
-    }
-
-    utterance.onend = () => resolve();
-    utterance.onerror = (err) => {
-      console.warn('Speech error:', err);
-      resolve();
-    };
-    window.speechSynthesis.speak(utterance);
-  });
+const speakUtterance = async (text, lang) => {
+  try {
+    await speakChinese(text, lang);
+  } catch (err) {
+    console.warn('Speech error:', err);
+  }
 };
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function StudyScreen() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { showToast } = useToast();
   const { t } = useTranslation();
@@ -689,6 +667,11 @@ export default function StudyScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isStudyFinished, setIsStudyFinished] = useState(false);
+  const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+  const [sessionStats, setSessionStats] = useState(null);
+  const [sessionDuration, setSessionDuration] = useState(0);
+  const sessionStartTimeRef = useRef(null);
+  const sessionReviewsRef = useRef([]);
 
   const [showWriting, setShowWriting] = useState(false);
   const [showSpeaking, setShowSpeaking] = useState(false);
@@ -1033,10 +1016,10 @@ export default function StudyScreen() {
     );
   };
 
-  // Cleanup speech synthesis on unmount
+  // Cleanup speech on unmount
   useEffect(() => {
     return () => {
-      window.speechSynthesis?.cancel();
+      stopSpeech();
     };
   }, []);
 
@@ -1049,7 +1032,7 @@ export default function StudyScreen() {
       } else {
         showToast('Bộ bài này đã hết từ mới để nạp thêm!', 'warning');
       }
-    } catch (err) {
+    } catch {
       showToast('Có lỗi xảy ra khi nạp thêm từ mới.', 'error');
     }
   };
@@ -1077,6 +1060,12 @@ export default function StudyScreen() {
     setCurrentIndex(0);
     setIsFlipped(false);
     setIsStudyFinished(false);
+    sessionStartTimeRef.current = Date.now();
+    sessionReviewsRef.current = [];
+    setSessionStats(null);
+    if (selectedDeckId && selectedDeckId !== 'all') {
+      recordDeckStudy(selectedDeckId);
+    }
     setIsStudyStarted(true);
   };
 
@@ -1167,7 +1156,7 @@ export default function StudyScreen() {
       setIsPassivePlaying(false);
       passivePlayingRef.current = false;
       passiveSeqIdRef.current++;
-      window.speechSynthesis?.cancel();
+      stopSpeech();
       setPassiveStatus('paused');
     } else {
       setIsPassivePlaying(true);
@@ -1177,7 +1166,7 @@ export default function StudyScreen() {
   };
 
   const handlePassiveNext = () => {
-    window.speechSynthesis?.cancel();
+    stopSpeech();
     passiveSeqIdRef.current++;
     const nextIdx = (currentIndex + 1) % activeQueue.length;
     setCurrentIndex(nextIdx);
@@ -1190,7 +1179,7 @@ export default function StudyScreen() {
   };
 
   const handlePassivePrev = () => {
-    window.speechSynthesis?.cancel();
+    stopSpeech();
     passiveSeqIdRef.current++;
     const prevIdx = (currentIndex - 1 + activeQueue.length) % activeQueue.length;
     setCurrentIndex(prevIdx);
@@ -1206,18 +1195,61 @@ export default function StudyScreen() {
     setIsPassivePlaying(false);
     passivePlayingRef.current = false;
     passiveSeqIdRef.current++;
-    window.speechSynthesis?.cancel();
+    stopSpeech();
     setIsPassiveStarted(false);
   };
 
   // Back to config panel
   const handleQuitStudy = () => {
     setIsStudyStarted(false);
+    setIsStudyFinished(false);
+    setSessionStats(null);
+    setSessionDuration(0);
   };
 
   // Flip card helper
   const handleFlip = () => {
     setIsFlipped((prev) => !prev);
+  };
+
+  const finalizeSessionStats = (queue = activeQueue) => {
+    const finalDuration = sessionStartTimeRef.current
+      ? Math.max(1, Math.round((Date.now() - sessionStartTimeRef.current) / 1000))
+      : 60;
+
+    const reviews = sessionReviewsRef.current;
+    const totalCards = queue.length;
+
+    const weakWordsMap = new Map();
+    reviews.forEach(({ card, rating }) => {
+      if (rating === 1 || rating === 2) {
+        weakWordsMap.set(card.id || card.character || card.hanzi, card);
+      }
+    });
+
+    const weakWords = Array.from(weakWordsMap.values());
+    const masteredCount = Math.max(0, totalCards - weakWords.length);
+
+    const accuracyRate = totalCards > 0
+      ? Math.round((masteredCount / totalCards) * 100)
+      : 100;
+
+    const xpEarned = totalCards * 10 + masteredCount * 5;
+    const coinsEarned = Math.max(1, Math.floor(xpEarned / 5));
+
+    const stats = {
+      totalCards,
+      masteredCount,
+      weakWords,
+      accuracyRate,
+      durationSec: finalDuration,
+      xpEarned,
+      coinsEarned,
+    };
+
+    setSessionDuration(finalDuration);
+    setSessionStats(stats);
+    setIsStudyFinished(true);
   };
 
   // Skip / Next card without scoring
@@ -1226,13 +1258,13 @@ export default function StudyScreen() {
     if (currentIndex < activeQueue.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      setIsStudyFinished(true);
+      finalizeSessionStats();
     }
   };
 
   const saveReviewOffline = (cardId, rating) => {
     const pendingStr = localStorage.getItem('chongzi_pending_reviews') || '[]';
-    let pending = [];
+    let pending;
     try {
       pending = JSON.parse(pendingStr);
     } catch {
@@ -1254,6 +1286,15 @@ export default function StudyScreen() {
     const currentCard = activeQueue[currentIndex];
     if (!currentCard) return;
 
+    sessionReviewsRef.current.push({
+      card: currentCard,
+      rating,
+    });
+
+    if (currentCard.deckId) {
+      recordDeckStudy(currentCard.deckId);
+    }
+
     if (studyMode === 'srs') {
       if (navigator.onLine) {
         // Dispatch to backend database in background (optimistic update)
@@ -1274,7 +1315,7 @@ export default function StudyScreen() {
     if (currentIndex < activeQueue.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      setIsStudyFinished(true);
+      finalizeSessionStats();
     }
   };
 
@@ -1284,7 +1325,7 @@ export default function StudyScreen() {
     if (currentIndex < activeQueue.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      setIsStudyFinished(true);
+      finalizeSessionStats();
     }
   };
 
@@ -1295,6 +1336,45 @@ export default function StudyScreen() {
     }
   };
 
+  const handleSwipeLeft = () => {
+    if (studyMode === 'srs') {
+      handleRate(1);
+    } else {
+      handlePrevClassic();
+    }
+  };
+
+  const handleSwipeRight = () => {
+    if (studyMode === 'srs') {
+      handleRate(3);
+    } else {
+      handleNextClassic();
+    }
+  };
+
+  const handleReviewWeak = () => {
+    if (!sessionStats || sessionStats.weakWords.length === 0) return;
+    const weakQueue = [...sessionStats.weakWords];
+    setActiveQueue(weakQueue);
+    setCurrentIndex(0);
+    setIsFlipped(false);
+    setIsStudyFinished(false);
+    sessionStartTimeRef.current = Date.now();
+    sessionReviewsRef.current = [];
+    setSessionDuration(0);
+    setSessionStats(null);
+  };
+
+  const handleRestartAll = () => {
+    setCurrentIndex(0);
+    setIsFlipped(false);
+    setIsStudyFinished(false);
+    sessionStartTimeRef.current = Date.now();
+    sessionReviewsRef.current = [];
+    setSessionDuration(0);
+    setSessionStats(null);
+  };
+
   // Keyboard Shortcuts Listener
   useEffect(() => {
     if (!isStudyStarted || isStudyFinished) return;
@@ -1303,8 +1383,21 @@ export default function StudyScreen() {
       // Ignore if writing text
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-      // Anti-spam key debounce (minimum 250ms between actions to prevent double-skipping)
       const now = Date.now();
+
+      // If shortcuts modal is open, ignore game/flip shortcuts so keys don't leak into background
+      if (isShortcutsOpen) {
+        if (e.key === '?' || e.key === '/') {
+          e.preventDefault();
+          if (now - lastKeyTimeRef.current >= 250) {
+            lastKeyTimeRef.current = now;
+            setIsShortcutsOpen(false);
+          }
+        }
+        return;
+      }
+
+      // Anti-spam key debounce (minimum 250ms between actions to prevent double-skipping)
       if (now - lastKeyTimeRef.current < 250) {
         e.preventDefault();
         return;
@@ -1326,6 +1419,40 @@ export default function StudyScreen() {
         e.preventDefault();
         lastKeyTimeRef.current = now;
         handlePrevClassic();
+      } else if (e.key === '?' || e.key === '/') {
+        e.preventDefault();
+        lastKeyTimeRef.current = now;
+        setIsShortcutsOpen((prev) => !prev);
+      } else if (e.key === 't' || e.key === 'T') {
+        e.preventDefault();
+        lastKeyTimeRef.current = now;
+        const cur = activeQueue[currentIndex];
+        if (cur) {
+          speakChinese(cur.hanzi || cur.character);
+        }
+      } else if (e.key === 'p' || e.key === 'P') {
+        e.preventDefault();
+        lastKeyTimeRef.current = now;
+        // Toggle Pomodoro timer
+        const timerToggleBtn = document.querySelector(
+          'button[title*="Nhấn P"], button[aria-label="Tạm dừng"], button[aria-label="Tiếp tục"]'
+        );
+        if (timerToggleBtn) {
+          timerToggleBtn.click();
+        } else {
+          const pomodoroBtn = document.querySelector('button[title*="Pomodoro"]');
+          if (pomodoroBtn) {
+            pomodoroBtn.click();
+            setTimeout(() => {
+              const preset25 = Array.from(document.querySelectorAll('button')).find(
+                (btn) => btn.textContent && btn.textContent.includes('25 phút')
+              );
+              if (preset25) {
+                preset25.click();
+              }
+            }, 50);
+          }
+        }
       } else if (studyMode === 'srs') {
         if (['1', '2', '3', '4'].includes(e.key)) {
           e.preventDefault();
@@ -1339,44 +1466,27 @@ export default function StudyScreen() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isStudyStarted, isStudyFinished, studyMode, currentIndex, isFlipped, activeQueue]);
+  }, [isStudyStarted, isStudyFinished, studyMode, currentIndex, isFlipped, activeQueue, isShortcutsOpen]);
 
   // Finished study screen
   if (isStudyStarted && isStudyFinished) {
     return (
-      <div className="flex min-h-[70vh] items-center justify-center p-6 bg-canvas dark:bg-surface-dark">
-        <div className="max-w-md w-full bg-surface-card dark:bg-surface-dark/60 border border-hairline dark:border-divider-dark rounded-md p-10 text-center shadow-lg">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary mb-6">
-            <CheckCircle size={36} />
-          </div>
-          <h1 className="font-display text-2xl font-extrabold text-ink dark:text-on-dark tracking-tight">Hoàn thành buổi học!</h1>
-          <p className="mt-3 text-sm text-body dark:text-on-dark-mute leading-6 font-sans">
-            Tuyệt vời! Bạn đã hoàn thành tất cả {activeQueue.length} từ vựng đã chọn. Hãy tiếp tục duy trì thói quen học tập hàng ngày nhé!
-          </p>
-          <div className="mt-8 flex flex-col gap-3">
-            <button
-              onClick={() => {
-                setIsStudyFinished(false);
-                setCurrentIndex(0);
-                setIsFlipped(false);
-              }}
-              className="w-full py-3 bg-primary hover:bg-primary-deep text-white font-mono font-bold rounded-full transition-colors cursor-pointer shadow-sm active:scale-[0.99]"
-            >
-              Học lại danh sách này
-            </button>
-            <button
-              onClick={() => {
-                setIsStudyStarted(false);
-                setIsStudyFinished(false);
-                setCurrentIndex(0);
-                setIsFlipped(false);
-              }}
-              className="w-full py-3 bg-surface-card hover:bg-surface-bone dark:bg-surface-dark dark:hover:bg-black border border-hairline dark:border-divider-dark text-ink dark:text-on-dark font-mono font-bold rounded-full transition-colors cursor-pointer"
-            >
-              Quay lại cấu hình
-            </button>
-          </div>
-        </div>
+      <div className="flex min-h-[70vh] items-center justify-center p-4 sm:p-6 bg-canvas dark:bg-surface-dark">
+        <SessionSummary
+          stats={sessionStats || {
+            totalCards: activeQueue.length,
+            masteredCount: activeQueue.length,
+            weakWords: [],
+            accuracyRate: 100,
+            durationSec: sessionDuration || 60,
+            xpEarned: activeQueue.length * 10,
+            coinsEarned: Math.max(1, Math.floor((activeQueue.length * 10) / 5)),
+          }}
+          onReviewWeak={handleReviewWeak}
+          onRestartAll={handleRestartAll}
+          onNextDeck={() => navigate('/decks')}
+          onGoHome={() => navigate('/')}
+        />
       </div>
     );
   }
@@ -1388,43 +1498,53 @@ export default function StudyScreen() {
     return (
       <div className="max-w-6xl mx-auto space-y-6 pb-12">
         {/* Navigation Top Bar */}
-        <div className="flex items-center justify-between border-b border-hairline dark:border-divider-dark pb-4">
+        <div className="flex items-center justify-between border-b border-hairline dark:border-divider-dark pb-4 gap-2">
           <button
             onClick={handleQuitStudy}
-            className="flex items-center gap-2 text-mute hover:text-ink dark:text-on-dark-mute dark:hover:text-on-dark font-mono font-bold text-xs cursor-pointer"
+            className="flex items-center gap-1.5 text-mute hover:text-ink dark:text-on-dark-mute dark:hover:text-on-dark font-mono font-bold text-xs cursor-pointer"
           >
             <ArrowLeft size={14} />
-            Thoát
+            <span>Thoát</span>
           </button>
-          <div className="text-xs font-mono font-bold text-mute dark:text-on-dark-mute flex items-center gap-1.5">
-            THẺ {currentIndex + 1} / {displayCount}
-            {!navigator.onLine && (
-              <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" title="Ngoại tuyến" />
-            )}
-          </div>
-          <div className="px-3 py-1 bg-surface-bone dark:bg-black/30 border border-hairline dark:border-divider-dark text-primary text-[10px] font-mono font-bold rounded-full">
-            {studyMode === 'srs' ? 'Spaced Repetition' : 'Classic Mode'}
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Focus / Pomodoro Timer */}
+            <PomodoroTimer />
+
+            {/* Shortcut Guide Button */}
+            <button
+              type="button"
+              onClick={() => setIsShortcutsOpen(true)}
+              className="min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full hover:bg-surface-bone dark:hover:bg-white/10 text-mute hover:text-primary transition cursor-pointer"
+              aria-label="Bảng phím tắt (?)"
+              title="Bảng phím tắt (?)"
+            >
+              <HelpCircle size={16} />
+            </button>
+
+            {/* Study Mode Indicator */}
+            <div className="hidden sm:inline-block px-3 py-1 bg-surface-bone dark:bg-black/30 border border-hairline dark:border-divider-dark text-primary text-[10px] font-mono font-bold rounded-full">
+              {studyMode === 'srs' ? 'Spaced Repetition' : 'Classic Mode'}
+            </div>
           </div>
         </div>
 
-        {/* Keyboard Shortcuts Helper Guide */}
-        <div className="flex flex-wrap items-center justify-center gap-4 text-[10px] text-mute dark:text-on-dark-mute bg-surface-bone/50 dark:bg-black/10 py-2 px-4 rounded-full max-w-xl mx-auto border border-hairline dark:border-divider-dark font-mono">
-          <HelpCircle size={12} className="text-primary" />
-          <span>Cách / Enter: Lật thẻ</span>
-          <span>•</span>
-          <span>Phím ←: Quay lại</span>
-          <span>•</span>
-          <span>Phím →: Tiếp theo</span>
-          {studyMode === 'srs' && (
-            <>
-              <span>•</span>
-              <span>Phím 1-4: Đánh giá nhanh</span>
-            </>
-          )}
+        {/* Study Progress Bar */}
+        <div className="w-full max-w-xl mx-auto pt-1">
+          <StudyProgressBar
+            current={currentIndex}
+            total={activeQueue.length}
+          />
         </div>
+
+        {/* Shortcuts Modal */}
+        <ShortcutsModal
+          isOpen={isShortcutsOpen}
+          onClose={() => setIsShortcutsOpen(false)}
+        />
 
         {/* Main Content Area: Responsive Grid (Side-by-side on desktop, vertical on mobile) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2">
 
           {/* Left Column (5 cols): Flashcard, SRS Ratings, and Navigation */}
           <div className="lg:col-span-5 flex flex-col items-center space-y-6 w-full">
@@ -1434,6 +1554,8 @@ export default function StudyScreen() {
                   cardData={currentCard}
                   isFlipped={isFlipped}
                   onFlip={handleFlip}
+                  onSwipeLeft={handleSwipeLeft}
+                  onSwipeRight={handleSwipeRight}
                   frontFaceMode={frontFaceMode}
                   showPinyinOnFront={showPinyinOnFront}
                   onTogglePinyinOnFront={() => setShowPinyinOnFront((prev) => !prev)}

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSwipeable } from 'react-swipeable';
 import { Eye, EyeOff, Star, Volume2 } from 'lucide-react';
 import HoverableText from '../common/HoverableText';
 import { speakChinese } from '../../utils/tts';
@@ -39,7 +40,7 @@ function parsePosAndMeaning(meaning) {
     const cleanMeaning = match[2].trim();
     const posLower = rawPos.toLowerCase();
     let posAbbr = rawPos;
-    
+
     if (posLower === 'danh từ' || posLower === 'n' || posLower === 'noun') posAbbr = 'n';
     else if (posLower === 'động từ' || posLower === 'v' || posLower === 'verb') posAbbr = 'v';
     else if (posLower === 'tính từ' || posLower === 'adj' || posLower === 'adjective') posAbbr = 'adj';
@@ -52,7 +53,7 @@ function parsePosAndMeaning(meaning) {
     else if (posLower === 'lượng từ' || posLower === 'm' || posLower === 'measure word' || posLower === 'classifier') posAbbr = 'm';
     else if (posLower === 'số từ' || posLower === 'num' || posLower === 'numeral') posAbbr = 'num';
     else if (posLower === 'trợ động từ' || posLower === 'aux' || posLower === 'auxiliary verb') posAbbr = 'aux';
-    
+
     return { pos: posAbbr, meaning: cleanMeaning };
   }
   return { pos: '', meaning: meaning };
@@ -88,6 +89,8 @@ export default function Flashcard({
   cardData, 
   isFlipped, 
   onFlip, 
+  onSwipeLeft,
+  onSwipeRight,
   frontFaceMode = 'hanzi',
   showPinyinOnFront = false,
   onTogglePinyinOnFront,
@@ -97,9 +100,12 @@ export default function Flashcard({
   const { t } = useTranslation();
   const { character: frontChar, pinyin: frontPinyin, meaning: frontMeaning } = cardData || {};
   const { pos: frontPos, meaning: cleanFrontMeaning } = parsePosAndMeaning(frontMeaning);
-  const [backCardData, setBackCardData] = React.useState(cardData);
+  const [backCardData, setBackCardData] = useState(cardData);
+  const [swipeDirection, setSwipeDirection] = useState(null);
+  const isSwipingRef = useRef(false);
+  const swipeTimeoutRef = useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isFlipped) {
       setBackCardData(cardData);
     } else {
@@ -110,12 +116,68 @@ export default function Flashcard({
     }
   }, [isFlipped, cardData]);
 
+  useEffect(() => {
+    return () => {
+      if (swipeTimeoutRef.current) {
+        clearTimeout(swipeTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const { character: backChar, pinyin: backPinyin, meaning: backMeaning } = backCardData || {};
   const { pos: backPos, meaning: cleanBackMeaning } = parsePosAndMeaning(backMeaning);
 
+  const handlers = useSwipeable({
+    onSwiping: (eventData) => {
+      isSwipingRef.current = true;
+      if (swipeTimeoutRef.current) clearTimeout(swipeTimeoutRef.current);
+      if (eventData.dir === 'Left') {
+        setSwipeDirection('left');
+      } else if (eventData.dir === 'Right') {
+        setSwipeDirection('right');
+      }
+    },
+    onSwipedLeft: () => {
+      setSwipeDirection(null);
+      if (swipeTimeoutRef.current) clearTimeout(swipeTimeoutRef.current);
+      swipeTimeoutRef.current = setTimeout(() => {
+        isSwipingRef.current = false;
+      }, 200);
+      onSwipeLeft?.();
+    },
+    onSwipedRight: () => {
+      setSwipeDirection(null);
+      if (swipeTimeoutRef.current) clearTimeout(swipeTimeoutRef.current);
+      swipeTimeoutRef.current = setTimeout(() => {
+        isSwipingRef.current = false;
+      }, 200);
+      onSwipeRight?.();
+    },
+    onTouchEndOrOnMouseUp: () => {
+      setSwipeDirection(null);
+      if (swipeTimeoutRef.current) clearTimeout(swipeTimeoutRef.current);
+      swipeTimeoutRef.current = setTimeout(() => {
+        isSwipingRef.current = false;
+      }, 200);
+    },
+    preventScrollOnSwipe: true,
+    trackMouse: true,
+    delta: 50,
+  });
+
+  const handleCardClick = (e) => {
+    if (isSwipingRef.current) return;
+    onFlip?.(e);
+  };
+
+  // Hardware-accelerated 3D transform with -webkit- prefixes
   const cardStyle = {
     transformStyle: 'preserve-3d',
-    transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+    WebkitTransformStyle: 'preserve-3d',
+    transform: isFlipped ? 'rotateY(180deg) translateZ(0)' : 'rotateY(0deg) translateZ(0)',
+    WebkitTransform: isFlipped ? 'rotateY(180deg) translateZ(0)' : 'rotateY(0deg) translateZ(0)',
+    transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+    willChange: 'transform',
   };
 
   const showHanziOnFront = frontFaceMode === 'hanzi';
@@ -135,12 +197,27 @@ export default function Flashcard({
 
   return (
     <div 
+      {...handlers}
       className="relative w-full max-w-xl cursor-pointer select-none" 
       style={{ perspective: '1200px' }}
-      onClick={onFlip}
+      onClick={handleCardClick}
     >
+      {/* Visual Swipe Indicator Badges */}
+      {swipeDirection === 'right' && (
+        <div className="absolute top-6 left-6 z-30 pointer-events-none bg-emerald-500/90 dark:bg-emerald-600/90 text-white font-mono font-bold text-xs sm:text-sm px-4 py-2 rounded-full shadow-lg flex items-center gap-1.5 backdrop-blur-xs animate-pulse">
+          <span>Thuộc</span>
+          <span>→</span>
+        </div>
+      )}
+      {swipeDirection === 'left' && (
+        <div className="absolute top-6 right-6 z-30 pointer-events-none bg-red-500/90 dark:bg-red-600/90 text-white font-mono font-bold text-xs sm:text-sm px-4 py-2 rounded-full shadow-lg flex items-center gap-1.5 backdrop-blur-xs animate-pulse">
+          <span>←</span>
+          <span>Cần ôn</span>
+        </div>
+      )}
+
       <div
-        className="relative w-full h-[27rem] rounded-2xl transition-transform duration-500 ease-out shadow-lg hover:shadow-xl dark:shadow-black/50 border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark"
+        className="relative w-full h-[27rem] rounded-2xl shadow-lg hover:shadow-xl dark:shadow-black/50 border border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark"
         style={cardStyle}
       >
         
@@ -149,9 +226,14 @@ export default function Flashcard({
           className={`absolute inset-0 rounded-2xl bg-surface-card dark:bg-surface-dark p-6 sm:p-8 text-ink dark:text-on-dark flex flex-col justify-between overflow-hidden transition-opacity duration-300 ${
             isFlipped ? 'pointer-events-none opacity-0' : 'pointer-events-auto opacity-100'
           }`}
-          style={{ backfaceVisibility: 'hidden' }}
+          style={{ 
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            transform: 'translateZ(0)',
+            WebkitTransform: 'translateZ(0)',
+          }}
         >
-          {/* Top Bar (Header) */}
+          {/* Top Bar (Header with min 44x44px touch targets) */}
           <div className="flex items-center justify-between w-full gap-2 z-10">
             {/* Left: Star Favorite Button + Topic Tag */}
             <div className="flex items-center gap-2.5 min-w-0">
@@ -159,14 +241,15 @@ export default function Flashcard({
                 <button
                   type="button"
                   onClick={handleToggleFav}
-                  className={`p-2 rounded-full border transition-all duration-200 cursor-pointer shrink-0 ${
+                  className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full border transition-all duration-200 cursor-pointer shrink-0 ${
                     isFavorite
                       ? 'bg-amber-500/15 border-amber-500/40 text-amber-500 hover:bg-amber-500/25 shadow-xs'
                       : 'bg-surface-bone/60 dark:bg-black/30 border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark hover:bg-surface-bone'
                   }`}
+                  aria-label={isFavorite ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
                   title={isFavorite ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
                 >
-                  <Star size={16} fill={isFavorite ? 'currentColor' : 'none'} />
+                  <Star size={18} fill={isFavorite ? 'currentColor' : 'none'} />
                 </button>
               )}
 
@@ -181,15 +264,16 @@ export default function Flashcard({
               )}
             </div>
 
-            {/* Right: Actions (Speaker & Pinyin Toggle) */}
+            {/* Right: Actions (Speaker & Pinyin Toggle >= 44px) */}
             <div className="flex items-center gap-2 shrink-0">
               <button
                 type="button"
                 onClick={(e) => handleSpeak(e, frontChar)}
-                className="p-2 rounded-full border border-hairline dark:border-divider-dark bg-surface-bone/60 dark:bg-black/30 hover:bg-surface-bone text-mute hover:text-primary transition cursor-pointer"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full border border-hairline dark:border-divider-dark bg-surface-bone/60 dark:bg-black/30 hover:bg-surface-bone text-mute hover:text-primary transition cursor-pointer"
+                aria-label="Phát âm từ vựng"
                 title="Phát âm từ vựng"
               >
-                <Volume2 size={15} />
+                <Volume2 size={18} />
               </button>
 
               {showHanziOnFront && !isEnglish && (
@@ -200,10 +284,11 @@ export default function Flashcard({
                     e.stopPropagation();
                     onTogglePinyinOnFront?.();
                   }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-hairline dark:border-divider-dark bg-surface-bone/60 dark:bg-black/30 hover:bg-surface-bone px-3 py-1.5 text-xs font-mono font-semibold text-ink dark:text-on-dark transition cursor-pointer"
+                  className="min-h-[44px] px-3.5 flex items-center gap-1.5 rounded-full border border-hairline dark:border-divider-dark bg-surface-bone/60 dark:bg-black/30 hover:bg-surface-bone text-xs font-mono font-semibold text-ink dark:text-on-dark transition cursor-pointer"
+                  aria-label="Ẩn hoặc hiện Pinyin"
                   title="Ẩn / Hiện Pinyin"
                 >
-                  {showPinyinOnFront ? <EyeOff size={13} className="text-primary" /> : <Eye size={13} className="text-primary" />}
+                  {showPinyinOnFront ? <EyeOff size={16} className="text-primary" /> : <Eye size={16} className="text-primary" />}
                   <span>{showPinyinOnFront ? 'Ẩn Pinyin' : 'Hiện Pinyin'}</span>
                 </button>
               )}
@@ -242,7 +327,6 @@ export default function Flashcard({
             )}
           </div>
 
-
           {/* Spacer for clean bottom */}
           <div className="h-2" />
         </div>
@@ -252,9 +336,14 @@ export default function Flashcard({
           className={`absolute inset-0 rounded-2xl bg-surface-card dark:bg-surface-dark p-6 sm:p-8 text-ink dark:text-on-dark flex flex-col justify-between overflow-hidden transition-opacity duration-300 ${
             isFlipped ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
           }`}
-          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+          style={{ 
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg) translateZ(0)',
+            WebkitTransform: 'rotateY(180deg) translateZ(0)',
+          }}
         >
-          {/* Top Bar (Header) */}
+          {/* Top Bar (Header with min 44x44px touch targets) */}
           <div className="flex items-center justify-between w-full gap-2 z-10">
             {/* Left: Star Favorite Button + Section Label */}
             <div className="flex items-center gap-2.5 min-w-0">
@@ -262,14 +351,15 @@ export default function Flashcard({
                 <button
                   type="button"
                   onClick={handleToggleFav}
-                  className={`p-2 rounded-full border transition-all duration-200 cursor-pointer shrink-0 ${
+                  className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full border transition-all duration-200 cursor-pointer shrink-0 ${
                     isFavorite
                       ? 'bg-amber-500/15 border-amber-500/40 text-amber-500 hover:bg-amber-500/25 shadow-xs'
                       : 'bg-surface-bone/60 dark:bg-black/30 border-hairline dark:border-divider-dark text-mute hover:text-ink dark:hover:text-on-dark hover:bg-surface-bone'
                   }`}
+                  aria-label={isFavorite ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
                   title={isFavorite ? 'Xóa khỏi mục yêu thích' : 'Thêm vào mục yêu thích'}
                 >
-                  <Star size={16} fill={isFavorite ? 'currentColor' : 'none'} />
+                  <Star size={18} fill={isFavorite ? 'currentColor' : 'none'} />
                 </button>
               )}
 
@@ -279,14 +369,15 @@ export default function Flashcard({
               </span>
             </div>
 
-            {/* Right: Audio Pronounce Button */}
+            {/* Right: Audio Pronounce Button >= 44px */}
             <button
               type="button"
               onClick={(e) => handleSpeak(e, backChar)}
-              className="p-2 rounded-full border border-hairline dark:border-divider-dark bg-surface-bone/60 dark:bg-black/30 hover:bg-surface-bone text-mute hover:text-primary transition cursor-pointer shrink-0"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full border border-hairline dark:border-divider-dark bg-surface-bone/60 dark:bg-black/30 hover:bg-surface-bone text-mute hover:text-primary transition cursor-pointer shrink-0"
+              aria-label="Phát âm từ vựng"
               title="Phát âm từ vựng"
             >
-              <Volume2 size={15} />
+              <Volume2 size={18} />
             </button>
           </div>
 

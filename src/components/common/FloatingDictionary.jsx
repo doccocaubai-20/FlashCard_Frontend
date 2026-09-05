@@ -85,13 +85,17 @@ export default function FloatingDictionary() {
       if (containerRef.current && containerRef.current.contains(event.target)) {
         return;
       }
+      // Extra safety: check if the click target or any ancestor has our data attribute
+      if (event.target.closest && event.target.closest('[data-floating-dict]')) {
+        return;
+      }
 
       setIsOpen(false);
     };
 
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen, isMobile]);
 
@@ -578,6 +582,7 @@ export default function FloatingDictionary() {
             borderColor: 'rgba(56, 189, 248, 0.3)',
           }}
           className="fixed w-[350px] max-h-[480px] border rounded-2xl backdrop-blur-xl pointer-events-auto flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200 z-[99998] text-white font-sans"
+          data-floating-dict="true"
         >
           {/* Header */}
           <div className="flex items-center justify-between p-3 border-b border-white/5 bg-white/2">
