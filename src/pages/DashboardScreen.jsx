@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -15,13 +15,16 @@ import {
 
 import { fetchSummary, fetchHeatmap } from '../features/stats/statsSlice';
 import { fetchAllDecks } from '../features/deck/deckSlice';
+import { updateProfile } from '../features/auth/authSlice';
 import { statsApi } from '../services/statsApi';
 import { useTheme } from '../context/ThemeContext';
+import { getLevelData, getSavedScholarPath, setSavedScholarPath } from '../utils/levelSystem';
 
 // Sub-components (Requirement R3)
 import GreetingBar from '../components/dashboard/GreetingBar';
 import TodayMission from '../components/dashboard/TodayMission';
 import WordOfTheDay from '../components/dashboard/WordOfTheDay';
+import ScholarPathModal from '../components/common/ScholarPathModal';
 import QuickLinksGrid from '../components/dashboard/QuickLinksGrid';
 import RecentDecks from '../components/dashboard/RecentDecks';
 import DailyQuests from '../components/dashboard/DailyQuests';
@@ -138,20 +141,23 @@ export default function DashboardScreen() {
   const studiedCards = summary?.completedCards ?? 0;
   const totalCards = decks?.reduce((sum, d) => sum + (d.cardCount || 0), 0) || 0;
 
-  // Level & Title Calculation based on XP
-  const userLevel = Math.floor(xp / 1000) + 1;
-  const getScholarTitle = useCallback(
-    (lvl) => {
-      if (lvl >= 50) return t('dashboard.title_trang_nguyen', 'Trạng Nguyên');
-      if (lvl >= 35) return t('dashboard.title_tham_hoa', 'Thám Hoa');
-      if (lvl >= 25) return t('dashboard.title_tien_si', 'Tiến Sĩ');
-      if (lvl >= 15) return t('dashboard.title_cu_nhan', 'Cử Nhân');
-      if (lvl >= 6) return t('dashboard.title_tu_tai', 'Tú Tài');
-      return t('dashboard.title_dong_sinh', 'Đồng Sinh');
-    },
-    [t]
-  );
-  const scholarTitle = getScholarTitle(userLevel);
+  // Level & Title Calculation based on unified RPG curve and active Scholar Path
+  const [isPathModalOpen, setIsPathModalOpen] = useState(false);
+  const activePath = user?.scholarPath || getSavedScholarPath('imperial');
+  const levelData = useMemo(() => getLevelData(xp, activePath), [xp, activePath]);
+  const userLevel = levelData.level;
+  const scholarTitle = levelData.title;
+
+  const handleSelectPath = useCallback(async (newPathId) => {
+    setSavedScholarPath(newPathId);
+    if (user?.id) {
+      try {
+        await dispatch(updateProfile({ id: user.id, data: { scholarPath: newPathId } })).unwrap();
+      } catch (err) {
+        console.warn('Could not persist scholar path to backend:', err);
+      }
+    }
+  }, [dispatch, user?.id]);
 
   // Real-time Countdown Timer for XP Boost Potion
   useEffect(() => {
@@ -224,6 +230,8 @@ export default function DashboardScreen() {
         coins={coins}
         userLevel={userLevel}
         scholarTitle={scholarTitle}
+        levelData={levelData}
+        onOpenPathModal={() => setIsPathModalOpen(true)}
         xpBoostTimeLeft={xpBoostTimeLeft}
         onToggleViewMode={toggleViewMode}
         viewMode={viewMode}
@@ -515,6 +523,15 @@ export default function DashboardScreen() {
           </div>
         </div>
       )}
+
+      {/* 5. Scholar Path Selection & Level Progress Modal */}
+      <ScholarPathModal
+        isOpen={isPathModalOpen}
+        onClose={() => setIsPathModalOpen(false)}
+        currentXp={xp}
+        activePath={activePath}
+        onSelectPath={handleSelectPath}
+      />
     </div>
   );
 }

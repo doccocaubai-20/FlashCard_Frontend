@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import api from '../services/api';
 import { Trophy, Flame, Layers, Award, RefreshCw } from 'lucide-react';
+import { getLevelData } from '../utils/levelSystem';
 
 function LeaderboardAvatar({ url, name, className }) {
   const [isBroken, setIsBroken] = useState(false);
@@ -171,13 +172,21 @@ export default function LeaderboardScreen() {
                   </div>
                 </div>
 
-                {/* Player Name */}
+                {/* Player Name & Scholar Title */}
                 <div className="flex flex-col items-center gap-0.5">
                   <span className={`text-xs lg:text-sm font-bold truncate max-w-[100px] lg:max-w-[140px] block ${
                     isCurrent ? 'text-primary' : 'text-ink dark:text-on-dark'
                   }`}>
                     {player.name}
                   </span>
+                  {(() => {
+                    const pData = getLevelData(player.score, player.scholarPath);
+                    return (
+                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-sm border ${pData.colorClasses}`}>
+                        {pData.icon} {pData.title} (Lv.{pData.level})
+                      </span>
+                    );
+                  })()}
                   <div className="flex items-center gap-1.5 mt-0.5">
                     {/* Streak Badge */}
                     <div className="flex items-center gap-0.5 text-[10px] font-bold text-amber-500 font-mono">
@@ -244,14 +253,29 @@ export default function LeaderboardScreen() {
                       #{rankNum}
                     </td>
                     <td className="py-3.5">
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-surface-bone dark:bg-black font-bold flex items-center justify-center text-[10px] shadow-xs text-ink dark:text-on-dark overflow-hidden border border-hairline dark:border-divider-dark">
-                          <LeaderboardAvatar url={player.avatarUrl} name={player.name} className="h-full w-full object-cover" />
-                        </div>
-                        <span className={isCurrent ? 'text-primary font-bold' : 'text-ink dark:text-on-dark font-medium'}>
-                          {player.name}
-                        </span>
-                      </div>
+                      {(() => {
+                        const pData = getLevelData(player.score, player.scholarPath);
+                        return (
+                          <div className="flex items-center gap-2">
+                            <div className="h-7 w-7 rounded-full bg-surface-bone dark:bg-black font-bold flex items-center justify-center text-[10px] shadow-xs text-ink dark:text-on-dark overflow-hidden border border-hairline dark:border-divider-dark shrink-0">
+                              <LeaderboardAvatar url={player.avatarUrl} name={player.name} className="h-full w-full object-cover" />
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className={`truncate max-w-[120px] sm:max-w-[180px] ${isCurrent ? 'text-primary font-bold' : 'text-ink dark:text-on-dark font-medium'}`}>
+                                  {player.name}
+                                </span>
+                                <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-sm border ${pData.colorClasses}`}>
+                                  {pData.icon} {pData.title}
+                                </span>
+                              </div>
+                              <span className="text-[10px] font-mono text-mute dark:text-on-dark-mute">
+                                Cấp {pData.level}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </td>
                     <td className="py-3.5 text-center font-mono font-semibold">
                       <span className="text-amber-500 inline-flex items-center gap-0.5">

@@ -6,6 +6,7 @@ import { updateProfile } from '../features/auth/authSlice';
 import { Sun, Moon, Camera, Check, ShieldAlert, Loader2, Globe } from 'lucide-react';
 import api from '../services/api';
 import { useTheme } from '../context/ThemeContext';
+import { SCHOLAR_PATHS, getSavedScholarPath, setSavedScholarPath } from '../utils/levelSystem';
 
 const predefinedAvatarSeeds = ['Felix', 'Chloe', 'Buddy', 'Buster', 'Coco', 'Angel'];
 
@@ -57,6 +58,29 @@ export default function SettingsScreen() {
   const [passwordMsg, setPasswordMsg] = useState('');
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarMsg, setAvatarMsg] = useState('');
+  const [scholarPathMsg, setScholarPathMsg] = useState('');
+
+  const currentScholarPath = user?.scholarPath || getSavedScholarPath('imperial');
+
+  const handleScholarPathSelect = async (pathId) => {
+    setSavedScholarPath(pathId);
+    setScholarPathMsg('');
+    if (user?.id) {
+      try {
+        await dispatch(
+          updateProfile({
+            id: user.id,
+            data: { scholarPath: pathId },
+          })
+        ).unwrap();
+        setScholarPathMsg('Đã cập nhật Đạo Lộ danh hiệu thành công!');
+        setTimeout(() => setScholarPathMsg(''), 3000);
+      } catch (err) {
+        console.error(err);
+        setScholarPathMsg('Không thể lưu Đạo Lộ, vui lòng thử lại.');
+      }
+    }
+  };
   const [avatarBroken, setAvatarBroken] = useState(false);
 
   useEffect(() => {
@@ -281,6 +305,54 @@ export default function SettingsScreen() {
                 <Moon size={14} className={isDark ? 'opacity-100 transition-opacity' : 'opacity-30 transition-opacity'} />
               </span>
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Section 2.5: Đạo Lộ Danh Hiệu (Scholar Path) */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-bold text-mute dark:text-on-dark-mute uppercase tracking-wider">
+            Đạo Lộ Danh Hiệu (Level Path)
+          </h2>
+          {scholarPathMsg && (
+            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+              {scholarPathMsg}
+            </span>
+          )}
+        </div>
+        <div className="bg-surface-card dark:bg-surface-dark/50 border border-hairline dark:border-divider-dark rounded-md shadow-sm p-5 transition-colors space-y-4">
+          <p className="text-xs text-mute dark:text-on-dark-mute leading-relaxed">
+            Chọn phong cách danh xưng theo sở thích. Cấp độ (Level) và điểm kinh nghiệm (XP) của bạn sẽ được giữ nguyên hoàn toàn khi đổi và tự động đồng bộ trên mọi thiết bị!
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {Object.values(SCHOLAR_PATHS).map((path) => {
+              const isSelected = currentScholarPath === path.id;
+              return (
+                <button
+                  key={path.id}
+                  type="button"
+                  onClick={() => handleScholarPathSelect(path.id)}
+                  className={`p-4 rounded-xl border-2 text-left transition-all cursor-pointer relative flex flex-col justify-between ${
+                    isSelected
+                      ? 'border-primary bg-primary/5 dark:bg-primary/10 shadow-sm ring-2 ring-primary/20'
+                      : 'border-hairline dark:border-divider-dark hover:border-primary/40 bg-surface-card dark:bg-surface-dark'
+                  }`}
+                >
+                  {isSelected && (
+                    <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center">
+                      <Check size={12} strokeWidth={3} />
+                    </div>
+                  )}
+                  <div className="space-y-1.5">
+                    <span className="text-2xl block">{path.icon}</span>
+                    <span className="text-sm font-bold text-ink dark:text-on-dark block">{path.name}</span>
+                    <span className="text-[10px] font-mono font-semibold text-primary block">{path.concept}</span>
+                    <p className="text-xs text-mute dark:text-on-dark-mute leading-relaxed mt-1">{path.description}</p>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

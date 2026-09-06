@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { statsApi } from '../services/statsApi';
+import { updateProfile } from '../features/auth/authSlice';
 import { speakChinese } from '../utils/tts';
+import { SCHOLAR_PATHS, setSavedScholarPath } from '../utils/levelSystem';
 import {
   BookOpen,
   CheckCircle2,
@@ -120,12 +122,14 @@ const SAMPLE_TUTORIAL_CARDS = [
 
 export default function OnboardingScreen() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
   // Steps: 1, 2, 3, 4
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedHsk, setSelectedHsk] = useState(1);
   const [dailyTarget, setDailyTarget] = useState(20);
+  const [selectedScholarPath, setSelectedScholarPath] = useState(user?.scholarPath || 'imperial');
   const [isSavingGoal, setIsSavingGoal] = useState(false);
   const [deckConfirmed, setDeckConfirmed] = useState(true);
 
@@ -155,8 +159,12 @@ export default function OnboardingScreen() {
     }
 
     if (currentStep === 2) {
-      // Synchronize daily goal with backend
+      // Synchronize daily goal and scholar path with backend
       setIsSavingGoal(true);
+      setSavedScholarPath(selectedScholarPath);
+      if (user?.id) {
+        dispatch(updateProfile({ id: user.id, data: { scholarPath: selectedScholarPath } }));
+      }
       try {
         await statsApi.updateGoals({ dailyTarget });
       } catch (err) {
@@ -215,6 +223,10 @@ export default function OnboardingScreen() {
       const userKey = user?.id ? `onboarding_completed_${user.id}` : 'onboarding_completed_default';
       localStorage.setItem(userKey, 'true');
       localStorage.setItem('chongzi_onboarding_done', 'true');
+      setSavedScholarPath(selectedScholarPath);
+      if (user?.id) {
+        dispatch(updateProfile({ id: user.id, data: { scholarPath: selectedScholarPath } }));
+      }
     } catch (e) {
       console.warn('Failed to record onboarding completion:', e);
     }
@@ -429,6 +441,48 @@ export default function OnboardingScreen() {
                   <span className="text-[#4a5568] dark:text-[#cbd5e0]">
                     Với mục tiêu <strong>{dailyTarget} từ/ngày</strong>, bạn sẽ chinh phục toàn bộ <strong>{activeHskInfo.words} từ vựng {activeHskInfo.label}</strong> trong khoảng <strong>{Math.ceil(activeHskInfo.words / dailyTarget)} ngày</strong> học kiên trì!
                   </span>
+                </div>
+              </div>
+
+              {/* Scholar Path Selection */}
+              <div className="mt-6 pt-6 border-t border-[#1a2332]/10 dark:border-white/10 space-y-3">
+                <div>
+                  <h3 className="text-sm font-bold text-[#1a2332] dark:text-white flex items-center gap-1.5">
+                    <span>✨</span>
+                    <span>Chọn Đạo Lộ Danh Hiệu của bạn</span>
+                  </h3>
+                  <p className="text-xs text-[#718096] dark:text-[#a0aec0]">
+                    Phong cách danh xưng xuất hiện trong suốt quá trình cày cấp học tập (có thể đổi bất cứ lúc nào trong Cài đặt).
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {Object.values(SCHOLAR_PATHS).map((path) => {
+                    const isSelected = selectedScholarPath === path.id;
+                    return (
+                      <div
+                        key={path.id}
+                        onClick={() => setSelectedScholarPath(path.id)}
+                        className={`p-3.5 rounded-2xl border-2 transition-all cursor-pointer select-none flex flex-col justify-between ${
+                          isSelected
+                            ? 'border-[#0F5257] bg-[#0F5257]/10 dark:bg-[#0F5257]/20 shadow-xs'
+                            : 'border-[#1a2332]/8 dark:border-white/10 hover:border-[#0F5257]/30 bg-white dark:bg-[#111827]'
+                        }`}
+                      >
+                        <div className="space-y-1">
+                          <span className="text-2xl block">{path.icon}</span>
+                          <span className="text-xs font-bold text-[#1a2332] dark:text-white block">{path.name}</span>
+                          <span className="text-[10px] font-mono text-[#0F5257] dark:text-[#2dd4bf] block">{path.concept}</span>
+                          <p className="text-[11px] text-[#718096] dark:text-[#a0aec0] line-clamp-2 leading-relaxed mt-1">{path.description}</p>
+                        </div>
+                        {isSelected && (
+                          <div className="mt-2 text-[10px] font-bold text-[#0F5257] dark:text-[#2dd4bf] flex items-center gap-1">
+                            <CheckCircle2 size={12} /> Đang chọn
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

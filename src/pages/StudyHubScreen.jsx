@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
   GraduationCap,
   Mic,
@@ -15,10 +16,13 @@ import {
   Video
 } from 'lucide-react';
 import { statsApi } from '../services/statsApi';
+import { getLevelData, getSavedScholarPath } from '../utils/levelSystem';
 
 export default function StudyHubScreen() {
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
+  const user = useSelector((state) => state.auth.user);
+  const activePath = user?.scholarPath || getSavedScholarPath('imperial');
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -30,7 +34,6 @@ export default function StudyHubScreen() {
           setStats({
             streak: res.data.currentStreak ?? res.data.streak ?? 0,
             xp: res.data.xp ?? 0,
-            level: res.data.level ?? (Math.floor((res.data.xp || 0) / 100) + 1)
           });
         }
       } catch (err) {
@@ -39,6 +42,8 @@ export default function StudyHubScreen() {
     };
     fetchStats();
   }, []);
+
+  const levelData = stats ? getLevelData(stats.xp, activePath) : null;
 
   const activities = [
     {
@@ -161,8 +166,12 @@ export default function StudyHubScreen() {
               <div className="flex items-center gap-2">
                 <Award size={18} className="text-purple-500" />
                 <div>
-                  <span className="text-[10px] font-mono text-mute block leading-tight">Level</span>
-                  <span className="text-sm font-bold text-ink dark:text-on-dark font-mono">Lv. {stats.level || 1}</span>
+                  <span className="text-[10px] font-mono text-mute block leading-tight">
+                    {levelData ? levelData.title : 'Cấp độ'}
+                  </span>
+                  <span className="text-sm font-bold text-ink dark:text-on-dark font-mono">
+                    Lv. {levelData ? levelData.level : 1}
+                  </span>
                 </div>
               </div>
             </div>

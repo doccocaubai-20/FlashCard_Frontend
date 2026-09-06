@@ -122,6 +122,9 @@
     "title_tien_si": "Scholar Doctor",
     "title_tham_hoa": "Scholar Master",
     "title_trang_nguyen": "Scholar Laureate",
+    "title_van_thanh": "Sage of Literature",
+    "title_long_thanh": "Dragon Saint",
+    "title_thanh_nhan": "Supreme Paragon",
     "quiz_correct_feedback": "Correct! You received +20 XP and +10 ChongZi Coins!",
     "quiz_incorrect_feedback": "Incorrect answer, please try again!"
   },

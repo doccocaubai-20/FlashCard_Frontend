@@ -9,12 +9,19 @@ export default function GreetingBar({
   coins = 0,
   userLevel = 1,
   scholarTitle = 'Đồng sinh',
+  levelData = null,
+  onOpenPathModal,
   xpBoostTimeLeft = '',
   onToggleViewMode,
   viewMode = 'gamified',
   onOpenShop,
 }) {
   const { t } = useTranslation();
+
+  const activeLevel = levelData?.level ?? userLevel;
+  const activeTitle = levelData?.title ?? scholarTitle;
+  const activeIcon = levelData?.icon ?? '🪵';
+  const badgeClasses = levelData?.colorClasses ?? 'text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20 border-primary/20';
 
   const getGreetingText = () => {
     const hour = new Date().getHours();
@@ -36,7 +43,11 @@ export default function GreetingBar({
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         {/* Left: User Avatar & Greeting */}
         <div className="flex items-center gap-3.5 min-w-0">
-          <div className="relative shrink-0">
+          <div 
+            className={`relative shrink-0 ${onOpenPathModal ? 'cursor-pointer hover:opacity-90' : ''}`}
+            onClick={onOpenPathModal}
+            title={onOpenPathModal ? 'Nhấn để xem Đạo Lộ & Cấp độ' : `Cấp độ ${activeLevel}`}
+          >
             {avatarUrl ? (
               <img
                 src={avatarUrl}
@@ -50,17 +61,23 @@ export default function GreetingBar({
             )}
             <span
               className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-black text-white ring-2 ring-surface-card dark:ring-surface-card shadow-xs"
-              title={`Cấp độ ${userLevel}`}
             >
-              {userLevel}
+              {activeLevel}
             </span>
           </div>
 
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-primary dark:text-primary-light bg-primary/10 dark:bg-primary/20 px-2 py-0.5 rounded-md border border-primary/20">
-                {scholarTitle} (Lv.{userLevel})
-              </span>
+              <button
+                type="button"
+                onClick={onOpenPathModal}
+                className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md border transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95 select-none ${badgeClasses}`}
+                title="Nhấn để xem tiến độ & đổi Đạo Lộ danh hiệu"
+              >
+                <span>{activeIcon}</span>
+                <span>{activeTitle} (Lv.{activeLevel})</span>
+                <span className="text-[9px] opacity-70">▾</span>
+              </button>
               {xpBoostTimeLeft && (
                 <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase text-purple-600 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 px-2 py-0.5 rounded-md border border-purple-300 dark:border-purple-800 animate-pulse">
                   <Zap size={11} className="fill-current" />
