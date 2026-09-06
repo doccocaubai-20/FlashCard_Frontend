@@ -106,12 +106,22 @@ export default function CreateFlashcardScreen() {
     if (targetDeckId) {
       dispatch(fetchFlashcardsByDeck(Number(targetDeckId)))
         .unwrap()
-        .then((cards) => {
-          const mapped = (cards || []).map((c) => ({
+        .then((res) => {
+          let list = [];
+          if (Array.isArray(res)) {
+            list = res;
+          } else if (res && Array.isArray(res.data)) {
+            list = res.data;
+          } else if (res && res.data && Array.isArray(res.data.cards)) {
+            list = res.data.cards;
+          } else if (res && Array.isArray(res.cards)) {
+            list = res.cards;
+          }
+          const mapped = list.map((c) => ({
             id: c.id,
-            hanzi: (c.hanzi || c.character || '').trim(),
+            hanzi: (c.hanzi || c.character || c.front || '').trim(),
             pinyin: (c.pinyin || '').trim(),
-            meaning: (c.meaning || '').trim(),
+            meaning: (c.meaning || c.back || '').trim(),
           }));
           setExistingCards(mapped);
           setExistingWords(mapped.map((c) => c.hanzi));
@@ -607,20 +617,30 @@ export default function CreateFlashcardScreen() {
               </div>
 
               {/* Duplicate Card Warning */}
+              {/* Duplicate Card Warning */}
               {duplicateCard && (
-                <div className="p-4 bg-amber-50/90 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800/50 rounded-xl flex items-start gap-3 text-xs text-amber-900 dark:text-amber-200 animate-fade-in">
-                  <AlertTriangle size={20} className="shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
-                  <div className="space-y-1">
-                    <p className="font-bold text-sm">
-                      Từ vựng "{duplicateCard.hanzi}" {duplicateCard.pinyin ? `(${duplicateCard.pinyin})` : ''} đã có trong bộ thẻ này!
-                    </p>
-                    <p className="text-xs text-amber-800 dark:text-amber-300">
-                      Nghĩa hiện có: <span className="font-semibold italic">"{duplicateCard.meaning}"</span>
-                    </p>
-                    <p className="text-[11px] text-amber-700/80 dark:text-amber-400/80">
-                      Để đảm bảo thuật toán ôn tập ngắt quãng (SRS) không bị loãng, hệ thống không cho phép tạo thẻ trùng lặp. Bạn có thể mở bộ thẻ để chỉnh sửa thẻ đã có.
-                    </p>
+                <div className="p-4 bg-amber-50/90 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800/50 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-amber-900 dark:text-amber-200 animate-fade-in">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle size={20} className="shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+                    <div className="space-y-1">
+                      <p className="font-bold text-sm">
+                        Từ vựng "{duplicateCard.hanzi}" {duplicateCard.pinyin ? `(${duplicateCard.pinyin})` : ''} đã có trong bộ thẻ này!
+                      </p>
+                      <p className="text-xs text-amber-800 dark:text-amber-300">
+                        Nghĩa hiện có: <span className="font-semibold italic">"{duplicateCard.meaning}"</span>
+                      </p>
+                      <p className="text-[11px] text-amber-700/80 dark:text-amber-400/80">
+                        Để đảm bảo thuật toán ôn tập ngắt quãng (SRS) không bị loãng, bạn không nên tạo thẻ trùng lặp.
+                      </p>
+                    </div>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/decks/${formData.deckId}`)}
+                    className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg text-xs transition-colors shrink-0 cursor-pointer self-start sm:self-center"
+                  >
+                    Xem thẻ bài
+                  </button>
                 </div>
               )}
 
@@ -676,25 +696,30 @@ export default function CreateFlashcardScreen() {
                 </div>
               </div>
 
-              {/* Buttons */}
-              <div className="flex items-center justify-between pt-4 border-t border-hairline dark:border-divider-dark">
-                <span className="text-xs font-semibold text-primary">{errorMsg}</span>
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => navigate(-1)}
-                    className="px-4 py-2.5 rounded-full border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark text-sm font-bold transition-colors cursor-pointer bg-transparent"
-                  >
-                    Quay lại
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isLoading || !!duplicateCard}
-                    className="px-5 py-2.5 rounded-full bg-primary hover:bg-primary-deep disabled:bg-stone/50 dark:disabled:bg-surface-dark/70 text-white text-sm font-bold shadow-sm hover:shadow-md transition-all cursor-pointer disabled:cursor-not-allowed"
-                  >
-                    {duplicateCard ? 'Từ vựng đã tồn tại' : isLoading ? 'Đang tạo...' : 'Tạo thẻ bài'}
-                  </button>
+              {/* Error Alert */}
+              {errorMsg && (
+                <div className="p-3 bg-red-50 dark:bg-red-950/25 border border-red-200 dark:border-red-900/40 rounded-xl text-xs text-red-600 dark:text-red-400 font-semibold flex items-center gap-2">
+                  <AlertTriangle size={15} className="shrink-0 text-red-500" />
+                  <span>{errorMsg}</span>
                 </div>
+              )}
+
+              {/* Buttons */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-hairline dark:border-divider-dark">
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  className="px-5 py-2.5 rounded-full border border-hairline dark:border-divider-dark hover:bg-surface-bone dark:hover:bg-black text-ink dark:text-on-dark text-sm font-bold transition-colors cursor-pointer bg-transparent shrink-0"
+                >
+                  Quay lại
+                </button>
+                <button
+                  type="submit"
+                  disabled={isLoading || !!duplicateCard}
+                  className="px-6 py-2.5 rounded-full bg-primary hover:bg-primary-deep disabled:bg-stone/40 dark:disabled:bg-surface-dark/70 text-white text-sm font-bold shadow-sm hover:shadow-md transition-all cursor-pointer disabled:cursor-not-allowed shrink-0 min-w-[130px] text-center"
+                >
+                  {duplicateCard ? 'Từ vựng đã tồn tại' : isLoading ? 'Đang tạo...' : 'Tạo thẻ bài'}
+                </button>
               </div>
 
             </div>

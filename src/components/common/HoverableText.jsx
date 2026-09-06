@@ -10,9 +10,9 @@ const cleanDefinition = (vi) => {
   if (parts.length > 0) {
     if (parts.length > 1) {
       const combined = parts.slice(0, 2).join('; ');
-      return combined.length > 45 ? parts[0] + '...' : combined;
+      return combined.length > 80 ? parts[0] + '...' : combined;
     }
-    return parts[0].length > 45 ? parts[0].slice(0, 45) + '...' : parts[0];
+    return parts[0].length > 80 ? parts[0].slice(0, 80) + '...' : parts[0];
   }
   return trimmed;
 };
@@ -222,11 +222,15 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
                   >
                     🔊 Đọc
                   </button>
-                  {data?.hsk && (
+                  {data?.hsk ? (
                     <span className="text-[9px] bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded font-mono font-bold">
                       HSK {data.hsk}
                     </span>
-                  )}
+                  ) : (data?.en && data.en.length > 0) ? (
+                    <span className="text-[9px] bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 px-1.5 py-0.5 rounded font-mono font-bold">
+                      CEDICT
+                    </span>
+                  ) : null}
                 </span>
               </span>
 
