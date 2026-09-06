@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { X, Check, Sparkles, Award, Zap } from 'lucide-react';
 import { SCHOLAR_PATHS, SCHOLAR_TIERS, getLevelData } from '../../utils/levelSystem';
 
@@ -11,6 +11,10 @@ export default function ScholarPathModal({
 }) {
   const [selectedPath, setSelectedPath] = useState(activePath);
 
+  React.useEffect(() => {
+    setSelectedPath(activePath);
+  }, [activePath, isOpen]);
+
   if (!isOpen) return null;
 
   const currentData = getLevelData(currentXp, selectedPath);
@@ -20,6 +24,13 @@ export default function ScholarPathModal({
     if (onSelectPath) {
       onSelectPath(pathId);
     }
+  };
+
+  const handleConfirm = () => {
+    if (onSelectPath) {
+      onSelectPath(selectedPath);
+    }
+    onClose();
   };
 
   return (
@@ -168,7 +179,7 @@ export default function ScholarPathModal({
           </p>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleConfirm}
             className="w-full sm:w-auto px-6 py-2.5 bg-primary hover:bg-primary-deep text-white font-mono font-bold text-xs rounded-full shadow-md transition cursor-pointer"
           >
             Đã hiểu & Xác nhận

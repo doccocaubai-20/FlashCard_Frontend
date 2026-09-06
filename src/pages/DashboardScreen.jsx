@@ -143,12 +143,20 @@ export default function DashboardScreen() {
 
   // Level & Title Calculation based on unified RPG curve and active Scholar Path
   const [isPathModalOpen, setIsPathModalOpen] = useState(false);
-  const activePath = user?.scholarPath || getSavedScholarPath('imperial');
-  const levelData = useMemo(() => getLevelData(xp, activePath), [xp, activePath]);
+  const [currentPath, setCurrentPath] = useState(user?.scholarPath || getSavedScholarPath('imperial'));
+
+  useEffect(() => {
+    if (user?.scholarPath) {
+      setCurrentPath(user.scholarPath);
+    }
+  }, [user?.scholarPath]);
+
+  const levelData = useMemo(() => getLevelData(xp, currentPath), [xp, currentPath]);
   const userLevel = levelData.level;
   const scholarTitle = levelData.title;
 
   const handleSelectPath = useCallback(async (newPathId) => {
+    setCurrentPath(newPathId);
     setSavedScholarPath(newPathId);
     if (user?.id) {
       try {
@@ -529,7 +537,7 @@ export default function DashboardScreen() {
         isOpen={isPathModalOpen}
         onClose={() => setIsPathModalOpen(false)}
         currentXp={xp}
-        activePath={activePath}
+        activePath={currentPath}
         onSelectPath={handleSelectPath}
       />
     </div>
