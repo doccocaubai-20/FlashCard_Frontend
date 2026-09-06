@@ -66,6 +66,10 @@
 
 /* ── Base ── */
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: var(--color-canvas);
     color: var(--color-body);
@@ -74,7 +78,9 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-family: 'Be Vietnam Pro', 'Noto Serif SC', sans-serif;
     color: var(--color-ink);
   }
@@ -109,13 +115,27 @@
 
 /* ── Fade in animation ── */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-in {
-  from { opacity: 0; transform: translateX(20px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* ════════════════════════════════════════════
@@ -231,7 +251,8 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(15, 82, 87, 0.2); /* Soft jade color */
+  background: rgba(15, 82, 87, 0.2);
+  /* Soft jade color */
   border-radius: 9999px;
   transition: background-color 0.2s ease;
 }
@@ -319,8 +340,8 @@
 .gamified-active .border-divider-dark,
 .gamified-active .border-gray-200,
 .gamified-active .border-slate-200,
-.gamified-active .divide-hairline > * + *,
-.gamified-active .divide-divider-dark > * + * {
+.gamified-active .divide-hairline>*+*,
+.gamified-active .divide-divider-dark>*+* {
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
@@ -350,7 +371,8 @@
 /* Chinese character font rendering style to match normal stroke representation and avoid faux-bolding distortions */
 .hanzi-char {
   font-family: "Noto Serif SC", "STKaiti", "Kaiti", "楷体", "BiauKai", "SimSun", "Songti SC", serif !important;
-  font-weight: 500 !important; /* Crisp medium weight by default so it's not too thin */
+  font-weight: 500 !important;
+  /* Crisp medium weight by default so it's not too thin */
   display: inline-block;
 }
 
@@ -388,6 +410,7 @@ b .hanzi-text {
    GLOBAL PRINT LAYOUT & RESET SYSTEM
    ════════════════════════════════════════════ */
 @media print {
+
   /* Hide all non-printable layout wrappers globally */
   .no-print,
   .no-print *,
@@ -407,10 +430,10 @@ b .hanzi-text {
   }
 
   /* Flatten and reset body wrappers for layout printing */
-  #root, 
-  .app-layout, 
+  #root,
+  .app-layout,
   .app-content,
-  .app-content > div,
+  .app-content>div,
   main {
     padding: 0 !important;
     margin: 0 !important;
@@ -431,8 +454,9 @@ b .hanzi-text {
     size: A4 portrait !important;
     margin: 0mm !important;
   }
-  
-  html, body {
+
+  html,
+  body {
     background: white !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -458,7 +482,8 @@ b .hanzi-text {
   /* Force borders to be visible */
   .border-dashed {
     border-style: dashed !important;
-    border-color: #d4d4d8 !important; /* zinc-300 */
+    border-color: #d4d4d8 !important;
+    /* zinc-300 */
   }
 
   /* Fix dark-mode white-on-white text invisibility in print preview */

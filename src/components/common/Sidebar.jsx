@@ -21,7 +21,8 @@ import {
   Printer,
   X,
   BarChart3,
-  Video
+  Video,
+  Sprout,
 } from 'lucide-react';
 
 export default function Sidebar({ onClose }) {
@@ -45,6 +46,7 @@ export default function Sidebar({ onClose }) {
       items: [
         { to: '/', label: t('nav.dashboard'), icon: LayoutDashboard },
         { to: '/decks', label: t('nav.decks'), icon: BookOpen },
+        { to: '/farm', label: t('nav.farm', 'Nông trại Tri Thức'), icon: Sprout },
         { to: '/stats', label: t('nav.stats', 'Thống kê'), icon: BarChart3 },
         { to: '/leaderboard', label: t('nav.leaderboard'), icon: Trophy },
       ]

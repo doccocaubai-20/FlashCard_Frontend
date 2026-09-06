@@ -160,12 +160,6 @@ export default function LandingScreen() {
             <div>
               <span className="text-xl font-black tracking-tight text-[#1a2332] dark:text-white flex items-center gap-1">
                 ChongZi
-                <span className="text-xs font-semibold px-1.5 py-0.5 rounded bg-[#0F5257]/10 dark:bg-[#0F5257]/30 text-[#0F5257] dark:text-[#d4eef0]">
-                  Tiếng Trung
-                </span>
-              </span>
-              <span className="text-[10px] block text-[#718096] dark:text-[#a0aec0] font-medium tracking-wide">
-                Hán tự thông minh & SRS
               </span>
             </div>
           </Link>
@@ -290,11 +284,6 @@ export default function LandingScreen() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Hero Content */}
             <div className="lg:col-span-7 text-center lg:text-left">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0F5257]/10 dark:bg-[#0F5257]/25 text-[#0F5257] dark:text-[#d4eef0] text-xs font-bold mb-6 border border-[#0F5257]/20">
-                <Sparkles size={14} className="text-[#0F5257] dark:text-[#d4eef0]" />
-                <span>Nền tảng Hán tự Thông minh • SRS & AI Etymology</span>
-              </div>
 
               {/* Headline */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12] text-[#1a2332] dark:text-white mb-6">
@@ -335,7 +324,7 @@ export default function LandingScreen() {
                   <div className="text-xs text-[#718096] dark:text-[#a0aec0] font-medium">Chữ Hán & Chiết tự</div>
                 </div>
                 <div>
-                  <div className="text-xl sm:text-2xl font-black text-[#0F5257] dark:text-[#2dd4bf]">HSK 1 - 6</div>
+                  <div className="text-xl sm:text-2xl font-black text-[#0F5257] dark:text-[#2dd4bf]">HSK 1 - 9</div>
                   <div className="text-xs text-[#718096] dark:text-[#a0aec0] font-medium">Lộ trình chuẩn hóa</div>
                 </div>
                 <div>
@@ -346,7 +335,7 @@ export default function LandingScreen() {
             </div>
 
             {/* Right Hero Interactive Flashcard Widget */}
-            <div id="demo-preview" className="lg:col-span-5 flex flex-col items-center">
+            <div id="demo-preview" className="scroll-mt-20 lg:col-span-5 flex flex-col items-center">
               <div className="w-full max-w-md">
                 {/* Character Picker Tabs */}
                 <div className="flex items-center justify-between mb-3 px-1">
@@ -361,11 +350,10 @@ export default function LandingScreen() {
                           setActiveCardIndex(idx);
                           setIsFlipped(false);
                         }}
-                        className={`px-2.5 py-1 text-xs font-bold rounded-md transition-all cursor-pointer ${
-                          activeCardIndex === idx
-                            ? 'bg-[#0F5257] text-white shadow-xs'
-                            : 'text-[#4a5568] dark:text-[#cbd5e0] hover:bg-black/5 dark:hover:bg-white/5'
-                        }`}
+                        className={`px-2.5 py-1 text-xs font-bold rounded-md transition-all cursor-pointer ${activeCardIndex === idx
+                          ? 'bg-[#0F5257] text-white shadow-xs'
+                          : 'text-[#4a5568] dark:text-[#cbd5e0] hover:bg-black/5 dark:hover:bg-white/5'
+                          }`}
                       >
                         {card.hanzi}
                       </button>
@@ -516,7 +504,7 @@ export default function LandingScreen() {
       </section>
 
       {/* ── 3. 4 Core Features Showcase ── */}
-      <section id="features" className="py-20 bg-black/2 dark:bg-white/[0.02] border-y border-[#1a2332]/5 dark:border-white/5">
+      <section id="features" className="scroll-mt-20 py-20 bg-black/2 dark:bg-white/[0.02] border-y border-[#1a2332]/5 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-bold uppercase tracking-wider text-[#0F5257] dark:text-[#2dd4bf] px-3 py-1 rounded-full bg-[#0F5257]/10 dark:bg-[#0F5257]/20">
@@ -594,7 +582,7 @@ export default function LandingScreen() {
                 3. Luyện viết Thư pháp & Phát âm Chuẩn
               </h3>
               <p className="text-sm text-[#4a5568] dark:text-[#a0aec0] leading-relaxed mb-6">
-                Vẽ nét chữ Hán chuẩn xác từng quy tắc thuận bút (trên trước dưới sau, trái trước phải sau) với bảng vẽ tương tác, đồng thời luyện nghe giọng Bắc Kinh chuẩn xác với Microsoft Neural TTS.
+                Vẽ nét chữ Hán chuẩn xác từng quy tắc thuận bút với bảng vẽ tương tác, đồng thời luyện nghe giọng đọc chuẩn xác.
               </p>
               <div className="space-y-2.5 text-xs font-semibold text-[#4a5568] dark:text-[#cbd5e0]">
                 <div className="flex items-center gap-2">
@@ -626,7 +614,7 @@ export default function LandingScreen() {
               <div className="space-y-2.5 text-xs font-semibold text-[#4a5568] dark:text-[#cbd5e0]">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 size={16} className="text-[#0F5257] dark:text-[#2dd4bf]" />
-                  <span>Chuỗi ngày học liên tục (Streak Flame) tạo phản xạ kỷ luật</span>
+                  <span>Chuỗi ngày học liên tục tạo năng lượng học tập</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 size={16} className="text-[#0F5257] dark:text-[#2dd4bf]" />
@@ -643,7 +631,7 @@ export default function LandingScreen() {
       </section>
 
       {/* ── 4. Methodology & HSK 1 - 6 Levels ── */}
-      <section id="hsk-levels" className="py-20">
+      <section id="hsk-levels" className="scroll-mt-20 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-bold uppercase tracking-wider text-[#0F5257] dark:text-[#2dd4bf] px-3 py-1 rounded-full bg-[#0F5257]/10 dark:bg-[#0F5257]/20">
@@ -663,11 +651,10 @@ export default function LandingScreen() {
               <button
                 key={item.level}
                 onClick={() => setSelectedHskIndex(index)}
-                className={`py-3 px-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-center cursor-pointer border ${
-                  selectedHskIndex === index
-                    ? 'bg-[#0F5257] text-white border-[#0F5257] shadow-md scale-105'
-                    : 'bg-white dark:bg-[#111827] text-[#4a5568] dark:text-[#cbd5e0] border-[#1a2332]/10 dark:border-white/10 hover:border-[#0F5257]/40'
-                }`}
+                className={`py-3 px-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-center cursor-pointer border ${selectedHskIndex === index
+                  ? 'bg-[#0F5257] text-white border-[#0F5257] shadow-md scale-105'
+                  : 'bg-white dark:bg-[#111827] text-[#4a5568] dark:text-[#cbd5e0] border-[#1a2332]/10 dark:border-white/10 hover:border-[#0F5257]/40'
+                  }`}
               >
                 {item.level}
               </button>
@@ -743,7 +730,7 @@ export default function LandingScreen() {
       </section>
 
       {/* ── 5. Methodology Scientific Framework ── */}
-      <section id="methodology" className="py-20 bg-black/2 dark:bg-white/[0.02] border-t border-[#1a2332]/5 dark:border-white/5">
+      <section id="methodology" className="scroll-mt-20 py-20 bg-black/2 dark:bg-white/[0.02] border-t border-[#1a2332]/5 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-bold uppercase tracking-wider text-[#0F5257] dark:text-[#2dd4bf] px-3 py-1 rounded-full bg-[#0F5257]/10 dark:bg-[#0F5257]/20">
@@ -809,10 +796,7 @@ export default function LandingScreen() {
             <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white/10 blur-2xl pointer-events-none" />
             <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-black/15 blur-2xl pointer-events-none" />
 
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-xs font-bold mb-4 backdrop-blur-sm">
-              <Flame size={14} className="text-amber-300" />
-              <span>Khởi đầu hành trình ngay hôm nay</span>
-            </span>
+
 
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-4">
               Làm chủ Hán tự không khó khi bạn có phương pháp đúng
@@ -858,24 +842,7 @@ export default function LandingScreen() {
               <p className="text-xs text-[#718096] dark:text-[#a0aec0] leading-relaxed">
                 Nền tảng học Hán tự và Tiếng Trung thông minh thế hệ mới, ứng dụng Spaced Repetition và phân tích Lục thư AI.
               </p>
-              <div className="flex items-center gap-2 pt-2">
-                <button
-                  onClick={toggleTheme}
-                  className="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full border border-[#1a2332]/15 dark:border-white/15 text-[#4a5568] dark:text-[#cbd5e0] hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
-                >
-                  {classicTheme === 'dark' ? (
-                    <>
-                      <Sun size={13} className="text-amber-400" />
-                      <span>Chế độ Sáng</span>
-                    </>
-                  ) : (
-                    <>
-                      <Moon size={13} />
-                      <span>Chế độ Tối</span>
-                    </>
-                  )}
-                </button>
-              </div>
+
             </div>
 
             {/* Links: Học tập */}
@@ -901,7 +868,7 @@ export default function LandingScreen() {
                 </li>
                 <li>
                   <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
-                    Bộ đề thi HSK 1 - 6
+                    Bộ đề thi HSK 1 - 9
                   </a>
                 </li>
               </ul>

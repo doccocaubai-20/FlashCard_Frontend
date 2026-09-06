@@ -13,6 +13,8 @@ export const statsApi = {
     claimQuest: (questId) => api.post(`/api/stats/quests/${questId}/claim`),
     incrementQuestProgress: (questType, amount, tzOffset = 420) => api.put('/api/stats/quests/progress', { questType, amount, tzOffset }),
     getDailyQuiz: (tzOffset = 420) => api.get('/api/stats/daily-quiz', { params: { tzOffset } }),
-    getGardenState: (tzOffset = 420, all = false) => api.get('/api/stats/garden', { params: { tzOffset, all } }),
+    getGardenState: (tzOffset = 420, all = true) => api.get('/api/stats/garden', { params: { tzOffset, all } }),
+    waterGarden: (data = {}) => api.post('/api/stats/garden/water', data),
+    fertilizeGarden: (data = {}) => api.post('/api/stats/garden/fertilize', data),
     harvestGarden: (tzOffset = 420) => api.post('/api/stats/garden/harvest', { tzOffset }),
 };

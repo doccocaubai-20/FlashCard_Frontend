@@ -290,6 +290,15 @@ export default function DashboardScreen() {
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
+              <Link
+                to="/farm"
+                className="px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                title="Vào nông trại tri thức"
+              >
+                <span>🌱</span>
+                <span>Nông trại</span>
+              </Link>
+
               <button
                 onClick={() => setShowAiMentor(true)}
                 className="px-3 py-1.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/20 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"

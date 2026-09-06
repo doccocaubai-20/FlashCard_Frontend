@@ -11,6 +11,7 @@ import {
   MessageSquare,
   BookMarked,
   Sparkles,
+  Sprout,
 } from 'lucide-react';
 
 export default function QuickLinksGrid({ onNavigate }) {
@@ -36,6 +37,18 @@ export default function QuickLinksGrid({ onNavigate }) {
       gradient: 'from-emerald-500/10 via-emerald-500/5 to-transparent',
       borderHover: 'hover:border-emerald-500/40 hover:shadow-emerald-500/10',
       iconBg: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
+    },
+    {
+      id: 'farm',
+      title: 'Nông trại Tri Thức',
+      subtitle: 'Trực quan hóa vốn từ & thu hoạch Xu',
+      badge: 'Vườn cây',
+      path: '/farm',
+      icon: Sprout,
+      accent: 'emerald',
+      gradient: 'from-emerald-500/15 via-teal-500/5 to-transparent',
+      borderHover: 'hover:border-emerald-500/50 hover:shadow-emerald-500/10',
+      iconBg: 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400',
     },
     {
       id: 'dictionary',
