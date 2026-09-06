@@ -21,18 +21,24 @@ export default function SessionSummary({
     durationSec = 0,
     xpEarned = 0,
     coinsEarned = 0,
+    isSkimmed = false,
+    bonusXpToAward = 0,
+    bonusCoinsToAward = 0,
   } = stats;
 
   // Award XP and coins automatically upon session completion
   useEffect(() => {
     if (xpAwardedRef.current) return;
-    if (xpEarned > 0 || coinsEarned > 0) {
+    const xpToAdd = bonusXpToAward !== undefined ? bonusXpToAward : xpEarned;
+    const coinsToAdd = bonusCoinsToAward !== undefined ? bonusCoinsToAward : coinsEarned;
+
+    if (xpToAdd > 0 || coinsToAdd > 0) {
       xpAwardedRef.current = true;
-      statsApi.addXpCoins(xpEarned, coinsEarned).catch((err) => {
+      statsApi.addXpCoins(xpToAdd, coinsToAdd).catch((err) => {
         console.warn('Could not sync XP/coins to backend:', err);
       });
     }
-  }, [xpEarned, coinsEarned]);
+  }, [bonusXpToAward, bonusCoinsToAward, xpEarned, coinsEarned]);
 
   const minutes = Math.floor(durationSec / 60);
   const seconds = durationSec % 60;
@@ -63,16 +69,24 @@ export default function SessionSummary({
     <div className="max-w-2xl mx-auto space-y-6 p-4 sm:p-8 animate-in fade-in zoom-in-95 duration-300">
       {/* Trophy & Congratulatory Card */}
       <div className="bg-gradient-to-br from-primary/15 via-teal-500/10 to-transparent border border-primary/20 dark:border-primary/30 rounded-3xl p-6 sm:p-8 text-center space-y-4 shadow-xl backdrop-blur-xs">
-        <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full bg-gradient-to-tr from-amber-400 to-amber-200 text-white flex items-center justify-center text-3xl sm:text-4xl shadow-lg ring-4 ring-amber-400/20 animate-bounce">
-          🏆
-        </div>
+        {isSkimmed ? (
+          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full bg-surface-bone dark:bg-white/10 text-mute flex items-center justify-center text-3xl sm:text-4xl shadow-md ring-4 ring-black/5 dark:ring-white/5">
+            📖
+          </div>
+        ) : (
+          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full bg-gradient-to-tr from-amber-400 to-amber-200 text-white flex items-center justify-center text-3xl sm:text-4xl shadow-lg ring-4 ring-amber-400/20 animate-bounce">
+            🏆
+          </div>
+        )}
         
         <div className="space-y-1">
           <h1 className="font-display text-2xl sm:text-3xl font-black text-ink dark:text-on-dark tracking-tight">
-            Hoàn thành buổi học!
+            {isSkimmed ? 'Đã xem lướt bộ thẻ' : 'Hoàn thành buổi học!'}
           </h1>
           <p className="text-xs sm:text-sm text-mute dark:text-on-dark-mute max-w-md mx-auto leading-relaxed">
-            Tuyệt vời! Bạn đã hoàn thành trọn vẹn buổi học flashcard và tích lũy thêm điểm kinh nghiệm.
+            {isSkimmed
+              ? 'Bạn vừa xem lướt qua các thẻ. Hãy lật thẻ và dừng lại ghi nhớ để tích lũy điểm kinh nghiệm (XP) nhé!'
+              : 'Tuyệt vời! Bạn đã hoàn thành trọn vẹn buổi học flashcard và tích lũy thêm điểm kinh nghiệm.'}
           </p>
         </div>
 
@@ -84,7 +98,7 @@ export default function SessionSummary({
               Độ chính xác
             </span>
             <span className="text-xl sm:text-2xl font-mono font-black text-emerald-600 dark:text-emerald-400 mt-1 block">
-              {accuracyRate}%
+              {isSkimmed ? '0%' : `${accuracyRate}%`}
             </span>
           </div>
 
@@ -116,7 +130,7 @@ export default function SessionSummary({
               Thưởng XP
             </span>
             <span className="text-xl sm:text-2xl font-mono font-black text-amber-500 mt-1 block">
-              +{xpEarned}
+              +{isSkimmed ? 0 : xpEarned}
             </span>
           </div>
         </div>

@@ -672,6 +672,8 @@ export default function StudyScreen() {
   const [sessionDuration, setSessionDuration] = useState(0);
   const sessionStartTimeRef = useRef(null);
   const sessionReviewsRef = useRef([]);
+  const currentCardStartTimeRef = useRef(Date.now());
+  const validInteractedCardsRef = useRef(new Set());
 
   const [showWriting, setShowWriting] = useState(false);
   const [showSpeaking, setShowSpeaking] = useState(false);
@@ -1062,6 +1064,8 @@ export default function StudyScreen() {
     setIsStudyFinished(false);
     sessionStartTimeRef.current = Date.now();
     sessionReviewsRef.current = [];
+    validInteractedCardsRef.current = new Set();
+    currentCardStartTimeRef.current = Date.now();
     setSessionStats(null);
     if (selectedDeckId && selectedDeckId !== 'all') {
       recordDeckStudy(selectedDeckId);
@@ -1212,6 +1216,17 @@ export default function StudyScreen() {
     setIsFlipped((prev) => !prev);
   };
 
+  const recordClassicInteraction = () => {
+    const currentCard = activeQueue[currentIndex];
+    if (!currentCard) return;
+    const cardId = currentCard.id || currentCard.character || currentCard.hanzi || currentIndex;
+    const timeSpent = Date.now() - currentCardStartTimeRef.current;
+    // Valid interaction: User flipped the card to see the back AND spent at least 1.5 seconds on this card
+    if (isFlipped && timeSpent >= 1500) {
+      validInteractedCardsRef.current.add(cardId);
+    }
+  };
+
   const finalizeSessionStats = (queue = activeQueue) => {
     const finalDuration = sessionStartTimeRef.current
       ? Math.max(1, Math.round((Date.now() - sessionStartTimeRef.current) / 1000))
@@ -1220,22 +1235,76 @@ export default function StudyScreen() {
     const reviews = sessionReviewsRef.current;
     const totalCards = queue.length;
 
-    const weakWordsMap = new Map();
-    reviews.forEach(({ card, rating }) => {
-      if (rating === 1 || rating === 2) {
-        weakWordsMap.set(card.id || card.character || card.hanzi, card);
+    let xpEarned = 0;
+    let coinsEarned = 0;
+    let masteredCount = 0;
+    let accuracyRate = 100;
+    let weakWords = [];
+    let isSkimmed = false;
+    let bonusXpToAward = 0;
+    let bonusCoinsToAward = 0;
+
+    if (studyMode === 'srs') {
+      const weakWordsMap = new Map();
+      let srsSessionXp = 0;
+      reviews.forEach(({ card, rating }) => {
+        if (rating === 1 || rating === 2) {
+          weakWordsMap.set(card.id || card.character || card.hanzi, card);
+        }
+        if (rating === 4) srsSessionXp += 8;
+        else if (rating === 3) srsSessionXp += 6;
+        else if (rating === 2) srsSessionXp += 4;
+        else srsSessionXp += 2;
+      });
+
+      weakWords = Array.from(weakWordsMap.values());
+      const reviewedCount = reviews.length;
+      masteredCount = Math.max(0, reviewedCount - weakWords.length);
+      accuracyRate = reviewedCount > 0
+        ? Math.round((masteredCount / reviewedCount) * 100)
+        : 0;
+
+      // Completion bonus only if actually completed at least 3 cards with ratings
+      const hasCompletedQueue = reviewedCount >= totalCards && reviewedCount >= 3;
+      bonusXpToAward = hasCompletedQueue ? 15 : 0;
+      bonusCoinsToAward = hasCompletedQueue ? 5 : 0;
+
+      // Total displayed XP = per-card XP (already recorded in DB) + completion bonus
+      xpEarned = srsSessionXp + bonusXpToAward;
+      coinsEarned = Math.max(1, Math.floor(xpEarned / 5));
+
+      if (reviewedCount === 0) {
+        isSkimmed = true;
+        xpEarned = 0;
+        coinsEarned = 0;
+        bonusXpToAward = 0;
+        bonusCoinsToAward = 0;
       }
-    });
+    } else {
+      // Classic Mode (Học tự do)
+      recordClassicInteraction();
+      const validCount = validInteractedCardsRef.current.size;
+      masteredCount = validCount;
+      accuracyRate = totalCards > 0
+        ? Math.round((validCount / totalCards) * 100)
+        : 0;
 
-    const weakWords = Array.from(weakWordsMap.values());
-    const masteredCount = Math.max(0, totalCards - weakWords.length);
-
-    const accuracyRate = totalCards > 0
-      ? Math.round((masteredCount / totalCards) * 100)
-      : 100;
-
-    const xpEarned = totalCards * 10 + masteredCount * 5;
-    const coinsEarned = Math.max(1, Math.floor(xpEarned / 5));
+      // Anti-abuse check:
+      // If session duration < 15 seconds or user viewed/flipped < 2 cards, treat as quick skim (0 XP)
+      if (finalDuration < 15 || validCount < 2) {
+        isSkimmed = true;
+        xpEarned = 0;
+        coinsEarned = 0;
+        bonusXpToAward = 0;
+        bonusCoinsToAward = 0;
+      } else {
+        // Award 1 XP per truly interacted card, capped at 20 XP max per session
+        xpEarned = Math.min(20, validCount * 1);
+        coinsEarned = Math.min(5, Math.max(1, Math.floor(xpEarned / 4)));
+        bonusXpToAward = xpEarned;
+        bonusCoinsToAward = coinsEarned;
+      }
+    }
 
     const stats = {
       totalCards,
@@ -1245,6 +1314,10 @@ export default function StudyScreen() {
       durationSec: finalDuration,
       xpEarned,
       coinsEarned,
+      isSrs: studyMode === 'srs',
+      isSkimmed,
+      bonusXpToAward,
+      bonusCoinsToAward,
     };
 
     setSessionDuration(finalDuration);
@@ -1255,6 +1328,7 @@ export default function StudyScreen() {
   // Skip / Next card without scoring
   const handleSkip = () => {
     setIsFlipped(false);
+    currentCardStartTimeRef.current = Date.now();
     if (currentIndex < activeQueue.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
@@ -1312,6 +1386,7 @@ export default function StudyScreen() {
 
     // Move next immediately (no UI lag or freezes)
     setIsFlipped(false);
+    currentCardStartTimeRef.current = Date.now();
     if (currentIndex < activeQueue.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
@@ -1321,7 +1396,9 @@ export default function StudyScreen() {
 
   // Classic Mode navigation
   const handleNextClassic = () => {
+    recordClassicInteraction();
     setIsFlipped(false);
+    currentCardStartTimeRef.current = Date.now();
     if (currentIndex < activeQueue.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
@@ -1330,7 +1407,9 @@ export default function StudyScreen() {
   };
 
   const handlePrevClassic = () => {
+    recordClassicInteraction();
     setIsFlipped(false);
+    currentCardStartTimeRef.current = Date.now();
     if (currentIndex > 0) {
       setCurrentIndex((prev) => prev - 1);
     }
@@ -1361,6 +1440,8 @@ export default function StudyScreen() {
     setIsStudyFinished(false);
     sessionStartTimeRef.current = Date.now();
     sessionReviewsRef.current = [];
+    validInteractedCardsRef.current = new Set();
+    currentCardStartTimeRef.current = Date.now();
     setSessionDuration(0);
     setSessionStats(null);
   };
@@ -1371,6 +1452,8 @@ export default function StudyScreen() {
     setIsStudyFinished(false);
     sessionStartTimeRef.current = Date.now();
     sessionReviewsRef.current = [];
+    validInteractedCardsRef.current = new Set();
+    currentCardStartTimeRef.current = Date.now();
     setSessionDuration(0);
     setSessionStats(null);
   };
@@ -1475,12 +1558,15 @@ export default function StudyScreen() {
         <SessionSummary
           stats={sessionStats || {
             totalCards: activeQueue.length,
-            masteredCount: activeQueue.length,
+            masteredCount: 0,
             weakWords: [],
-            accuracyRate: 100,
+            accuracyRate: 0,
             durationSec: sessionDuration || 60,
-            xpEarned: activeQueue.length * 10,
-            coinsEarned: Math.max(1, Math.floor((activeQueue.length * 10) / 5)),
+            xpEarned: 0,
+            coinsEarned: 0,
+            isSkimmed: true,
+            bonusXpToAward: 0,
+            bonusCoinsToAward: 0,
           }}
           onReviewWeak={handleReviewWeak}
           onRestartAll={handleRestartAll}
