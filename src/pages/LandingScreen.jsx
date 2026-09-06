@@ -154,8 +154,8 @@ export default function LandingScreen() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
           {/* Brand Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="h-10 w-10 rounded-xl bg-[#0F5257] text-white flex items-center justify-center font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
-              虫
+            <div className="h-11 w-11 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform border border-[#1a2332]/10 dark:border-white/10 shrink-0">
+              <img src="/ap2.png" alt="ChongZi Logo" className="h-full w-full object-cover" />
             </div>
             <div>
               <span className="text-xl font-black tracking-tight text-[#1a2332] dark:text-white flex items-center gap-1">
@@ -848,8 +848,8 @@ export default function LandingScreen() {
             {/* Brand column */}
             <div className="md:col-span-1 space-y-4">
               <Link to="/" className="flex items-center gap-2.5">
-                <div className="h-8 w-8 rounded-lg bg-[#0F5257] text-white flex items-center justify-center font-bold text-lg">
-                  虫
+                <div className="h-9 w-9 rounded-lg overflow-hidden shadow-xs border border-[#1a2332]/10 dark:border-white/10 shrink-0">
+                  <img src="/ap2.png" alt="ChongZi" className="h-full w-full object-cover" />
                 </div>
                 <span className="text-lg font-black tracking-tight text-[#1a2332] dark:text-white">
                   ChongZi 虫子
