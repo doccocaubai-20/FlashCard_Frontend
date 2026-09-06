@@ -75,17 +75,22 @@ export function HanziTooltip({ char, children, hideMeaning = false, className = 
           const exactMatches = matches.filter((m) => m.s === char || m.t === char);
           if (exactMatches.length > 0) {
             exactMatches.sort((a, b) => {
-              // 1. Prioritize non-surname definitions first
-              const aIsSurname = /^(họ\b|họ\s*\[)/i.test(a.vi || '') || (Array.isArray(a.en) && a.en.every(e => e.toLowerCase().startsWith('surname')));
-              const bIsSurname = /^(họ\b|họ\s*\[)/i.test(b.vi || '') || (Array.isArray(b.en) && b.en.every(e => e.toLowerCase().startsWith('surname')));
+              // 1. ABSOLUTE PRIORITY: HSK 1-9 words (with Vietnamese definitions) always come first!
+              const aIsHsk = a.hsk != null && a.hsk > 0;
+              const bIsHsk = b.hsk != null && b.hsk > 0;
+              if (aIsHsk !== bIsHsk) return aIsHsk ? -1 : 1;
+
+              // 2. Prioritize non-surname definitions first
+              const aIsSurname = /^(họ\b|họ\s*\[)/i.test(a.vi || '') || (Array.isArray(a.en) && a.en.length > 0 && a.en.every(e => e.toLowerCase().startsWith('surname')));
+              const bIsSurname = /^(họ\b|họ\s*\[)/i.test(b.vi || '') || (Array.isArray(b.en) && b.en.length > 0 && b.en.every(e => e.toLowerCase().startsWith('surname')));
               if (aIsSurname !== bIsSurname) return aIsSurname ? 1 : -1;
 
-              // 2. Prioritize common lowercase pinyin over capitalized surname/proper noun pinyin
+              // 3. Prioritize common lowercase pinyin over capitalized surname/proper noun pinyin
               const aIsCapitalized = a.p && a.p[0] === a.p[0].toUpperCase() && a.p[0] !== a.p[0].toLowerCase();
               const bIsCapitalized = b.p && b.p[0] === b.p[0].toUpperCase() && b.p[0] !== b.p[0].toLowerCase();
               if (aIsCapitalized !== bIsCapitalized) return aIsCapitalized ? 1 : -1;
 
-              // 3. Prioritize HSK words
+              // 4. Prioritize earlier HSK levels (HSK 1 before HSK 2, etc.)
               const aHsk = a.hsk ? a.hsk : 99;
               const bHsk = b.hsk ? b.hsk : 99;
               if (aHsk !== bHsk) return aHsk - bHsk;
