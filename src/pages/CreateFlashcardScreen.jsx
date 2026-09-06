@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { fetchAllDecks, createFlashcard, createDeck, importFlashcards, fetchFlashcardsByDeck } from '../features/deck/deckSlice';
-import { PlusCircle, ArrowLeft, Sparkles, CheckSquare, Square, Save, Loader2 } from 'lucide-react';
+import { PlusCircle, ArrowLeft, Sparkles, CheckSquare, Square, Save, Loader2, AlertTriangle } from 'lucide-react';
 import { useDictionary } from '../hooks/useDictionary';
 import HandwritingCanvas from '../components/common/HandwritingCanvas';
 import { aiFlashcardApi } from '../services/aiFlashcardApi';
@@ -98,21 +98,41 @@ export default function CreateFlashcardScreen() {
     }
   };
 
+  const targetDeckId = activeTab === 'manual' ? formData.deckId : aiSaveDeckId;
+  const [existingCards, setExistingCards] = useState([]);
   const [existingWords, setExistingWords] = useState([]);
 
   useEffect(() => {
-    if (aiSaveDeckId) {
-      dispatch(fetchFlashcardsByDeck(Number(aiSaveDeckId)))
+    if (targetDeckId) {
+      dispatch(fetchFlashcardsByDeck(Number(targetDeckId)))
         .unwrap()
         .then((cards) => {
-          const words = cards.map(c => c.hanzi || c.character || '');
-          setExistingWords(words);
+          const mapped = (cards || []).map((c) => ({
+            id: c.id,
+            hanzi: (c.hanzi || c.character || '').trim(),
+            pinyin: (c.pinyin || '').trim(),
+            meaning: (c.meaning || '').trim(),
+          }));
+          setExistingCards(mapped);
+          setExistingWords(mapped.map((c) => c.hanzi));
         })
-        .catch(err => console.error('Failed to fetch existing cards:', err));
+        .catch((err) => console.error('Failed to fetch existing cards:', err));
     } else {
+      setExistingCards([]);
       setExistingWords([]);
     }
-  }, [aiSaveDeckId, dispatch]);
+  }, [targetDeckId, dispatch]);
+
+  const duplicateCard = formData.hanzi.trim() && formData.deckId
+    ? existingCards.find((c) => {
+        const hMatch = c.hanzi.toLowerCase() === formData.hanzi.trim().toLowerCase();
+        if (!hMatch) return false;
+        const cP = (c.pinyin || '').toLowerCase();
+        const inputP = formData.pinyin.trim().toLowerCase();
+        if (!cP || !inputP) return true;
+        return cP === inputP;
+      })
+    : null;
 
   // Relevance sorting helper to penalize variants and boost common words
   const getSortScore = (item) => {
@@ -233,12 +253,19 @@ export default function CreateFlashcardScreen() {
       return;
     }
 
+    if (duplicateCard) {
+      const msg = `Từ vựng "${duplicateCard.hanzi}" đã tồn tại trong bộ bài này!`;
+      setErrorMsg(msg);
+      showToast(msg, 'warning');
+      return;
+    }
+
     try {
       const payload = {
         deckId: Number(formData.deckId),
-        hanzi: formData.hanzi,
-        pinyin: formData.pinyin,
-        meaning: formData.meaning,
+        hanzi: formData.hanzi.trim(),
+        pinyin: formData.pinyin.trim(),
+        meaning: formData.meaning.trim(),
         radicals: formData.radicals || undefined,
         exampleHanzi: formData.exampleHanzi || undefined,
         examplePinyin: formData.examplePinyin || undefined,
@@ -246,16 +273,15 @@ export default function CreateFlashcardScreen() {
       };
 
       await dispatch(createFlashcard(payload)).unwrap();
+      showToast('Đã thêm thẻ mới thành công!', 'success');
 
       // Auto-redirect to the deck detail screen
       navigate(`/decks/${formData.deckId}`);
     } catch (err) {
       console.error(err);
-      if (err && (err.statusCode === 409 || err.error === 'Conflict' || err.message === 'Flashcard already exists')) {
-        setErrorMsg('Thẻ bài này đã tồn tại trong bộ bài này!');
-      } else {
-        setErrorMsg(err?.message || 'Tạo thẻ mới thất bại. Vui lòng kiểm tra lại thông tin.');
-      }
+      const errMsg = typeof err === 'string' ? err : err?.message || err?.error || 'Tạo thẻ mới thất bại. Vui lòng kiểm tra lại thông tin.';
+      setErrorMsg(errMsg);
+      showToast(errMsg, 'error');
     }
   };
 
@@ -580,6 +606,24 @@ export default function CreateFlashcardScreen() {
                 </div>
               </div>
 
+              {/* Duplicate Card Warning */}
+              {duplicateCard && (
+                <div className="p-4 bg-amber-50/90 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800/50 rounded-xl flex items-start gap-3 text-xs text-amber-900 dark:text-amber-200 animate-fade-in">
+                  <AlertTriangle size={20} className="shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+                  <div className="space-y-1">
+                    <p className="font-bold text-sm">
+                      Từ vựng "{duplicateCard.hanzi}" {duplicateCard.pinyin ? `(${duplicateCard.pinyin})` : ''} đã có trong bộ thẻ này!
+                    </p>
+                    <p className="text-xs text-amber-800 dark:text-amber-300">
+                      Nghĩa hiện có: <span className="font-semibold italic">"{duplicateCard.meaning}"</span>
+                    </p>
+                    <p className="text-[11px] text-amber-700/80 dark:text-amber-400/80">
+                      Để đảm bảo thuật toán ôn tập ngắt quãng (SRS) không bị loãng, hệ thống không cho phép tạo thẻ trùng lặp. Bạn có thể mở bộ thẻ để chỉnh sửa thẻ đã có.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {/* Optional Fields */}
               <div className="grid gap-6 md:grid-cols-2">
                 <div>
@@ -645,10 +689,10 @@ export default function CreateFlashcardScreen() {
                   </button>
                   <button
                     type="submit"
-                    disabled={isLoading}
-                    className="px-5 py-2.5 rounded-full bg-primary hover:bg-primary-deep disabled:bg-stone dark:disabled:bg-surface-dark text-white text-sm font-bold shadow-sm hover:shadow-md transition-all cursor-pointer"
+                    disabled={isLoading || !!duplicateCard}
+                    className="px-5 py-2.5 rounded-full bg-primary hover:bg-primary-deep disabled:bg-stone/50 dark:disabled:bg-surface-dark/70 text-white text-sm font-bold shadow-sm hover:shadow-md transition-all cursor-pointer disabled:cursor-not-allowed"
                   >
-                    {isLoading ? 'Đang tạo...' : 'Tạo thẻ bài'}
+                    {duplicateCard ? 'Từ vựng đã tồn tại' : isLoading ? 'Đang tạo...' : 'Tạo thẻ bài'}
                   </button>
                 </div>
               </div>

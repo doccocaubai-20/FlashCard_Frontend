@@ -188,7 +188,7 @@ export default function LeaderboardScreen() {
                     {/* Reps Badge */}
                     <div className="flex items-center gap-0.5 text-[10px] font-bold text-primary font-mono">
                       <Layers size={12} />
-                      {player.totalRepetitions}
+                      {(player.totalRepetitions ?? 0).toLocaleString()}
                     </div>
                   </div>
                 </div>
@@ -260,7 +260,7 @@ export default function LeaderboardScreen() {
                       </span>
                     </td>
                     <td className="py-3.5 text-center font-mono font-semibold text-primary">
-                      {player.totalRepetitions}
+                      {(player.totalRepetitions ?? 0).toLocaleString()}
                     </td>
                     <td className="py-3.5 text-right pr-4 font-mono font-bold text-ink dark:text-on-dark">
                       {player.score.toLocaleString()}
@@ -306,7 +306,7 @@ export default function LeaderboardScreen() {
               <span className="text-[9px] uppercase font-bold text-mute">Lượt Reps</span>
               <span className="text-sm font-bold text-primary flex items-center gap-0.5">
                 <Layers size={14} />
-                {currentUserRankData?.totalRepetitions}
+                {(currentUserRankData?.totalRepetitions ?? 0).toLocaleString()}
               </span>
             </div>
           </div>

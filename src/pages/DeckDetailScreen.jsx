@@ -241,8 +241,17 @@ export default function DeckDetailScreen() {
           exampleMeaning: item.exampleMeaning || null,
         }));
 
-        await dispatch(importFlashcards(formattedData)).unwrap();
-        showToast('Nhập dữ liệu từ file JSON thành công!', 'success');
+        const previousCount = (flashcards || []).length;
+        const result = await dispatch(importFlashcards(formattedData)).unwrap();
+        const currentCount = Array.isArray(result) ? result.length : (previousCount + formattedData.length);
+        const added = Math.max(0, currentCount - previousCount);
+        const skipped = Math.max(0, formattedData.length - added);
+
+        if (skipped > 0) {
+          showToast(`Đã nhập thành công ${added} thẻ mới (đã tự động bỏ qua ${skipped} từ bị trùng lặp).`, 'success');
+        } else {
+          showToast(`Nhập dữ liệu thành công (${added} thẻ bài)!`, 'success');
+        }
       } catch (err) {
         console.error(err);
         showToast('Lỗi: Không thể phân tích tệp tin JSON hoặc định dạng không hợp lệ.', 'error');
@@ -331,7 +340,8 @@ export default function DeckDetailScreen() {
       setEditingCard(null);
     } catch (err) {
       console.error(err);
-      showToast('Có lỗi xảy ra khi cập nhật thẻ bài.', 'error');
+      const errMsg = typeof err === 'string' ? err : err?.message || err?.error || 'Có lỗi xảy ra khi cập nhật thẻ bài.';
+      showToast(errMsg, 'error');
     }
   };
 
