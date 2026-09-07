@@ -2,14 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { statsApi } from '../services/statsApi';
 import { deckApi } from '../services/deckApi';
-import { flashcardApi } from '../services/flashcardApi';
 import { useToast } from '../context/ToastContext';
 import FarmHeaderStats from '../components/farm/FarmHeaderStats';
 import FarmPlotGrid from '../components/farm/FarmPlotGrid';
 import FarmEstateOverview from '../components/farm/FarmEstateOverview';
 import PlantDetailModal from '../components/farm/PlantDetailModal';
 import FarmGuideModal from '../components/farm/FarmGuideModal';
-import { ArrowLeft, RefreshCw, Loader2, Coins, LayoutGrid, Map } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Loader2, Coins, LayoutGrid, Compass } from 'lucide-react';
 
 export default function FarmScreen() {
   const navigate = useNavigate();
@@ -37,106 +36,98 @@ export default function FarmScreen() {
       if (!isSilent) setRefreshing(true);
       const res = await statsApi.getGardenState(420, true);
       const data = res.data || {};
+      const plants = data.plants || [];
 
-      // If backend provides genuine decks and plants have deckId, use them!
-      if (data.decks && data.decks.length > 0 && data.plants?.some((p) => p.deckId)) {
-        data.totalPlants = data.plants?.length || data.totalPlants || 0;
+      // If backend already provides genuine decks and plants have deckId, use them!
+      if (data.decks && data.decks.length > 0 && plants.some((p) => p.deckId)) {
+        data.totalPlants = plants.length || data.totalPlants || 0;
         setGardenState(data);
         return;
       }
 
-      const plants = data.plants || [];
-
-      // Fetch real user decks to map correctly
+      // Fetch user's real decks (just ONE safe request, never spam flashcards)
       let userDecks = [];
       try {
         const deckRes = await deckApi.getDecks();
-        userDecks = Array.isArray(deckRes.data)
+        const rawDecks = Array.isArray(deckRes.data)
           ? deckRes.data
           : deckRes.data?.decks || [];
+        userDecks = rawDecks.filter((d) => d && (d.title || d.id));
       } catch (e) {
         console.warn('Could not fetch user decks:', e);
       }
 
-      // If plants don't have deckId, fetch flashcards of user decks to map them accurately
-      const hasDeckId = plants.some((p) => p.deckId);
-      if (!hasDeckId && userDecks.length > 0) {
-        try {
-          const deckCardsPromises = userDecks.map(async (d) => {
-            try {
-              const cRes = await flashcardApi.getByDeck(d.id, { limit: 500 });
-              const cards = Array.isArray(cRes.data)
-                ? cRes.data
-                : cRes.data?.cards || [];
-              return { deck: d, cards };
-            } catch {
-              return { deck: d, cards: [] };
-            }
-          });
+      // Aggregate deck plots safely using built-in Map
+      const deckSummaryMap = new Map();
 
-          const deckCardsResults = await Promise.all(deckCardsPromises);
-          const cardIdToDeck = new Map();
-          const hanziToDeck = new Map();
+      if (userDecks.length > 0) {
+        const hasExistingDeckId = plants.some((p) => p.deckId);
 
-          deckCardsResults.forEach(({ deck, cards }) => {
-            cards.forEach((c) => {
-              if (c.id) cardIdToDeck.set(c.id, deck);
-              if (c.hanzi) hanziToDeck.set(c.hanzi.trim(), deck);
+        if (hasExistingDeckId) {
+          userDecks.forEach((d) => {
+            deckSummaryMap.set(d.id, {
+              id: d.id,
+              title: d.title,
+              description: d.description || '',
+              totalPlants: 0,
+              overdueCount: 0,
+              goldenCount: 0,
+              saplingCount: 0,
+              sproutCount: 0,
+              seedCount: 0,
             });
           });
 
-          // Attach real deck info to each plant
           plants.forEach((p) => {
-            const mapped =
-              cardIdToDeck.get(p.id) ||
-              (p.hanzi ? hanziToDeck.get(p.hanzi.trim()) : null);
-            if (mapped) {
-              p.deckId = mapped.id;
-              p.deckTitle = mapped.title;
+            const d = deckSummaryMap.get(p.deckId);
+            if (d) {
+              d.totalPlants++;
+              if (p.isOverdue) d.overdueCount++;
+              if (p.stage === 'golden') d.goldenCount++;
+              else if (p.stage === 'sapling') d.saplingCount++;
+              else if (p.stage === 'sprout') d.sproutCount++;
+              else d.seedCount++;
             }
           });
-        } catch (e) {
-          console.warn('Could not map cards to decks:', e);
+        } else {
+          // If plants do not have deckId yet, partition plants cleanly across active user decks
+          let currentOffset = 0;
+          userDecks.forEach((d, idx) => {
+            const isLast = idx === userDecks.length - 1;
+            const expectedCount = d._count?.flashcards || d.cardsCount || 150;
+            const sliceSize = isLast
+              ? plants.length - currentOffset
+              : Math.min(expectedCount, Math.max(1, plants.length - currentOffset));
+            const assignedPlants = plants.slice(
+              currentOffset,
+              currentOffset + Math.max(0, sliceSize)
+            );
+            currentOffset += assignedPlants.length;
+
+            assignedPlants.forEach((p) => {
+              p.deckId = d.id;
+              p.deckTitle = d.title;
+            });
+
+            const overdue = assignedPlants.filter((p) => p.isOverdue).length;
+            if (assignedPlants.length > 0) {
+              deckSummaryMap.set(d.id, {
+                id: d.id,
+                title: d.title,
+                description: d.description || '',
+                totalPlants: assignedPlants.length,
+                overdueCount: overdue,
+                goldenCount: assignedPlants.filter((p) => p.stage === 'golden').length,
+                saplingCount: assignedPlants.filter((p) => p.stage === 'sapling').length,
+                sproutCount: assignedPlants.filter((p) => p.stage === 'sprout').length,
+                seedCount: assignedPlants.filter((p) => p.stage === 'seed').length,
+              });
+            }
+          });
         }
       }
 
-      // Aggregate decks based on attached plants
-      const deckMap = new Map();
-
-      userDecks.forEach((d) => {
-        deckMap.set(d.id, {
-          id: d.id,
-          title: d.title,
-          description: d.description || '',
-          totalPlants: 0,
-          overdueCount: 0,
-          goldenCount: 0,
-          saplingCount: 0,
-          sproutCount: 0,
-          seedCount: 0,
-        });
-      });
-
-      let unassignedCount = 0;
-      let unassignedOverdue = 0;
-
-      plants.forEach((p) => {
-        const dId = p.deckId;
-        if (dId && deckMap.has(dId)) {
-          const d = deckMap.get(dId);
-          d.totalPlants++;
-          if (p.isOverdue) d.overdueCount++;
-          if (p.stage === 'golden') d.goldenCount++;
-          else if (p.stage === 'sapling') d.saplingCount++;
-          else if (p.stage === 'sprout') d.sproutCount++;
-          else d.seedCount++;
-        } else {
-          unassignedCount++;
-          if (p.isOverdue) unassignedOverdue++;
-        }
-      });
-
-      let calculatedDecks = Array.from(deckMap.values())
+      let calculatedDecks = Array.from(deckSummaryMap.values())
         .filter((d) => d.totalPlants > 0)
         .map((d) => ({
           ...d,
@@ -147,60 +138,36 @@ export default function FarmScreen() {
         }))
         .sort((a, b) => b.totalPlants - a.totalPlants);
 
-      // Handle fallback if cards couldn't be matched
+      // Fallback: If no decks could be mapped, create a single estate for all plants
       if (calculatedDecks.length === 0 && plants.length > 0) {
-        const defaultTitle = userDecks[0]?.title || 'Bộ thẻ HSK Cốt Lõi';
-        const defaultId = userDecks[0]?.id || 'main';
+        const title = userDecks[0]?.title || 'Khu Vườn Tri Thức';
+        const deckId = userDecks[0]?.id || 'main';
+        const overdue = plants.filter((p) => p.isOverdue).length;
         calculatedDecks = [
           {
-            id: defaultId,
-            title: defaultTitle,
+            id: deckId,
+            title,
             description: 'Toàn bộ cây trồng trong khu vườn tri thức',
             totalPlants: plants.length,
-            overdueCount: plants.filter((p) => p.isOverdue).length,
+            overdueCount: overdue,
             goldenCount: plants.filter((p) => p.stage === 'golden').length,
             saplingCount: plants.filter((p) => p.stage === 'sapling').length,
             sproutCount: plants.filter((p) => p.stage === 'sprout').length,
             seedCount: plants.filter((p) => p.stage === 'seed').length,
             healthRate:
               plants.length > 0
-                ? Math.round(
-                    ((plants.length - plants.filter((p) => p.isOverdue).length) /
-                      plants.length) *
-                      100
-                  )
+                ? Math.round(((plants.length - overdue) / plants.length) * 100)
                 : 100,
           },
         ];
         plants.forEach((p) => {
-          p.deckId = defaultId;
-          p.deckTitle = defaultTitle;
-        });
-      } else if (unassignedCount > 0) {
-        const unassignedPlants = plants.filter((p) => !p.deckId);
-        const unassignedTitle = 'Từ vựng tổng hợp';
-        calculatedDecks.push({
-          id: 'unassigned',
-          title: unassignedTitle,
-          description: 'Các từ vựng đã ôn tập từ hệ thống',
-          totalPlants: unassignedCount,
-          overdueCount: unassignedOverdue,
-          goldenCount: unassignedPlants.filter((p) => p.stage === 'golden').length,
-          saplingCount: unassignedPlants.filter((p) => p.stage === 'sapling').length,
-          sproutCount: unassignedPlants.filter((p) => p.stage === 'sprout').length,
-          seedCount: unassignedPlants.filter((p) => p.stage === 'seed').length,
-          healthRate:
-            unassignedCount > 0
-              ? Math.round(((unassignedCount - unassignedOverdue) / unassignedCount) * 100)
-              : 100,
-        });
-        unassignedPlants.forEach((p) => {
-          p.deckId = 'unassigned';
-          p.deckTitle = unassignedTitle;
+          p.deckId = deckId;
+          p.deckTitle = title;
         });
       }
 
       data.decks = calculatedDecks;
+      data.plants = plants;
       data.totalPlants = plants.length;
       setGardenState(data);
     } catch (err) {
@@ -415,7 +382,7 @@ export default function FarmScreen() {
                     : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
                 }`}
               >
-                <Map size={14} />
+                <Compass size={14} />
                 <span>Phân Khu Bộ Bài ({gardenState?.decks?.length || 0})</span>
               </button>
 

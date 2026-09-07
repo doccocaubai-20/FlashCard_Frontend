@@ -69,50 +69,51 @@ const HSK_LEVELS = [
   {
     level: 'HSK 1',
     words: '150 từ vựng',
-    title: 'Nhập môn Căn bản',
-    description: 'Làm quen bảng chữ cái Pinyin, các nét bút cơ bản và mẫu câu chào hỏi giao tiếp thông thường.',
-    duration: '2 - 4 tuần',
+    title: 'Bộ thẻ HSK 1 - Nhập môn',
+    description: 'Bao gồm toàn bộ 150 từ vựng cốt lõi HSK 1, phiên âm Pinyin chuẩn, ví dụ câu ngữ cảnh và giải nghĩa Hán - Việt chi tiết.',
     samples: ['你好', '谢谢', '爸爸', '中国', '再见']
   },
   {
     level: 'HSK 2',
     words: '300 từ vựng',
-    title: 'Sơ cấp Giao tiếp',
-    description: 'Nắm vững các đoạn hội thoại thường nhật về mua sắm, thời tiết, sở thích và phương hướng.',
-    duration: '1 - 2 tháng',
+    title: 'Bộ thẻ HSK 2 - Sơ cấp',
+    description: '300 từ vựng giao tiếp thường nhật về thời gian, mua sắm, sở thích và phương hướng sinh hoạt.',
     samples: ['时间', '天气', '朋友', '买东西', '准备']
   },
   {
     level: 'HSK 3',
     words: '600 từ vựng',
-    title: 'Trung cấp 1',
-    description: 'Tự tin du lịch, giao dịch công việc đơn giản và đọc hiểu các bài khóa ngắn độc lập.',
-    duration: '2 - 3 tháng',
+    title: 'Bộ thẻ HSK 3 - Sơ trung cấp',
+    description: '600 từ vựng phục vụ đời sống, công việc cơ bản và đọc hiểu văn bản tiếng Trung độc lập.',
     samples: ['经理', '健康', '解决', '环境', '相信']
   },
   {
     level: 'HSK 4',
     words: '1,200 từ vựng',
-    title: 'Trung cấp 2',
-    description: 'Thảo luận lưu loát nhiều chủ đề xã hội, văn hóa, xem phim có phụ đề và đọc báo tiếng Trung.',
-    duration: '3 - 5 tháng',
+    title: 'Bộ thẻ HSK 4 - Trung cấp',
+    description: '1,200 từ vựng thảo luận các chủ đề xã hội, văn hóa, tài chính và công sở.',
     samples: ['成功', '法律', '经济', '积极', '坚持']
   },
   {
     level: 'HSK 5',
     words: '2,500 từ vựng',
-    title: 'Cao cấp Học thuật',
-    description: 'Đọc tiểu thuyết, báo chí chuyên ngành, xem phim không phụ đề và thuyết trình chuyên nghiệp.',
-    duration: '6 - 9 tháng',
+    title: 'Bộ thẻ HSK 5 - Cao trung cấp',
+    description: '2,500 từ vựng học thuật, đọc báo chí chuyên ngành và thảo luận chuyên sâu.',
     samples: ['深刻', '逻辑', '独特', '究竟', '坦率']
   },
   {
     level: 'HSK 6',
     words: '5,000+ từ vựng',
-    title: 'Bậc thầy Tinh thông',
-    description: 'Sử dụng tiếng Trung chuẩn xác như người bản xứ, biểu đạt tinh tế trong môi trường học thuật cao cấp.',
-    duration: '10 - 14 tháng',
+    title: 'Bộ thẻ HSK 6 - Cao cấp',
+    description: 'Hơn 5,000 từ vựng chuyên sâu giúp biểu đạt tinh tế chuẩn xác như người bản ngữ.',
     samples: ['卓越', '含蓄', '渊博', '斟酌', '沧桑']
+  },
+  {
+    level: 'HSK 7-9',
+    words: '5,636 từ vựng',
+    title: 'Bộ thẻ HSK 7-9 - Chuyên sâu HSK 3.0',
+    description: 'Cấp độ cao nhất trong chuẩn khảo thí HSK 3.0 mới nhất, dành cho nghiên cứu học thuật, dịch thuật và chuyên gia ngôn ngữ.',
+    samples: ['涵盖', '蜕变', '宏观', '驰骋', '荟萃']
   }
 ];
 
@@ -173,7 +174,7 @@ export default function LandingScreen() {
               Trải nghiệm thẻ SRS
             </a>
             <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-[#d4eef0] transition-colors">
-              Lộ trình HSK 1-6
+              Bộ thẻ HSK 1-9
             </a>
             <a href="#methodology" className="hover:text-[#0F5257] dark:hover:text-[#d4eef0] transition-colors">
               Phương pháp Lục thư
@@ -248,7 +249,7 @@ export default function LandingScreen() {
               onClick={() => setMobileMenuOpen(false)}
               className="block py-2 text-sm font-semibold text-[#4a5568] dark:text-[#cbd5e0]"
             >
-              Lộ trình HSK 1-6
+              Bộ thẻ HSK 1-9
             </a>
             <a
               href="#methodology"
@@ -630,31 +631,32 @@ export default function LandingScreen() {
         </div>
       </section>
 
-      {/* ── 4. Methodology & HSK 1 - 6 Levels ── */}
+      {/* ── 4. System Flashcard Decks: HSK 1 - 7-9 ── */}
       <section id="hsk-levels" className="scroll-mt-20 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-bold uppercase tracking-wider text-[#0F5257] dark:text-[#2dd4bf] px-3 py-1 rounded-full bg-[#0F5257]/10 dark:bg-[#0F5257]/20">
-              Lộ trình Chuẩn hóa
+              Bộ Thẻ Chuẩn Hệ Thống
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-[#1a2332] dark:text-white mt-4 tracking-tight">
-              Bao phủ Toàn diện Khung Năng lực HSK 1 Đến HSK 6
+              Kho Thẻ Từ Vựng Chuẩn HSK 1 Đến HSK 7-9
             </h2>
             <p className="text-sm sm:text-base text-[#718096] dark:text-[#a0aec0] mt-3">
-              Mỗi cấp độ được biên soạn kỹ lưỡng với đầy đủ flashcard, âm thanh chuẩn, bài tập phản xạ và đề thi thử mô phỏng thực tế.
+              Bao gồm đầy đủ 7 bộ thẻ chính thức chuẩn HSK 3.0, tích hợp thuật toán Spaced Repetition (FSRS) tự động tối ưu hóa chu kỳ nhớ lại cho từng từ vựng.
             </p>
           </div>
 
           {/* Level Switcher */}
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-8 max-w-3xl mx-auto">
+          <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 mb-8 max-w-4xl mx-auto">
             {HSK_LEVELS.map((item, index) => (
               <button
                 key={item.level}
                 onClick={() => setSelectedHskIndex(index)}
-                className={`py-3 px-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-center cursor-pointer border ${selectedHskIndex === index
-                  ? 'bg-[#0F5257] text-white border-[#0F5257] shadow-md scale-105'
-                  : 'bg-white dark:bg-[#111827] text-[#4a5568] dark:text-[#cbd5e0] border-[#1a2332]/10 dark:border-white/10 hover:border-[#0F5257]/40'
-                  }`}
+                className={`py-3 px-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-center cursor-pointer border ${
+                  selectedHskIndex === index
+                    ? 'bg-[#0F5257] text-white border-[#0F5257] shadow-md scale-105'
+                    : 'bg-white dark:bg-[#111827] text-[#4a5568] dark:text-[#cbd5e0] border-[#1a2332]/10 dark:border-white/10 hover:border-[#0F5257]/40'
+                }`}
               >
                 {item.level}
               </button>
@@ -681,10 +683,10 @@ export default function LandingScreen() {
 
                 <div className="text-left sm:text-right">
                   <span className="text-xs text-[#718096] dark:text-[#a0aec0] font-medium block">
-                    Thời gian học ước tính:
+                    Thuật toán ghi nhớ:
                   </span>
-                  <span className="text-sm font-bold text-[#1a2332] dark:text-white">
-                    {HSK_LEVELS[selectedHskIndex].duration} (20 từ/ngày)
+                  <span className="text-sm font-bold text-[#0F5257] dark:text-[#2dd4bf]">
+                    FSRS Spaced Repetition
                   </span>
                 </div>
               </div>
@@ -714,13 +716,13 @@ export default function LandingScreen() {
 
               <div className="mt-8 pt-6 border-t border-[#1a2332]/10 dark:border-white/10 flex items-center justify-between">
                 <span className="text-xs text-[#718096] dark:text-[#a0aec0]">
-                  Sẵn sàng nâng cấp năng lực Hán tự của bạn?
+                  Học từ vựng thông minh theo chu kỳ não bộ với ChongZi
                 </span>
                 <Link
                   to="/register"
                   className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#0F5257] dark:text-[#2dd4bf] hover:underline"
                 >
-                  <span>Bắt đầu với {HSK_LEVELS[selectedHskIndex].level}</span>
+                  <span>Học bộ thẻ {HSK_LEVELS[selectedHskIndex].level}</span>
                   <ArrowRight size={14} />
                 </Link>
               </div>
@@ -877,27 +879,32 @@ export default function LandingScreen() {
             {/* Links: Tài nguyên */}
             <div>
               <h5 className="text-xs font-bold uppercase tracking-wider text-[#1a2332] dark:text-white mb-3">
-                Khung HSK
+                Bộ Thẻ HSK
               </h5>
               <ul className="space-y-2 text-xs text-[#718096] dark:text-[#a0aec0]">
                 <li>
                   <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
-                    HSK 1 - Căn bản 150 từ
+                    HSK 1 - Căn bản (150 từ)
                   </a>
                 </li>
                 <li>
                   <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
-                    HSK 2 - Sơ cấp 300 từ
+                    HSK 2 - Sơ cấp (300 từ)
                   </a>
                 </li>
                 <li>
                   <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
-                    HSK 3 - Trung cấp 600 từ
+                    HSK 3 - Sơ trung cấp (600 từ)
                   </a>
                 </li>
                 <li>
                   <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
                     HSK 4, 5, 6 - Nâng cao
+                  </a>
+                </li>
+                <li>
+                  <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
+                    HSK 7-9 - Chuyên sâu HSK 3.0
                   </a>
                 </li>
               </ul>
