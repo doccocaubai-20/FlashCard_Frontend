@@ -33,7 +33,7 @@ export default function TodayMission({
   const strokeDashoffset = circumference - ratio * circumference;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-surface-card dark:bg-surface-card border border-hairline dark:border-white/10 p-5 sm:p-6 shadow-xs transition-all">
+    <div className="h-full flex flex-col justify-center relative overflow-hidden rounded-2xl bg-surface-card dark:bg-surface-card border border-hairline dark:border-white/10 p-5 sm:p-6 shadow-xs transition-all">
       {/* Subtle ambient blur in background */}
       <div className="absolute -top-12 -right-12 w-36 h-36 rounded-full bg-primary/5 dark:bg-primary/10 blur-2xl pointer-events-none" />
 

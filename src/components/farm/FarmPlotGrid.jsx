@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import FarmPlantCard from './FarmPlantCard';
 import FarmPagination from './FarmPagination';
-import { Search, Droplet, Sparkles, Award, Filter, ArrowUpDown } from 'lucide-react';
+import { Search, Droplet, Sparkles, Award, Filter } from 'lucide-react';
 
 const normalizeSearchText = (str) => {
   if (!str) return '';
@@ -141,101 +141,20 @@ export default function FarmPlotGrid({
 
   return (
     <div ref={gridTopRef} className="w-full space-y-4">
-      {/* Controls Bar */}
-      <div className="flex flex-col gap-3 bg-white/90 dark:bg-stone-900/80 border border-stone-200/90 dark:border-white/10 rounded-2xl p-3.5 backdrop-blur-xl shadow-sm">
-        {/* Row 1: Filters & Search */}
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-          {/* Status Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
-            <button
-              type="button"
-              onClick={() => setActiveTab('all')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
-                activeTab === 'all'
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm'
-                  : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-200/70 dark:hover:bg-stone-700/60'
-              }`}
-            >
-              Tất cả ({tabCounts.all})
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('thirsty')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeTab === 'thirsty'
-                  ? 'bg-gradient-to-r from-sky-600 to-cyan-600 text-white shadow-sm'
-                  : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-200/70 dark:hover:bg-stone-700/60'
-              }`}
-            >
-              <Droplet size={13} className={tabCounts.thirsty > 0 ? 'fill-current text-sky-500 dark:text-cyan-300' : ''} />
-              <span>Cần tưới ({tabCounts.thirsty})</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('seedling')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeTab === 'seedling'
-                  ? 'bg-teal-600 text-white shadow-sm'
-                  : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-200/70 dark:hover:bg-stone-700/60'
-              }`}
-            >
-              <span>🌱 Mầm non ({tabCounts.seedling})</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('mature')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeTab === 'mature'
-                  ? 'bg-pink-600 text-white shadow-sm'
-                  : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-200/70 dark:hover:bg-stone-700/60'
-              }`}
-            >
-              <Sparkles size={13} />
-              <span>Đơm hoa ({tabCounts.mature})</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('golden')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeTab === 'golden'
-                  ? 'bg-amber-600 text-white shadow-sm'
-                  : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-200/70 dark:hover:bg-stone-700/60'
-              }`}
-            >
-              <Award size={13} />
-              <span>Cổ thụ ({tabCounts.golden})</span>
-            </button>
-          </div>
-
-          {/* Search Input */}
-          <div className="relative w-full lg:w-72">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 dark:text-stone-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Tìm theo chữ Hán, pinyin, nghĩa..."
-              className="w-full bg-stone-100/90 dark:bg-stone-800/90 border border-stone-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-1.5 text-xs text-stone-900 dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:outline-none focus:border-emerald-500 transition-colors shadow-inner"
-            />
-          </div>
-        </div>
-
-        {/* Row 2: Secondary Filters (Deck Picker & Sort By) */}
-        <div className="flex flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-stone-200/70 dark:border-white/5 text-xs">
-          {/* Deck Dropdown (Only show specific decks if they have genuine plants) */}
-          <div className="flex items-center gap-2">
-            <span className="text-stone-500 dark:text-stone-400 text-[11px] font-medium flex items-center gap-1">
-              <Filter size={12} className="text-emerald-600 dark:text-emerald-400" />
+      {/* Controls Bar - Single Unified Row */}
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5 bg-surface-card dark:bg-surface-card border border-hairline dark:border-white/10 rounded-2xl p-3 sm:p-3.5 shadow-xs transition-colors">
+        {/* Left: Deck Picker + Status Tabs */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Deck Dropdown */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="text-mute text-xs font-medium flex items-center gap-1">
+              <Filter size={13} className="text-primary" />
               <span>Bộ thẻ:</span>
             </span>
             <select
               value={selectedDeckId}
               onChange={(e) => setSelectedDeckId(e.target.value)}
-              className="bg-stone-100/90 dark:bg-stone-800 border border-stone-200 dark:border-white/10 text-stone-800 dark:text-white text-xs font-bold rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer max-w-[240px] truncate"
+              className="bg-surface-bone dark:bg-white/5 border border-hairline dark:border-white/10 text-ink dark:text-on-dark text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-primary cursor-pointer max-w-[190px] sm:max-w-[220px] truncate"
             >
               <option value="all">Tất cả bộ thẻ ({plants.length} cây)</option>
               {decks.filter((d) => d.totalPlants > 0).map((d) => (
@@ -246,23 +165,85 @@ export default function FarmPlotGrid({
             </select>
           </div>
 
-          {/* Sort By Dropdown */}
-          <div className="flex items-center gap-2">
-            <span className="text-stone-500 dark:text-stone-400 text-[11px] font-medium flex items-center gap-1">
-              <ArrowUpDown size={12} className="text-amber-500 dark:text-amber-400" />
-              <span>Sắp xếp:</span>
-            </span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="bg-stone-100/90 dark:bg-stone-800 border border-stone-200 dark:border-white/10 text-stone-800 dark:text-white text-xs font-bold rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer"
+          <div className="h-4 w-px bg-hairline dark:bg-white/10 hidden sm:block mx-0.5" />
+
+          {/* Status Tabs */}
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5">
+            <button
+              type="button"
+              onClick={() => setActiveTab('all')}
+              className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                activeTab === 'all'
+                  ? 'bg-primary text-white shadow-xs'
+                  : 'bg-surface-bone dark:bg-white/5 text-mute hover:text-ink dark:hover:text-on-dark'
+              }`}
             >
-              <option value="overdueFirst">Cần tưới nước trước 💧</option>
-              <option value="goldenFirst">Cổ thụ hoàng kim 👑</option>
-              <option value="growthAsc">Mới gieo mầm 🌱</option>
-              <option value="hanzi">Bảng chữ cái A - Z</option>
-            </select>
+              Tất cả ({tabCounts.all})
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('thirsty')}
+              className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-all cursor-pointer ${
+                activeTab === 'thirsty'
+                  ? 'bg-sky-600 text-white shadow-xs'
+                  : 'bg-surface-bone dark:bg-white/5 text-mute hover:text-ink dark:hover:text-on-dark'
+              }`}
+            >
+              <Droplet size={12} className={tabCounts.thirsty > 0 ? 'fill-current' : ''} />
+              <span>Cần tưới ({tabCounts.thirsty})</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('seedling')}
+              className={`px-2 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1 transition-all cursor-pointer ${
+                activeTab === 'seedling'
+                  ? 'bg-teal-700 text-white shadow-xs'
+                  : 'bg-surface-bone dark:bg-white/5 text-mute hover:text-ink dark:hover:text-on-dark'
+              }`}
+            >
+              <span>🌱 Mầm non ({tabCounts.seedling})</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('mature')}
+              className={`px-2 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1 transition-all cursor-pointer ${
+                activeTab === 'mature'
+                  ? 'bg-pink-700 text-white shadow-xs'
+                  : 'bg-surface-bone dark:bg-white/5 text-mute hover:text-ink dark:hover:text-on-dark'
+              }`}
+            >
+              <Sparkles size={12} />
+              <span>Đơm hoa ({tabCounts.mature})</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('golden')}
+              className={`px-2 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1 transition-all cursor-pointer ${
+                activeTab === 'golden'
+                  ? 'bg-amber-600 text-white shadow-xs'
+                  : 'bg-surface-bone dark:bg-white/5 text-mute hover:text-ink dark:hover:text-on-dark'
+              }`}
+            >
+              <Award size={12} />
+              <span>Cổ thụ ({tabCounts.golden})</span>
+            </button>
           </div>
+        </div>
+
+        {/* Right: Search Input */}
+        <div className="relative w-full lg:w-56 xl:w-64 shrink-0">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-mute" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Tìm theo chữ Hán, pinyin, nghĩa..."
+            className="w-full bg-surface-bone dark:bg-white/5 border border-hairline dark:border-white/10 rounded-xl pl-8 pr-3 py-1.5 text-xs text-ink dark:text-on-dark placeholder:text-mute focus:outline-none focus:border-primary transition-colors"
+          />
         </div>
       </div>
 

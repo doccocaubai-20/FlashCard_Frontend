@@ -35,7 +35,7 @@ export default function ScholarPathModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div 
+      <div
         className="bg-surface-card dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto"
         role="dialog"
         aria-modal="true"
@@ -43,7 +43,6 @@ export default function ScholarPathModal({
         {/* Header */}
         <div className="flex items-center justify-between border-b border-hairline dark:border-divider-dark pb-4">
           <div className="flex items-center gap-2.5">
-            <span className="text-2xl">✨</span>
             <div>
               <h2 className="text-lg sm:text-xl font-display font-extrabold text-ink dark:text-on-dark tracking-tight">
                 Đạo Lộ Học Tập & Danh Hiệu
@@ -132,11 +131,10 @@ export default function ScholarPathModal({
                 <div
                   key={path.id}
                   onClick={() => handleSelect(path.id)}
-                  className={`p-4 rounded-2xl border-2 transition-all cursor-pointer text-left relative flex flex-col justify-between select-none ${
-                    isCurrent
+                  className={`p-4 rounded-2xl border-2 transition-all cursor-pointer text-left relative flex flex-col justify-between select-none ${isCurrent
                       ? 'border-primary bg-primary/5 dark:bg-primary/10 shadow-md ring-2 ring-primary/20 scale-[1.02]'
                       : 'border-hairline dark:border-divider-dark bg-surface-card dark:bg-surface-dark hover:border-primary/40 hover:bg-surface-bone dark:hover:bg-white/5'
-                  }`}
+                    }`}
                 >
                   {isCurrent && (
                     <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center shadow-xs">

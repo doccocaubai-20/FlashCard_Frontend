@@ -338,7 +338,7 @@ export default function DeckListScreen() {
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-surface-card dark:bg-surface-dark/50 p-6 rounded-md border border-hairline dark:border-divider-dark shadow-sm transition-colors text-left">
         <div>
-          <h1 className="text-2xl font-extrabold text-ink dark:text-on-dark font-display tracking-tight">Quản lý Bộ bài</h1>
+          <h1 className="text-2xl font-medium text-ink dark:text-on-dark font-display tracking-tight">Quản lý Bộ bài</h1>
           <p className="text-body dark:text-on-dark-mute text-sm mt-1">
             Tạo, sửa đổi và quản lý các bộ bài flashcard học tiếng Trung của bạn.
           </p>
@@ -625,22 +625,30 @@ export default function DeckListScreen() {
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {publicDecks.map((deck) => {
                 const shareCode = deck.shareCode;
-                const alreadyImported = importedCodes.has(shareCode);
-                const isImportingThis = importingDeckId === shareCode;
+                const alreadyImported = Boolean(shareCode && importedCodes.has(shareCode));
+                const isImportingThis = Boolean(shareCode && importingDeckId === shareCode);
+                const cardCount = deck.cardCount ?? deck._count?.flashcards ?? 0;
+                const authorName = deck.user?.name || deck.owner?.name || deck.authorName || 'Cộng đồng';
 
                 return (
                   <div
                     key={deck.id}
-                    className="flex flex-col justify-between p-5 bg-surface-card dark:bg-surface-dark/60 rounded-xl border border-hairline dark:border-white/5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+                    className="flex flex-col justify-between p-5 bg-surface-card dark:bg-surface-card rounded-2xl border border-hairline dark:border-white/10 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
                   >
                     <div>
                       <div className="flex items-start justify-between mb-3 gap-2">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                           <BookOpen size={18} />
                         </div>
-                        <span className="text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full uppercase tracking-wider border border-green-500/20 shrink-0">
-                          Công khai
-                        </span>
+                        {shareCode ? (
+                          <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-emerald-500/20 shrink-0">
+                            Công khai
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-bold text-mute bg-black/5 dark:bg-white/5 px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-hairline dark:border-white/10 shrink-0">
+                            Hệ thống
+                          </span>
+                        )}
                       </div>
                       <h3 className="text-base font-bold text-ink dark:text-on-dark font-display tracking-tight line-clamp-2">
                         {deck.title || deck.name || 'Bộ thẻ không tên'}
@@ -656,16 +664,18 @@ export default function DeckListScreen() {
                       <div className="flex items-center justify-between text-[11px] text-mute dark:text-on-dark-mute">
                         <span className="flex items-center gap-1">
                           <Users size={11} />
-                          {deck.owner?.name || deck.authorName || 'Ẩn danh'}
+                          {authorName}
                         </span>
-                        <span className="font-mono font-bold">{deck.cardCount ?? 0} thẻ</span>
+                        <span className="font-mono font-bold">{cardCount} thẻ</span>
                       </div>
 
                       <button
                         onClick={() => handleImportPublic(shareCode)}
                         disabled={isImportingThis || alreadyImported || !shareCode}
-                        className={`w-full flex items-center justify-center gap-2 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${alreadyImported
-                          ? 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/30 cursor-default'
+                        className={`w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${alreadyImported
+                          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 cursor-default'
+                          : !shareCode
+                          ? 'bg-surface-bone dark:bg-white/5 text-mute border border-hairline dark:border-white/10 cursor-not-allowed'
                           : 'bg-primary hover:bg-primary-deep text-white shadow-xs disabled:opacity-60 disabled:cursor-not-allowed'
                           }`}
                       >
@@ -677,6 +687,10 @@ export default function DeckListScreen() {
                           <>
                             <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white" />
                             Đang nhập...
+                          </>
+                        ) : !shareCode ? (
+                          <>
+                            <span>Chưa có mã chia sẻ</span>
                           </>
                         ) : (
                           <>

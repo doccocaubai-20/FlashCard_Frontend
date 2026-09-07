@@ -63,7 +63,7 @@ export default function RecentDecks({ decks = [], onStudyDeck }) {
       // 4. Fallback to original order
       return 0;
     })
-    .slice(0, 3);
+    .slice(0, 4);
 
   const handleStudy = (deckId, e) => {
     if (e) e.stopPropagation();

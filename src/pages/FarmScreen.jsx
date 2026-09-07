@@ -325,43 +325,30 @@ export default function FarmScreen() {
   const hasDecks = gardenState?.decks && gardenState.decks.length > 0;
 
   return (
-    <div className="min-h-[calc(100vh-80px)] w-full bg-[#f8fafc] text-stone-800 dark:bg-[#070d17] dark:text-white p-3.5 sm:p-6 flex flex-col relative overflow-hidden select-none transition-colors duration-200">
-      {/* Ambient background glows */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-teal-500/5 dark:bg-teal-500/10 rounded-full blur-[120px] pointer-events-none" />
-
+    <div className="min-h-[calc(100vh-80px)] w-full bg-canvas text-ink dark:text-on-dark p-4 sm:p-6 flex flex-col relative select-none transition-colors duration-200">
       {/* Floating Coins Animation Layer */}
       {floatingCoins.map((coin) => (
         <div
           key={coin.id}
           style={{ left: `${coin.x}%`, top: `${coin.y}%` }}
-          className="fixed z-50 pointer-events-none flex items-center gap-1 text-amber-500 dark:text-amber-300 font-black text-sm drop-shadow-[0_2px_10px_rgba(245,158,11,0.8)] animate-[floatUp_2s_ease-out_forwards]"
+          className="fixed z-50 pointer-events-none flex items-center gap-1 text-amber-500 font-bold text-sm drop-shadow-md animate-[floatUp_2s_ease-out_forwards]"
         >
-          <Coins size={22} className="fill-amber-400 text-yellow-400 animate-spin" />
+          <Coins size={20} className="fill-amber-400 text-yellow-500 animate-spin" />
           <span>+ Xu</span>
         </div>
       ))}
 
       {/* Top Navigation Row */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-5 max-w-7xl mx-auto w-full">
-        {/* Back button & Breadcrumb */}
+        {/* Back button & Title */}
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => navigate('/')}
-            className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white dark:bg-stone-900/90 border border-stone-200 dark:border-white/10 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-all cursor-pointer shadow-sm"
-            title="Quay lại Trang chủ"
-          >
-            <ArrowLeft size={18} />
-          </button>
           <div>
-            <div className="text-[11px] font-semibold text-stone-500 dark:text-stone-400">Trang chủ / Nông trại</div>
-            <h1 className="text-base font-black text-stone-900 dark:text-white flex items-center gap-2">
-              <span>Nông Trại Tri Thức</span>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-400/30 font-bold">
-                {gardenState?.totalPlants || 0} cây
-              </span>
+            <h1 className="font-display text-xl font-semibold text-ink dark:text-on-dark tracking-tight flex items-center gap-2">
+              Nông Trại Tri Thức
             </h1>
+            <p className="text-xs text-mute dark:text-on-dark-mute">
+              Khu vườn từ vựng sinh thái cá nhân hóa
+            </p>
           </div>
         </div>
 
@@ -369,33 +356,31 @@ export default function FarmScreen() {
         <div className="flex items-center gap-2">
           {/* Dual View Mode Switcher */}
           {gardenState && (
-            <div className="flex items-center bg-white dark:bg-stone-900/90 border border-stone-200 dark:border-white/10 rounded-2xl p-1 shadow-sm">
+            <div className="flex items-center bg-surface-bone dark:bg-white/5 border border-hairline dark:border-white/10 rounded-xl p-1 shadow-xs">
               <button
                 type="button"
                 onClick={() => {
                   setViewMode('estates');
                   setSelectedDeckFilter(null);
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  viewMode === 'estates'
-                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm'
-                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
-                }`}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${viewMode === 'estates'
+                    ? 'bg-surface-card dark:bg-surface-card text-ink dark:text-on-dark shadow-xs font-bold'
+                    : 'text-mute hover:text-ink dark:hover:text-on-dark'
+                  }`}
               >
-                <Compass size={14} />
+                <Compass size={14} className={viewMode === 'estates' ? 'text-primary dark:text-hero-glow' : ''} />
                 <span>Phân Khu Bộ Bài ({gardenState?.decks?.length || 0})</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setViewMode('plants')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  viewMode === 'plants'
-                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm'
-                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
-                }`}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${viewMode === 'plants'
+                    ? 'bg-surface-card dark:bg-surface-card text-ink dark:text-on-dark shadow-xs font-bold'
+                    : 'text-mute hover:text-ink dark:hover:text-on-dark'
+                  }`}
               >
-                <LayoutGrid size={14} />
+                <LayoutGrid size={14} className={viewMode === 'plants' ? 'text-primary dark:text-hero-glow' : ''} />
                 <span>Tất Cả Cây Trồng ({gardenState?.totalPlants || gardenState?.plants?.length || 0})</span>
               </button>
             </div>
@@ -406,10 +391,10 @@ export default function FarmScreen() {
             type="button"
             onClick={() => loadGarden(false)}
             disabled={refreshing}
-            className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white dark:bg-stone-900/90 border border-stone-200 dark:border-white/10 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-card dark:bg-surface-card border border-hairline dark:border-white/10 text-mute hover:text-primary transition-colors cursor-pointer shadow-xs shrink-0"
             title="Làm mới nông trại"
           >
-            <RefreshCw size={15} className={refreshing ? 'animate-spin text-emerald-600 dark:text-emerald-400' : ''} />
+            <RefreshCw size={14} className={refreshing ? 'animate-spin text-primary' : ''} />
           </button>
         </div>
       </div>

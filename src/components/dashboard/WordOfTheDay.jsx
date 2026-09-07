@@ -128,7 +128,7 @@ export default function WordOfTheDay({ initialWord = null }) {
   const characters = Array.from(wotd.s || '');
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-surface-card via-surface-card to-primary-light/20 dark:from-surface-card dark:via-surface-card dark:to-primary/10 border border-hairline dark:border-white/10 p-5 sm:p-6 shadow-xs transition-all">
+    <div className="h-full flex flex-col justify-center relative overflow-hidden rounded-2xl bg-gradient-to-br from-surface-card via-surface-card to-primary-light/20 dark:from-surface-card dark:via-surface-card dark:to-primary/10 border border-hairline dark:border-white/10 p-5 sm:p-6 shadow-xs transition-all">
       {/* Decorative gradient accents */}
       <div className="absolute -top-16 -right-16 w-44 h-44 rounded-full bg-primary/5 dark:bg-primary/10 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-amber-500/5 blur-2xl pointer-events-none" />

@@ -406,6 +406,52 @@ export default function DashboardScreen() {
                   )}
                 </div>
               </div>
+
+              {/* Item 2: Clean Water */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-surface-bone/60 dark:bg-white/5 hover:bg-surface-bone dark:hover:bg-white/10 transition-all border border-hairline dark:border-white/5">
+                <div className="space-y-0.5 min-w-0 pr-3">
+                  <h4 className="text-xs font-bold text-ink dark:text-white flex items-center gap-1.5">
+                    💧 {t('dashboard.water_bucket', 'Thùng Nước Sạch')}{' '}
+                    <span className="text-[10px] text-sky-600 dark:text-sky-400 font-normal">
+                      (+10 Nước)
+                    </span>
+                  </h4>
+                  <p className="text-[11px] text-mute dark:text-white/60">
+                    Sở hữu: {summary?.water ?? 0} bình nước tưới cây
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => handleBuyItem('water', 10)}
+                    className="px-3 py-1.5 rounded-full bg-sky-600 hover:bg-sky-700 text-white text-[11px] font-bold shadow-xs cursor-pointer active:scale-95"
+                  >
+                    10 Xu
+                  </button>
+                </div>
+              </div>
+
+              {/* Item 3: Growth Fertilizer */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-surface-bone/60 dark:bg-white/5 hover:bg-surface-bone dark:hover:bg-white/10 transition-all border border-hairline dark:border-white/5">
+                <div className="space-y-0.5 min-w-0 pr-3">
+                  <h4 className="text-xs font-bold text-ink dark:text-white flex items-center gap-1.5">
+                    🌱 {t('dashboard.fertilizer_bag', 'Phân Bón Sinh Trưởng')}{' '}
+                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-normal">
+                      (+5 Phân bón)
+                    </span>
+                  </h4>
+                  <p className="text-[11px] text-mute dark:text-white/60">
+                    Sở hữu: {summary?.fertilizer ?? 0} túi phân bón
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => handleBuyItem('fertilizer', 15)}
+                    className="px-3 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold shadow-xs cursor-pointer active:scale-95"
+                  >
+                    15 Xu
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

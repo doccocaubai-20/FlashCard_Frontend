@@ -43,7 +43,7 @@ export default function GreetingBar({
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         {/* Left: User Avatar & Greeting */}
         <div className="flex items-center gap-3.5 min-w-0">
-          <div 
+          <div
             className={`relative shrink-0 ${onOpenPathModal ? 'cursor-pointer hover:opacity-90' : ''}`}
             onClick={onOpenPathModal}
             title={onOpenPathModal ? 'Nhấn để xem Đạo Lộ & Cấp độ' : `Cấp độ ${activeLevel}`}
@@ -59,11 +59,7 @@ export default function GreetingBar({
                 {initial}
               </div>
             )}
-            <span
-              className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-black text-white ring-2 ring-surface-card dark:ring-surface-card shadow-xs"
-            >
-              {activeLevel}
-            </span>
+
           </div>
 
           <div className="min-w-0">

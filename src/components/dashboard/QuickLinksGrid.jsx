@@ -122,18 +122,7 @@ export default function QuickLinksGrid({ onNavigate }) {
       borderHover: 'hover:border-amber-500/40 hover:shadow-amber-500/10',
       iconBg: 'bg-amber-500/15 text-amber-600 dark:text-amber-400',
     },
-    {
-      id: 'ai-chat',
-      title: 'Trợ lý AI Đàm thoại',
-      subtitle: 'Luyện giao tiếp ngữ cảnh thực',
-      badge: 'AI Smart',
-      path: '/chat',
-      icon: MessageSquare,
-      accent: 'cyan',
-      gradient: 'from-cyan-500/10 via-cyan-500/5 to-transparent',
-      borderHover: 'hover:border-cyan-500/40 hover:shadow-cyan-500/10',
-      iconBg: 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400',
-    },
+
   ];
 
   return (

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   CheckCircle2,
   Award,
+  Target,
   Sparkles,
   HelpCircle,
   Loader2,
@@ -26,7 +27,7 @@ const getQuestIcon = (type) => {
     case 'PLAY_GAME':
       return Gamepad2;
     default:
-      return Sparkles;
+      return Target;
   }
 };
 
@@ -232,7 +233,7 @@ export default function DailyQuests({
       {/* Header with Switcher Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline dark:border-white/10 pb-3">
         <div className="flex items-center gap-2">
-          <Sparkles size={16} className="text-primary dark:text-hero-glow" />
+          <Target size={16} className="text-primary dark:text-hero-glow" />
           <h2 className="text-sm sm:text-base font-bold text-ink dark:text-on-dark">
             Nhiệm vụ &amp; Thử thách ngày
           </h2>
