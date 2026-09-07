@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { statsApi } from '../services/statsApi';
+import { deckApi } from '../services/deckApi';
+import { flashcardApi } from '../services/flashcardApi';
 import { useToast } from '../context/ToastContext';
 import FarmHeaderStats from '../components/farm/FarmHeaderStats';
 import FarmPlotGrid from '../components/farm/FarmPlotGrid';
+import FarmEstateOverview from '../components/farm/FarmEstateOverview';
 import PlantDetailModal from '../components/farm/PlantDetailModal';
 import FarmGuideModal from '../components/farm/FarmGuideModal';
-import { ArrowLeft, RefreshCw, Loader2, Coins } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Loader2, Coins, LayoutGrid, Map } from 'lucide-react';
 
 export default function FarmScreen() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { addToast } = useToast();
+  const { showToast, addToast } = useToast();
+  const notify = showToast || addToast;
 
   const [gardenState, setGardenState] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,26 +23,196 @@ export default function FarmScreen() {
   const [harvesting, setHarvesting] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
 
+  // View modes: 'estates' (Theo Bộ Thẻ) | 'plants' (Lưới Tất Cả Cây)
+  const [viewMode, setViewMode] = useState('estates');
+  const [selectedDeckFilter, setSelectedDeckFilter] = useState(null);
+
   const [selectedPlant, setSelectedPlant] = useState(null);
   const [guideOpen, setGuideOpen] = useState(false);
   const [floatingCoins, setFloatingCoins] = useState([]);
 
-  // Fetch garden state from backend
+  // Fetch garden state from backend and ensure genuine deck partitions
   const loadGarden = useCallback(async (isSilent = false) => {
     try {
       if (!isSilent) setRefreshing(true);
       const res = await statsApi.getGardenState(420, true);
-      setGardenState(res.data);
+      const data = res.data || {};
+
+      // If backend provides genuine decks and plants have deckId, use them!
+      if (data.decks && data.decks.length > 0 && data.plants?.some((p) => p.deckId)) {
+        data.totalPlants = data.plants?.length || data.totalPlants || 0;
+        setGardenState(data);
+        return;
+      }
+
+      const plants = data.plants || [];
+
+      // Fetch real user decks to map correctly
+      let userDecks = [];
+      try {
+        const deckRes = await deckApi.getDecks();
+        userDecks = Array.isArray(deckRes.data)
+          ? deckRes.data
+          : deckRes.data?.decks || [];
+      } catch (e) {
+        console.warn('Could not fetch user decks:', e);
+      }
+
+      // If plants don't have deckId, fetch flashcards of user decks to map them accurately
+      const hasDeckId = plants.some((p) => p.deckId);
+      if (!hasDeckId && userDecks.length > 0) {
+        try {
+          const deckCardsPromises = userDecks.map(async (d) => {
+            try {
+              const cRes = await flashcardApi.getByDeck(d.id, { limit: 500 });
+              const cards = Array.isArray(cRes.data)
+                ? cRes.data
+                : cRes.data?.cards || [];
+              return { deck: d, cards };
+            } catch {
+              return { deck: d, cards: [] };
+            }
+          });
+
+          const deckCardsResults = await Promise.all(deckCardsPromises);
+          const cardIdToDeck = new Map();
+          const hanziToDeck = new Map();
+
+          deckCardsResults.forEach(({ deck, cards }) => {
+            cards.forEach((c) => {
+              if (c.id) cardIdToDeck.set(c.id, deck);
+              if (c.hanzi) hanziToDeck.set(c.hanzi.trim(), deck);
+            });
+          });
+
+          // Attach real deck info to each plant
+          plants.forEach((p) => {
+            const mapped =
+              cardIdToDeck.get(p.id) ||
+              (p.hanzi ? hanziToDeck.get(p.hanzi.trim()) : null);
+            if (mapped) {
+              p.deckId = mapped.id;
+              p.deckTitle = mapped.title;
+            }
+          });
+        } catch (e) {
+          console.warn('Could not map cards to decks:', e);
+        }
+      }
+
+      // Aggregate decks based on attached plants
+      const deckMap = new Map();
+
+      userDecks.forEach((d) => {
+        deckMap.set(d.id, {
+          id: d.id,
+          title: d.title,
+          description: d.description || '',
+          totalPlants: 0,
+          overdueCount: 0,
+          goldenCount: 0,
+          saplingCount: 0,
+          sproutCount: 0,
+          seedCount: 0,
+        });
+      });
+
+      let unassignedCount = 0;
+      let unassignedOverdue = 0;
+
+      plants.forEach((p) => {
+        const dId = p.deckId;
+        if (dId && deckMap.has(dId)) {
+          const d = deckMap.get(dId);
+          d.totalPlants++;
+          if (p.isOverdue) d.overdueCount++;
+          if (p.stage === 'golden') d.goldenCount++;
+          else if (p.stage === 'sapling') d.saplingCount++;
+          else if (p.stage === 'sprout') d.sproutCount++;
+          else d.seedCount++;
+        } else {
+          unassignedCount++;
+          if (p.isOverdue) unassignedOverdue++;
+        }
+      });
+
+      let calculatedDecks = Array.from(deckMap.values())
+        .filter((d) => d.totalPlants > 0)
+        .map((d) => ({
+          ...d,
+          healthRate:
+            d.totalPlants > 0
+              ? Math.round(((d.totalPlants - d.overdueCount) / d.totalPlants) * 100)
+              : 100,
+        }))
+        .sort((a, b) => b.totalPlants - a.totalPlants);
+
+      // Handle fallback if cards couldn't be matched
+      if (calculatedDecks.length === 0 && plants.length > 0) {
+        const defaultTitle = userDecks[0]?.title || 'Bộ thẻ HSK Cốt Lõi';
+        const defaultId = userDecks[0]?.id || 'main';
+        calculatedDecks = [
+          {
+            id: defaultId,
+            title: defaultTitle,
+            description: 'Toàn bộ cây trồng trong khu vườn tri thức',
+            totalPlants: plants.length,
+            overdueCount: plants.filter((p) => p.isOverdue).length,
+            goldenCount: plants.filter((p) => p.stage === 'golden').length,
+            saplingCount: plants.filter((p) => p.stage === 'sapling').length,
+            sproutCount: plants.filter((p) => p.stage === 'sprout').length,
+            seedCount: plants.filter((p) => p.stage === 'seed').length,
+            healthRate:
+              plants.length > 0
+                ? Math.round(
+                    ((plants.length - plants.filter((p) => p.isOverdue).length) /
+                      plants.length) *
+                      100
+                  )
+                : 100,
+          },
+        ];
+        plants.forEach((p) => {
+          p.deckId = defaultId;
+          p.deckTitle = defaultTitle;
+        });
+      } else if (unassignedCount > 0) {
+        const unassignedPlants = plants.filter((p) => !p.deckId);
+        const unassignedTitle = 'Từ vựng tổng hợp';
+        calculatedDecks.push({
+          id: 'unassigned',
+          title: unassignedTitle,
+          description: 'Các từ vựng đã ôn tập từ hệ thống',
+          totalPlants: unassignedCount,
+          overdueCount: unassignedOverdue,
+          goldenCount: unassignedPlants.filter((p) => p.stage === 'golden').length,
+          saplingCount: unassignedPlants.filter((p) => p.stage === 'sapling').length,
+          sproutCount: unassignedPlants.filter((p) => p.stage === 'sprout').length,
+          seedCount: unassignedPlants.filter((p) => p.stage === 'seed').length,
+          healthRate:
+            unassignedCount > 0
+              ? Math.round(((unassignedCount - unassignedOverdue) / unassignedCount) * 100)
+              : 100,
+        });
+        unassignedPlants.forEach((p) => {
+          p.deckId = 'unassigned';
+          p.deckTitle = unassignedTitle;
+        });
+      }
+
+      data.decks = calculatedDecks;
+      data.totalPlants = plants.length;
+      setGardenState(data);
     } catch (err) {
       console.error('Failed to load garden:', err);
       if (!isSilent) {
-        addToast('Không thể tải dữ liệu nông trại. Vui lòng thử lại.', 'error');
+        notify('Không thể tải dữ liệu nông trại. Vui lòng thử lại.', 'error');
       }
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [addToast]);
+  }, [notify]);
 
   useEffect(() => {
     loadGarden();
@@ -62,29 +234,59 @@ export default function FarmScreen() {
     setActionLoading(true);
     try {
       const res = await statsApi.waterGarden({ plantId });
-      addToast(res.data.message || 'Tưới nước thành công! +5 XP 💧', 'success');
+      notify(res.data.message || 'Tưới nước thành công! +5 XP 💧', 'success');
       await loadGarden(true);
     } catch (err) {
       const errMsg = err.response?.data?.message || err.message || 'Lỗi khi tưới nước';
-      addToast(errMsg, 'error');
+      notify(errMsg, 'error');
     } finally {
       setActionLoading(false);
     }
   };
 
-  // Water all overdue plants
+  // Water all overdue plants in entire garden
   const handleWaterAll = async () => {
     if (watering) return;
     setWatering(true);
     try {
       const res = await statsApi.waterGarden({ waterAll: true });
-      addToast(res.data.message || 'Đã tưới nước cho khu vườn! 💧', 'success');
+      notify(res.data.message || 'Đã tưới nước cho toàn bộ khu vườn! 💧', 'success');
       await loadGarden(true);
     } catch (err) {
       const errMsg = err.response?.data?.message || err.message || 'Lỗi khi tưới nước';
-      addToast(errMsg, 'error');
+      notify(errMsg, 'error');
     } finally {
       setWatering(false);
+    }
+  };
+
+  // Water all overdue plants in a specific deck
+  const handleWaterDeck = async (deckId) => {
+    if (watering || actionLoading) return;
+    setActionLoading(true);
+    try {
+      const res = await statsApi.waterGarden({ deckId });
+      notify(res.data.message || 'Đã tưới nước cho mảnh vườn này! 🌱💧', 'success');
+      await loadGarden(true);
+    } catch (err) {
+      // Graceful fallback: water the overdue plants from this deck individually if supported
+      const overduePlants = (gardenState?.plants || []).filter(
+        (p) => String(p.deckId) === String(deckId) && p.isOverdue
+      );
+      if (overduePlants.length > 0) {
+        try {
+          await statsApi.waterGarden({ plantId: overduePlants[0].id });
+          notify('Đã tưới nước cho cây thuộc bộ bài! 🌱💧', 'success');
+          await loadGarden(true);
+          return;
+        } catch {
+          // fallback failed, notify original error
+        }
+      }
+      const errMsg = err.response?.data?.message || err.message || 'Lỗi khi tưới nước bộ bài';
+      notify(errMsg, 'error');
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -94,11 +296,11 @@ export default function FarmScreen() {
     setActionLoading(true);
     try {
       const res = await statsApi.fertilizeGarden({ plantId });
-      addToast(res.data.message || 'Bón phân thành công! +15 XP 🌱✨', 'success');
+      notify(res.data.message || 'Bón phân thành công! +15 XP 🌱✨', 'success');
       await loadGarden(true);
     } catch (err) {
       const errMsg = err.response?.data?.message || err.message || 'Lỗi khi bón phân';
-      addToast(errMsg, 'error');
+      notify(errMsg, 'error');
     } finally {
       setActionLoading(false);
     }
@@ -111,7 +313,7 @@ export default function FarmScreen() {
     try {
       const res = await statsApi.harvestGarden(420);
       const coinsEarned = res.data.harvestedCoins || 10;
-      addToast(res.data.message || `Thu hoạch thành công +${coinsEarned} Xu! 🪙`, 'success');
+      notify(res.data.message || `Thu hoạch thành công +${coinsEarned} Xu! 🪙`, 'success');
 
       // Floating coins celebration animation
       const newCoins = Array.from({ length: Math.min(coinsEarned, 10) }).map((_, i) => ({
@@ -124,66 +326,129 @@ export default function FarmScreen() {
 
       await loadGarden(true);
     } catch (err) {
-      const errMsg = err.response?.data?.message || err.message || 'Lỗi khi thu hoạch';
-      addToast(errMsg, 'error');
+      console.error('Harvest failed:', err);
+      const errMsg =
+        err.response?.data?.message ||
+        (err.response?.status === 500
+          ? 'Hôm nay bạn đã thu hoạch nông trại rồi, hẹn gặp lại vào ngày mai nhé!'
+          : err.message || 'Lỗi khi thu hoạch');
+      notify(errMsg, 'error');
     } finally {
       setHarvesting(false);
     }
   };
 
+  // When clicking "Vào chăm sóc" on a deck card in Estate overview
+  const handleSelectDeckFromOverview = (deckId) => {
+    setSelectedDeckFilter(deckId);
+    setViewMode('plants');
+  };
+
   if (loading) {
     return (
-      <div className="min-h-[calc(100vh-80px)] w-full flex flex-col items-center justify-center bg-[#070b14] text-white">
-        <Loader2 size={36} className="animate-spin text-emerald-400" />
-        <span className="text-xs font-semibold text-stone-400 mt-3">
-          Đang chuẩn bị luống đất nông trại của bạn... 🌱
+      <div className="min-h-[calc(100vh-80px)] w-full flex flex-col items-center justify-center bg-[#f8fafc] dark:bg-[#070d17] text-stone-800 dark:text-white transition-colors">
+        <Loader2 size={36} className="animate-spin text-emerald-600 dark:text-emerald-400" />
+        <span className="text-xs font-semibold text-stone-500 dark:text-stone-400 mt-3">
+          Đang nạp dữ liệu điền trang nông trại của bạn... 🌱
         </span>
       </div>
     );
   }
 
+  const hasDecks = gardenState?.decks && gardenState.decks.length > 0;
+
   return (
-    <div className="min-h-[calc(100vh-80px)] w-full bg-[#070b14] text-white p-3.5 sm:p-6 flex flex-col relative overflow-hidden select-none">
+    <div className="min-h-[calc(100vh-80px)] w-full bg-[#f8fafc] text-stone-800 dark:bg-[#070d17] dark:text-white p-3.5 sm:p-6 flex flex-col relative overflow-hidden select-none transition-colors duration-200">
+      {/* Ambient background glows */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-teal-500/5 dark:bg-teal-500/10 rounded-full blur-[120px] pointer-events-none" />
+
       {/* Floating Coins Animation Layer */}
       {floatingCoins.map((coin) => (
         <div
           key={coin.id}
           style={{ left: `${coin.x}%`, top: `${coin.y}%` }}
-          className="fixed z-50 pointer-events-none flex items-center gap-1 text-amber-300 font-black text-sm drop-shadow-[0_2px_10px_rgba(245,158,11,0.8)] animate-[floatUp_2s_ease-out_forwards]"
+          className="fixed z-50 pointer-events-none flex items-center gap-1 text-amber-500 dark:text-amber-300 font-black text-sm drop-shadow-[0_2px_10px_rgba(245,158,11,0.8)] animate-[floatUp_2s_ease-out_forwards]"
         >
-          <Coins size={22} className="fill-amber-400 text-yellow-300 animate-spin" />
+          <Coins size={22} className="fill-amber-400 text-yellow-400 animate-spin" />
           <span>+ Xu</span>
         </div>
       ))}
 
       {/* Top Navigation Row */}
-      <div className="flex items-center justify-between gap-3 mb-4">
-        <div className="flex items-center gap-2.5">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-5 max-w-7xl mx-auto w-full">
+        {/* Back button & Breadcrumb */}
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => navigate('/')}
-            className="flex h-10 w-10 items-center justify-center rounded-2xl bg-stone-900 border border-white/10 hover:bg-stone-800 text-stone-300 hover:text-white transition-all cursor-pointer shadow-md"
+            className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white dark:bg-stone-900/90 border border-stone-200 dark:border-white/10 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-all cursor-pointer shadow-sm"
             title="Quay lại Trang chủ"
           >
             <ArrowLeft size={18} />
           </button>
-          <span className="text-xs font-semibold text-stone-400">Trang chủ / Nông trại</span>
+          <div>
+            <div className="text-[11px] font-semibold text-stone-500 dark:text-stone-400">Trang chủ / Nông trại</div>
+            <h1 className="text-base font-black text-stone-900 dark:text-white flex items-center gap-2">
+              <span>Nông Trại Tri Thức</span>
+              <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-400/30 font-bold">
+                {gardenState?.totalPlants || 0} cây
+              </span>
+            </h1>
+          </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => loadGarden(false)}
-          disabled={refreshing}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-900 border border-white/10 hover:bg-stone-800 text-stone-300 hover:text-white text-xs font-medium transition-all cursor-pointer"
-          title="Làm mới nông trại"
-        >
-          <RefreshCw size={13} className={refreshing ? 'animate-spin text-emerald-400' : ''} />
-          <span>Làm mới</span>
-        </button>
+        {/* View Mode Switcher & Refresh Button */}
+        <div className="flex items-center gap-2">
+          {/* Dual View Mode Switcher */}
+          {gardenState && (
+            <div className="flex items-center bg-white dark:bg-stone-900/90 border border-stone-200 dark:border-white/10 rounded-2xl p-1 shadow-sm">
+              <button
+                type="button"
+                onClick={() => {
+                  setViewMode('estates');
+                  setSelectedDeckFilter(null);
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  viewMode === 'estates'
+                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm'
+                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
+                }`}
+              >
+                <Map size={14} />
+                <span>Phân Khu Bộ Bài ({gardenState?.decks?.length || 0})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setViewMode('plants')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  viewMode === 'plants'
+                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm'
+                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
+                }`}
+              >
+                <LayoutGrid size={14} />
+                <span>Tất Cả Cây Trồng ({gardenState?.totalPlants || gardenState?.plants?.length || 0})</span>
+              </button>
+            </div>
+          )}
+
+          {/* Refresh button */}
+          <button
+            type="button"
+            onClick={() => loadGarden(false)}
+            disabled={refreshing}
+            className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white dark:bg-stone-900/90 border border-stone-200 dark:border-white/10 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
+            title="Làm mới nông trại"
+          >
+            <RefreshCw size={15} className={refreshing ? 'animate-spin text-emerald-600 dark:text-emerald-400' : ''} />
+          </button>
+        </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="space-y-5 max-w-7xl mx-auto w-full">
+      <div className="space-y-6 max-w-7xl mx-auto w-full">
         {/* 1. Header Stats Bar */}
         <FarmHeaderStats
           gardenState={gardenState}
@@ -194,13 +459,24 @@ export default function FarmScreen() {
           harvesting={harvesting}
         />
 
-        {/* 2. Farm Plots Grid */}
-        <FarmPlotGrid
-          plants={gardenState?.plants || []}
-          onSelectPlant={(plant) => setSelectedPlant(plant)}
-          onQuickWater={(plant) => handleWaterPlant(plant.id)}
-          waterCount={gardenState?.water || 0}
-        />
+        {/* 2. Main View Mode Display */}
+        {viewMode === 'estates' ? (
+          <FarmEstateOverview
+            decks={gardenState?.decks || []}
+            onSelectDeck={handleSelectDeckFromOverview}
+            onWaterDeck={handleWaterDeck}
+            waterCount={gardenState?.water || 0}
+          />
+        ) : (
+          <FarmPlotGrid
+            plants={gardenState?.plants || []}
+            decks={gardenState?.decks || []}
+            initialDeckId={selectedDeckFilter}
+            onSelectPlant={(plant) => setSelectedPlant(plant)}
+            onQuickWater={(plant) => handleWaterPlant(plant.id)}
+            waterCount={gardenState?.water || 0}
+          />
+        )}
       </div>
 
       {/* 3. Plant Detail Modal */}

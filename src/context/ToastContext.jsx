@@ -99,7 +99,7 @@ export function ToastProvider({ children }) {
   };
 
   return (
-    <ToastContext.Provider value={{ showToast: addToast, updateToast }}>
+    <ToastContext.Provider value={{ showToast: addToast, addToast, updateToast }}>
       {children}
       <style>{`
         @keyframes toast-exit {

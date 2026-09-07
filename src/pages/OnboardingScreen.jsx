@@ -245,8 +245,8 @@ export default function OnboardingScreen() {
       <div className="max-w-3xl mx-auto">
         {/* ── Brand Header & Progress Indicator ── */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl overflow-hidden shadow-md mb-3 ring-2 ring-[#0F5257]/20 border border-[#1a2332]/10 dark:border-white/10">
-            <img src="/ap2.png" alt="ChongZi" className="h-full w-full object-cover" />
+          <div className="inline-flex items-center justify-center h-14 w-14 rounded-full overflow-hidden shadow-sm mb-3">
+            <img src="/ap2.png" alt="ChongZi" className="h-full w-full object-cover rounded-full" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#1a2332] dark:text-white">
             Chào mừng bạn đến với ChongZi

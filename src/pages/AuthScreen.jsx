@@ -95,8 +95,8 @@ export default function AuthScreen() {
 
         {/* Brand / Logo */}
         <div className="text-center mb-8">
-          <div className="mx-auto h-14 w-14 rounded-2xl overflow-hidden shadow-md mb-4 ring-2 ring-primary/20 border border-hairline dark:border-divider-dark">
-            <img src="/ap2.png" alt="ChongZi" className="h-full w-full object-cover" />
+          <div className="mx-auto h-16 w-16 rounded-full overflow-hidden mb-4 shadow-sm">
+            <img src="/ap2.png" alt="ChongZi" className="h-full w-full object-cover rounded-full" />
           </div>
           <h2 className="text-3xl font-extrabold text-ink dark:text-on-dark font-display tracking-tight">
             {isLogin ? 'Chào mừng trở lại' : 'Tạo tài khoản mới'}

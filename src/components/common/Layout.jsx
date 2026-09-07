@@ -24,7 +24,7 @@ export default function Layout() {
       <header className="mobile-header flex items-center justify-between">
         {/* Left: Logo + Title */}
         <div className="flex items-center gap-2">
-          <img src="/ap2.png" alt="ChongZi Logo" className="w-7 h-7 object-contain rounded-md" />
+          <img src="/ap2.png" alt="ChongZi Logo" className="w-8 h-8 object-cover rounded-full shrink-0" />
           <span className="font-display font-extrabold text-base text-ink dark:text-on-dark tracking-tight">
             ChongZi
           </span>

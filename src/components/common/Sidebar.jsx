@@ -126,8 +126,8 @@ export default function Sidebar({ onClose }) {
         {/* Brand Section */}
         <div className="sidebar-brand flex items-center justify-between px-5 pb-5 border-b border-hairline dark:border-divider-dark">
           <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-lg overflow-hidden shadow-sm">
-              <img src="/ap2.png" alt="ChongZi" className="h-full w-full object-cover" />
+            <div className="h-11 w-11 rounded-full overflow-hidden shrink-0">
+              <img src="/ap2.png" alt="ChongZi" className="h-full w-full object-cover rounded-full" />
             </div>
             <div>
               <span className="font-display font-bold text-xl text-ink dark:text-on-dark tracking-tight">
