@@ -52,7 +52,14 @@ export default function VideoPlayerScreen() {
         const detail = await videoLessonApi.getVideoLessonById(id);
         if (isMounted) {
           if (detail && detail.segments) {
-            setLesson(detail);
+            const rawSegs = detail.segments;
+            const parsedSegs = typeof rawSegs === 'string' ? JSON.parse(rawSegs) : rawSegs;
+            setLesson({
+              ...detail,
+              segments: Array.isArray(parsedSegs) ? parsedSegs : [],
+            });
+          } else if (detail) {
+            setLesson({ ...detail, segments: [] });
           } else {
             setLesson(videoLessonsData[0]);
           }
@@ -223,15 +230,17 @@ export default function VideoPlayerScreen() {
         }
       }
     }
-  }, [currentTime, lesson.segments, activeSegmentIndex, isLooping, isAutoPause, isPlaying]);
+  }, [currentTime, lesson?.segments, activeSegmentIndex, isLooping, isAutoPause, isPlaying]);
 
-  const activeSegment = lesson.segments[activeSegmentIndex] || lesson.segments[0] || {};
-  const progressPercent = lesson.segments.length > 0
-    ? Math.round(((activeSegmentIndex + 1) / lesson.segments.length) * 100)
+  const segments = Array.isArray(lesson?.segments) ? lesson.segments : [];
+  const activeSegment = segments[activeSegmentIndex] || segments[0] || {};
+  const progressPercent = segments.length > 0
+    ? Math.round(((activeSegmentIndex + 1) / segments.length) * 100)
     : 0;
 
   // Điều khiển tua câu
   const seekToSegment = (seg, index) => {
+    if (!seg) return;
     lastPausedSegRef.current = -1;
     setActiveSegmentIndex(index);
     scrollToSegment(index, 'smooth');
@@ -252,14 +261,14 @@ export default function VideoPlayerScreen() {
 
   const handlePrevSegment = () => {
     if (activeSegmentIndex > 0) {
-      const prev = lesson.segments[activeSegmentIndex - 1];
+      const prev = segments[activeSegmentIndex - 1];
       seekToSegment(prev, activeSegmentIndex - 1);
     }
   };
 
   const handleNextSegment = () => {
-    if (activeSegmentIndex < lesson.segments.length - 1) {
-      const next = lesson.segments[activeSegmentIndex + 1];
+    if (activeSegmentIndex < segments.length - 1) {
+      const next = segments[activeSegmentIndex + 1];
       seekToSegment(next, activeSegmentIndex + 1);
     }
   };
@@ -371,7 +380,7 @@ export default function VideoPlayerScreen() {
           <div className="bg-white dark:bg-surface-dark rounded-2xl p-4 sm:p-5 border border-hairline dark:border-divider-dark shadow-sm space-y-2.5 relative min-h-[125px] max-h-[160px] sm:max-h-[185px] overflow-y-auto custom-scrollbar">
             <div className="flex items-center justify-between text-xs text-mute pb-2 border-b border-hairline/60 dark:border-divider-dark/60">
               <span className="font-bold flex items-center gap-1.5 text-primary">
-                <span>Câu {activeSegment.id || activeSegmentIndex + 1} / {lesson.segments.length}</span>
+                <span>Câu {activeSegment.id || activeSegmentIndex + 1} / {segments.length}</span>
               </span>
               <span className="font-mono text-[11px]">
                 {Math.floor(activeSegment.start || 0)}s - {Math.floor(activeSegment.end || 0)}s
@@ -422,7 +431,7 @@ export default function VideoPlayerScreen() {
 
               <button
                 onClick={handleNextSegment}
-                disabled={activeSegmentIndex >= lesson.segments.length - 1}
+                disabled={activeSegmentIndex >= segments.length - 1}
                 className="p-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 disabled:opacity-30 transition cursor-pointer text-ink dark:text-on-dark"
                 title="Câu tiếp theo"
               >
@@ -588,7 +597,7 @@ export default function VideoPlayerScreen() {
               ref={transcriptListRef}
               className="flex-1 overflow-y-auto p-3 space-y-2.5 divide-y-0 custom-scrollbar"
             >
-              {lesson.segments.map((seg, idx) => {
+              {segments.map((seg, idx) => {
                 const isActive = idx === activeSegmentIndex;
                 return (
                   <div
