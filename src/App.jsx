@@ -53,6 +53,10 @@ const PrintFlashcardScreen = React.lazy(() => import('./pages/PrintFlashcardScre
 const VideoListScreen = React.lazy(() => import('./pages/VideoListScreen'));
 const VideoPlayerScreen = React.lazy(() => import('./pages/VideoPlayerScreen'));
 const FarmScreen = React.lazy(() => import('./pages/FarmScreen'));
+const BlogListScreen = React.lazy(() => import('./pages/BlogListScreen'));
+const BlogPostScreen = React.lazy(() => import('./pages/BlogPostScreen'));
+const PrivacyPolicyScreen = React.lazy(() => import('./pages/PrivacyPolicyScreen'));
+const TermsOfServiceScreen = React.lazy(() => import('./pages/TermsOfServiceScreen'));
 
 // Loading spinner for lazy pages
 function LazyFallback() {
@@ -93,6 +97,14 @@ function App() {
       <Route path="/" element={<RootRoute />} />
       <Route path="/login" element={<LoginRoute />} />
       <Route path="/register" element={<LoginRoute />} />
+
+      {/* Public Blog & SEO Editorial Routes */}
+      <Route path="/blog" element={<Suspense fallback={<LazyFallback />}><BlogListScreen /></Suspense>} />
+      <Route path="/blog/:slug" element={<Suspense fallback={<LazyFallback />}><BlogPostScreen /></Suspense>} />
+
+      {/* Public Legal & Policy Routes */}
+      <Route path="/privacy" element={<Suspense fallback={<LazyFallback />}><PrivacyPolicyScreen /></Suspense>} />
+      <Route path="/terms" element={<Suspense fallback={<LazyFallback />}><TermsOfServiceScreen /></Suspense>} />
 
       {/* Onboarding Flow: Protected by PrivateRoute */}
       <Route

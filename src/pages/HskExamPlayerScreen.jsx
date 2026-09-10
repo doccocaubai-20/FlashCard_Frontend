@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { hskExamApi } from '../services/hskExamApi';
 import { useToast } from '../context/ToastContext';
+import { speakChinese, stopSpeech } from '../utils/tts';
 
 export default function HskExamPlayerScreen() {
   const { id: testId } = useParams();
@@ -310,22 +311,34 @@ export default function HskExamPlayerScreen() {
     }
   };
 
-  // Question Audio Handlers
-  const playQuestionAudio = (qId, audioUrl) => {
-    if (!audioUrl) return;
-    if (playingQuestionAudioId === qId && questionAudioRef.current) {
-      questionAudioRef.current.pause();
+  // Question Audio Handlers (Supports direct audio or Speech-to-Text Transcript via speakChinese)
+  const playQuestionAudio = (qId, audioUrl, transcript) => {
+    if (playingQuestionAudioId === qId) {
+      if (questionAudioRef.current) {
+        questionAudioRef.current.pause();
+      }
+      stopSpeech();
       setPlayingQuestionAudioId(null);
       return;
     }
+
     if (questionAudioRef.current) {
       questionAudioRef.current.pause();
     }
-    const audio = new Audio(audioUrl);
-    questionAudioRef.current = audio;
-    setPlayingQuestionAudioId(qId);
-    audio.play().catch(() => setPlayingQuestionAudioId(null));
-    audio.onended = () => setPlayingQuestionAudioId(null);
+    stopSpeech();
+
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
+      questionAudioRef.current = audio;
+      setPlayingQuestionAudioId(qId);
+      audio.play().catch(() => setPlayingQuestionAudioId(null));
+      audio.onended = () => setPlayingQuestionAudioId(null);
+    } else if (transcript) {
+      setPlayingQuestionAudioId(qId);
+      speakChinese(transcript).finally(() => {
+        setPlayingQuestionAudioId(null);
+      });
+    }
   };
 
   if (loading) {
@@ -768,11 +781,11 @@ export default function HskExamPlayerScreen() {
                               {q.number}
                             </span>
 
-                            {/* Question Audio Button */}
-                            {q.audio && (
+                            {/* Question Audio Button (Supports q.audio or q.transcript via speakChinese) */}
+                            {(q.audio || q.transcript) && (
                               <button
-                                onClick={() => playQuestionAudio(q.id, q.audio)}
-                                className={`flex items-center gap-1 px-3 py-1.5 rounded-xl border text-xs font-medium transition-colors cursor-pointer ${
+                                onClick={() => playQuestionAudio(q.id, q.audio, q.transcript)}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-medium transition-colors cursor-pointer ${
                                   playingQuestionAudioId === q.id
                                     ? 'bg-[#1e3a5f] text-white border-[#1e3a5f]'
                                     : 'border-hairline dark:border-divider-dark hover:bg-stone-50 dark:hover:bg-black/20 text-mute hover:text-ink'
@@ -988,6 +1001,29 @@ export default function HskExamPlayerScreen() {
                           </div>
                         )}
 
+                        {/* Listening Transcript in Review Mode */}
+                        {isReviewMode && q.transcript && (
+                          <div className="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-ink dark:text-on-dark flex items-start gap-2">
+                            <FileText size={14} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                            <div>
+                              <span className="font-bold text-amber-700 dark:text-amber-400">Lời thoại bài nghe: </span>
+                              <span className="font-chinese text-sm font-medium">{q.transcript}</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Detailed AI Explanation in Review Mode */}
+                        {isReviewMode && q.explanation && (
+                          <div className="mt-3 p-3.5 rounded-xl bg-emerald-500/10 dark:bg-emerald-950/20 border border-emerald-500/20 dark:border-emerald-500/30 text-xs sm:text-[13px] text-ink dark:text-on-dark space-y-1.5">
+                            <div className="flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400">
+                              <Sparkles size={14} className="shrink-0" />
+                              <span>Giải thích chi tiết:</span>
+                            </div>
+                            <div className="leading-relaxed whitespace-pre-line text-ink/90 dark:text-on-dark/90 font-normal select-text">
+                              {q.explanation}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   })}

@@ -22,6 +22,7 @@ import {
   Bookmark
 } from 'lucide-react';
 import videoLessonsData from '../data/videoLessonsData';
+import videoLessonApi from '../services/videoLessonApi';
 import HoverableText from '../components/common/HoverableText';
 import { useToast } from '../context/ToastContext';
 
@@ -30,9 +31,43 @@ export default function VideoPlayerScreen() {
   const navigate = useNavigate();
   const { showToast } = useToast();
 
-  // Tìm bài học theo ID
-  const lesson = useMemo(() => {
-    return videoLessonsData.find(v => v.id === id || v.youtubeId === id) || videoLessonsData[0];
+  // Tìm bài học theo ID (đồng bộ nếu có sẵn trong dữ liệu tĩnh, bất đồng bộ nếu là bài cộng đồng)
+  const [lesson, setLesson] = useState(() => {
+    return videoLessonsData.find((v) => v.id === id || v.youtubeId === id) || null;
+  });
+  const [isLoadingLesson, setIsLoadingLesson] = useState(!lesson);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchLesson = async () => {
+      const staticMatch = videoLessonsData.find((v) => v.id === id || v.youtubeId === id);
+      if (staticMatch) {
+        setLesson(staticMatch);
+        setIsLoadingLesson(false);
+        return;
+      }
+
+      setIsLoadingLesson(true);
+      try {
+        const detail = await videoLessonApi.getVideoLessonById(id);
+        if (isMounted) {
+          if (detail && detail.segments) {
+            setLesson(detail);
+          } else {
+            setLesson(videoLessonsData[0]);
+          }
+        }
+      } catch (err) {
+        if (isMounted) setLesson(videoLessonsData[0]);
+      } finally {
+        if (isMounted) setIsLoadingLesson(false);
+      }
+    };
+
+    fetchLesson();
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   // YouTube Player State
@@ -84,6 +119,7 @@ export default function VideoPlayerScreen() {
 
   // 1. Tải và khởi tạo YouTube IFrame API
   useEffect(() => {
+    if (!lesson || !lesson.youtubeId) return;
     let checkInterval = null;
 
     const initPlayer = () => {
@@ -144,11 +180,11 @@ export default function VideoPlayerScreen() {
         playerRef.current = null;
       }
     };
-  }, [lesson.youtubeId]);
+  }, [lesson?.youtubeId]);
 
   // 2. Tìm câu active dựa theo currentTime & xử lý tự dừng / lặp câu
   useEffect(() => {
-    if (!lesson.segments || lesson.segments.length === 0) return;
+    if (!lesson || !lesson.segments || lesson.segments.length === 0) return;
 
     const segIndex = lesson.segments.findIndex(
       (s) => currentTime >= s.start && currentTime < s.end
@@ -278,6 +314,15 @@ export default function VideoPlayerScreen() {
     audio.onended = () => setIsPlayingRecorded(false);
   };
 
+  if (isLoadingLesson || !lesson) {
+    return (
+      <div className="max-w-4xl mx-auto py-24 text-center space-y-4">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-sm font-bold text-ink dark:text-on-dark">Đang tải bài học video...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-[1550px] mx-auto space-y-4 pb-12">
       {/* Breadcrumb & Tiêu đề bài học */}
@@ -294,12 +339,21 @@ export default function VideoPlayerScreen() {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/10 text-emerald-600 border border-emerald-500/30">
-            HSK {lesson.level}
-          </span>
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
-            {lesson.topic}
-          </span>
+          {lesson.isCommunity && (
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+              Cộng đồng đóng góp
+            </span>
+          )}
+          {lesson.level && (
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/10 text-emerald-600 border border-emerald-500/30">
+              HSK {lesson.level}
+            </span>
+          )}
+          {lesson.topic && (
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+              {lesson.topic}
+            </span>
+          )}
         </div>
       </div>
 

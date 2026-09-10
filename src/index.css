@@ -503,3 +503,158 @@ b .hanzi-text {
     -webkit-text-fill-color: #0f5257 !important;
   }
 }
+
+/* ── Blog Editorial Typography & Components ── */
+.blog-article-content {
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.blog-article-content .lead {
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: var(--color-mute);
+  margin-bottom: 1.75rem;
+  font-weight: 400;
+}
+
+.blog-article-content p {
+  margin-bottom: 1.35rem;
+}
+
+.blog-article-content h2 {
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-top: 2.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-hairline);
+  color: var(--color-main, currentColor);
+}
+
+.blog-article-content h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-main, currentColor);
+}
+
+.blog-article-content ul {
+  list-style-type: disc;
+  margin-top: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.blog-article-content ol {
+  list-style-type: decimal;
+  margin-top: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.blog-article-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+
+.blog-article-content strong {
+  font-weight: 600;
+  color: var(--color-main, currentColor);
+}
+
+/* Review Pros & Cons Boxes */
+.blog-article-content .review-box {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 1.75rem 0;
+  padding: 1.25rem;
+  border-radius: 12px;
+  background-color: var(--color-surface, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--color-hairline, rgba(0, 0, 0, 0.08));
+}
+
+@media (min-width: 640px) {
+  .blog-article-content .review-box {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.blog-article-content .review-box.highlight-box {
+  background-color: rgba(15, 82, 87, 0.04);
+  border-color: rgba(15, 82, 87, 0.25);
+  grid-template-columns: 1fr;
+}
+
+.blog-article-content .review-pros h4 {
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #166534;
+  margin-bottom: 0.5rem;
+}
+
+.dark .blog-article-content .review-pros h4 {
+  color: #4ade80;
+}
+
+.blog-article-content .review-cons h4 {
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9a3412;
+  margin-bottom: 0.5rem;
+}
+
+.dark .blog-article-content .review-cons h4 {
+  color: #fb923c;
+}
+
+.blog-article-content .review-pros ul,
+.blog-article-content .review-cons ul {
+  padding-left: 1.25rem;
+  margin: 0;
+  font-size: 0.925rem;
+}
+
+.blog-article-content .review-pros li,
+.blog-article-content .review-cons li {
+  margin-bottom: 0.35rem;
+}
+
+/* Comparison Table */
+.blog-article-content .table-container {
+  overflow-x: auto;
+  margin: 2rem 0;
+  border-radius: 10px;
+  border: 1px solid var(--color-hairline, rgba(0, 0, 0, 0.1));
+}
+
+.blog-article-content .comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.blog-article-content .comparison-table th,
+.blog-article-content .comparison-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-hairline, rgba(0, 0, 0, 0.06));
+}
+
+.blog-article-content .comparison-table th {
+  font-weight: 600;
+  background-color: var(--color-surface, rgba(0, 0, 0, 0.04));
+  white-space: nowrap;
+}
+
+.blog-article-content .comparison-table tr:last-child td {
+  border-bottom: none;
+}

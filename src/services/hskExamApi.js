@@ -21,51 +21,20 @@ export const hskExamApi = {
 
   // 2. Get tests by level (1 to 6)
   getExamsByLevel: async (level) => {
-    try {
-      const res = await api.get(`/api/hsk-exams/levels/${level}`);
-      return res.data;
-    } catch (e) {
-      console.warn(`API getExamsByLevel(${level}) failed:`, e);
-      // Direct fallback to API if backend offline
-      try {
-        const fallbackRes = await fetch(`https://api.xiehanzi.com/api/v1/hsk-tests/levels/${level}`);
-        const data = await fallbackRes.json();
-        return data.items || [];
-      } catch (err) {
-        return [];
-      }
-    }
+    const res = await api.get(`/api/hsk-exams/levels/${level}`);
+    return res.data;
   },
 
   // 3. Get full details of an exam
   getExamDetail: async (testId) => {
-    try {
-      const res = await api.get(`/api/hsk-exams/detail/${testId}`);
-      return res.data;
-    } catch (e) {
-      console.warn(`API getExamDetail(${testId}) failed, trying fallback:`, e);
-      // Fallback
-      const match = testId.match(/hsk(\d)/i);
-      const level = match ? parseInt(match[1], 10) : 1;
-      const res = await fetch(`https://api.xiehanzi.com/api/v1/hsk-tests/levels/${level}/${testId}`);
-      return await res.json();
-    }
+    const res = await api.get(`/api/hsk-exams/detail/${testId}`);
+    return res.data;
   },
 
   // 4. Grade user exam answers
   gradeExam: async (testId, answers) => {
-    try {
-      const res = await api.post(`/api/hsk-exams/${testId}/grade`, { answers });
-      return res.data;
-    } catch (e) {
-      console.warn(`API gradeExam(${testId}) failed, trying direct grading:`, e);
-      const res = await fetch(`https://api.xiehanzi.com/api/v1/hsk-tests/${testId}/grade`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers }),
-      });
-      return await res.json();
-    }
+    const res = await api.post(`/api/hsk-exams/${testId}/grade`, { answers });
+    return res.data;
   },
 
   // 5. Submit result and save to DB

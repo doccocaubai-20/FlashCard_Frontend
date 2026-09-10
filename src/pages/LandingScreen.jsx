@@ -179,6 +179,9 @@ export default function LandingScreen() {
             <a href="#methodology" className="hover:text-[#0F5257] dark:hover:text-[#d4eef0] transition-colors">
               Phương pháp Lục thư
             </a>
+            <Link to="/blog" className="hover:text-[#0F5257] dark:hover:text-[#d4eef0] transition-colors">
+              Blog
+            </Link>
           </nav>
 
           {/* Desktop Right CTAs */}
@@ -258,6 +261,13 @@ export default function LandingScreen() {
             >
               Phương pháp Lục thư
             </a>
+            <Link
+              to="/blog"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-2 text-sm font-semibold text-[#0F5257] dark:text-[#d4eef0]"
+            >
+              Blog kiến thức & kinh nghiệm
+            </Link>
             <div className="pt-3 border-t border-[#1a2332]/10 dark:border-white/10 flex flex-col gap-2">
               <Link
                 to="/login"
@@ -854,9 +864,9 @@ export default function LandingScreen() {
               </h5>
               <ul className="space-y-2 text-xs text-[#718096] dark:text-[#a0aec0]">
                 <li>
-                  <a href="#demo-preview" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
-                    Flashcard SRS thông minh
-                  </a>
+                  <Link to="/study" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
+                    Flashcard FSRS thông minh
+                  </Link>
                 </li>
                 <li>
                   <a href="#features" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
@@ -869,9 +879,9 @@ export default function LandingScreen() {
                   </a>
                 </li>
                 <li>
-                  <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
-                    Bộ đề thi HSK 1 - 9
-                  </a>
+                  <Link to="/hsk-exams" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
+                    Bộ 77 đề thi HSK 1 - 6
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -883,29 +893,29 @@ export default function LandingScreen() {
               </h5>
               <ul className="space-y-2 text-xs text-[#718096] dark:text-[#a0aec0]">
                 <li>
-                  <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
+                  <Link to="/hsk-exams" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
                     HSK 1 - Căn bản (150 từ)
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
+                  <Link to="/hsk-exams" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
                     HSK 2 - Sơ cấp (300 từ)
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
+                  <Link to="/hsk-exams" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
                     HSK 3 - Sơ trung cấp (600 từ)
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
+                  <Link to="/hsk-exams" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
                     HSK 4, 5, 6 - Nâng cao
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#hsk-levels" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
+                  <Link to="/hsk-exams" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
                     HSK 7-9 - Chuyên sâu HSK 3.0
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -917,6 +927,11 @@ export default function LandingScreen() {
               </h5>
               <ul className="space-y-2 text-xs text-[#718096] dark:text-[#a0aec0]">
                 <li>
+                  <Link to="/blog" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
+                    Blog kiến thức & kinh nghiệm
+                  </Link>
+                </li>
+                <li>
                   <Link to="/login" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
                     Đăng nhập tài khoản
                   </Link>
@@ -927,9 +942,19 @@ export default function LandingScreen() {
                   </Link>
                 </li>
                 <li>
-                  <span className="text-[#a0aec0] dark:text-[#718096]">
-                    Hỗ trợ: support@chongzi.app
-                  </span>
+                  <a href="mailto:chongzichinese@gmail.com" className="text-[#a0aec0] dark:text-[#718096] hover:text-[#0F5257] dark:hover:text-white transition-colors">
+                    Hỗ trợ: chongzichinese@gmail.com
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.facebook.com/profile.php?id=61594118917546"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#a0aec0] dark:text-[#718096] hover:text-[#0F5257] dark:hover:text-white transition-colors flex items-center gap-1"
+                  >
+                    <span>Fanpage Facebook</span>
+                  </a>
                 </li>
                 <li>
                   <span className="text-[#a0aec0] dark:text-[#718096]">
@@ -945,9 +970,20 @@ export default function LandingScreen() {
               © 2026 ChongZi (虫子). Bản quyền thuộc về đội ngũ phát triển ChongZi.
             </div>
             <div className="flex items-center gap-6">
-              <span className="hover:underline cursor-pointer">Điều khoản dịch vụ</span>
-              <span className="hover:underline cursor-pointer">Chính sách bảo mật</span>
-              <span className="hover:underline cursor-pointer">Cộng đồng</span>
+              <Link to="/terms" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
+                Điều khoản dịch vụ
+              </Link>
+              <Link to="/privacy" className="hover:text-[#0F5257] dark:hover:text-white transition-colors">
+                Chính sách bảo mật
+              </Link>
+              <a
+                href="https://www.facebook.com/profile.php?id=61594118917546"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#0F5257] dark:hover:text-white transition-colors"
+              >
+                Cộng đồng Facebook
+              </a>
             </div>
           </div>
         </div>

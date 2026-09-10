@@ -1,0 +1,18 @@
+# robots.txt for ChongZi Tiếng Trung (https://chongziapp.id.vn)
+User-agent: *
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Allow: /hsk-exams
+Allow: /login
+Allow: /register
+
+# Disallow private user-authenticated dashboard routes
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /admin
+Disallow: /onboarding
+Disallow: /study
+Disallow: /farm
+
+Sitemap: https://chongziapp.id.vn/sitemap.xml
