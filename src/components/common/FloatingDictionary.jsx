@@ -147,6 +147,12 @@ export default function FloatingDictionary() {
 
       const matches = await lookupMultiple('all', trimmed);
       setResults((matches || []).slice(0, 20));
+      // Count as 1 lookup when user stops typing and gets results
+      if (matches?.length > 0) {
+        import('../../utils/questTracker').then(({ trackQuestProgress }) => {
+          trackQuestProgress('DICTIONARY_LOOKUP', 1);
+        });
+      }
     }, 450);
 
     return () => clearTimeout(delayDebounce);

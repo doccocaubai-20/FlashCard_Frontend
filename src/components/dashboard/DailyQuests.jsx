@@ -82,9 +82,13 @@ export default function DailyQuests({
           } else if (q.questType === 'STUDY_CARDS') {
             localCount = studiedCards;
           }
+          // DB is source of truth. Use localCount only as a floor when DB hasn't been
+          // synced yet (progress === 0), to avoid showing stale/inflated DB values.
+          const dbProgress = q.progress || 0;
+          const mergedProgress = dbProgress > 0 ? dbProgress : localCount;
           return {
             ...q,
-            progress: Math.max(q.progress || 0, localCount),
+            progress: mergedProgress,
           };
         });
         setQuestsList(mergedQuests);
@@ -278,7 +282,9 @@ export default function DailyQuests({
             const progress = quest.id === 'quest_study' ? studiedCards : (quest.progress || 0);
             const target = quest.target || 1;
             const isCompleted = progress >= target;
-            const progressPercent = Math.min(100, Math.round((progress / target) * 100));
+            // Clamp display only — real progress kept in DB for analytics
+            const displayProgress = Math.min(progress, target);
+            const progressPercent = Math.min(100, Math.round((displayProgress / target) * 100));
 
             return (
               <div
@@ -318,7 +324,7 @@ export default function DailyQuests({
                         />
                       </div>
                       <span className="text-[10px] font-semibold text-mute dark:text-ash">
-                        {progress}/{target}
+                        {displayProgress}/{target}
                       </span>
                     </div>
                   </div>

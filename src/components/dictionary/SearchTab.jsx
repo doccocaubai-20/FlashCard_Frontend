@@ -182,6 +182,12 @@ export default function SearchTab({
     }
     setQuery(inputValue);
     handleSearch(inputValue);
+    // Track quest only on deliberate searches (Enter / button click), not on debounced typing
+    if (inputValue.trim()) {
+      import('../../utils/questTracker').then(({ trackQuestProgress }) => {
+        trackQuestProgress('DICTIONARY_LOOKUP', 1);
+      });
+    }
   };
 
   const handleClearQuery = () => {
