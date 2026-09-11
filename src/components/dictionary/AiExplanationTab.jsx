@@ -13,6 +13,7 @@ import {
   Compass
 } from 'lucide-react';
 import { dictionaryHistoryApi } from '../../services/dictionaryHistoryApi';
+import { hanziMnemonicApi } from '../../services/hanziMnemonicApi';
 import { speakChinese } from '../../utils/tts';
 import { useToast } from '../../context/ToastContext';
 
@@ -256,56 +257,105 @@ export default function AiExplanationTab({
           }
         }
 
+        let mnemonicData = null;
+        try {
+          const mRes = await hanziMnemonicApi.getByChar(char);
+          if (mRes?.data) {
+            mnemonicData = mRes.data;
+          }
+        } catch {
+          mnemonicData = null;
+        }
+
         const radicals = detectRadicals(char);
         parts.push({
           char,
-          p: charData?.p || '',
-          sv: charData?.sv || '',
-          vi: charData?.vi || 'Từ tố chữ Hán',
-          b: charData?.b || '',
+          p: charData?.p || mnemonicData?.pinyin || '',
+          sv: charData?.sv || mnemonicData?.sinoVietnamese || '',
+          vi: charData?.vi || mnemonicData?.meaning || 'Từ tố chữ Hán',
+          b: charData?.b || mnemonicData?.strokeCount || '',
           radicals,
+          mnemonicData,
         });
       }
+
+      // First character mnemonic data if single char
+      const singleMnemonic = chars.length === 1 ? parts[0]?.mnemonicData : null;
 
       // Format rich offline HTML/JSX
       const htmlOutput = `
 <div class="space-y-4 text-xs sm:text-sm text-body dark:text-on-dark-mute">
   <div class="bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-xl p-4">
-    <div class="flex items-center gap-2 font-bold text-primary dark:text-link text-sm mb-1">
-      <span>📚 Phân tích Từ nguyên &amp; Cấu tạo chữ: "${target.s}"</span>
-      <span class="text-[10px] bg-primary/15 text-primary px-2 py-0.5 rounded-full uppercase font-mono">
-        ${target.s.length === 1 ? 'Chữ đơn' : 'Từ ghép'}
-      </span>
+    <div class="flex items-center justify-between gap-2 mb-1">
+      <div class="flex items-center gap-2 font-bold text-primary dark:text-link text-sm">
+        <span>📚 Phân tích Từ nguyên &amp; Cấu tạo chữ: "${target.s}"</span>
+        <span class="text-[10px] bg-primary/15 text-primary px-2 py-0.5 rounded-full uppercase font-mono">
+          ${target.s.length === 1 ? 'Chữ đơn' : 'Từ ghép'}
+        </span>
+      </div>
+      ${singleMnemonic ? `<a href="/mnemonics?search=${encodeURIComponent(target.s)}" class="text-[11px] font-semibold text-primary hover:underline flex items-center gap-1">Kho Chiết tự &rarr;</a>` : ''}
     </div>
     <p class="text-ink dark:text-on-dark font-medium leading-relaxed">
       ${
         showcaseMatch
           ? showcaseMatch.lucThuDesc
+          : singleMnemonic
+          ? `Chữ <strong>"${target.s}"</strong> (${singleMnemonic.sinoVietnamese.toUpperCase()}) - ${singleMnemonic.meaning}. Loại cấu tạo: <em>${singleMnemonic.etymologyType}</em>.`
           : target.s.length === 1
           ? `Chữ <strong>"${target.s}"</strong> (${target.sv ? target.sv.toUpperCase() : ''}) là chữ đơn trong chữ Hán, thể hiện khái niệm: <em>"${target.vi || ''}"</em>.`
           : `Từ ghép <strong>"${target.s}"</strong> được cấu thành từ ${chars.length} chữ đơn, mỗi từ tố mang một hàm ý riêng biệt kết hợp thành nghĩa khái niệm tổng hợp.`
       }
     </p>
+    ${
+      singleMnemonic?.mnemonicStory
+        ? `<div class="mt-3 bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 rounded-lg p-2.5 text-xs text-amber-950 dark:text-amber-200 leading-relaxed">
+            <span class="font-bold text-amber-700 dark:text-amber-300">💡 Câu chuyện ghi nhớ (Mnemonic):</span> ${singleMnemonic.mnemonicStory}
+           </div>`
+        : ''
+    }
   </div>
 
   <div class="space-y-3">
     <h5 class="text-xs font-bold text-ink dark:text-on-dark uppercase tracking-wider">
-      1. Phân rã từng từ tố &amp; Bộ thủ cấu thành:
+      1. Phân rã từng từ tố, chiết tự &amp; Bộ thủ cấu thành:
     </h5>
     ${parts
       .map(
         (p) => `
-      <div class="bg-surface-card dark:bg-black/20 border border-hairline dark:border-divider-dark rounded-xl p-3.5 space-y-1.5 shadow-2xs">
-        <div class="flex items-center gap-2">
-          <span class="text-xl font-display font-extrabold text-primary">${p.char}</span>
-          <span class="font-mono text-xs font-bold text-ink dark:text-on-dark">
-            ${p.p ? `[${p.p}]` : ''} ${p.sv ? `(${p.sv.toUpperCase()})` : ''}
-          </span>
-          ${p.b ? `<span class="text-[10px] text-mute font-mono">(${p.b} nét)</span>` : ''}
+      <div class="bg-surface-card dark:bg-black/20 border border-hairline dark:border-divider-dark rounded-xl p-3.5 space-y-2 shadow-2xs">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl font-display font-extrabold text-primary">${p.char}</span>
+            <span class="font-mono text-xs font-bold text-ink dark:text-on-dark">
+              ${p.p ? `[${p.p}]` : ''} ${p.sv ? `(${p.sv.toUpperCase()})` : ''}
+            </span>
+            ${p.b ? `<span class="text-[10px] text-mute font-mono">(${p.b} nét)</span>` : ''}
+          </div>
+          ${p.mnemonicData ? `<a href="/mnemonics?search=${encodeURIComponent(p.char)}" class="text-[10px] font-mono font-bold text-primary bg-primary/10 px-2 py-0.5 rounded hover:bg-primary/20">Chiết tự</a>` : ''}
         </div>
         <p class="text-xs text-body dark:text-on-dark-mute font-medium leading-relaxed">
           Nghĩa từ điển: ${p.vi}
         </p>
+        ${
+          p.mnemonicData?.components?.length > 0
+            ? `<div class="text-xs flex flex-wrap items-center gap-1.5 bg-surface-bone/80 dark:bg-surface-dark/50 p-2 rounded-lg border border-hairline dark:border-divider-dark">
+                <span class="font-bold text-primary text-[11px]">Cấu thành:</span>
+                ${p.mnemonicData.components
+                  .map(
+                    (c) =>
+                      `<span class="bg-primary/10 text-primary px-1.5 py-0.5 rounded font-mono font-bold text-xs">${c.char} <span class="font-normal text-[11px] opacity-80">(${c.meaning})</span></span>`
+                  )
+                  .join(' + ')}
+              </div>`
+            : ''
+        }
+        ${
+          p.mnemonicData?.mnemonicStory && chars.length > 1
+            ? `<div class="text-xs bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/25 rounded-lg p-2 text-amber-900 dark:text-amber-200 italic">
+                <span class="font-bold not-italic text-amber-700 dark:text-amber-300">Mẹo nhớ:</span> ${p.mnemonicData.mnemonicStory}
+              </div>`
+            : ''
+        }
         ${
           p.radicals.length > 0
             ? `<div class="text-[11px] text-mute border-t border-hairline dark:border-divider-dark pt-1.5 flex flex-wrap gap-1.5 items-center">

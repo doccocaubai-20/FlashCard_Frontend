@@ -42,6 +42,7 @@ const ReferenceHubScreen = React.lazy(() => import('./pages/ReferenceHubScreen')
 const StudyHubScreen = React.lazy(() => import('./pages/StudyHubScreen'));
 const ReadingPassagesScreen = React.lazy(() => import('./pages/ReadingPassagesScreen'));
 const ChengyuScreen = React.lazy(() => import('./pages/ChengyuScreen'));
+const HanziMnemonicScreen = React.lazy(() => import('./pages/HanziMnemonicScreen'));
 
 // Heavy data & media features
 const GrammarScreen = React.lazy(() => import('./pages/GrammarScreen'));
@@ -163,6 +164,7 @@ function App() {
         <Route path="/reading" element={<Suspense fallback={<LazyFallback />}><ReadingPassagesScreen /></Suspense>} />
         <Route path="/reading/:id" element={<Suspense fallback={<LazyFallback />}><ReadingPassagesScreen /></Suspense>} />
         <Route path="/chengyu" element={<Suspense fallback={<LazyFallback />}><ChengyuScreen /></Suspense>} />
+        <Route path="/mnemonics" element={<Suspense fallback={<LazyFallback />}><HanziMnemonicScreen /></Suspense>} />
         <Route path="/settings" element={<Suspense fallback={<LazyFallback />}><SettingsScreen /></Suspense>} />
 
         {/* Lazy-loaded routes (heavy data & specialized tools) */}

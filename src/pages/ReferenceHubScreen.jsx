@@ -7,7 +7,8 @@ import {
   Grid, 
   ArrowRight,
   Sparkles,
-  Scroll
+  Scroll,
+  Lightbulb
 } from 'lucide-react';
 
 export default function ReferenceHubScreen() {
@@ -21,6 +22,14 @@ export default function ReferenceHubScreen() {
       path: '/chengyu',
       color: 'from-amber-500/10 to-orange-500/10 border-amber-500/30 text-amber-500',
       badge: 'Văn hóa & Điển tích'
+    },
+    {
+      title: 'Kho Chiết Tự Chữ Hán (Mnemonic)',
+      description: 'Khám phá bí mật tạo chữ qua phương pháp chiết tự, mổ xẻ các bộ phận cấu thành và câu chuyện ghi nhớ trực quan cho toàn bộ chữ Hán HSK 1-6.',
+      icon: Lightbulb,
+      path: '/mnemonics',
+      color: 'from-yellow-500/10 to-amber-500/10 border-yellow-500/30 text-yellow-600 dark:text-yellow-400',
+      badge: 'Phương pháp ghi nhớ'
     },
     {
       title: 'Tra từ điển Hán - Việt',

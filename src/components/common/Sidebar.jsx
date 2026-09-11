@@ -25,6 +25,7 @@ import {
   Sprout,
   BookOpenCheck,
   Scroll,
+  Lightbulb,
 } from 'lucide-react';
 
 export default function Sidebar({ onClose }) {
@@ -69,6 +70,7 @@ export default function Sidebar({ onClose }) {
       title: t('nav.search_tools'),
       items: [
         { to: '/chengyu', label: t('nav.chengyu', 'Điển tích Thành ngữ'), icon: Scroll },
+        { to: '/mnemonics', label: t('nav.mnemonics', 'Chiết tự chữ Hán'), icon: Lightbulb },
         { to: '/reference-hub', label: t('nav.reference_hub'), icon: Library },
         { to: '/english-hub', label: 'Góc Tiếng Anh', icon: Languages },
         { to: '/print-cards', label: 'In thẻ Flashcard', icon: Printer },
