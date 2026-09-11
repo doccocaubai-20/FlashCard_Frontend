@@ -13,7 +13,8 @@ import {
   Zap,
   Sparkles,
   Award,
-  Video
+  Video,
+  BookOpenCheck,
 } from 'lucide-react';
 import { statsApi } from '../services/statsApi';
 import { getLevelData, getSavedScholarPath } from '../utils/levelSystem';
@@ -53,6 +54,14 @@ export default function StudyHubScreen() {
       path: '/study',
       color: 'from-blue-500/10 to-indigo-500/10 border-blue-500/30 text-blue-500',
       badge: 'Cơ bản & Từ vựng'
+    },
+    {
+      title: 'Kho Luyện Đọc Hiểu HSK',
+      description: 'Kho bài đọc phong phú HSK 1-6 có Pinyin, bản dịch song ngữ, nghe phát âm và trắc nghiệm đọc hiểu giải thích chi tiết.',
+      icon: BookOpenCheck,
+      path: '/reading',
+      color: 'from-amber-500/10 to-orange-500/10 border-amber-500/30 text-amber-500',
+      badge: '170+ Bài đọc HSK'
     },
     {
       title: 'Học qua Video YouTube',

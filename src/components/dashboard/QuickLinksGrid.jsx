@@ -12,6 +12,7 @@ import {
   BookMarked,
   Sparkles,
   Sprout,
+  BookOpenCheck,
 } from 'lucide-react';
 
 export default function QuickLinksGrid({ onNavigate }) {
@@ -49,6 +50,18 @@ export default function QuickLinksGrid({ onNavigate }) {
       gradient: 'from-emerald-500/15 via-teal-500/5 to-transparent',
       borderHover: 'hover:border-emerald-500/50 hover:shadow-emerald-500/10',
       iconBg: 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400',
+    },
+    {
+      id: 'reading',
+      title: 'Kho Luyện Đọc HSK',
+      subtitle: '170+ bài đọc song ngữ & trắc nghiệm',
+      badge: 'Mới',
+      path: '/reading',
+      icon: BookOpenCheck,
+      accent: 'amber',
+      gradient: 'from-amber-500/15 via-orange-500/5 to-transparent',
+      borderHover: 'hover:border-amber-500/50 hover:shadow-amber-500/10',
+      iconBg: 'bg-amber-500/20 text-amber-600 dark:text-amber-400',
     },
     {
       id: 'dictionary',

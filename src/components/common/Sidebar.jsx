@@ -23,6 +23,8 @@ import {
   BarChart3,
   Video,
   Sprout,
+  BookOpenCheck,
+  Scroll,
 } from 'lucide-react';
 
 export default function Sidebar({ onClose }) {
@@ -55,6 +57,7 @@ export default function Sidebar({ onClose }) {
       title: t('nav.study_practice'),
       items: [
         { to: '/study-hub', label: t('nav.study_hub'), icon: GraduationCap },
+        { to: '/reading', label: t('nav.reading', 'Luyện đọc HSK'), icon: BookOpenCheck },
         { to: '/game-arcade', label: t('nav.game_arcade'), icon: Gamepad2 },
         { to: '/hsk-exams', label: t('nav.hsk_exams'), icon: ClipboardList },
         { to: '/video', label: 'Học qua video', icon: Video },
@@ -65,6 +68,7 @@ export default function Sidebar({ onClose }) {
     {
       title: t('nav.search_tools'),
       items: [
+        { to: '/chengyu', label: t('nav.chengyu', 'Điển tích Thành ngữ'), icon: Scroll },
         { to: '/reference-hub', label: t('nav.reference_hub'), icon: Library },
         { to: '/english-hub', label: 'Góc Tiếng Anh', icon: Languages },
         { to: '/print-cards', label: 'In thẻ Flashcard', icon: Printer },

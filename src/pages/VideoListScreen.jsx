@@ -15,6 +15,7 @@ import {
 import videoLessonsData from '../data/videoLessonsData';
 import videoLessonApi from '../services/videoLessonApi';
 import ContributeVideoModal from '../components/video/ContributeVideoModal';
+import Pagination from '../components/common/Pagination';
 
 const HSK_COLORS = {
   1: { badge: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30 dark:text-emerald-400', bar: 'bg-emerald-500' },
@@ -92,6 +93,20 @@ export default function VideoListScreen() {
     });
     return counts;
   }, [videos]);
+
+  // Phân trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(12);
+
+  // Tự động quay về trang 1 khi đổi bộ lọc hoặc tìm kiếm
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedLevel, searchQuery]);
+
+  const paginatedVideos = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredVideos.slice(startIndex, startIndex + pageSize);
+  }, [filteredVideos, currentPage, pageSize]);
 
   const handleVideoCreated = (newVideo) => {
     fetchVideos();
@@ -213,8 +228,9 @@ export default function VideoListScreen() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredVideos.map((video) => {
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {paginatedVideos.map((video) => {
             const colors = HSK_COLORS[video.level] || HSK_COLORS[1];
             const minutes = Math.round(video.durationSec / 60) || 3;
 
@@ -300,6 +316,24 @@ export default function VideoListScreen() {
               </div>
             );
           })}
+          </div>
+
+          {/* Thanh phân trang */}
+          <Pagination
+            currentPage={currentPage}
+            totalItems={filteredVideos.length}
+            pageSize={pageSize}
+            pageSizeOptions={[8, 12, 16, 24]}
+            onPageChange={(page) => {
+              setCurrentPage(page);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onPageSizeChange={(newSize) => {
+              setPageSize(newSize);
+              setCurrentPage(1);
+            }}
+            itemLabel="video"
+          />
         </div>
       )}
 

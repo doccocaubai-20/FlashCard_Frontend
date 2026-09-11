@@ -65,7 +65,10 @@ export default function VideoPlayerScreen() {
           }
         }
       } catch (err) {
-        if (isMounted) setLesson(videoLessonsData[0]);
+        if (isMounted) {
+          showToast('Bài học video không tồn tại hoặc đã bị gỡ bỏ.', 'error');
+          navigate('/video', { replace: true });
+        }
       } finally {
         if (isMounted) setIsLoadingLesson(false);
       }

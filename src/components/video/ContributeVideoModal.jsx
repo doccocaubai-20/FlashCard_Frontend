@@ -298,11 +298,10 @@ export default function ContributeVideoModal({ isOpen, onClose, onCreated }) {
                 <button
                   type="button"
                   onClick={() => setInputMode('file')}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-                    inputMode === 'file'
-                      ? 'bg-white dark:bg-surface-card text-primary shadow-sm'
-                      : 'text-mute hover:text-ink dark:hover:text-on-dark'
-                  }`}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${inputMode === 'file'
+                    ? 'bg-white dark:bg-surface-card text-primary shadow-sm'
+                    : 'text-mute hover:text-ink dark:hover:text-on-dark'
+                    }`}
                 >
                   <Upload size={14} />
                   Tải tệp JSON từ máy
@@ -310,11 +309,10 @@ export default function ContributeVideoModal({ isOpen, onClose, onCreated }) {
                 <button
                   type="button"
                   onClick={() => setInputMode('paste')}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-                    inputMode === 'paste'
-                      ? 'bg-white dark:bg-surface-card text-primary shadow-sm'
-                      : 'text-mute hover:text-ink dark:hover:text-on-dark'
-                  }`}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${inputMode === 'paste'
+                    ? 'bg-white dark:bg-surface-card text-primary shadow-sm'
+                    : 'text-mute hover:text-ink dark:hover:text-on-dark'
+                    }`}
                 >
                   <FileCode size={14} />
                   Dán nội dung JSON
@@ -331,11 +329,10 @@ export default function ContributeVideoModal({ isOpen, onClose, onCreated }) {
                   onDragLeave={() => setIsDragging(false)}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`border-2 border-dashed rounded-3xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200 ${
-                    isDragging
-                      ? 'border-primary bg-primary/5 scale-[0.99]'
-                      : 'border-hairline dark:border-white/15 hover:border-primary/50 hover:bg-surface-bone/30 dark:hover:bg-white/5'
-                  }`}
+                  className={`border-2 border-dashed rounded-3xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200 ${isDragging
+                    ? 'border-primary bg-primary/5 scale-[0.99]'
+                    : 'border-hairline dark:border-white/15 hover:border-primary/50 hover:bg-surface-bone/30 dark:hover:bg-white/5'
+                    }`}
                 >
                   <input
                     ref={fileInputRef}
@@ -539,7 +536,7 @@ export default function ContributeVideoModal({ isOpen, onClose, onCreated }) {
               <button
                 type="button"
                 onClick={handleReset}
-                className="px-4 py-2 text-xs font-bold rounded-xl text-mute hover:text-ink dark:hover:text-on-dark hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+                className="px-4 py-2 text-xs font-bold bg-primary rounded-xl text-white dark:hover:text-on-dark hover:bg-primary-deep dark:hover:bg-white/5 transition-colors cursor-pointer"
               >
                 Chọn tệp khác
               </button>
@@ -561,7 +558,7 @@ export default function ContributeVideoModal({ isOpen, onClose, onCreated }) {
                     'Đang lưu...'
                   ) : (
                     <>
-                      <Sparkles size={14} />
+
                       Xác nhận & Bắt đầu học
                     </>
                   )}

@@ -6,13 +6,22 @@ import {
   Library, 
   Grid, 
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Scroll
 } from 'lucide-react';
 
 export default function ReferenceHubScreen() {
   const navigate = useNavigate();
 
   const resources = [
+    {
+      title: 'Kho Điển tích Thành ngữ (成语)',
+      description: 'Khám phá hơn 120 câu thành ngữ 4 chữ kinh điển qua các câu chuyện điển tích lịch sử Xuân Thu, Chiến Quốc, Hán Sở cuốn hút kèm bài học nhân sinh.',
+      icon: Scroll,
+      path: '/chengyu',
+      color: 'from-amber-500/10 to-orange-500/10 border-amber-500/30 text-amber-500',
+      badge: 'Văn hóa & Điển tích'
+    },
     {
       title: 'Tra từ điển Hán - Việt',
       description: 'Tra cứu đa năng chữ Hán giản thể/phồn thể, phiên âm bính âm, Hán Việt và nghĩa tiếng Việt chi tiết của hơn 20.000 từ.',
