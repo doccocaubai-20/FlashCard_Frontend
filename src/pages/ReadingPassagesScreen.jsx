@@ -406,7 +406,7 @@ export default function ReadingPassagesScreen() {
             </button>
 
             <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
-              HSK {activePassage.hskLevel || selectedLevel}
+              {activePassage.hskLevel === 7 ? 'HSK 7-9' : `HSK ${activePassage.hskLevel || selectedLevel}`}
             </span>
 
             {activePassage.totalParts > 1 && (
@@ -883,19 +883,20 @@ export default function ReadingPassagesScreen() {
             <div>
               <div className="text-xs text-mute font-medium">Tổng số bài đọc</div>
               <div className="text-lg font-black text-ink dark:text-on-dark">
-                {summary?.totalPassages || '170+'}
+                {summary?.totalPassages || '360+'}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Level Tabs (HSK 1 to HSK 6) */}
+      {/* Level Tabs (HSK 1 to HSK 7-9) */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-        {[1, 2, 3, 4, 5, 6].map((lvl) => {
+        {[1, 2, 3, 4, 5, 6, 7].map((lvl) => {
           const isSelected = selectedLevel === lvl;
           const lvlInfo = summary?.levels?.find((l) => l.level === lvl);
           const count = lvlInfo ? lvlInfo.count : 0;
+          const label = lvl === 7 ? 'HSK 7-9' : `HSK ${lvl}`;
 
           return (
             <button
@@ -911,7 +912,7 @@ export default function ReadingPassagesScreen() {
                   : 'bg-surface-card dark:bg-card-dark text-ink dark:text-on-dark border-border/80 dark:border-border-dark hover:border-primary/40'
               }`}
             >
-              <span>HSK {lvl}</span>
+              <span>{label}</span>
               {count > 0 && (
                 <span
                   className={`text-xs px-2 py-0.5 rounded-full font-extrabold ${
@@ -974,7 +975,9 @@ export default function ReadingPassagesScreen() {
       {loadingList ? (
         <div className="flex flex-col items-center justify-center min-h-[350px] gap-3">
           <div className="h-10 w-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-          <p className="text-sm font-semibold text-mute">Đang tải danh sách bài đọc HSK {selectedLevel}...</p>
+          <p className="text-sm font-semibold text-mute">
+            Đang tải danh sách bài đọc {selectedLevel === 7 ? 'HSK 7-9' : `HSK ${selectedLevel}`}...
+          </p>
         </div>
       ) : filteredPassages.length === 0 ? (
         <div className="text-center py-16 p-8 rounded-3xl bg-surface-card dark:bg-card-dark border border-border/80 dark:border-border-dark space-y-3">
