@@ -1,365 +1,442 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { chatApi } from '../services/chatApi';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-  MessageSquare,
-  Send,
-  Trash2,
-  Loader2,
+  Menu,
   Sparkles,
-  HelpCircle,
-  AlertCircle
+  Bot,
+  RefreshCw,
+  Plus,
+  Trash2,
+  AlertCircle,
+  MessageSquare,
+  BookOpen,
 } from 'lucide-react';
+import { chatApi } from '../services/chatApi';
+import { fetchAllDecks } from '../features/deck/deckSlice';
+import { useToast } from '../context/ToastContext';
+
+// Chat Components
+import ChatSessionSidebar from '../components/chat/ChatSessionSidebar';
+import ChatPersonaSelector, { PERSONAS } from '../components/chat/ChatPersonaSelector';
+import ChatMessageItem from '../components/chat/ChatMessageItem';
+import ChatInputBar from '../components/chat/ChatInputBar';
+import ChatTokenBadge from '../components/chat/ChatTokenBadge';
 
 export default function ChatbotScreen() {
+  const dispatch = useDispatch();
+  const { showToast } = useToast();
+  const decks = useSelector((state) => state.deck.decks || []);
+
+  // Sessions & Messages State
+  const [sessions, setSessions] = useState([]);
+  const [activeSessionId, setActiveSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+
+  // Active Persona & Deck Context
+  const [activePersona, setActivePersona] = useState('general');
+  const [selectedDeckId, setSelectedDeckId] = useState(null);
+
+  // Quota state
+  const [quota, setQuota] = useState(null);
+
+  // UI state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
-  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Quick suggestions list
-  const suggestions = [
-    { text: 'Giải thích cấu trúc câu chữ 把 (bǎ)?', label: 'Cấu trúc 把' },
-    { text: 'Cho tôi 5 từ vựng HSK 3 chủ đề thời tiết?', label: 'Từ vựng thời tiết' },
-    { text: 'ChongZi có những tính năng gì nổi bật?', label: 'Tính năng ChongZi' },
-    { text: 'Làm sao để ghi nhớ chữ Hán lâu hơn?', label: 'Mẹo nhớ chữ Hán' },
-  ];
-
-  // Fetch history on mount
+  // 1. Tải danh sách Bộ bài từ Redux
   useEffect(() => {
-    async function loadHistory() {
-      try {
-        const res = await chatApi.getHistory();
-        setMessages(res.data || []);
-      } catch (err) {
-        console.error('Failed to load chat history:', err);
-      } finally {
-        setIsHistoryLoading(false);
+    dispatch(fetchAllDecks());
+  }, [dispatch]);
+
+  // 2. Tải hạn mức Tokens Quota
+  const fetchQuota = async () => {
+    try {
+      const res = await chatApi.getQuota();
+      if (res?.data) {
+        setQuota(res.data);
       }
+    } catch (err) {
+      console.warn('Failed to fetch chat token quota:', err);
     }
-    loadHistory();
+  };
+
+  useEffect(() => {
+    fetchQuota();
   }, []);
 
-  // Scroll to bottom on new messages
+  // 3. Tải danh sách các phiên trò chuyện (Sessions)
+  const fetchSessions = async (autoSelectFirst = true) => {
+    try {
+      const res = await chatApi.getSessions();
+      const sessionList = res.data || [];
+      setSessions(sessionList);
+
+      if (autoSelectFirst && sessionList.length > 0) {
+        const firstSession = sessionList[0];
+        setActiveSessionId(firstSession.id);
+        setActivePersona(firstSession.persona || 'general');
+        setSelectedDeckId(firstSession.deckId || null);
+      } else if (sessionList.length === 0) {
+        // Chưa có phiên nào -> Tự động tạo phiên đầu tiên
+        handleCreateSession();
+      }
+    } catch (err) {
+      console.error('Failed to load chat sessions:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchSessions();
+  }, []);
+
+  // 4. Tải tin nhắn của phiên đang chọn
+  useEffect(() => {
+    if (!activeSessionId) {
+      setMessages([]);
+      return;
+    }
+
+    const loadMessages = async () => {
+      setIsLoadingMessages(true);
+      try {
+        const res = await chatApi.getSessionMessages(activeSessionId);
+        setMessages(res.data || []);
+      } catch (err) {
+        console.error('Failed to load session messages:', err);
+        setMessages([]);
+      } finally {
+        setIsLoadingMessages(false);
+      }
+    };
+
+    loadMessages();
+  }, [activeSessionId]);
+
+  // Cuộn xuống tin nhắn mới nhất
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
+  }, [messages, isSending]);
 
+  // 5. Chọn phiên khác
+  const handleSelectSession = (sessionId) => {
+    if (sessionId === activeSessionId) return;
+    const found = sessions.find((s) => s.id === sessionId);
+    setActiveSessionId(sessionId);
+    if (found) {
+      setActivePersona(found.persona || 'general');
+      setSelectedDeckId(found.deckId || null);
+    }
+  };
+
+  // 6. Tạo phiên trò chuyện mới
+  const handleCreateSession = async () => {
+    try {
+      const personaObj = PERSONAS.find((p) => p.id === activePersona) || PERSONAS[0];
+      const res = await chatApi.createSession({
+        title: `Học cùng ${personaObj.name}`,
+        persona: activePersona,
+        deckId: selectedDeckId,
+      });
+
+      const newSession = res.data;
+      setSessions((prev) => [newSession, ...prev]);
+      setActiveSessionId(newSession.id);
+      setMessages([]);
+      showToast('Đã tạo cuộc trò chuyện mới', 'info');
+    } catch (err) {
+      console.error('Failed to create session:', err);
+      showToast('Không thể tạo phiên mới lúc này', 'error');
+    }
+  };
+
+  // 7. Cập nhật phiên (đổi tên, ghim)
+  const handleUpdateSession = async (sessionId, data) => {
+    try {
+      const res = await chatApi.updateSession(sessionId, data);
+      setSessions((prev) =>
+        prev.map((s) => (s.id === sessionId ? { ...s, ...res.data } : s))
+      );
+    } catch (err) {
+      console.error('Failed to update session:', err);
+    }
+  };
+
+  // 8. Xóa phiên
+  const handleDeleteSession = async (sessionId) => {
+    try {
+      await chatApi.deleteSession(sessionId);
+      const remaining = sessions.filter((s) => s.id !== sessionId);
+      setSessions(remaining);
+
+      if (activeSessionId === sessionId) {
+        if (remaining.length > 0) {
+          setActiveSessionId(remaining[0].id);
+          setActivePersona(remaining[0].persona || 'general');
+        } else {
+          setActiveSessionId(null);
+          setMessages([]);
+        }
+      }
+      showToast('Đã xóa cuộc trò chuyện', 'info');
+    } catch (err) {
+      console.error('Failed to delete session:', err);
+      showToast('Không thể xóa cuộc trò chuyện', 'error');
+    }
+  };
+
+  // 9. Đổi chế độ Persona
+  const handleSelectPersona = async (personaId) => {
+    setActivePersona(personaId);
+    if (activeSessionId) {
+      await handleUpdateSession(activeSessionId, { persona: personaId });
+    }
+  };
+
+  // 10. Gửi tin nhắn
   const handleSend = async (textToSend) => {
     const text = textToSend || input;
-    if (!text || !text.trim() || isLoading) return;
+    if (!text || !text.trim() || isSending) return;
 
-    // Add user message locally
-    const userMsg = { role: 'user', content: text, createdAt: new Date() };
-    setMessages((prev) => [...prev, userMsg]);
+    // Kiểm tra quota trước khi gửi
+    if (quota && quota.remaining <= 0) {
+      showToast('Bạn đã hết hạn mức tokens hôm nay. Hãy đổi Xu để nạp thêm nhé!', 'warning');
+      return;
+    }
+
+    const trimmedText = text.trim();
     if (!textToSend) setInput('');
-    setIsLoading(true);
+
+    // Đẩy tạm tin nhắn user vào UI ngay lập tức
+    const tempUserMsg = {
+      role: 'user',
+      content: trimmedText,
+      createdAt: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, tempUserMsg]);
+    setIsSending(true);
 
     try {
-      const res = await chatApi.sendMessage(text);
-      setMessages((prev) => [...prev, res.data]);
+      const res = await chatApi.sendMessage(
+        trimmedText,
+        activeSessionId,
+        activePersona,
+        selectedDeckId
+      );
+
+      const aiReply = res.data;
+      setMessages((prev) => [...prev, aiReply]);
+
+      // Cập nhật session id nếu server tự cấp
+      if (aiReply.sessionId && aiReply.sessionId !== activeSessionId) {
+        setActiveSessionId(aiReply.sessionId);
+        fetchSessions(false);
+      } else {
+        // Cập nhật title trong sidebar nếu được tự động đổi
+        fetchSessions(false);
+      }
+
+      // Cập nhật quota mới nhất từ backend
+      if (aiReply.quota) {
+        setQuota(aiReply.quota);
+      }
     } catch (err) {
       console.error('Failed to send message:', err);
-      const errMsg = err.response?.data?.message || 'Không thể kết nối đến máy chủ AI.';
+      const errMsg =
+        err.response?.data?.message || 'Không thể kết nối đến máy chủ AI.';
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: `⚠️ **Lỗi:** ${errMsg}`, isError: true }
+        {
+          role: 'assistant',
+          content: `⚠️ **Lỗi:** ${errMsg}`,
+          isError: true,
+          createdAt: new Date().toISOString(),
+        },
       ]);
     } finally {
-      setIsLoading(false);
+      setIsSending(false);
     }
   };
 
-  const handleClearHistory = async () => {
-    try {
-      await chatApi.clearHistory();
-      setMessages([]);
-      setShowClearConfirm(false);
-    } catch (err) {
-      console.error('Failed to clear history:', err);
+  // 11. Đổi Xu lấy thêm Tokens
+  const handleRefillQuota = async () => {
+    const res = await chatApi.refillQuota();
+    if (res?.data) {
+      await fetchQuota();
     }
   };
 
-  // Keyboard shortcut listener
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
-
-  // Safe markdown-like parser for inline bold, list items, headers and inline code
-  const parseInline = (text) => {
-    if (!text) return '';
-    const parts = [];
-    let currentIdx = 0;
-    const regex = /(\*\*.*?\*\*|`.*?`)/g;
-    let match;
-
-    while ((match = regex.exec(text)) !== null) {
-      const matchText = match[0];
-      const matchIdx = match.index;
-
-      if (matchIdx > currentIdx) {
-        parts.push(text.substring(currentIdx, matchIdx));
-      }
-
-      if (matchText.startsWith('**') && matchText.endsWith('**')) {
-        parts.push(
-          <strong key={matchIdx} className="font-bold text-primary dark:text-primary-light">
-            {matchText.slice(2, -2)}
-          </strong>
-        );
-      } else if (matchText.startsWith('`') && matchText.endsWith('`')) {
-        parts.push(
-          <code key={matchIdx} className="px-1.5 py-0.5 rounded bg-surface-bone dark:bg-surface-dark font-mono text-xs text-rose-500 font-semibold border border-hairline dark:border-divider-dark">
-            {matchText.slice(1, -1)}
-          </code>
-        );
-      }
-      currentIdx = regex.lastIndex;
-    }
-
-    if (currentIdx < text.length) {
-      parts.push(text.substring(currentIdx));
-    }
-
-    return parts.length > 0 ? parts : text;
-  };
-
-  const formatMessageContent = (text) => {
-    if (!text) return '';
-    const lines = text.split('\n');
-    return lines.map((line, idx) => {
-      // List items
-      const listMatch = line.match(/^[\s]*[-*][\s]+(.*)/);
-      if (listMatch) {
-        return (
-          <li key={idx} className="ml-4 list-disc text-sm my-1.5 text-ink dark:text-on-dark pl-1">
-            {parseInline(listMatch[1])}
-          </li>
-        );
-      }
-
-      // Headers
-      const headerMatch = line.match(/^[\s]*(#{1,6})[\s]+(.*)/);
-      if (headerMatch) {
-        const level = headerMatch[1].length;
-        const headingClass = level === 1 
-          ? 'text-lg font-bold mt-3 mb-2 text-primary' 
-          : level === 2 
-          ? 'text-base font-bold mt-2.5 mb-1.5 text-primary' 
-          : 'text-sm font-bold mt-2 mb-1 text-ink dark:text-on-dark';
-        return (
-          <div key={idx} className={headingClass}>
-            {parseInline(headerMatch[2])}
-          </div>
-        );
-      }
-
-      // Default paragraph (supports empty lines as spacers)
-      if (!line.trim()) {
-        return <div key={idx} className="h-2" />;
-      }
-
-      return (
-        <p key={idx} className="text-sm my-1 leading-relaxed text-ink dark:text-on-dark">
-          {parseInline(line)}
-        </p>
-      );
-    });
-  };
+  const activePersonaObj = PERSONAS.find((p) => p.id === activePersona) || PERSONAS[0];
+  const activeSession = sessions.find((s) => s.id === activeSessionId);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-80px)] md:h-[calc(100vh-40px)] w-full max-w-6xl mx-auto px-4 py-4 select-none">
-      
-      {/* Header section */}
-      <div className="flex items-center justify-between pb-4 border-b border-hairline dark:border-divider-dark">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center shadow-sm">
-            <Sparkles size={20} />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold text-ink dark:text-on-dark tracking-tight leading-none">
-              ChongZi AI Assistant
-            </h1>
-            <span className="text-xs text-mute dark:text-on-dark-mute mt-1 block">
-              Gia sư tiếng Trung & Hướng dẫn sử dụng hệ thống
-            </span>
-          </div>
-        </div>
+    <div className="flex h-[calc(100vh-80px)] md:h-[calc(100vh-50px)] w-full max-w-7xl mx-auto rounded-3xl bg-white dark:bg-[#1a2332] border border-hairline dark:border-white/10 shadow-sm overflow-hidden select-none">
+      {/* CỘT TRÁI: Multi-Sessions Sidebar */}
+      <ChatSessionSidebar
+        sessions={sessions}
+        activeSessionId={activeSessionId}
+        onSelectSession={handleSelectSession}
+        onCreateSession={handleCreateSession}
+        onUpdateSession={handleUpdateSession}
+        onDeleteSession={handleDeleteSession}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
 
-        {/* Clear History Button */}
-        {messages.length > 0 && (
-          <button
-            onClick={() => setShowClearConfirm(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-mute hover:text-red-500 hover:bg-red-50/50 dark:hover:bg-red-950/20 transition-all border border-hairline dark:border-divider-dark cursor-pointer"
-            title="Xóa cuộc trò chuyện"
-          >
-            <Trash2 size={13} />
-            <span>Xóa chat</span>
-          </button>
-        )}
-      </div>
+      {/* CỘT PHẢI: Main Chat Workspace */}
+      <div className="flex-1 flex flex-col min-w-0 bg-white/60 dark:bg-[#1a2332]/60">
+        
+        {/* Top Header: Session title, Persona info, Token Badge & Controls */}
+        <header className="flex items-center justify-between gap-3 px-4 py-3 border-b border-hairline dark:border-white/10 bg-white dark:bg-[#1a2332]">
+          <div className="flex items-center gap-2.5 min-w-0">
+            {/* Mobile Hamburger toggle for session sidebar */}
+            <button
+              type="button"
+              onClick={() => setIsSidebarOpen(true)}
+              className="p-1.5 rounded-xl text-mute hover:text-ink dark:hover:text-on-dark hover:bg-black/5 dark:hover:bg-white/5 md:hidden cursor-pointer"
+              title="Mở danh sách cuộc trò chuyện"
+            >
+              <Menu size={20} />
+            </button>
 
-      {/* Confirmation Modal */}
-      {showClearConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark p-6 rounded-2xl max-w-sm w-full shadow-lg">
-            <div className="flex items-center gap-3 text-red-500 mb-3">
-              <AlertCircle size={24} />
-              <h3 className="font-bold text-ink dark:text-on-dark text-base">Xóa lịch sử trò chuyện?</h3>
-            </div>
-            <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed mb-5">
-              Hành động này sẽ xóa toàn bộ nội dung trò chuyện hiện tại và không thể khôi phục lại. Bạn có chắc chắn không?
-            </p>
-            <div className="flex justify-end gap-2.5">
-              <button
-                onClick={() => setShowClearConfirm(false)}
-                className="px-4 py-2 rounded-full text-xs font-semibold bg-surface-bone dark:bg-black/25 text-ink dark:text-on-dark hover:bg-hairline dark:hover:bg-black/40 cursor-pointer"
-              >
-                Hủy bỏ
-              </button>
-              <button
-                onClick={handleClearHistory}
-                className="px-4 py-2 rounded-full text-xs font-semibold bg-red-500 hover:bg-red-600 text-white cursor-pointer"
-              >
-                Xác nhận xóa
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            {/* Persona Avatar & Title */}
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="h-9 w-9 rounded-xl bg-primary/10 text-primary border border-primary/20 flex items-center justify-center shrink-0 shadow-2xs">
+                <Bot size={18} />
+              </div>
 
-      {/* Main chat messages list */}
-      <div className="flex-1 overflow-y-auto py-4 space-y-4 px-1 custom-scrollbar">
-        {isHistoryLoading ? (
-          <div className="flex flex-col items-center justify-center h-full gap-2">
-            <Loader2 className="animate-spin text-primary" size={24} />
-            <span className="text-xs text-mute dark:text-on-dark-mute">Đang tải cuộc trò chuyện...</span>
-          </div>
-        ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full max-w-md mx-auto text-center space-y-5">
-            <div className="h-16 w-16 rounded-full bg-primary/5 flex items-center justify-center text-primary">
-              <MessageSquare size={32} />
-            </div>
-            <div>
-              <h2 className="text-base font-bold text-ink dark:text-on-dark">Bắt đầu cuộc trò chuyện!</h2>
-              <p className="text-xs text-body dark:text-on-dark-mute leading-relaxed mt-2">
-                Hãy đặt câu hỏi về ngữ pháp tiếng Trung, nhờ AI soạn đoạn hội thoại mẫu hoặc hỏi về cách sử dụng các tính năng của ChongZi.
-              </p>
-            </div>
-
-            {/* Suggestions list */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 w-full pt-2">
-              {suggestions.map((sug, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSend(sug.text)}
-                  className="flex items-start gap-2.5 p-3 text-left rounded-xl bg-white dark:bg-black/10 border border-hairline dark:border-divider-dark hover:border-primary/50 dark:hover:border-primary/50 hover:bg-primary/5 transition-all text-xs text-body dark:text-on-dark cursor-pointer shadow-xs"
-                >
-                  <HelpCircle size={14} className="text-primary mt-0.5 shrink-0" />
-                  <span>{sug.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-4 max-w-4xl mx-auto">
-            {messages.map((msg, i) => {
-              const isUser = msg.role === 'user';
-              return (
-                <div key={i} className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-                  <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-3 shadow-xs border ${
-                      isUser
-                        ? 'bg-surface-dark dark:bg-black/35 text-white border-transparent rounded-tr-xs'
-                        : msg.isError
-                        ? 'bg-red-50 dark:bg-red-950/20 text-red-500 border-red-200 dark:border-red-900/40 rounded-tl-xs'
-                        : 'bg-white dark:bg-black/15 text-ink dark:text-on-dark border-hairline dark:border-divider-dark rounded-tl-xs'
-                    }`}
-                  >
-                    {!isUser && (
-                      <div className="flex items-center gap-1.5 mb-1 border-b border-hairline/10 dark:border-divider-dark/5 pb-1">
-                        <Sparkles size={11} className="text-primary" />
-                        <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-primary">
-                          ChongZi AI
-                        </span>
-                      </div>
-                    )}
-                    <div className="space-y-1">
-                      {isUser ? (
-                        <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
-                      ) : (
-                        formatMessageContent(msg.content)
-                      )}
-                    </div>
-                    <span
-                      className={`text-[9px] block text-right mt-1.5 ${
-                        isUser ? 'text-white/60' : 'text-mute/60 dark:text-on-dark-mute/40'
-                      }`}
-                    >
-                      {new Date(msg.createdAt).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </span>
-                  </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <h1 className="font-bold text-xs sm:text-sm text-ink dark:text-on-dark truncate leading-tight">
+                    {activeSession?.title || 'ChongZi AI Assistant'}
+                  </h1>
                 </div>
-              );
-            })}
-
-            {/* Pulsing dots loading indicator */}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-white dark:bg-black/15 border border-hairline dark:border-divider-dark rounded-2xl rounded-tl-xs px-4 py-3 shadow-xs">
-                  <div className="flex items-center gap-1.5 mb-1.5 pb-1 border-b border-hairline/10 dark:border-divider-dark/5">
-                    <Sparkles size={11} className="text-primary animate-pulse" />
-                    <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-primary">
-                      ChongZi AI đang trả lời...
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1 py-1 px-2">
-                    <div className="h-1.5 w-1.5 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                    <div className="h-1.5 w-1.5 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                    <div className="h-1.5 w-1.5 bg-primary rounded-full animate-bounce"></div>
-                  </div>
+                <div className="flex items-center gap-1 text-[10px] text-mute mt-0.5 truncate">
+                  <span className="font-semibold text-primary">{activePersonaObj.name}</span>
+                  <span>•</span>
+                  <span className="truncate">{activePersonaObj.role}</span>
                 </div>
               </div>
-            )}
-            <div ref={messagesEndRef} />
+            </div>
           </div>
-        )}
-      </div>
 
-      {/* Input text bar & send button */}
-      <div className="pt-3 border-t border-hairline dark:border-divider-dark max-w-4xl w-full mx-auto">
-        <div className="relative flex items-center bg-white dark:bg-black/10 border border-hairline dark:border-divider-dark rounded-2xl focus-within:border-primary/50 dark:focus-within:border-primary/50 transition-all p-1.5">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Đặt câu hỏi của bạn tại đây... (Nhấn Enter để gửi)"
-            className="flex-1 bg-transparent border-0 outline-hidden py-2 px-3 text-sm text-ink dark:text-on-dark resize-none max-h-24 min-h-[40px] focus:ring-0"
-            rows={1}
-            disabled={isLoading || isHistoryLoading}
+          {/* Right Header Actions: Token Badge & New Chat */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Token Quota Badge */}
+            <ChatTokenBadge quota={quota} onRefillSuccess={handleRefillQuota} />
+
+            <button
+              type="button"
+              onClick={handleCreateSession}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-surface-bone dark:bg-white/5 text-ink dark:text-on-dark hover:bg-primary/10 hover:text-primary transition-all border border-hairline dark:border-white/10 cursor-pointer"
+              title="Bắt đầu cuộc trò chuyện mới"
+            >
+              <Plus size={14} />
+              <span>Đoạn chat mới</span>
+            </button>
+          </div>
+        </header>
+
+        {/* Persona Selector Bar (5 chế độ gia sư) */}
+        <div className="px-4 py-2 bg-surface-bone/40 dark:bg-white/2 border-b border-hairline/60 dark:border-white/5">
+          <ChatPersonaSelector
+            activePersona={activePersona}
+            onSelectPersona={handleSelectPersona}
           />
-          <button
-            onClick={() => handleSend()}
-            disabled={!input.trim() || isLoading || isHistoryLoading}
-            className={`flex items-center justify-center h-10 w-10 rounded-xl transition-all cursor-pointer ${
-              input.trim() && !isLoading && !isHistoryLoading
-                ? 'bg-primary text-white hover:bg-primary-deep shadow-xs'
-                : 'bg-surface-bone dark:bg-black/15 text-mute/50 cursor-not-allowed border border-hairline/50'
-            }`}
-          >
-            {isLoading ? <Loader2 className="animate-spin" size={16} /> : <Send size={16} />}
-          </button>
         </div>
-        <p className="text-[10px] text-mute/80 dark:text-on-dark-mute/60 text-center mt-2">
-          Hệ thống được vận hành bởi trí tuệ nhân tạo DeepSeek. Các câu trả lời có tính chất hỗ trợ học tập.
-        </p>
+
+        {/* Messages Stream Area */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar">
+          {isLoadingMessages ? (
+            <div className="flex flex-col items-center justify-center h-full gap-3 text-mute">
+              <div className="h-8 w-8 border-3 border-primary/30 border-t-primary rounded-full animate-spin" />
+              <span className="text-xs font-semibold">Đang tải cuộc trò chuyện...</span>
+            </div>
+          ) : messages.length === 0 ? (
+            /* Welcome / Empty State */
+            <div className="flex flex-col items-center justify-center h-full max-w-lg mx-auto text-center space-y-4 py-6">
+              <div className="h-16 w-16 rounded-2xl bg-primary/10 text-primary border border-primary/20 flex items-center justify-center shadow-xs">
+                <Sparkles size={32} />
+              </div>
+
+              <div>
+                <h2 className="text-lg font-bold text-ink dark:text-on-dark">
+                  Xin chào! Tôi là {activePersonaObj.name}
+                </h2>
+                <p className="text-xs text-mute mt-1.5 leading-relaxed">
+                  {activePersonaObj.desc}. Hãy đặt câu hỏi hoặc chọn một gợi ý bên dưới để bắt đầu bài học nhé!
+                </p>
+              </div>
+
+              {/* Persona highlights */}
+              <div className="p-3.5 rounded-2xl bg-surface-bone dark:bg-white/5 border border-hairline dark:border-white/10 text-left w-full space-y-1.5 text-xs">
+                <div className="font-bold text-primary flex items-center gap-1.5">
+                  <Sparkles size={13} />
+                  <span>Tính năng hỗ trợ học tập:</span>
+                </div>
+                <ul className="space-y-1 text-ink/80 dark:text-on-dark/80 text-[11px] list-disc list-inside">
+                  <li>Rê chuột vào bất kỳ chữ Hán nào để tra Pinyin, nghĩa và xem thứ tự nét vẽ.</li>
+                  <li>Bấm nút loa bên cạnh câu trả lời để nghe phát âm giọng chuẩn Microsoft Edge.</li>
+                  <li>Nhập liệu bằng giọng nói tiếng Trung qua biểu tượng Micro ở góc dưới.</li>
+                  <li>Gắn bộ thẻ từ vựng bạn đang học để AI ưu tiên dạy các từ vựng đó.</li>
+                </ul>
+              </div>
+            </div>
+          ) : (
+            /* Message List */
+            <div className="space-y-4 max-w-4xl mx-auto">
+              {messages.map((msg, idx) => (
+                <ChatMessageItem
+                  key={msg.id || idx}
+                  message={msg}
+                  persona={activePersona}
+                />
+              ))}
+
+              {/* Sending / Loading Indicator */}
+              {isSending && (
+                <div className="flex gap-3 justify-start animate-fade-in">
+                  <div className="h-8 w-8 rounded-xl bg-primary/10 text-primary border border-primary/20 flex items-center justify-center shrink-0 shadow-2xs mt-1">
+                    <Bot size={16} />
+                  </div>
+                  <div className="rounded-2xl rounded-tl-xs p-4 bg-white dark:bg-[#1a2332] border border-hairline dark:border-white/10 shadow-xs space-y-2">
+                    <div className="flex items-center gap-1.5 text-xs text-primary font-bold">
+                      <Sparkles size={13} className="animate-pulse" />
+                      <span>{activePersonaObj.name} đang suy nghĩ...</span>
+                    </div>
+                    <div className="flex items-center gap-1 py-1">
+                      <div className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                      <div className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                      <div className="h-2 w-2 bg-primary rounded-full animate-bounce"></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
+            </div>
+          )}
+        </div>
+
+        {/* Bottom Input Deck Bar */}
+        <div className="px-4 pb-3 sm:px-5">
+          <div className="max-w-4xl mx-auto">
+            <ChatInputBar
+              input={input}
+              setInput={setInput}
+              onSend={handleSend}
+              isLoading={isSending}
+              selectedDeckId={selectedDeckId}
+              onSelectDeck={setSelectedDeckId}
+              decks={decks}
+              quota={quota}
+              activePersona={activePersona}
+            />
+          </div>
+        </div>
+
       </div>
     </div>
   );

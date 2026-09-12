@@ -56,6 +56,14 @@ export default function StudyHubScreen() {
       badge: 'Cơ bản & Từ vựng'
     },
     {
+      title: 'Gia sư AI Luyện nói 1-1',
+      description: 'Luyện nói phản xạ âm thanh 1-1, chỉnh sửa thanh điệu Pinyin và nâng cấp khẩu ngữ tự nhiên cùng Gemini Live Voice.',
+      icon: Mic,
+      path: '/speaking-tutor',
+      color: 'from-teal-500/10 to-emerald-500/10 border-teal-500/30 text-teal-500',
+      badge: 'Gemini Live Voice'
+    },
+    {
       title: 'Kho Luyện Đọc Hiểu HSK',
       description: 'Kho bài đọc phong phú HSK 1-6 có Pinyin, bản dịch song ngữ, nghe phát âm và trắc nghiệm đọc hiểu giải thích chi tiết.',
       icon: BookOpenCheck,

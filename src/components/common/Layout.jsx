@@ -20,79 +20,80 @@ export default function Layout() {
   return (
     <div className={`app-layout ${viewMode === 'gamified' ? 'gamified-active' : ''}`}>
 
-      {/* Mobile Top Header Bar */}
-      <header className="mobile-header flex items-center justify-between">
-        {/* Left: Logo + Title */}
-        <div className="flex items-center gap-2">
-          <img src="/ap2.png" alt="ChongZi Logo" className="w-8 h-8 object-cover rounded-full shrink-0" />
-          <span className="font-display font-extrabold text-base text-ink dark:text-on-dark tracking-tight">
-            ChongZi
-          </span>
-        </div>
+        {/* Mobile Top Header Bar */}
+        <header className="mobile-header flex items-center justify-between">
+          {/* Left: Logo + Title */}
+          <div className="flex items-center gap-2">
+            <img src="/ap2.png" alt="ChongZi Logo" className="w-8 h-8 object-cover rounded-full shrink-0" />
+            <span className="font-display font-extrabold text-base text-ink dark:text-on-dark tracking-tight">
+              ChongZi
+            </span>
+          </div>
 
-        {/* Right: Actions */}
-        <div className="flex items-center gap-1.5">
-          {/* Dictionary search */}
-          <button
-            onClick={() => {
-              window.dispatchEvent(new CustomEvent('chongzi-open-dictionary'));
-            }}
-            className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-ink dark:text-on-dark cursor-pointer transition-colors"
-            aria-label="Tra từ điển"
-          >
-            <Search size={20} />
-          </button>
+          {/* Right: Actions */}
+          <div className="flex items-center gap-1.5">
+            {/* Dictionary search */}
+            <button
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent('chongzi-open-dictionary'));
+              }}
+              className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-ink dark:text-on-dark cursor-pointer transition-colors"
+              aria-label="Tra từ điển"
+            >
+              <Search size={20} />
+            </button>
 
-          {/* Theme mode toggle */}
-          <button
-            onClick={() => {
-              if (viewMode === 'gamified') {
-                setViewMode('classic');
-              }
-              setClassicTheme(classicTheme === 'dark' ? 'light' : 'dark');
-            }}
-            className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-ink dark:text-on-dark cursor-pointer transition-colors"
-            aria-label="Đổi giao diện"
-          >
-            {viewMode === 'gamified' || classicTheme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
+            {/* Theme mode toggle */}
+            <button
+              onClick={() => {
+                if (viewMode === 'gamified') {
+                  setViewMode('classic');
+                }
+                setClassicTheme(classicTheme === 'dark' ? 'light' : 'dark');
+              }}
+              className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-ink dark:text-on-dark cursor-pointer transition-colors"
+              aria-label="Đổi giao diện"
+            >
+              {viewMode === 'gamified' || classicTheme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
 
-          {/* Hamburger menu */}
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-ink dark:text-on-dark cursor-pointer transition-colors"
-            aria-label="Mở Menu"
-          >
-            <Menu size={20} />
-          </button>
-        </div>
-      </header>
+            {/* Hamburger menu */}
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-ink dark:text-on-dark cursor-pointer transition-colors"
+              aria-label="Mở Menu"
+            >
+              <Menu size={20} />
+            </button>
+          </div>
+        </header>
 
-      {/* Backdrop for mobile drawer */}
-      {isSidebarOpen && (
-        <div
-          className="sidebar-backdrop"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
+        {/* Backdrop for mobile drawer */}
+        {isSidebarOpen && (
+          <div
+            className="sidebar-backdrop"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
 
-      {/* Sidebar Drawer */}
-      <aside className={`app-sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-        <Sidebar onClose={() => setIsSidebarOpen(false)} />
-      </aside>
+        {/* Sidebar Drawer */}
+        <aside className={`app-sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+          <Sidebar onClose={() => setIsSidebarOpen(false)} />
+        </aside>
 
-      {/* Main Scrollable Content Area */}
-      <main className="app-content">
-        <div className="p-4 md:p-8 pt-20 md:pt-8 pb-24 md:pb-8">
-          <Outlet />
-        </div>
-      </main>
+        {/* Main Scrollable Content Area */}
+        <main className="app-content">
+          <div className="p-4 md:p-8 pt-20 md:pt-8 pb-24 md:pb-8">
+            <Outlet />
+          </div>
+        </main>
 
-      {/* Mobile Bottom Navigation Bar */}
-      <BottomTabBar onOpenMore={() => setIsSidebarOpen(true)} />
+        {/* Mobile Bottom Navigation Bar */}
+        <BottomTabBar onOpenMore={() => setIsSidebarOpen(true)} />
 
-      {/* Globally Floating Dictionary Bubble */}
-      <FloatingDictionary />
-    </div>
+        {/* Globally Floating Dictionary Bubble */}
+        <FloatingDictionary />
+
+      </div>
   );
 }

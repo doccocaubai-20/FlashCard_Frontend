@@ -29,10 +29,12 @@
 
   /* Backgrounds — giấy cổ nhẹ nhàng */
   --color-canvas: #f8f9fa;
+  --color-surface: #ffffff;
   --color-surface-bone: #f1f3f5;
   --color-surface-card: #ffffff;
   --color-surface-dark: #1a2332;
   --color-surface-deep: #0f1923;
+  --color-card-dark: #1a2332;
 
   /* Borders */
   --color-hairline: rgba(26, 35, 50, 0.09);
@@ -96,9 +98,11 @@
   --color-stone: rgba(240, 244, 248, 0.24);
 
   --color-canvas: #111827;
+  --color-surface: #1a2332;
   --color-surface-bone: #0d1420;
   --color-surface-card: #1a2332;
   --color-surface-dark: #111827;
+  --color-card-dark: #1a2332;
 
   --color-hairline: rgba(240, 244, 248, 0.1);
   --color-hairline-strong: #f0f4f8;

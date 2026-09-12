@@ -43,6 +43,12 @@ export const hskExamApi = {
   // 6. Get user's exam results history
   getResults: () => api.get('/api/hsk-exams/results'),
 
+  // 7. Get specific exam result by ID
+  getResultById: async (id) => {
+    const res = await api.get(`/api/hsk-exams/results/${id}`);
+    return res.data;
+  },
+
   // Backward compatibility
   getExams: () => api.get('/api/hsk-exams'),
 };

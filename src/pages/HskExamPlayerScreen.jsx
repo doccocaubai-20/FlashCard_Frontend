@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Clock, 
-  CheckCircle2, 
-  XCircle, 
-  Volume2, 
-  Play, 
-  Pause, 
-  Bookmark, 
-  FileText, 
-  Maximize2, 
-  Minimize2, 
-  RotateCcw, 
-  ListOrdered, 
-  ChevronRight, 
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import {
+  ArrowLeft,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  Volume2,
+  Play,
+  Pause,
+  Bookmark,
+  FileText,
+  Maximize2,
+  Minimize2,
+  RotateCcw,
+  ListOrdered,
+  ChevronRight,
   AlertCircle,
   HelpCircle,
   VolumeX,
@@ -28,16 +28,20 @@ import { speakChinese, stopSpeech } from '../utils/tts';
 export default function HskExamPlayerScreen() {
   const { id: testId } = useParams();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const { showToast } = useToast();
 
-  // Custom duration from query params (defaults to 35 min)
+  // Query params
   const durationParam = parseInt(searchParams.get('duration'), 10);
+  const resultIdParam = searchParams.get('resultId');
+  const reviewParam = searchParams.get('mode') === 'review' || searchParams.get('review') === 'true';
 
   // Core Exam State
   const [exam, setExam] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [loadedResultDate, setLoadedResultDate] = useState(null);
 
   // User Interaction State
   const [userAnswers, setUserAnswers] = useState({});
@@ -92,7 +96,48 @@ export default function HskExamPlayerScreen() {
         const totalSecs = targetMinutes * 60;
         setTotalSeconds(totalSecs);
 
-        // Restore saved progress if available
+        // CASE 1: Viewing a completed exam attempt from history
+        if (resultIdParam) {
+          let pastResult = location.state?.result;
+          if (!pastResult || String(pastResult.id) !== String(resultIdParam)) {
+            try {
+              pastResult = await hskExamApi.getResultById(resultIdParam);
+            } catch (rErr) {
+              console.warn('Could not fetch past result by ID:', rErr);
+            }
+          }
+
+          if (pastResult) {
+            const pastAnswers = pastResult.userAnswers || {};
+            setUserAnswers(pastAnswers);
+            if (pastResult.completedAt) {
+              setLoadedResultDate(pastResult.completedAt);
+            }
+            if (pastResult.duration) {
+              setElapsedTime(pastResult.duration);
+            }
+
+            try {
+              const grade = await hskExamApi.gradeExam(testId, pastAnswers);
+              setGradeResult(grade);
+            } catch (gradeErr) {
+              console.warn('Failed to grade past answers, using fallback:', gradeErr);
+              setGradeResult({
+                testId,
+                score: pastResult.score,
+                correct: pastResult.correctAnswers,
+                total: pastResult.totalQuestions,
+                sections: []
+              });
+            }
+
+            setIsSubmitted(true);
+            setIsReviewMode(reviewParam);
+            return;
+          }
+        }
+
+        // CASE 2: Taking an active exam - restore saved progress if available
         try {
           const savedStr = localStorage.getItem(storageKey);
           if (savedStr) {
@@ -116,7 +161,7 @@ export default function HskExamPlayerScreen() {
       }
     }
     loadExam();
-  }, [testId, durationParam]);
+  }, [testId, durationParam, resultIdParam, reviewParam]);
 
   // 2. Timer Countdown & Auto-Save
   useEffect(() => {
@@ -253,7 +298,9 @@ export default function HskExamPlayerScreen() {
     setIsReviewMode(false);
     setTimeLeft(totalSeconds);
     setElapsedTime(0);
+    setLoadedResultDate(null);
     localStorage.removeItem(storageKey);
+    navigate(`/hsk-exams/${testId}/play`, { replace: true });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -276,9 +323,9 @@ export default function HskExamPlayerScreen() {
     });
   };
 
-  // Handle choice selection
+  // Handle choice selection (disabled once submitted)
   const handleSelectOption = (qId, optionVal) => {
-    if (isSubmitted && !isReviewMode) return;
+    if (isSubmitted) return;
     setUserAnswers((prev) => ({
       ...prev,
       [qId]: optionVal
@@ -288,11 +335,11 @@ export default function HskExamPlayerScreen() {
   // Fullscreen toggle
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
+      document.documentElement.requestFullscreen().catch(() => { });
       setIsFullscreen(true);
     } else {
       if (document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
+        document.exitFullscreen().catch(() => { });
         setIsFullscreen(false);
       }
     }
@@ -390,10 +437,10 @@ export default function HskExamPlayerScreen() {
     return (
       <div className="min-h-screen pb-20 animate-fade-in text-ink dark:text-on-dark select-none">
         <div className="max-w-4xl mx-auto space-y-6 px-4 sm:px-6">
-          
+
           {/* Back Nav Link */}
           <button
-            onClick={() => navigate('/hsk-exams')}
+            onClick={() => navigate('/hsk-exams', { state: { openHistory: true } })}
             className="flex items-center gap-1.5 text-xs font-semibold text-mute dark:text-on-dark-mute hover:text-ink dark:hover:text-on-dark transition-colors cursor-pointer pt-2"
           >
             <ArrowLeft size={16} />
@@ -402,14 +449,13 @@ export default function HskExamPlayerScreen() {
 
           {/* HERO RESULT CARD (Screenshot 4) */}
           <div className="bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-            
+
             <div className="flex flex-col sm:flex-row items-center sm:items-stretch gap-6">
-              
+
               {/* Score Percentage Box */}
               <div className="w-40 sm:w-48 bg-stone-100 dark:bg-black/25 rounded-2xl p-5 flex flex-col items-center justify-center text-center shrink-0">
-                <div className={`text-4xl sm:text-5xl font-extrabold tracking-tight font-display ${
-                  scorePct >= 60 ? 'text-[#c53030] dark:text-red-400' : 'text-[#c53030] dark:text-red-400'
-                }`}>
+                <div className={`text-4xl sm:text-5xl font-extrabold tracking-tight font-display ${scorePct >= 60 ? 'text-[#c53030] dark:text-red-400' : 'text-[#c53030] dark:text-red-400'
+                  }`}>
                   {scorePct}%
                 </div>
                 <div className="text-xs font-semibold text-mute dark:text-on-dark-mute mt-2">
@@ -420,8 +466,13 @@ export default function HskExamPlayerScreen() {
               {/* Exam Info & Section Breakdowns */}
               <div className="flex-1 flex flex-col justify-between text-center sm:text-left space-y-3">
                 <div className="space-y-1">
-                  <div className="text-xs font-medium text-mute dark:text-on-dark-mute">
-                    Kết quả của bạn
+                  <div className="text-xs font-medium text-mute dark:text-on-dark-mute flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                    <span>Kết quả của bạn</span>
+                    {loadedResultDate && (
+                      <span className="text-[11px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-white/10 text-mute dark:text-on-dark-mute font-mono">
+                        Làm bài: {new Date(loadedResultDate).toLocaleDateString('vi-VN')} {new Date(loadedResultDate).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    )}
                   </div>
                   <h2 className="text-2xl sm:text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight">
                     {exam.title || `HSK ${exam.level} – Đề 1`}
@@ -461,7 +512,7 @@ export default function HskExamPlayerScreen() {
                 Làm lại
               </button>
               <button
-                onClick={() => navigate('/hsk-exams')}
+                onClick={() => navigate('/hsk-exams', { state: { openHistory: true } })}
                 className="flex items-center justify-center px-5 py-3 rounded-xl border border-hairline dark:border-divider-dark bg-white dark:bg-surface-dark hover:bg-stone-50 dark:hover:bg-black/20 text-xs sm:text-sm font-bold transition-colors cursor-pointer"
               >
                 Chọn đề khác
@@ -472,46 +523,35 @@ export default function HskExamPlayerScreen() {
 
           {/* SECTION: XEM LẠI BÀI LÀM (Screenshot 4) */}
           <div className="space-y-6 pt-2">
-            
+
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <h3 className="text-xl font-bold tracking-tight text-ink dark:text-on-dark">
                 Xem lại bài làm
               </h3>
-              
+
               {/* Filter Tabs: Câu sai vs Tất cả */}
               <div className="flex items-center bg-stone-100 dark:bg-black/25 p-1 rounded-xl shrink-0 self-start sm:self-auto">
                 <button
                   onClick={() => setReviewFilter('wrong')}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    reviewFilter === 'wrong'
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${reviewFilter === 'wrong'
                       ? 'bg-[#1e3a5f] text-white shadow-xs'
                       : 'text-mute hover:text-ink dark:hover:text-on-dark'
-                  }`}
+                    }`}
                 >
                   Câu sai ({wrongQuestions.length})
                 </button>
                 <button
                   onClick={() => setReviewFilter('all')}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    reviewFilter === 'all'
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${reviewFilter === 'all'
                       ? 'bg-[#1e3a5f] text-white shadow-xs'
                       : 'text-mute hover:text-ink dark:hover:text-on-dark'
-                  }`}
+                    }`}
                 >
                   Tất cả ({totalCount})
                 </button>
               </div>
             </div>
 
-            {/* Link: Mở toàn bộ đề ở chế độ xem lại */}
-            <div>
-              <button
-                onClick={() => setIsReviewMode(true)}
-                className="text-xs sm:text-sm font-bold text-ink dark:text-on-dark hover:text-primary transition-colors cursor-pointer inline-flex items-center gap-1"
-              >
-                Mở toàn bộ đề ở chế độ xem lại →
-              </button>
-            </div>
 
             {/* MATRIX GRIDS BY SECTION */}
             {(gradeResult.sections || []).map((sec) => {
@@ -549,13 +589,12 @@ export default function HskExamPlayerScreen() {
                             setIsReviewMode(true);
                             setTimeout(() => scrollToQuestion(q.number), 100);
                           }}
-                          className={`h-10 rounded-xl flex items-center justify-center text-xs font-bold transition-transform hover:scale-105 cursor-pointer ${
-                            isCorrect
+                          className={`h-10 rounded-xl flex items-center justify-center text-xs font-bold transition-transform hover:scale-105 cursor-pointer ${isCorrect
                               ? 'bg-emerald-500/15 border border-emerald-500 text-emerald-600 dark:text-emerald-400'
                               : isWrong
-                              ? 'bg-red-500/15 border border-red-500 text-red-600 dark:text-red-400'
-                              : 'border-2 border-dashed border-red-400 text-red-500 bg-red-50/50 dark:bg-red-950/20'
-                          }`}
+                                ? 'bg-red-500/15 border border-red-500 text-red-600 dark:text-red-400'
+                                : 'border-2 border-dashed border-red-400 text-red-500 bg-red-50/50 dark:bg-red-950/20'
+                            }`}
                         >
                           {q.number}
                         </button>
@@ -594,17 +633,17 @@ export default function HskExamPlayerScreen() {
   // ==========================================
   return (
     <div className="min-h-screen pb-24 text-ink dark:text-on-dark select-none">
-      
+
       {/* 1. STICKY TOP HEADER */}
       <div className="sticky top-0 z-40 bg-white/95 dark:bg-surface-dark/95 backdrop-blur-md border-b border-hairline dark:border-divider-dark px-4 sm:px-8 py-3 transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          
+
           {/* Left: Exit button & Title */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => {
                 if (isSubmitted || isReviewMode) {
-                  navigate('/hsk-exams');
+                  navigate('/hsk-exams', { state: { openHistory: true } });
                 } else {
                   setShowExitConfirm(true);
                 }
@@ -628,11 +667,10 @@ export default function HskExamPlayerScreen() {
           {/* Right: Timer, Fullscreen, Submit */}
           <div className="flex items-center gap-2 sm:gap-3">
             {!isReviewMode && (
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-mono font-bold ${
-                timeLeft < 300 
-                  ? 'bg-red-500/15 text-red-600 dark:text-red-400 border border-red-500/30 animate-pulse' 
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-mono font-bold ${timeLeft < 300
+                  ? 'bg-red-500/15 text-red-600 dark:text-red-400 border border-red-500/30 animate-pulse'
                   : 'bg-stone-100 dark:bg-black/25 text-ink dark:text-on-dark border border-hairline dark:border-divider-dark'
-              }`}>
+                }`}>
                 <Clock size={15} />
                 <span>{formatTime(timeLeft)}</span>
               </div>
@@ -732,12 +770,12 @@ export default function HskExamPlayerScreen() {
       {/* 3. MAIN TWO-COLUMN CONTAINER */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-6">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          
+
           {/* LEFT COLUMN: QUESTIONS SCROLL LIST */}
           <div className="flex-1 w-full space-y-10">
             {sectionGroups.map((sec) => (
               <div key={sec.id} className="space-y-6">
-                
+
                 {/* Section Header */}
                 <div className="flex items-center gap-2 text-base sm:text-lg font-extrabold text-ink dark:text-on-dark border-b border-hairline dark:border-divider-dark pb-2">
                   <span className="w-1.5 h-4 bg-[#1e3a5f] dark:bg-blue-400 rounded-full inline-block" />
@@ -762,19 +800,18 @@ export default function HskExamPlayerScreen() {
                       <div
                         key={q.id}
                         id={`q-${q.number}`}
-                        className={`relative bg-white dark:bg-surface-dark border rounded-2xl p-5 sm:p-6 transition-all duration-200 shadow-2xs ${
-                          activeQuestionId === `q-${q.number}`
+                        className={`relative bg-white dark:bg-surface-dark border rounded-2xl p-5 sm:p-6 transition-all duration-200 shadow-2xs ${activeQuestionId === `q-${q.number}`
                             ? 'ring-2 ring-[#1e3a5f]/40 border-[#1e3a5f]'
                             : isReviewMode
-                            ? isCorrect
-                              ? 'border-emerald-500/40 bg-emerald-500/5'
-                              : 'border-red-500/40 bg-red-500/5'
-                            : 'border-hairline dark:border-divider-dark'
-                        }`}
+                              ? isCorrect
+                                ? 'border-emerald-500/40 bg-emerald-500/5'
+                                : 'border-red-500/40 bg-red-500/5'
+                              : 'border-hairline dark:border-divider-dark'
+                          }`}
                       >
                         {/* Question Card Header */}
                         <div className="flex items-center justify-between gap-4 pb-4 border-b border-hairline/60 dark:border-divider-dark/60">
-                          
+
                           <div className="flex items-center gap-3">
                             {/* Question Number Badge */}
                             <span className="w-8 h-8 rounded-xl bg-stone-100 dark:bg-black/30 border border-hairline dark:border-divider-dark flex items-center justify-center font-bold text-xs text-ink dark:text-on-dark">
@@ -785,11 +822,10 @@ export default function HskExamPlayerScreen() {
                             {(q.audio || q.transcript) && (
                               <button
                                 onClick={() => playQuestionAudio(q.id, q.audio, q.transcript)}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-medium transition-colors cursor-pointer ${
-                                  playingQuestionAudioId === q.id
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-medium transition-colors cursor-pointer ${playingQuestionAudioId === q.id
                                     ? 'bg-[#1e3a5f] text-white border-[#1e3a5f]'
                                     : 'border-hairline dark:border-divider-dark hover:bg-stone-50 dark:hover:bg-black/20 text-mute hover:text-ink'
-                                }`}
+                                  }`}
                               >
                                 {playingQuestionAudioId === q.id ? <Pause size={13} /> : <Volume2 size={13} />}
                                 <span className="text-[11px] font-mono">Nghe câu {q.number}</span>
@@ -802,11 +838,10 @@ export default function HskExamPlayerScreen() {
                             <button
                               onClick={() => toggleFlag(q.id)}
                               title="Đánh dấu câu này"
-                              className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
-                                isFlagged
+                              className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${isFlagged
                                   ? 'bg-amber-500/20 border-amber-500 text-amber-600 dark:text-amber-400'
                                   : 'border-hairline dark:border-divider-dark text-mute hover:text-ink'
-                              }`}
+                                }`}
                             >
                               <Bookmark size={15} fill={isFlagged ? 'currentColor' : 'none'} />
                             </button>
@@ -814,11 +849,10 @@ export default function HskExamPlayerScreen() {
                             <button
                               onClick={() => setActiveNoteModal(q.id)}
                               title="Ghi chú"
-                              className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
-                                hasNote
+                              className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${hasNote
                                   ? 'bg-blue-500/20 border-blue-500 text-blue-600 dark:text-blue-400'
                                   : 'border-hairline dark:border-divider-dark text-mute hover:text-ink'
-                              }`}
+                                }`}
                             >
                               <FileText size={15} />
                             </button>
@@ -840,7 +874,7 @@ export default function HskExamPlayerScreen() {
                         )}
 
                         {/* QUESTION BODY BY TYPE */}
-                        
+
                         {/* 1. True / False with Image (Screenshot 3 Q1-5) */}
                         {((q.imageUrls && q.imageUrls.length > 0 && (!q.options || q.options.length === 0)) || (q.correctAnswer === '√' || q.correctAnswer === '×')) && (
                           <div className="flex flex-col sm:flex-row items-center gap-6 mt-5">
@@ -1036,7 +1070,7 @@ export default function HskExamPlayerScreen() {
           {/* RIGHT COLUMN: STICKY QUESTION NAVIGATION PALETTE (Screenshot 3) */}
           <div className="w-full lg:w-72 shrink-0 lg:sticky lg:top-20 space-y-4">
             <div className="bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-2xl p-5 shadow-xs space-y-5">
-              
+
               <h3 className="font-bold text-sm text-ink dark:text-on-dark tracking-tight">
                 Câu hỏi
               </h3>
@@ -1079,9 +1113,8 @@ export default function HskExamPlayerScreen() {
                           <button
                             key={q.id}
                             onClick={() => scrollToQuestion(q.number)}
-                            className={`relative h-9 rounded-xl flex items-center justify-center text-xs font-semibold transition-all duration-150 cursor-pointer ${btnColor} ${
-                              isActive ? 'ring-2 ring-[#1e3a5f] dark:ring-blue-400 ring-offset-2 dark:ring-offset-surface-dark' : ''
-                            }`}
+                            className={`relative h-9 rounded-xl flex items-center justify-center text-xs font-semibold transition-all duration-150 cursor-pointer ${btnColor} ${isActive ? 'ring-2 ring-[#1e3a5f] dark:ring-blue-400 ring-offset-2 dark:ring-offset-surface-dark' : ''
+                              }`}
                           >
                             <span>{q.number}</span>
 

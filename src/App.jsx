@@ -49,6 +49,7 @@ const GrammarScreen = React.lazy(() => import('./pages/GrammarScreen'));
 const DialogueScreen = React.lazy(() => import('./pages/DialogueScreen'));
 const TranslationPlaygroundScreen = React.lazy(() => import('./pages/TranslationPlaygroundScreen'));
 const SpeakingScreen = React.lazy(() => import('./pages/SpeakingScreen'));
+const SpeakingTutorScreen = React.lazy(() => import('./pages/SpeakingTutorScreen'));
 const FreestyleSpeakingScreen = React.lazy(() => import('./pages/FreestyleSpeakingScreen'));
 const EnglishHubScreen = React.lazy(() => import('./pages/EnglishHubScreen'));
 const WritingNotebookScreen = React.lazy(() => import('./pages/WritingNotebookScreen'));
@@ -172,6 +173,7 @@ function App() {
         <Route path="/dictionary" element={<DictionaryScreen />} />
         <Route path="/dialogues" element={<Suspense fallback={<LazyFallback />}><DialogueScreen /></Suspense>} />
         <Route path="/speaking" element={<Suspense fallback={<LazyFallback />}><SpeakingScreen /></Suspense>} />
+        <Route path="/speaking-tutor" element={<Suspense fallback={<LazyFallback />}><SpeakingTutorScreen /></Suspense>} />
         <Route path="/speaking-sandbox" element={<Suspense fallback={<LazyFallback />}><FreestyleSpeakingScreen /></Suspense>} />
         <Route path="/translation" element={<Suspense fallback={<LazyFallback />}><TranslationPlaygroundScreen /></Suspense>} />
         <Route path="/games/unscramble" element={<Suspense fallback={<LazyFallback />}><UnscrambleGameScreen /></Suspense>} />

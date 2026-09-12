@@ -22,6 +22,7 @@ import {
   X,
   BarChart3,
   Video,
+  Mic,
   Sprout,
   BookOpenCheck,
   Scroll,
@@ -47,7 +48,7 @@ export default function Sidebar({ onClose }) {
     {
       title: t('nav.overview'),
       items: [
-        { to: '/', label: t('nav.dashboard'), icon: LayoutDashboard },
+        { to: '/dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
         { to: '/decks', label: t('nav.decks'), icon: BookOpen },
         { to: '/farm', label: t('nav.farm', 'Nông trại Tri Thức'), icon: Sprout },
         { to: '/stats', label: t('nav.stats', 'Thống kê'), icon: BarChart3 },
@@ -58,6 +59,7 @@ export default function Sidebar({ onClose }) {
       title: t('nav.study_practice'),
       items: [
         { to: '/study-hub', label: t('nav.study_hub'), icon: GraduationCap },
+        { to: '/speaking-tutor', label: 'Gia sư Luyện nói AI', icon: Mic },
         { to: '/reading', label: t('nav.reading', 'Luyện đọc HSK'), icon: BookOpenCheck },
         { to: '/game-arcade', label: t('nav.game_arcade'), icon: Gamepad2 },
         { to: '/hsk-exams', label: t('nav.hsk_exams'), icon: ClipboardList },

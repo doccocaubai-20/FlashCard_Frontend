@@ -27,6 +27,31 @@ let currentSessionId = 0;
 let currentResolve = null;
 
 /**
+ * Prefetch audio from Edge TTS to prime server and browser cache in advance
+ */
+export const prefetchAudio = (text, lang = 'zh-CN', gender = null) => {
+  if (!text || typeof window === 'undefined') return;
+  const cleanText = text.trim();
+  const cacheKey = `${cleanText}|${lang}|${gender || 'female'}`;
+  if (audioCache.has(cacheKey)) return;
+
+  const apiBase = getApiBase();
+  const params = new URLSearchParams({ text: cleanText, lang });
+  if (gender) params.set('gender', gender);
+  const ttsUrl = `${apiBase}/api/tts/speak?${params.toString()}`;
+
+  fetch(ttsUrl, { priority: 'low' })
+    .then((res) => {
+      if (res.ok) {
+        audioCache.set(cacheKey, ttsUrl);
+      }
+    })
+    .catch(() => {
+      // Background prefetch failed silently
+    });
+};
+
+/**
  * Stop any ongoing audio playback and browser speech synthesis.
  */
 export const stopSpeech = () => {
@@ -67,20 +92,26 @@ export const stopSpeech = () => {
 };
 
 /**
- * Main TTS function. Plays high-quality audio from backend API.
- * Falls back to browser SpeechSynthesis if backend is unavailable.
+ * Main TTS function. Plays high-quality audio from backend API (Microsoft Edge Neural voices).
+ * Supports options:
+ * - disableRoboticFallback: boolean (if true, never fall back to distorted browser SAPI robot voice)
+ * - timeoutMs: number (timeout for audio playback, default 15000ms)
  * Returns a Promise that resolves when audio finishes playing or is aborted.
  */
-export const speakChinese = (text, lang = 'zh-CN', gender = null) => {
+export const speakChinese = (text, lang = 'zh-CN', gender = null, options = {}) => {
   if (!text) return Promise.resolve();
+
+  const { disableRoboticFallback = false, timeoutMs = 15000 } = options;
 
   return new Promise((resolve) => {
     // Stop any currently playing audio or speech synthesis and increment session ID
     stopSpeech();
 
     const thisSessionId = currentSessionId;
-    const cacheKey = `${text}|${lang}|${gender || 'female'}`;
+    const cleanText = text.trim();
+    const cacheKey = `${cleanText}|${lang}|${gender || 'female'}`;
     let isFinished = false;
+    let retryAttempt = 0;
 
     const finish = () => {
       if (!isFinished) {
@@ -99,7 +130,13 @@ export const speakChinese = (text, lang = 'zh-CN', gender = null) => {
         finish();
         return;
       }
-      speakWithBrowserTTS(text, lang, gender, finish);
+      if (disableRoboticFallback) {
+        // User explicitly asked for Edge TTS only; skip distorted robotic voice
+        console.warn('Edge TTS unavailable, skipped robotic voice fallback as requested.');
+        finish();
+        return;
+      }
+      speakWithBrowserTTS(cleanText, lang, gender, finish);
     };
 
     // Check if we already have a cached audio URL for this text
@@ -122,7 +159,6 @@ export const speakChinese = (text, lang = 'zh-CN', gender = null) => {
       };
 
       audio.play().catch((err) => {
-        // If play was aborted or replaced by a new speech request, do NOT fallback
         if (currentSessionId !== thisSessionId || audio._aborted || err?.name === 'AbortError') {
           finish();
           return;
@@ -132,40 +168,99 @@ export const speakChinese = (text, lang = 'zh-CN', gender = null) => {
       return;
     }
 
-    // Build the backend TTS API URL
-    const apiBase = getApiBase();
-    const params = new URLSearchParams({ text, lang });
-    if (gender) params.set('gender', gender);
-    const ttsUrl = `${apiBase}/api/tts/speak?${params.toString()}`;
-
-    const audio = new Audio(ttsUrl);
-    currentAudio = audio;
-
-    let fallbackTriggered = false;
-
-    const triggerFallbackOnce = () => {
-      if (fallbackTriggered || currentSessionId !== thisSessionId || audio._aborted) {
+    // Function to attempt Edge TTS playback with retry
+    const attemptEdgeTTS = () => {
+      if (currentSessionId !== thisSessionId) {
         finish();
         return;
       }
-      fallbackTriggered = true;
-      triggerFallback();
-    };
 
-    // Set a timeout — if audio doesn't start playing within 8s, use fallback
-    const timeoutId = setTimeout(() => {
-      if (currentSessionId !== thisSessionId || audio._aborted) {
+      const apiBase = getApiBase();
+      const params = new URLSearchParams({ text: cleanText, lang });
+      if (gender) params.set('gender', gender);
+      const ttsUrl = `${apiBase}/api/tts/speak?${params.toString()}`;
+
+      const audio = new Audio(ttsUrl);
+      currentAudio = audio;
+
+      let fallbackTriggered = false;
+
+      const triggerFallbackOnce = () => {
+        if (fallbackTriggered || currentSessionId !== thisSessionId || audio._aborted) {
+          finish();
+          return;
+        }
+        fallbackTriggered = true;
+
+        // Auto-retry Edge TTS once before giving up
+        if (retryAttempt === 0) {
+          retryAttempt++;
+          console.warn('Edge TTS hiccup, retrying once before fallback...');
+          attemptEdgeTTS();
+          return;
+        }
+
+        triggerFallback();
+      };
+
+      // Set a generous timeout (default 15s) for synthesizing longer paragraphs
+      const timeoutId = setTimeout(() => {
+        if (currentSessionId !== thisSessionId || audio._aborted) {
+          finish();
+          return;
+        }
+        if (!fallbackTriggered) {
+          if (currentAudio === audio) {
+            audio.pause();
+            audio.src = '';
+          }
+          triggerFallbackOnce();
+        }
+      }, timeoutMs);
+      currentTimeoutId = timeoutId;
+
+      audio.oncanplaythrough = () => {
+        if (currentSessionId !== thisSessionId || audio._aborted) return;
+        clearTimeout(timeoutId);
+
+        // Cache the URL for future use
+        if (audioCache.size >= MAX_AUDIO_CACHE) {
+          const firstKey = audioCache.keys().next().value;
+          const oldUrl = audioCache.get(firstKey);
+          if (oldUrl && oldUrl.startsWith('blob:')) {
+            URL.revokeObjectURL(oldUrl);
+          }
+          audioCache.delete(firstKey);
+        }
+        audioCache.set(cacheKey, ttsUrl);
+      };
+
+      audio.onended = () => {
+        clearTimeout(timeoutId);
+        if (currentAudio === audio) currentAudio = null;
         finish();
-        return;
-      }
-      if (!fallbackTriggered) {
-        if (currentAudio === audio) {
-          audio.pause();
-          audio.src = '';
+      };
+
+      audio.onerror = () => {
+        clearTimeout(timeoutId);
+        if (currentSessionId !== thisSessionId || audio._aborted) {
+          finish();
+          return;
         }
         triggerFallbackOnce();
-      }
-    }, 8000);
+      };
+
+      audio.play().catch((err) => {
+        clearTimeout(timeoutId);
+        if (currentSessionId !== thisSessionId || audio._aborted || err?.name === 'AbortError') {
+          finish();
+          return;
+        }
+        triggerFallbackOnce();
+      });
+    };
+
+    attemptEdgeTTS();
     currentTimeoutId = timeoutId;
 
     audio.oncanplaythrough = () => {

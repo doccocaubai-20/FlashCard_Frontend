@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { 
   Clock, 
   Headphones, 
@@ -12,7 +12,8 @@ import {
   ArrowRight,
   Calendar,
   Layers,
-  Sparkles
+  Sparkles,
+  Eye
 } from 'lucide-react';
 import { hskExamApi } from '../services/hskExamApi';
 
@@ -28,6 +29,8 @@ const LEVEL_SUBTITLES = {
 
 export default function HskExamListScreen() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   // State
   const [levels, setLevels] = useState([]);
@@ -43,7 +46,9 @@ export default function HskExamListScreen() {
 
   // User History State
   const [history, setHistory] = useState([]);
-  const [showHistory, setShowHistory] = useState(false);
+  const [showHistory, setShowHistory] = useState(
+    Boolean(location.state?.openHistory || searchParams.get('history') === 'true')
+  );
 
   // Load levels on mount
   useEffect(() => {
@@ -105,6 +110,22 @@ export default function HskExamListScreen() {
     if (!selectedExam) return;
     const duration = Math.max(1, Math.min(180, parseInt(customDuration, 10) || 35));
     navigate(`/hsk-exams/${selectedExam.testId}/play?duration=${duration}`);
+  };
+
+  // View exam result detail from history
+  const handleViewResultDetail = (item) => {
+    let targetTestId = item.testId;
+    if (!targetTestId && item.examTitle) {
+      const match = exams.find((e) => e.title === item.examTitle);
+      if (match) targetTestId = match.testId;
+    }
+    if (!targetTestId) {
+      const lvl = item.hskLevel || 1;
+      targetTestId = `hsk${lvl}-1`;
+    }
+    navigate(`/hsk-exams/${targetTestId}/play?resultId=${item.id}`, {
+      state: { result: item }
+    });
   };
 
   return (
@@ -272,30 +293,89 @@ export default function HskExamListScreen() {
 
         {/* RECENT HISTORY DRAWER / ACCORDION */}
         {showHistory && history.length > 0 && (
-          <div className="bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-2xl p-6 space-y-4">
-            <h3 className="text-base font-bold tracking-tight text-ink dark:text-on-dark flex items-center gap-2">
-              <History size={18} className="text-primary" />
-              Lịch sử các lần làm bài
-            </h3>
-            <div className="divide-y divide-hairline dark:divide-divider-dark">
-              {history.map((item) => (
-                <div key={item.id} className="py-3 flex items-center justify-between">
-                  <div className="space-y-1">
-                    <div className="text-sm font-semibold text-ink dark:text-on-dark">
-                      {item.examTitle || `HSK ${item.hskLevel}`}
+          <div className="bg-white dark:bg-surface-dark border border-hairline dark:border-divider-dark rounded-2xl p-5 sm:p-6 space-y-4 shadow-xs animate-fade-in">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base sm:text-lg font-bold tracking-tight text-ink dark:text-on-dark flex items-center gap-2">
+                <History size={18} className="text-primary" />
+                <span>Lịch sử các lần làm bài</span>
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-stone-100 dark:bg-white/10 text-mute dark:text-on-dark-mute">
+                  {history.length}
+                </span>
+              </h3>
+              <span className="text-xs text-mute dark:text-on-dark-mute hidden sm:inline">
+                Nhấp vào bài thi để xem lại chi tiết
+              </span>
+            </div>
+
+            <div className="space-y-2.5">
+              {history.map((item) => {
+                const isPass = item.score >= 60;
+                const durationMin = Math.round(item.duration / 60);
+                const dateObj = new Date(item.completedAt);
+                const formattedDate = !isNaN(dateObj.getTime())
+                  ? dateObj.toLocaleDateString('vi-VN', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric'
+                    })
+                  : '';
+                const formattedTime = !isNaN(dateObj.getTime())
+                  ? dateObj.toLocaleTimeString('vi-VN', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })
+                  : '';
+
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => handleViewResultDetail(item)}
+                    className="p-4 rounded-xl border border-hairline dark:border-divider-dark hover:border-[#c53030]/40 dark:hover:border-red-500/40 hover:bg-red-50/20 dark:hover:bg-red-950/10 hover:shadow-xs transition-all duration-200 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 group"
+                  >
+                    <div className="space-y-1.5 min-w-0">
+                      <div className="flex items-center gap-2.5 flex-wrap">
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-red-100 dark:bg-red-950/50 text-[#c53030] dark:text-red-400 shrink-0">
+                          HSK {item.hskLevel}
+                        </span>
+                        <h4 className="text-sm sm:text-base font-bold text-ink dark:text-on-dark group-hover:text-[#c53030] dark:group-hover:text-red-400 transition-colors truncate">
+                          {item.examTitle || `HSK ${item.hskLevel} Test`}
+                        </h4>
+                      </div>
+
+                      <div className="text-xs text-mute dark:text-on-dark-mute flex flex-wrap items-center gap-3 font-medium">
+                        {formattedDate && (
+                          <span className="flex items-center gap-1">
+                            <Calendar size={13} className="shrink-0" />
+                            {formattedDate} {formattedTime && `• ${formattedTime}`}
+                          </span>
+                        )}
+                        <span className="flex items-center gap-1">
+                          <Clock size={13} className="shrink-0" />
+                          Thời gian: {durationMin > 0 ? `${durationMin} phút` : `${item.duration || 0}s`}
+                        </span>
+                      </div>
                     </div>
-                    <div className="text-xs text-mute flex items-center gap-3">
-                      <span>{new Date(item.completedAt).toLocaleDateString('vi-VN')}</span>
-                      <span>Thời gian: {Math.round(item.duration / 60)} phút</span>
+
+                    <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-hairline dark:border-divider-dark">
+                      <div className="text-left sm:text-right">
+                        <div className={`text-base font-extrabold font-display ${
+                          isPass ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'
+                        }`}>
+                          {item.correctAnswers}/{item.totalQuestions} ({item.score}%)
+                        </div>
+                        <div className="text-[11px] font-semibold text-mute dark:text-on-dark-mute">
+                          {isPass ? 'Đạt yêu cầu' : 'Chưa đạt'}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1 text-xs font-bold text-[#1e3a5f] dark:text-blue-400 bg-[#1e3a5f]/10 dark:bg-blue-400/15 group-hover:bg-[#1e3a5f] group-hover:text-white dark:group-hover:bg-blue-500 dark:group-hover:text-white px-3 py-1.5 rounded-lg transition-all">
+                        <span>Chi tiết</span>
+                        <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
-                      {item.correctAnswers}/{item.totalQuestions} ({item.score}%)
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
