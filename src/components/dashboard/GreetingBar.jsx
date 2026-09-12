@@ -147,7 +147,7 @@ export default function GreetingBar({
               title={viewMode === 'gamified' ? 'Chuyển sang giao diện Cổ điển' : 'Chuyển sang giao diện Tương tác'}
             >
               <LayoutGrid size={13} />
-              <span className="capitalize">{viewMode === 'gamified' ? 'Cổ điển' : 'Gamified'}</span>
+              <span className="capitalize">{viewMode === 'gamified' ? 'Cổ điển' : 'Game'}</span>
             </button>
           )}
         </div>

@@ -154,7 +154,7 @@ export default function ReadingPassagesScreen() {
                 }));
               }
             })
-            .catch(() => {});
+            .catch(() => { });
         }, 3000);
       } catch (err) {
         showToast('Không tìm thấy bài đọc yêu cầu', 'error');
@@ -421,11 +421,10 @@ export default function ReadingPassagesScreen() {
             {/* Toggle TTS Speak All */}
             <button
               onClick={handleToggleSpeakAll}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                isSpeakingAll
-                  ? 'bg-rose-500 text-white shadow-sm animate-pulse'
-                  : 'bg-primary/10 text-primary hover:bg-primary/20'
-              }`}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${isSpeakingAll
+                ? 'bg-rose-500 text-white shadow-sm animate-pulse'
+                : 'bg-primary/10 text-primary hover:bg-primary/20'
+                }`}
             >
               {isSpeakingAll ? <Square size={14} /> : <Volume2 size={14} />}
               <span>{isSpeakingAll ? 'Dừng đọc' : 'Nghe bài'}</span>
@@ -434,11 +433,10 @@ export default function ReadingPassagesScreen() {
             {/* Toggle Pinyin */}
             <button
               onClick={() => setShowPinyin((v) => !v)}
-              className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
-                showPinyin
-                  ? 'bg-surface-card dark:bg-white/10 text-primary border-primary/30'
-                  : 'bg-transparent text-mute border-transparent hover:bg-surface-card'
-              }`}
+              className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all border ${showPinyin
+                ? 'bg-surface-card dark:bg-white/10 text-primary border-primary/30'
+                : 'bg-transparent text-mute border-transparent hover:bg-surface-card'
+                }`}
               title="Bật/Tắt Pinyin"
             >
               Pinyin {showPinyin ? '✓' : ''}
@@ -447,11 +445,10 @@ export default function ReadingPassagesScreen() {
             {/* Toggle Vietnamese Meaning */}
             <button
               onClick={() => setShowMeaning((v) => !v)}
-              className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
-                showMeaning
-                  ? 'bg-surface-card dark:bg-white/10 text-primary border-primary/30'
-                  : 'bg-transparent text-mute border-transparent hover:bg-surface-card'
-              }`}
+              className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all border ${showMeaning
+                ? 'bg-surface-card dark:bg-white/10 text-primary border-primary/30'
+                : 'bg-transparent text-mute border-transparent hover:bg-surface-card'
+                }`}
               title="Bật/Tắt Bản dịch tiếng Việt"
             >
               Tiếng Việt {showMeaning ? '✓' : ''}
@@ -461,25 +458,22 @@ export default function ReadingPassagesScreen() {
             <div className="hidden sm:flex items-center bg-surface-bone dark:bg-white/5 rounded-xl p-0.5 border border-hairline dark:border-white/10">
               <button
                 onClick={() => setFontSize('sm')}
-                className={`px-2 py-1 text-xs rounded-lg font-bold transition-colors ${
-                  fontSize === 'sm' ? 'bg-primary text-white' : 'text-mute hover:text-ink'
-                }`}
+                className={`px-2 py-1 text-xs rounded-lg font-bold transition-colors ${fontSize === 'sm' ? 'bg-primary text-white' : 'text-mute hover:text-ink'
+                  }`}
               >
                 A-
               </button>
               <button
                 onClick={() => setFontSize('md')}
-                className={`px-2 py-1 text-xs rounded-lg font-bold transition-colors ${
-                  fontSize === 'md' ? 'bg-primary text-white' : 'text-mute hover:text-ink'
-                }`}
+                className={`px-2 py-1 text-xs rounded-lg font-bold transition-colors ${fontSize === 'md' ? 'bg-primary text-white' : 'text-mute hover:text-ink'
+                  }`}
               >
                 A
               </button>
               <button
                 onClick={() => setFontSize('lg')}
-                className={`px-2 py-1 text-xs rounded-lg font-bold transition-colors ${
-                  fontSize === 'lg' ? 'bg-primary text-white' : 'text-mute hover:text-ink'
-                }`}
+                className={`px-2 py-1 text-xs rounded-lg font-bold transition-colors ${fontSize === 'lg' ? 'bg-primary text-white' : 'text-mute hover:text-ink'
+                  }`}
               >
                 A+
               </button>
@@ -519,7 +513,7 @@ export default function ReadingPassagesScreen() {
 
           {activePassage.contextDescription && (
             <div className="p-3.5 rounded-2xl bg-surface-bone dark:bg-white/5 border border-hairline dark:border-white/10 text-xs sm:text-sm text-mute dark:text-on-dark-mute italic">
-              💡 <span className="font-semibold not-italic">Bối cảnh:</span> {activePassage.contextDescription}
+              <span className="font-semibold not-italic">Bối cảnh:</span> {activePassage.contextDescription}
             </div>
           )}
 
@@ -527,11 +521,10 @@ export default function ReadingPassagesScreen() {
           <div className="flex border-b border-border/60 dark:border-border-dark pt-2 gap-6">
             <button
               onClick={() => setReaderTab('text')}
-              className={`pb-3 text-sm font-bold flex items-center gap-2 border-b-2 transition-colors ${
-                readerTab === 'text'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-mute hover:text-ink dark:hover:text-on-dark'
-              }`}
+              className={`pb-3 text-sm font-bold flex items-center gap-2 border-b-2 transition-colors ${readerTab === 'text'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-mute hover:text-ink dark:hover:text-on-dark'
+                }`}
             >
               <FileText size={16} />
               <span>Nội dung bài đọc</span>
@@ -539,11 +532,10 @@ export default function ReadingPassagesScreen() {
 
             <button
               onClick={() => setReaderTab('quiz')}
-              className={`pb-3 text-sm font-bold flex items-center gap-2 border-b-2 transition-colors relative ${
-                readerTab === 'quiz'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-mute hover:text-ink dark:hover:text-on-dark'
-              }`}
+              className={`pb-3 text-sm font-bold flex items-center gap-2 border-b-2 transition-colors relative ${readerTab === 'quiz'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-mute hover:text-ink dark:hover:text-on-dark'
+                }`}
             >
               <HelpCircle size={16} />
               <span>Trắc nghiệm đọc hiểu ({activePassage.quiz?.length || 0})</span>
@@ -554,11 +546,10 @@ export default function ReadingPassagesScreen() {
 
             <button
               onClick={() => setReaderTab('vocab')}
-              className={`pb-3 text-sm font-bold flex items-center gap-2 border-b-2 transition-colors ${
-                readerTab === 'vocab'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-mute hover:text-ink dark:hover:text-on-dark'
-              }`}
+              className={`pb-3 text-sm font-bold flex items-center gap-2 border-b-2 transition-colors ${readerTab === 'vocab'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-mute hover:text-ink dark:hover:text-on-dark'
+                }`}
             >
               <Star size={16} />
               <span>Từ vựng mục tiêu ({activePassage.targetWordsUsed?.length || 0})</span>
@@ -575,21 +566,19 @@ export default function ReadingPassagesScreen() {
               return (
                 <div
                   key={para.index}
-                  className={`relative p-6 sm:p-7 rounded-3xl bg-surface-card dark:bg-card-dark border transition-all duration-300 ${
-                    isPlayingThis
-                      ? 'border-primary shadow-md ring-2 ring-primary/20 bg-primary/5'
-                      : 'border-border/80 dark:border-border-dark hover:border-primary/30'
-                  }`}
+                  className={`relative p-6 sm:p-7 rounded-3xl bg-surface-card dark:bg-card-dark border transition-all duration-300 ${isPlayingThis
+                    ? 'border-primary shadow-md ring-2 ring-primary/20 bg-primary/5'
+                    : 'border-border/80 dark:border-border-dark hover:border-primary/30'
+                    }`}
                 >
                   {/* Speaker audio button for this paragraph */}
                   <div className="absolute top-4 right-4 flex items-center gap-1.5">
                     <button
                       onClick={() => handleSpeakParagraph(para.hanzi, para.index)}
-                      className={`p-2 rounded-xl text-xs font-semibold transition-all ${
-                        isPlayingThis
-                          ? 'bg-primary text-white shadow-xs'
-                          : 'bg-surface-bone dark:bg-white/5 text-mute hover:text-primary hover:bg-primary/10'
-                      }`}
+                      className={`p-2 rounded-xl text-xs font-semibold transition-all ${isPlayingThis
+                        ? 'bg-primary text-white shadow-xs'
+                        : 'bg-surface-bone dark:bg-white/5 text-mute hover:text-primary hover:bg-primary/10'
+                        }`}
                       title="Nghe đoạn này"
                     >
                       <Volume2 size={16} />
@@ -725,11 +714,10 @@ export default function ReadingPassagesScreen() {
                           className={`w-full text-left p-3.5 rounded-2xl border text-sm transition-all flex items-center gap-3 ${btnStyle}`}
                         >
                           <span
-                            className={`h-6 w-6 rounded-lg font-bold text-xs flex items-center justify-center shrink-0 ${
-                              isThisSelected
-                                ? 'bg-primary text-white'
-                                : 'bg-surface dark:bg-card-dark text-mute'
-                            }`}
+                            className={`h-6 w-6 rounded-lg font-bold text-xs flex items-center justify-center shrink-0 ${isThisSelected
+                              ? 'bg-primary text-white'
+                              : 'bg-surface dark:bg-card-dark text-mute'
+                              }`}
                           >
                             {optKey}
                           </span>
@@ -830,11 +818,10 @@ export default function ReadingPassagesScreen() {
 
                       <button
                         onClick={() => handleSaveWord(word)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
-                          isSaved
-                            ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30'
-                            : 'bg-surface-bone dark:bg-white/5 text-ink dark:text-on-dark border-hairline dark:border-white/10 hover:border-amber-500/40'
-                        }`}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${isSaved
+                          ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30'
+                          : 'bg-surface-bone dark:bg-white/5 text-ink dark:text-on-dark border-hairline dark:border-white/10 hover:border-amber-500/40'
+                          }`}
                       >
                         <Star size={14} className={isSaved ? 'fill-amber-500 text-amber-500' : ''} />
                         <span>{isSaved ? 'Đã lưu' : 'Lưu từ'}</span>
@@ -858,25 +845,16 @@ export default function ReadingPassagesScreen() {
       {/* Hero Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-primary/15 via-surface-card to-amber-500/10 dark:from-primary/20 dark:via-card-dark dark:to-amber-500/10 border border-primary/20 shadow-xs">
         <div className="space-y-2 max-w-2xl">
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-primary text-white shadow-xs">
-              Kho tài liệu chuẩn
-            </span>
-            <span className="text-xs text-mute font-semibold flex items-center gap-1">
-              <Sparkles size={13} className="text-amber-500" />
-              170+ Bài đọc phân cấp HSK 1 - 6
-            </span>
-          </div>
 
           <h1 className="text-2xl sm:text-3xl font-extrabold text-ink dark:text-on-dark tracking-tight">
             Kho Luyện Đọc Hiểu HSK
           </h1>
           <p className="text-sm text-mute dark:text-on-dark-mute leading-relaxed">
-            Nâng cao khả năng đọc hiểu thực tế qua các bài văn xuôi chọn lọc, phiên âm Pinyin, bản dịch song ngữ và trắc nghiệm đọc hiểu có giải thích chi tiết.
+            Nâng cao khả năng đọc hiểu thực tế qua các bài văn song ngữ và trắc nghiệm chi tiết.
           </p>
         </div>
 
-        {/* Global Stats Overview */}
+        {/* Global Stats Overview
         <div className="flex sm:flex-col gap-2 shrink-0">
           <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-surface/80 dark:bg-white/5 backdrop-blur-sm border border-hairline dark:border-white/10">
             <BookOpenCheck className="text-primary" size={22} />
@@ -887,7 +865,7 @@ export default function ReadingPassagesScreen() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Level Tabs (HSK 1 to HSK 7-9) */}
@@ -906,18 +884,16 @@ export default function ReadingPassagesScreen() {
                 setSelectedTopic('all');
                 setSearchParams({ level: lvl });
               }}
-              className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm transition-all whitespace-nowrap border shrink-0 ${
-                isSelected
-                  ? 'bg-primary text-white border-primary shadow-sm scale-105'
-                  : 'bg-surface-card dark:bg-card-dark text-ink dark:text-on-dark border-border/80 dark:border-border-dark hover:border-primary/40'
-              }`}
+              className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm transition-all whitespace-nowrap border shrink-0 ${isSelected
+                ? 'bg-primary text-white border-primary shadow-sm scale-105'
+                : 'bg-surface-card dark:bg-card-dark text-ink dark:text-on-dark border-border/80 dark:border-border-dark hover:border-primary/40'
+                }`}
             >
               <span>{label}</span>
               {count > 0 && (
                 <span
-                  className={`text-xs px-2 py-0.5 rounded-full font-extrabold ${
-                    isSelected ? 'bg-white/20 text-white' : 'bg-surface-bone dark:bg-white/10 text-mute'
-                  }`}
+                  className={`text-xs px-2 py-0.5 rounded-full font-extrabold ${isSelected ? 'bg-white/20 text-white' : 'bg-surface-bone dark:bg-white/10 text-mute'
+                    }`}
                 >
                   {count}
                 </span>
